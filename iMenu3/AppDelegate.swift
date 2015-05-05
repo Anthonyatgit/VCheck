@@ -17,6 +17,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        // Init Breeze Storage stack with iCloud
+        if BreezeStore.iCloudAvailable() {
+            BreezeStore.setupiCloudStoreWithContentNameKey("iCloud-\(BreezeStore.appName())", localStoreName: "\(BreezeStore.appName())", transactionLogs: "iCloud_transaction_logs")
+        }
+        else {
+            BreezeStore.setupStoreWithName("\(BreezeStore.appName())", storeType: NSSQLiteStoreType, options: [NSMigratePersistentStoresAutomaticallyOption: true, NSInferMappingModelAutomaticallyOption: true])
+        }
+        
+        
+        
+        
         return true
     }
 
