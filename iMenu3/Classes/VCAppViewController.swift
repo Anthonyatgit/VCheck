@@ -119,7 +119,10 @@ class VCAppViewController: UIViewController, CAPSPageMenuDelegate {
     }
     
     func userPanel() {
-        performSegueWithIdentifier("showUserPanel", sender: self)
+        
+        let memberPanel: UserPanelViewController = UserPanelViewController()
+        memberPanel.parentNav = self.navigationController
+        self.navigationController?.showViewController(memberPanel, sender: self)
     }
     
     // Add new FoodItem

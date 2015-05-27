@@ -1,5 +1,5 @@
 //
-//  FoodListTableViewCell.swift
+//  FoodListTableViewself.swift
 //  iMenu3
 //
 //  Created by Gabriel Anthony on 15/4/23.
@@ -7,32 +7,66 @@
 //
 
 import UIKit
+import PureLayout
 
 class UserPanelTableViewCell: UITableViewCell {
     
-    var panelIcon: UIImageView = UIImageView()
-    var panelTitle: UILabel = UILabel()
+    var panelIcon: UIImageView = UIImageView.newAutoLayoutView()
+    var panelTitle: UILabel = UILabel.newAutoLayoutView()
+    
+    var didSetupConstraints = false
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
+        setupViews()
     }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        setupViews()
+    }
+    
+    func setupViews() {
+        
         self.selectionStyle = UITableViewCellSelectionStyle.Gray
         self.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
         
-        panelIcon.frame = CGRectMake(18.0, 13.0, 24.0, 24.0)
-        self.addSubview(panelIcon)
+        self.panelIcon.layer.cornerRadius = VCAppLetor.ConstValue.ImageCornerRadius
+        self.panelIcon.alpha = 1.0
+        self.contentView.addSubview(self.panelIcon)
         
-        panelTitle.frame = CGRectMake(56.0, 15.0, 100.0, 20.0)
-        panelTitle.font = BIGFONT
-        panelTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
-        self.addSubview(panelTitle)
+        self.panelTitle.font = VCAppLetor.Font.BigFont
+        self.panelTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+        self.contentView.addSubview(self.panelTitle)
         
+        self.contentView.setNeedsUpdateConstraints()
+    }
+    
+    override func updateConstraints() {
         
+        if !didSetupConstraints {
+            
+//            UIView.autoSetPriority(1000) {
+//                self.panelIcon.autoSetContentCompressionResistancePriorityForAxis(.Horizontal)
+//                self.panelTitle.autoSetContentCompressionResistancePriorityForAxis(.Horizontal)
+//            }
+            
+            self.panelIcon.autoPinEdgeToSuperviewEdge(.Leading, withInset: 18.0)
+            self.panelIcon.autoAlignAxisToSuperviewAxis(ALAxis.Horizontal)
+            self.panelIcon.autoSetDimensionsToSize(CGSizeMake(VCAppLetor.ConstValue.UserPanelCellIconWidth, VCAppLetor.ConstValue.UserPanelCellIconWidth))
+            
+            
+            self.panelTitle.autoSetDimensionsToSize(CGSizeMake(160.0, 20.0))
+            self.panelTitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.panelIcon, withOffset: 14.0)
+            self.panelTitle.autoAlignAxisToSuperviewAxis(.Horizontal)
+            
+            
+            didSetupConstraints = true
+        }
+        
+        super.updateConstraints()
     }
     
     

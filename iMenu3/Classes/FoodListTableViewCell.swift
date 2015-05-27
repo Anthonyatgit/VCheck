@@ -31,17 +31,17 @@ class FoodListTableViewCell: UITableViewCell {
         
         foodImageView.frame = CGRectMake(0, 0, self.bounds.width, 100)
         foodImageView.bounds = foodImageView.frame
-        foodImageView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.2)
+//        foodImageView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.2)
         self.addSubview(foodImageView)
         
         
         foodTitle.frame = CGRectMake(0.0, 110.0, self.bounds.width, 20.0)
-        foodTitle.font = VCAppLetor.BIGFONT
+        foodTitle.font = VCAppLetor.Font.BigFont
         foodTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.addSubview(foodTitle)
         
         foodDesc.frame = CGRectMake(0.0, 135.0, self.bounds.width, 65.0)
-        foodDesc.font = VCAppLetor.NORMALFONT
+        foodDesc.font = VCAppLetor.Font.NormalFont
         foodDesc.textColor = UIColor.grayColor()
         foodDesc.numberOfLines = 5
         self.addSubview(foodDesc)

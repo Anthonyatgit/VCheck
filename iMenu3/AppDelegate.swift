@@ -8,15 +8,22 @@
 
 import UIKit
 import CoreData
+import Alamofire
+import SCLAlertView
+import RKDropdownAlert
+import SwiftyJSON
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        UINavigationBar.appearance().barStyle = UIBarStyle.BlackTranslucent
+        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         
         // Init Breeze Storage stack with iCloud
         if BreezeStore.iCloudAvailable() {
@@ -26,7 +33,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             BreezeStore.setupStoreWithName("\(BreezeStore.appName())", storeType: NSSQLiteStoreType, options: [NSMigratePersistentStoresAutomaticallyOption: true, NSInferMappingModelAutomaticallyOption: true])
         }
         
+        // Register for ShareSDK
+        ShareSDK.registerApp("74ed3d5fc213")
         
+        // Connect Sina Weibo
+        ShareSDK.connectSinaWeiboWithAppKey("4012589497", appSecret: "cad1412fd89be70722de86337a571a54", redirectUri: "http://192.168.100.100", weiboSDKCls: WeiboSDK.classForCoder())
+        
+        // Connect WeChat
+        ShareSDK.connectWeChatWithAppId("wx76e86073a6e91077", appSecret: "f02a4fac3a25c49245e6b7317a7e8026", wechatCls: WXApi.classForCoder())
+        ShareSDK.connectWeChatSessionWithAppId("wx76e86073a6e91077", appSecret: "f02a4fac3a25c49245e6b7317a7e8026", wechatCls: WXApi.classForCoder())
+        
+        // Connect SMS
+        ShareSDK.connectSMS()
+        
+        let appName: String = "VCheck"
+        
+        // Get client config
+        self.getClientConfig()
         
         
         return true
@@ -53,7 +76,95 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
-        self.saveContext()
+        //self.saveContext()
+    }
+    
+    // MARK: - Initialization
+    
+    func getClientConfig() {
+        
+        // Current app version
+//        let version: Settings = Settings.findFirst(attribute: "name", value: "version_app", contextType: BreezeContextType.Background) as! Settings
+        
+        if let version = Settings.findFirst(attribute: "name", value: "version_app", contextType: BreezeContextType.Main) as? Settings { // Get current app version
+            
+            CTMemCache.sharedInstance.set("version_app", data: version.value, namespace: "appConfig")
+        }
+        else { // App version DO NOT exist, create one with version "1.0"
+            
+            BreezeStore.saveInMain({ contextType -> Void in
+                
+                let versionToBeCreate: Settings = Settings.createInContextOfType(contextType) as! Settings
+                
+                versionToBeCreate.sid = "\(NSDate())"
+                versionToBeCreate.name = "version_app"
+                versionToBeCreate.value = "1.0"
+                versionToBeCreate.type = VCAppLetor.SettingType.AppConfig
+                versionToBeCreate.data = ""
+                
+            })
+            
+            CTMemCache.sharedInstance.set("version_app", data: "1.0", namespace: "appConfig")
+        }
+        
+        // Read config from server
+        let appVersion: String = CTMemCache.sharedInstance.get("version_app", namespace: "appConfig")?.data as! String
+        
+        Alamofire.request(VCheckGo.Router.AppSettings(appVersion,VCheckGo.DeviceType.iPhone)).validate().responseJSON() {
+            (request, response, JSON, error) -> Void in
+            
+            if error == nil {
+                
+                let status = (JSON as! NSDictionary).valueForKey("status") as! NSDictionary
+                if (status.valueForKey("succeed") as! String) == "1" {
+                    
+                    // Check if app update required
+                    let configList = ((JSON as! NSDictionary).valueForKey("data") as! NSDictionary).valueForKey("config_list") as! [NSDictionary]
+                    
+                    for config in configList {
+                        
+                        CTMemCache.sharedInstance.set(config.valueForKey("key") as! String, data: config, namespace: "appConfig")
+                    }
+                    
+                    let needUpdate: String = (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNeedUpdate, namespace: "appConfig")?.data as! NSDictionary).valueForKey("value") as! String
+                    if (needUpdate == "1") { // Enforce to update app
+                        
+                        let isShowTip: String = (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optTipForUpdate, namespace: "appConfig")?.data as! NSDictionary).valueForKey("value") as! String
+                        if (isShowTip == "1") { // With alertview?
+                            
+                            let alert = SCLAlertView()
+                            alert.addButton(VCAppLetor.StringLine.UpdateNowButtonTitle, target:self, selector:"updateNow")
+                            alert.showNotice(VCAppLetor.StringLine.UpdateNoticeTitle, subTitle:VCAppLetor.StringLine.UpdateDescription)
+                        }
+                        else { // Update app directly (redirect to App Store page)
+                            println("Go Update!")
+                        }
+                    }
+                    
+                }
+                else {
+                    println("Error: JSON Return ERROR: Succeed fail")
+                }
+            }
+            else {
+                println("Error with App Settings Request: \(error?.localizedDescription)")
+            }
+        }
+    }
+    
+    // Update in progressing when user click UPDATE NOW button on the update alert view
+    func updateNow() {
+        println("Go Update!")
+    }
+    
+    // MARK: - ShareSDK URL Schemes Handler
+    
+    func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
+        return ShareSDK.handleOpenURL(url, wxDelegate: self)
+    }
+    
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+        return ShareSDK.handleOpenURL(url, sourceApplication: sourceApplication, annotation: annotation, wxDelegate: self)
     }
 
     // MARK: - Core Data stack
