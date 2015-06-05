@@ -11,8 +11,9 @@ import PureLayout
 
 class UserPanelTableViewCell: UITableViewCell {
     
-    var panelIcon: UIImageView = UIImageView.newAutoLayoutView()
-    var panelTitle: UILabel = UILabel.newAutoLayoutView()
+    let panelIcon: UIImageView = UIImageView.newAutoLayoutView()
+    let panelTitle: UILabel = UILabel.newAutoLayoutView()
+    let countLabel: UILabel = UILabel.newAutoLayoutView()
     
     var didSetupConstraints = false
     
@@ -41,6 +42,11 @@ class UserPanelTableViewCell: UITableViewCell {
         self.panelTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.contentView.addSubview(self.panelTitle)
         
+        self.countLabel.text = "0"
+        self.countLabel.font = VCAppLetor.Font.BigFont
+        self.countLabel.textColor = UIColor.lightGrayColor()
+        self.contentView.addSubview(self.countLabel)
+        
         self.contentView.setNeedsUpdateConstraints()
     }
     
@@ -54,14 +60,16 @@ class UserPanelTableViewCell: UITableViewCell {
 //            }
             
             self.panelIcon.autoPinEdgeToSuperviewEdge(.Leading, withInset: 18.0)
-            self.panelIcon.autoAlignAxisToSuperviewAxis(ALAxis.Horizontal)
+            self.panelIcon.autoAlignAxisToSuperviewAxis(.Horizontal)
             self.panelIcon.autoSetDimensionsToSize(CGSizeMake(VCAppLetor.ConstValue.UserPanelCellIconWidth, VCAppLetor.ConstValue.UserPanelCellIconWidth))
-            
             
             self.panelTitle.autoSetDimensionsToSize(CGSizeMake(160.0, 20.0))
             self.panelTitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.panelIcon, withOffset: 14.0)
             self.panelTitle.autoAlignAxisToSuperviewAxis(.Horizontal)
             
+            self.countLabel.autoPinEdgeToSuperviewEdge(.Trailing)
+            self.countLabel.autoSetDimensionsToSize(CGSizeMake(20.0, 20.0))
+            self.countLabel.autoAlignAxisToSuperviewAxis(.Horizontal)
             
             didSetupConstraints = true
         }

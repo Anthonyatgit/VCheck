@@ -49,6 +49,12 @@ struct VCAppLetor {
         static let LoginTitle: String = "使用VCheck账号登陆，赢取丰富礼券"
         static let LoginName: String = "手机号/邮箱"
         static let LoginPass: String = "密码"
+        static let LoginNameEmpty: String = "手机号/邮箱忘记填写了？"
+        static let LoginNameIllegal: String = "手机号/邮箱填写格式不对，检查一下"
+        static let MobileIllegal: String = "手机号码填写格式不对，检查一下"
+        static let MobileNotExist: String = "手机号码不存在，检查一下"
+        static let LoginPassEmpty: String = "密码忘记填写了？"
+        static let LoginInfoError: String = "手机号/邮箱或者密码是不是写错了？"
         static let SignUpText: String = "新用户也有专享福利，"
         static let SignUpButtonText: String = "点击注册"
         static let SocialSignUpTitle: String = "使用社交账号登陆"
@@ -64,14 +70,16 @@ struct VCAppLetor {
         static let Gotit: String = "我知道了"
         static let FindBackMyPassTitle: String = "找回密码"
         static let SMSCode: String = "验证码"
-        static let InputSMSCode: String = "短信验证码"
+        static let InputSMSCode: String = "请输入验证码"
         static let ResetYourPasscode: String = "重置密码"
         static let Next: String = "下一步"
         static let Preview: String = "上一步"
         static let Resent: String = "重新发送"
         static let NewPasscode: String = "新密码"
         static let AgainPasscode: String = "再输一次"
-        static let PasscodeTooShort: String = "您的密码应当不少于6位"
+        static let PassNotMatch: String = "密码输入不匹配，应当为6-20位数字或字母"
+        static let PasscodeTooShort: String = "密码应当为6-20位数字或字母"
+        static let ResetPassDone: String = "密码设置成功，现在可以登录了"
         static let PhoneNumber: String = "手机号码"
         static let SendAutoCode: String = "发送验证码"
         static let InventCodeOption: String = "邀请码(选填)"
@@ -85,7 +93,60 @@ struct VCAppLetor {
         static let PassCodeString = "••••••"
         static let NotAuthYet: String = "未认证"
         static let UserInfoSettings: String = "账户设置"
+        static let EditMemberEmail: String = "修改邮箱"
+        static let EmailIllegal: String = "邮箱地址格式不正确"
+        static let EditEmailSuccess: String = "邮箱修改成功"
+        static let EditMemberNickname: String = "修改昵称"
+        static let NicknameTooShort: String = "昵称应当为2-20位字符"
+        static let EditNicknameSuccess: String = "昵称修改成功"
+        static let EditMemberPassowrd: String = "修改密码"
+        static let CurrentPass: String = "当前密码"
+        static let NewPass: String = "新密码"
+        static let NewPassAgain: String = "再输一遍新密码"
+        static let newpassNotMatch: String = "密码输入不匹配，应当为6-20位数字或字母"
+        static let PasswordTooShort: String = "密码应当为6-20位数字或字母"
+        static let EditPasswordSuccess: String = "密码修改成功"
+        static let MobileCannotChange: String = "手机号码绑定后不能修改[联系客服]"
         static let Logout: String = "退出登录"
+        
+        static let FoodViewerTitle: String = "礼遇详情"
+        static let ShareToGetCoupon: String = "分享获取丰富礼券"
+        static let CheckNow: String = "Check NOW"
+        static let SegmentTitles: [AnyObject] = ["亮点","菜单","须知"]
+        
+        
+        static let FoodTitle: String = "设计师新贵打造花园式餐厅 澜悦双人菜单"
+        static let FoodDesc: String = "紫荆上海花园旁的新开餐厅澜悦，天蓝色沙发，桃红色气球，翠绿的墙面，花藤爬满屋顶，设计师将其打造成一个花团锦簇，色彩斑斓的艺术空间。拥有当地五星酒店从业经验的大厨献上充满热带风情东南亚融合料理，在花园般的景色中尽享泰国，马来西亚和新加坡美食。独享74折"
+    }
+    
+    enum FoodInfo {
+        
+        static let photos: NSArray = [
+            "http://www.siyo.cc/t/mood1.jpg",
+            "http://www.siyo.cc/t/mood2.jpg",
+            "http://www.siyo.cc/t/mood3.jpg",
+                "http://www.siyo.cc/t/mood4.jpg",
+        "http://www.siyo.cc/t/mood5.jpg"
+        ]
+        
+        static let spot: [NSDictionary] = [
+            [
+                "image": "http://www.siyo.cc/t/mood1.jpg",
+                "title": "title1",
+                "desc": "description1"
+            ],
+            [
+                "image": "http://www.siyo.cc/t/mood2.jpg",
+                "title": "title2",
+                "desc": "description2"
+            ],
+            [
+                "image": "http://www.siyo.cc/t/mood3.jpg",
+                "title": "title3",
+                "desc": "description3"
+            ]
+        ]
+        
     }
     
     // MARK: - IconName
@@ -96,6 +157,8 @@ struct VCAppLetor {
         static let ClearIconBlack: String = "clear_black"
         static let HelpIconBlack: String = "help_black"
         static let InternetBlack: String = "internet_black"
+        static let ShareBlack: String = "share_black"
+        static let ThumbUpBlack: String = "thumb_up_black"
     }
     
     // MARK: - ConstValue
@@ -120,9 +183,11 @@ struct VCAppLetor {
         static let ImageCornerRadius: CGFloat = 3.0
         static let UserInfoSectionHeaderHight: CGFloat = 40.0 // 用户信息分区标题视图高度
         static let UserInfoHeaderViewHeight: CGFloat = 80.0 // 顶部用户信息视图高度
-        static let UserInfoFooterViewHeight: CGFloat = 80.0 // 底部用户信息视图高度
+        static let UserInfoFooterViewHeight: CGFloat = 100.0 // 底部用户信息视图高度
         static let MinLengthOfPasscode: Int = 6 // 用户密码最小长度
         static let ReachableClosures: Bool = false
+        static let TextFieldShakeTime: NSTimeInterval = 0.6
+        static let CheckNowBarHeight: CGFloat = 60.0
     }
     
     // MARK: - SettingName
@@ -135,9 +200,6 @@ struct VCAppLetor {
         static let optNeedUpdate: String = "need_update"
         static let optTipForUpdate: String = "is_tips"
         static let optToken: String = "token"
-        static let verifyCode: String = "verify_code"
-        static let saltCode: String = "salt_code"
-        static let mobile: String = "mobile"
     }
     
     // MARK: - LoginType
@@ -156,6 +218,11 @@ struct VCAppLetor {
         static let Success: String = "恭喜"
         static let Error: String = "错误"
         static let Notice: String = "提示"
+    }
+    
+    enum ErrorCode {
+        
+        static let MobileAlreadyExist: String = "2013"
     }
     
     // MARK: - UserPanel
@@ -195,6 +262,20 @@ struct VCAppLetor {
         static let Email: String = "email"
         static let Nickname: String = "nickname"
         static let Icon: String = "icon"
+        static let VerifyCode: String = "verify_code"
+        static let SaltCode: String = "salt_code"
+    }
+    
+    enum EditType: String {
+        case Email = "Email"
+        case Nickname = "Nickname"
+        case Password = "Password"
+    }
+    
+    enum FoodInfoType: Int {
+        case spot = 1
+        case menu = 2
+        case info = 3
     }
     
 }

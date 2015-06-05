@@ -9,7 +9,7 @@
 import UIKit
 import PureLayout
 
-class VCTermsViewController: UIViewController {
+class VCTermsViewController: VCBaseViewController {
     
     let scrollView: UIScrollView = UIScrollView.newAutoLayoutView()
     

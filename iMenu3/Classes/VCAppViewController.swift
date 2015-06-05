@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import PageMenu
 
 class VCAppViewController: UIViewController, CAPSPageMenuDelegate {
     

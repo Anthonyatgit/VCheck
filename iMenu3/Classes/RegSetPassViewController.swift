@@ -16,7 +16,7 @@ protocol MemberRegisterDelegate {
     func memberDidFinishRegister(mid: String, token: String)
 }
 
-class RegSetPassViewController: UIViewController {
+class RegSetPassViewController: VCBaseViewController {
     
     let scrollView: UIScrollView = UIScrollView()
     
@@ -93,8 +93,8 @@ class RegSetPassViewController: UIViewController {
             hud.mode = MBProgressHUDMode.Determinate
             hud.labelText = VCAppLetor.StringLine.RegisterInProgress
             
-            let mobile = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.mobile, namespace: "member")?.data as! String
-            let code = ((CTMemCache.sharedInstance.get(VCAppLetor.SettingName.saltCode, namespace: "member")?.data as! String) + VCAppLetor.StringLine.SaltKey).md5
+            let mobile = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Mobile, namespace: "member")?.data as! String
+            let code = ((CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.SaltCode, namespace: "member")?.data as! String) + VCAppLetor.StringLine.SaltKey).md5
             // Submit member register request
             Alamofire.request(VCheckGo.Router.MemberRegister(mobile, passcodeToBeSet, code)).validate().responseSwiftyJSON({
                 (_, _, JSON, error) -> Void in

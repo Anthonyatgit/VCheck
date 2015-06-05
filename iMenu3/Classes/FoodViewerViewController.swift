@@ -7,42 +7,394 @@
 //
 
 import UIKit
+import Alamofire
+import PureLayout
+import HYBLoopScrollView
+import HMSegmentedControl
 
-class FoodViewerViewController: UIViewController, UIScrollViewDelegate, UIPopoverPresentationControllerDelegate, UIActionSheetDelegate {
+class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSegmentViewDelegate, UIActionSheetDelegate {
     
     var foodIdentifier: String?
-    
-    let scrollView = UIScrollView()
-    
     var foodInfo: FoodItem?
     
+    let scrollView: UIScrollView = UIScrollView()
+    let checkView: UIView = UIView.newAutoLayoutView()
+    let detailSegmentView: UIView = UIView.newAutoLayoutView()
+//    let detailView: UIView = UIView.newAutoLayoutView()
+    let detailScrollView: FoodDetailScrollView = FoodDetailScrollView.newAutoLayoutView()
     
-    // MARK: Life-cycle
+    var photos: NSArray = VCAppLetor.FoodInfo.photos
+    var photoViewer: HYBLoopScrollView?
+    
+    let originPrice: UILabel = UILabel.newAutoLayoutView()
+    let originPriceStricke: CustomDrawView = CustomDrawView.newAutoLayoutView()
+    let price: UILabel = UILabel.newAutoLayoutView()
+    let foodUnit: UILabel = UILabel.newAutoLayoutView()
+    let checkNow: UIButton = UIButton.newAutoLayoutView()
+    let checkNowBg: UIView = UIView.newAutoLayoutView()
+    
+    let photosView: UIView = UIView.newAutoLayoutView()
+    let dateTagBg: CustomDrawView = CustomDrawView.newAutoLayoutView()
+    let dateTag: UILabel = UILabel.newAutoLayoutView()
+    
+    let foodTitle: UILabel = UILabel.newAutoLayoutView()
+    let remainAmount: UILabel = UILabel.newAutoLayoutView()
+    let remainTime: UILabel = UILabel.newAutoLayoutView()
+    let returnable: UILabel = UILabel.newAutoLayoutView()
+    let foodDesc: UILabel = UILabel.newAutoLayoutView()
+    
+    let shareBtn: IconButton = IconButton.newAutoLayoutView()
+    let likeBtn: IconButton = IconButton.newAutoLayoutView()
+    
+    var detailSegmentControl: SMSegmentView!
+    
+    var foodDetailHeight: CGFloat!
+    
+    // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // A scroll view is used to show all content
-        scrollView.frame = view.bounds
-        scrollView.contentSize = CGSize(width: CGRectGetWidth(scrollView.frame), height: CGRectGetHeight(scrollView.frame)*2)
-        scrollView.delegate = self
-        view.addSubview(scrollView)
+        self.title = VCAppLetor.StringLine.FoodViewerTitle
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Bookmarks, target: self, action: "shareFood")
         
-        let otherText: UILabel = UILabel()
-        otherText.frame = CGRect(x: 0, y: 0, width: 300, height: 50)
-        otherText.text = self.foodIdentifier
-        scrollView.addSubview(otherText)
-        println(self.foodIdentifier)
+        self.scrollView.frame = self.view.bounds
+        self.scrollView.frame.size.height = self.view.bounds.height - VCAppLetor.ConstValue.CheckNowBarHeight
+        self.scrollView.contentMode = UIViewContentMode.Top
+        self.scrollView.backgroundColor = UIColor.whiteColor()
         
+        self.setupFoodView()
+        
+        self.view.addSubview(self.scrollView)
+        
+        self.setupCheckView()
+        
+        self.view.setNeedsUpdateConstraints()
+        
+//        self.detailSegmentControl.selectSegmentAtIndex(0)
+        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.width, self.detailScrollView.originY + self.detailScrollView.frame.height + 20.0)
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.delegate = self
+        
+        
+        
+    }
+    
+    
+    override func updateViewConstraints() {
+        super.updateViewConstraints()
+        
+        self.checkView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0), excludingEdge: .Top)
+        self.checkView.autoSetDimension(.Height, toSize: VCAppLetor.ConstValue.CheckNowBarHeight)
+        
+        self.checkNow.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(10.0, 0.0, 10.0, 20.0), excludingEdge: .Leading)
+        self.checkNow.autoMatchDimension(.Width, toDimension: .Width, ofView: self.checkView, withMultiplier: 0.4)
+        
+        self.checkNowBg.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.checkNow, withOffset: -1.0)
+        self.checkNowBg.autoPinEdge(.Top, toEdge: .Top, ofView: self.checkNow, withOffset: -1.0)
+        self.checkNowBg.autoMatchDimension(.Height, toDimension: .Height, ofView: self.checkNow, withOffset: 2.0)
+        self.checkNowBg.autoMatchDimension(.Width, toDimension: .Width, ofView: self.checkNow, withOffset: 2.0)
+        
+        self.price.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.checkNow)
+        self.price.autoPinEdgeToSuperviewEdge(.Leading, withInset: 50.0)
+        self.price.autoSetDimensionsToSize(CGSizeMake(36.0, 22.0))
+        
+        self.foodUnit.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.price)
+        self.foodUnit.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.price)
+        self.foodUnit.autoSetDimensionsToSize(CGSizeMake(40.0, 20.0))
+        
+        self.originPrice.autoPinEdgeToSuperviewEdge(.Top, withInset: 16.0)
+        self.originPrice.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.price, withOffset: 30.0)
+        self.originPrice.autoSetDimensionsToSize(CGSizeMake(42.0, 20.0))
+        
+        self.originPriceStricke.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.originPrice)
+        self.originPriceStricke.autoAlignAxis(.Horizontal, toSameAxisOfView: self.originPrice)
+        self.originPriceStricke.autoMatchDimension(.Width, toDimension: .Width, ofView: self.originPrice)
+        self.originPriceStricke.autoSetDimension(.Height, toSize: 2.0)
+        
+        self.photosView.autoSetDimensionsToSize(CGSizeMake(self.scrollView.bounds.width, self.scrollView.bounds.width/2))
+        self.photosView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0), excludingEdge: .Bottom)
+        
+        self.dateTagBg.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.photosView, withOffset: 20.0)
+        self.dateTagBg.autoPinEdgeToSuperviewEdge(.Leading)
+        self.dateTagBg.autoSetDimensionsToSize(CGSizeMake(80.0, 28.0))
+        
+        self.dateTag.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.dateTagBg, withOffset: 8.0)
+        self.dateTag.autoAlignAxis(.Horizontal, toSameAxisOfView: self.dateTagBg)
+        self.dateTag.autoSetDimensionsToSize(CGSizeMake(64.0, 14.0))
+        
+        self.foodTitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.dateTagBg, withOffset: 20.0)
+        self.foodTitle.autoPinEdgeToSuperviewEdge(.Leading, withInset: 20.0)
+        self.foodTitle.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 20.0)
+        
+        self.remainAmount.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodTitle, withOffset: 10.0)
+        self.remainAmount.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+        self.remainAmount.autoSetDimensionsToSize(CGSizeMake(68.0, 14.0))
+        
+        self.remainTime.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.remainAmount, withOffset: 10.0)
+        self.remainTime.autoPinEdge(.Top, toEdge: .Top, ofView: self.remainAmount)
+        self.remainTime.autoSetDimensionsToSize(CGSizeMake(80.0, 14.0))
+        
+        self.returnable.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.remainAmount, withOffset: 10.0)
+        self.returnable.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+        self.returnable.autoSetDimensionsToSize(CGSizeMake(50.0, 14.0))
+        
+        self.foodDesc.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.returnable, withOffset: 12.0)
+        self.foodDesc.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+        self.foodDesc.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+        
+        self.shareBtn.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+        self.shareBtn.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodDesc, withOffset: 20.0)
+        self.shareBtn.autoSetDimensionsToSize(CGSizeMake(138.0, 38.0))
+        
+        self.likeBtn.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.shareBtn, withOffset: 10.0)
+        self.likeBtn.autoPinEdge(.Top, toEdge: .Top, ofView: self.shareBtn)
+        self.likeBtn.autoSetDimensionsToSize(CGSizeMake(64.0, 38.0))
+        
+        self.detailSegmentControl?.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+        self.detailSegmentControl?.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+        self.detailSegmentControl?.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.shareBtn, withOffset: 20.0)
+        self.detailSegmentControl?.autoSetDimension(.Height, toSize: 40.0)
+        
+        
+        self.detailScrollView.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.detailSegmentControl, withOffset: 20.0)
+        self.detailScrollView.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+        self.detailScrollView.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        
     }
     
     
+    // MARK: - Functions
     
+    func setupCheckView() {
+        
+        self.checkNowBg.backgroundColor = UIColor.pumpkinColor()
+        self.checkView.addSubview(self.checkNowBg)
+        
+        self.checkNow.backgroundColor = UIColor.pumpkinColor()
+        self.checkNow.setTitle(VCAppLetor.StringLine.CheckNow, forState: UIControlState.Normal)
+        self.checkNow.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+        self.checkNow.layer.borderWidth = 1.0
+        self.checkNow.layer.borderColor = UIColor.whiteColor().CGColor
+        self.checkView.addSubview(self.checkNow)
+        
+        self.price.text = "288"
+        self.price.textAlignment = .Center
+        self.price.textColor = UIColor.orangeColor()
+        self.price.font = VCAppLetor.Font.XLarge
+        self.checkView.addSubview(self.price)
+        
+        self.foodUnit.text = "元/2位"
+        self.foodUnit.textAlignment = .Center
+        self.foodUnit.textColor = UIColor.orangeColor()
+        self.foodUnit.font = VCAppLetor.Font.SmallFont
+        self.checkView.addSubview(self.foodUnit)
+        
+        self.originPrice.text = "388元"
+        self.originPrice.textAlignment = .Left
+        self.originPrice.textColor = UIColor.grayColor()
+        self.originPrice.font = VCAppLetor.Font.SmallFont
+        self.checkView.addSubview(self.originPrice)
+        
+        self.originPriceStricke.drawType = "GrayLine"
+        self.originPriceStricke.lineWidth = 1.0
+        self.checkView.addSubview(self.originPriceStricke)
+        
+        self.checkView.backgroundColor = UIColor.grayColor().colorWithAlphaComponent(0.1)
+        
+        let topBorder: CustomDrawView = CustomDrawView.newAutoLayoutView()
+        topBorder.drawType = "GrayLine"
+        topBorder.lineWidth = 1.0
+        self.checkView.addSubview(topBorder)
+        
+        topBorder.autoSetDimension(.Height, toSize: 1.0)
+        topBorder.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0), excludingEdge: .Bottom)
+        
+        self.view.addSubview(self.checkView)
+    }
+    
+    func setupFoodView() {
+        
+        // Food photos
+        self.photoViewer = HYBLoopScrollView(frame: CGRectMake(0, 0, self.scrollView.bounds.width, self.scrollView.bounds.width / 2), imageUrls: self.photos as [AnyObject]) as HYBLoopScrollView
+        self.photoViewer!.alignment = HYBPageControlAlignment.PageControlAlignCenter
+        self.photoViewer?.timeInterval = 60
+        self.photoViewer!.setTranslatesAutoresizingMaskIntoConstraints(true)
+        self.photosView.addSubview(self.photoViewer!)
+        self.scrollView.addSubview(self.photosView)
+        
+        // Date Tag
+        self.dateTagBg.drawType = "DateTag"
+        self.dateTagBg.alpha = 0.8
+        self.scrollView.addSubview(self.dateTagBg)
+        
+        self.dateTag.text = "2015.06.01"
+        self.dateTag.textAlignment = .Left
+        self.dateTag.textColor = UIColor.whiteColor()
+        self.dateTag.font = VCAppLetor.Font.SmallFont
+        self.scrollView.addSubview(self.dateTag)
+        
+        // Food title
+        self.foodTitle.text = self.foodInfo!.title
+        self.foodTitle.font = VCAppLetor.Font.XLarge
+        self.foodTitle.numberOfLines = 2
+        self.foodTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+        self.scrollView.addSubview(self.foodTitle)
+        
+        // Remainings
+        self.remainAmount.text = "剩余 17 份"
+        self.remainAmount.font = VCAppLetor.Font.SmallFont
+        self.remainAmount.textAlignment = .Left
+        self.remainAmount.textColor = UIColor.lightGrayColor()
+        self.scrollView.addSubview(self.remainAmount)
+        
+        self.remainTime.text = "剩余 1 周以上"
+        self.remainTime.font = VCAppLetor.Font.SmallFont
+        self.remainTime.textAlignment = .Left
+        self.remainTime.textColor = UIColor.lightGrayColor()
+        self.scrollView.addSubview(self.remainTime)
+        
+        self.returnable.text = "可退款"
+        self.returnable.font = VCAppLetor.Font.SmallFont
+        self.returnable.textAlignment = .Left
+        self.returnable.textColor = UIColor.nephritisColor()
+        self.scrollView.addSubview(self.returnable)
+        
+        // Food Description
+        self.foodDesc.text = self.foodInfo?.desc
+        
+        let attrString: NSMutableAttributedString = NSMutableAttributedString(string: self.foodInfo!.desc)
+        let parag: NSMutableParagraphStyle = NSMutableParagraphStyle()
+        parag.lineSpacing = 5
+        attrString.addAttribute(NSParagraphStyleAttributeName, value: parag, range: NSMakeRange(0, count(self.foodInfo!.desc)))
+        self.foodDesc.attributedText = attrString
+        self.foodDesc.sizeToFit()
+        self.foodDesc.font = VCAppLetor.Font.NormalFont
+        self.foodDesc.textAlignment = .Left
+        self.foodDesc.textColor = UIColor.grayColor()
+        self.foodDesc.numberOfLines = 0
+        self.foodDesc.lineBreakMode = NSLineBreakMode.ByTruncatingTail
+        self.scrollView.addSubview(self.foodDesc)
+        
+        // Share Button
+        self.shareBtn.icon.image = UIImage(named: VCAppLetor.IconName.ShareBlack)
+        self.shareBtn.titleStr.text = VCAppLetor.StringLine.ShareToGetCoupon
+        self.scrollView.addSubview(self.shareBtn)
+        
+        // Like
+        self.likeBtn.icon.image = UIImage(named: VCAppLetor.IconName.ThumbUpBlack)
+        self.likeBtn.titleStr.text = "17"
+        self.scrollView.addSubview(self.likeBtn)
+        
+        // Detail segment control
+        self.detailSegmentControl = SMSegmentView(frame: CGRectMake(0, 0, self.scrollView.frame.width - 40.0, 40.0), separatorColour: UIColor.lightGrayColor(), separatorWidth: 0.5, segmentProperties: [keySegmentTitleFont: UIFont.systemFontOfSize(14.0), keySegmentOnSelectionColour: UIColor.blackColor().colorWithAlphaComponent(0.2), keySegmentOffSelectionColour: UIColor.whiteColor(), keyContentVerticalMargin: Float(10.0)])
+        self.detailSegmentControl.delegate = self
+        self.detailSegmentControl.layer.borderColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.4).CGColor
+        self.detailSegmentControl.layer.borderWidth = 0
+        
+        self.detailSegmentControl.addSegmentWithTitle("亮点", onSelectionImage: UIImage(named: "bulb_light"), offSelectionImage: UIImage(named: "bulb"))
+        self.detailSegmentControl.addSegmentWithTitle("菜单", onSelectionImage: UIImage(named: "clip_light"), offSelectionImage: UIImage(named: "clip"))
+        self.detailSegmentControl.addSegmentWithTitle("须知", onSelectionImage: UIImage(named: "cloud_light"), offSelectionImage: UIImage(named: "cloud"))
+        
+        self.scrollView.addSubview(self.detailSegmentControl)
+        
+        self.scrollView.addSubview(self.detailScrollView)
+        
+    }
+    
+    func shareFood() {
+        
+    }
+    
+    // MARK: - UIScrollViewDelegate
+    
+    
+    // MARK: - SMSegmentView Delegate
+    func segmentView(segmentView: SMSegmentView, didSelectSegmentAtIndex index: Int) {
+        
+        
+        var indexPage: CGFloat = 0.0
+        if index == 1 {
+            indexPage = 1.0
+            
+            
+        }
+        else if index == 2 {
+            indexPage = 2.0
+            
+        }
+        else {
+            
+        }
+        
+        self.detailScrollView.setNeedsUpdateConstraints()
+        
+        
+        
+    }
     
 }
+
+// MARK: - IconButton
+// Button with icon@left & text@right
+class IconButton: UIButton {
+    
+    let icon: UIImageView = UIImageView.newAutoLayoutView()
+    let titleStr: UILabel = UILabel.newAutoLayoutView()
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+    
+    func setupView() {
+        
+        self.layer.borderWidth = 1.0
+        self.layer.borderColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.5).CGColor
+        self.backgroundColor = UIColor.whiteColor()
+        
+        self.addSubview(self.icon)
+        
+        self.titleStr.textAlignment = .Center
+        self.titleStr.textColor = UIColor.blackColor()
+        self.titleStr.font = VCAppLetor.Font.SmallFont
+        self.addSubview(self.titleStr)
+        
+        self.setNeedsUpdateConstraints()
+    }
+    
+    override func updateConstraints() {
+        super.updateConstraints()
+        
+        self.icon.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(10.0, 10.0, 10.0, 0.0), excludingEdge: .Trailing)
+        self.icon.autoMatchDimension(.Width, toDimension: .Height, ofView: self, withOffset: -20.0)
+        
+        self.titleStr.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.icon, withOffset: 10.0)
+        self.titleStr.autoAlignAxisToSuperviewAxis(.Horizontal)
+        self.titleStr.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 10.0)
+        self.titleStr.autoMatchDimension(.Height, toDimension: .Height, ofView: self.icon, withMultiplier: 0.6)
+    }
+    
+}
+
+
+
+

@@ -7,11 +7,14 @@
 //
 
 import UIKit
+import Alamofire
 import PureLayout
 import RKDropdownAlert
+import MBProgressHUD
+import AFViewShaker
 
 protocol MemberSigninDelegate {
-    func memberDidSigninSuccess(mid: String)
+    func memberDidSigninSuccess(mid: String, token: String)
 }
 
 class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITextFieldDelegate, RKDropdownAlertDelegate {
@@ -22,6 +25,8 @@ class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITex
     let loginName: UITextField = UITextField.newAutoLayoutView()
     let loginPass: UITextField = UITextField.newAutoLayoutView()
     
+    var loginNameShaker: AFViewShaker?
+    var loginPassShaker: AFViewShaker?
     
     let weiboSignInButton: UIButton = UIButton.newAutoLayoutView()
     let wechatSignInButton: UIButton = UIButton.newAutoLayoutView()
@@ -41,19 +46,24 @@ class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITex
     let socialLine2 = CustomDrawView.newAutoLayoutView()
     let socialSignInTitle: UILabel = UILabel.newAutoLayoutView()
     
+    var tapGesture: UITapGestureRecognizer!
+    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.scrollView.frame = self.view.bounds
-//        self.scrollView.contentMode = UIViewContentMode.Top
+        self.scrollView.contentMode = UIViewContentMode.Top
         self.scrollView.backgroundColor = UIColor.whiteColor()
         
         self.title = VCAppLetor.StringLine.LoginPageTitle
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: VCAppLetor.StringLine.Done, style: .Done, target: self, action: "letMeLogin")
         navigationItem.leftBarButtonItem = barButtonItemWithImageNamed(VCAppLetor.IconName.ClearIconBlack, title: nil, action: "dismiss")
         
+        self.tapGesture = UITapGestureRecognizer(target: self, action: "viewDidTap:")
+        self.tapGesture.numberOfTapsRequired = 1
+        self.tapGesture.numberOfTouchesRequired = 1
         
         // Top Description Text
         self.loginTitle.text = VCAppLetor.StringLine.LoginTitle
@@ -79,7 +89,6 @@ class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITex
         
         // Login Pass
         self.loginPass.placeholder = VCAppLetor.StringLine.LoginPass
-        self.loginPass.clearButtonMode = .WhileEditing
         self.loginPass.secureTextEntry = true
         self.loginPass.keyboardType = UIKeyboardType.EmailAddress
         self.loginPass.returnKeyType = UIReturnKeyType.Done
@@ -133,7 +142,10 @@ class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITex
         socialSignInTitle.backgroundColor = UIColor.whiteColor()
         socialSignInTitle.font = VCAppLetor.Font.NormalFont
         self.scrollView.addSubview(socialSignInTitle)
-
+        
+        // Shake Animation
+        self.loginNameShaker = AFViewShaker(view: self.loginName)
+        self.loginPassShaker = AFViewShaker(view: self.loginPass)
         
         self.view.addSubview(self.scrollView)
         self.view.setNeedsUpdateConstraints()
@@ -144,6 +156,8 @@ class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITex
         super.viewWillAppear(animated)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "userDidFinishInput:", name: UITextFieldTextDidEndEditingNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShowNotification:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHideNotification:", name: UIKeyboardWillHideNotification, object: nil)
     }
     
     override func updateViewConstraints() {
@@ -234,83 +248,154 @@ class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITex
         
     }
     
+    // MARK: - UITextFiledDelegate
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        
+        if textField.tag == 1 {
+            self.loginPass.becomeFirstResponder()
+        }
+        else {
+            self.letMeLogin()
+        }
+        return true
+    }
+    
+    // MARK: - Keyboard Notifications
+    func keyboardWillShowNotification(notification: NSNotification) {
+        
+        let userInfo = notification.userInfo!
+        
+        let keyboardFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        let animationOptions = UIViewAnimationOptions(UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).integerValue << 16))
+        let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
+        
+        UIView.animateWithDuration(animationDuration,
+            delay: 0,
+            options: animationOptions,
+            animations: {
+                
+            },
+            completion: { complated in
+                self.view.addGestureRecognizer(self.tapGesture)
+        })
+    }
+    
+    func keyboardWillHideNotification(notification: NSNotification) {
+        
+        
+        self.view.removeGestureRecognizer(self.tapGesture)
+    }
+    
+    
+    
+    
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        self.loginName.resignFirstResponder()
+        self.loginPass.resignFirstResponder()
+    }
+    
+    // MARK: Functions
+    
+    func barButtonItemWithImageNamed(imageName: String?, title: String?, action: Selector? = nil) -> UIBarButtonItem {
+        
+        let button: UIButton = UIButton.newAutoLayoutView()
+        
+        if imageName != nil {
+            button.setImage(UIImage(named: imageName!)!.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
+        }
+        
+        if title != nil {
+            button.setTitle(title, forState: .Normal)
+            button.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, 0.0)
+            
+            let font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
+            button.titleLabel?.font = font
+        }
+        
+        let size = button.sizeThatFits(CGSizeMake(90.0, 24.0))
+        button.frame = CGRectMake(0.0, 0.0, 42.0, 42.0)
+        button.imageEdgeInsets = UIEdgeInsetsMake(2, 2, 2, 2)
+        
+        if action != nil {
+            button.addTarget(self, action: action!, forControlEvents: .TouchUpInside)
+        }
+        
+        let barButton = UIBarButtonItem(customView: button)
+        
+        return barButton
+    }
+    
     func letMeLogin() {
+        
+        self.loginName.resignFirstResponder()
+        self.loginPass.resignFirstResponder()
         
         // Clear local cache data with member
         CTMemCache.sharedInstance.cleanNamespace("member")
         
-        // Do user login action
-        // Ask serverside to log-user-in
+        let loginNameText = self.loginName.text
+        let loginPassText = self.loginPass.text
         
-        
-        let passString: String = "222"
-        
-        let name: String = self.loginName.text
-        let pass: String = self.loginPass.text
-        
-        let predicate: NSPredicate = NSPredicate(format: "phone = '15229354910'")
-        let member = Member.findFirst(predicate: predicate, sortedBy: "mid", ascending: true, contextType: BreezeContextType.Background) as! Member
-        
-        if member.mid != "" {
+        if loginNameText == "" {
+            self.loginNameShaker?.shakeWithDuration(VCAppLetor.ConstValue.TextFieldShakeTime, completion: { () -> Void in
+                RKDropdownAlert.title(VCAppLetor.StringLine.LoginNameEmpty, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            })
+        }
+        else if loginPassText == "" {
+            self.loginPassShaker?.shakeWithDuration(VCAppLetor.ConstValue.TextFieldShakeTime, completion: { () -> Void in
+                RKDropdownAlert.title(VCAppLetor.StringLine.LoginPassEmpty, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            })
+        }
+        else if !self.isEmail(loginNameText) && !self.isMobile(loginNameText) {
+            self.loginNameShaker?.shakeWithDuration(VCAppLetor.ConstValue.TextFieldShakeTime, completion: { () -> Void in
+                RKDropdownAlert.title(VCAppLetor.StringLine.LoginNameIllegal, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            })
+        }
+        else {
             
-            BreezeStore.saveInBackground({ (contextType) -> Void in
+            let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            hud.mode = MBProgressHUDMode.Determinate
+            
+            var loginType: VCheckGo.LoginType = VCheckGo.LoginType.Mobile
+            if self.isEmail(loginNameText) {
+                loginType = VCheckGo.LoginType.Email
+            }
+            
+            let code: String = (loginNameText + VCAppLetor.StringLine.SaltKey).md5
+            
+            Alamofire.request(VCheckGo.Router.MemberLogin(loginNameText, loginPassText, loginType, code)).validate().responseSwiftyJSON({
+                (_, _, JSON, error) -> Void in
                 
-                let memberToBeLogin: Member = Member.createInContextOfType(contextType) as! Member
-                
-                memberToBeLogin.lastLog = NSDate()
-                
-            }, completion: { (error) -> Void in
-                
-                if (error != nil) {
-                    println("\(error?.localizedDescription)")
+                if error == nil {
+                    
+                    let json = JSON
+                    
+                    if json["status"]["succeed"].string == "1" {
+                        
+                        self.delegate?.memberDidSigninSuccess(json["data"]["member_id"].string!, token: json["data"]["token"].string!)
+                        self.dismiss()
+                    }
+                    else {
+                        RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    }
                 }
                 else {
-                    // Sign in success to fresh user status
-                    self.delegate?.memberDidSigninSuccess(member.mid)
-                    self.dismiss()
+                    println("ERROR @ Request for member login : \(error?.localizedDescription)")
                 }
             })
             
-            
-        }
-        else {
-            
-            // Member do not exist OR member login fail
-            
-            JSSAlertView().show(
-                self,
-                title: VCAppLetor.StringLine.LoginPageTitle,
-                text: VCAppLetor.StringLine.LoginFail,
-                buttonText: VCAppLetor.StringLine.Gotit,
-                color: UIColor.alizarinColor()
-            )
-        }
-    }
-    
-    
-    func logout() {
-        
-        if ShareSDK.hasAuthorizedWithType(ShareTypeSinaWeibo) {
-            ShareSDK.cancelAuthWithType(ShareTypeSinaWeibo)
-            
-        }
-        else if ShareSDK.hasAuthorizedWithType(ShareTypeWeixiTimeline) {
-            ShareSDK.cancelAuthWithType(ShareTypeWeixiTimeline)
-        }
-        else {
-            // User logout from current session
-            
+            hud.hide(true)
         }
         
-        // Clear cache data with membership
-        CTMemCache.sharedInstance.cleanNamespace("member")
+        
     }
+    
     
     func letMeRegister() {
         
         // Present member register page
         
-        if !CTMemCache.sharedInstance.exists("isLogin") {
+        if CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String == "0" {
             
             let regViewController: RegisterViewController = RegisterViewController()
             let parentNav = self.parentViewController as! UINavigationController
@@ -327,9 +412,8 @@ class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITex
         let findMyPassViewController: FindMyPasscodeViewController = FindMyPasscodeViewController()
         let parentNav = self.parentViewController as! UINavigationController
         
-        findMyPassViewController.view.bounds = self.view.bounds
         findMyPassViewController.parentNav = parentNav
-//        navParent.pushViewController(findMyPassViewController, animated: true)
+        //        navParent.pushViewController(findMyPassViewController, animated: true)
         parentNav.showViewController(findMyPassViewController, sender: self)
         
     }
@@ -354,15 +438,15 @@ class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITex
                     member.nickname = userInfo.nickname()
                     member.iconURL = userInfo.profileImage()
                     
-//                    let optIsLogin = Settings.createInContextOfType(contextType) as! Settings
-//                    optIsLogin.sid = "\(NSDate())"
-//                    optIsLogin.name = VCAppLetor.SettingName.optNameIsLogin
-//                    optIsLogin.value = "true"
-//                    
-//                    let optLoginType = Settings.createInContextOfType(contextType) as! Settings
-//                    optLoginType.sid = "\(NSDate())"
-//                    optLoginType.name = VCAppLetor.SettingName.optNameLoginType
-//                    optLoginType.value = VCAppLetor.LoginType.SinaWeibo
+                    //                    let optIsLogin = Settings.createInContextOfType(contextType) as! Settings
+                    //                    optIsLogin.sid = "\(NSDate())"
+                    //                    optIsLogin.name = VCAppLetor.SettingName.optNameIsLogin
+                    //                    optIsLogin.value = "true"
+                    //
+                    //                    let optLoginType = Settings.createInContextOfType(contextType) as! Settings
+                    //                    optLoginType.sid = "\(NSDate())"
+                    //                    optLoginType.name = VCAppLetor.SettingName.optNameLoginType
+                    //                    optLoginType.value = VCAppLetor.LoginType.SinaWeibo
                     
                     }, completion: { error -> Void in
                         
@@ -376,7 +460,7 @@ class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITex
                             CTMemCache.sharedInstance.set("loginType", data: VCAppLetor.LoginType.SinaWeibo, namespace: "member")
                             CTMemCache.sharedInstance.set("currentMid", data: mid, namespace: "member")
                             
-                            self.delegate?.memberDidSigninSuccess(mid)
+                            self.delegate?.memberDidSigninSuccess(mid, token: "0")
                             self.logoutButton.hidden = false
                             self.dismiss()
                         }
@@ -418,7 +502,7 @@ class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITex
                             CTMemCache.sharedInstance.set("loginType", data: VCAppLetor.LoginType.WeChat, namespace: "member")
                             CTMemCache.sharedInstance.set("currentMid", data: mid, namespace: "member")
                             // Prepare for member login refresh
-                            self.delegate?.memberDidSigninSuccess(mid)
+                            self.delegate?.memberDidSigninSuccess(mid, token: "0")
                             self.logoutButton.hidden = false
                             self.dismiss()
                         }
@@ -469,57 +553,27 @@ class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITex
         })
     }
     
-    // MARK: UITextFiledDelegate
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func isEmail(email: String) -> Bool {
         
-        if textField.tag == 1 {
-            self.loginPass.becomeFirstResponder()
-        }
-        else {
-            textField.resignFirstResponder()
-        }
-        return true
+        let emailRegex: String = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}"
+        let emailTest: NSPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        return emailTest.evaluateWithObject(email)
+    }
+    
+    func isMobile(mobile: String) -> Bool {
+        
+        let mobileRegex: String = "^((13[0-9])|(15[^4,\\D])|(18[0,0-9]))\\d{8}$"
+        let mobileTest: NSPredicate = NSPredicate(format: "SELF MATCHES %@", mobileRegex)
+        return mobileTest.evaluateWithObject(mobile)
     }
     
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    // MARK: - UIGesture
+    
+    func viewDidTap(gesture: UITapGestureRecognizer) {
         self.loginName.resignFirstResponder()
         self.loginPass.resignFirstResponder()
     }
-    
-    // MARK: Functions
-    
-    func barButtonItemWithImageNamed(imageName: String?, title: String?, action: Selector? = nil) -> UIBarButtonItem {
-        
-        let button = UIButton.buttonWithType(.Custom) as! UIButton
-        
-        if imageName != nil {
-            button.setImage(UIImage(named: imageName!)!.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
-        }
-        
-        if title != nil {
-            button.setTitle(title, forState: .Normal)
-            button.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, 0.0)
-            
-            let font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
-            button.titleLabel?.font = font
-        }
-        
-        let size = button.sizeThatFits(CGSizeMake(90.0, 24.0))
-        button.frame = CGRectMake(0.0, 0.0, 42.0, 42.0)
-//        button.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
-        button.imageEdgeInsets = UIEdgeInsetsMake(2, 2, 2, 2)
-        
-        if action != nil {
-            button.addTarget(self, action: action!, forControlEvents: .TouchUpInside)
-        }
-        
-        let barButton = UIBarButtonItem(customView: button)
-        
-        return barButton
-    }
-    
-    
     
     
     

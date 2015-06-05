@@ -10,6 +10,21 @@
 		0BE02F5CD93607CAD28B61E4 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E1B9F71B7F8A3007EFAD6E6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */; };
 		9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */; };
+		922412911B1FE2C20049A9B5 /* FoodDetailScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412901B1FE2C20049A9B5 /* FoodDetailScrollView.swift */; };
+		922412951B200D560049A9B5 /* SMSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412931B200D560049A9B5 /* SMSegment.swift */; };
+		922412961B200D560049A9B5 /* SMSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412941B200D560049A9B5 /* SMSegmentView.swift */; };
+		922412A41B20122A0049A9B5 /* bulb_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 922412981B20122A0049A9B5 /* bulb_light.png */; };
+		922412A51B20122A0049A9B5 /* bulb_light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 922412991B20122A0049A9B5 /* bulb_light@2x.png */; };
+		922412A61B20122A0049A9B5 /* bulb.png in Resources */ = {isa = PBXBuildFile; fileRef = 9224129A1B20122A0049A9B5 /* bulb.png */; };
+		922412A71B20122A0049A9B5 /* bulb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9224129B1B20122A0049A9B5 /* bulb@2x.png */; };
+		922412A81B20122A0049A9B5 /* clip_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 9224129C1B20122A0049A9B5 /* clip_light.png */; };
+		922412A91B20122A0049A9B5 /* clip_light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9224129D1B20122A0049A9B5 /* clip_light@2x.png */; };
+		922412AA1B20122A0049A9B5 /* clip.png in Resources */ = {isa = PBXBuildFile; fileRef = 9224129E1B20122A0049A9B5 /* clip.png */; };
+		922412AB1B20122A0049A9B5 /* clip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9224129F1B20122A0049A9B5 /* clip@2x.png */; };
+		922412AC1B20122A0049A9B5 /* cloud_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 922412A01B20122A0049A9B5 /* cloud_light.png */; };
+		922412AD1B20122A0049A9B5 /* cloud_light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 922412A11B20122A0049A9B5 /* cloud_light@2x.png */; };
+		922412AE1B20122A0049A9B5 /* cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 922412A21B20122A0049A9B5 /* cloud.png */; };
+		922412AF1B20122A0049A9B5 /* cloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 922412A31B20122A0049A9B5 /* cloud@2x.png */; };
 		9227E2C51AE8DCCC008C6381 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2C41AE8DCCC008C6381 /* AppDelegate.swift */; };
 		9227E2C81AE8DCCC008C6381 /* iMenu3.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2C61AE8DCCC008C6381 /* iMenu3.xcdatamodeld */; };
 		9227E2CD1AE8DCCC008C6381 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9227E2CB1AE8DCCC008C6381 /* Main.storyboard */; };
@@ -19,6 +34,7 @@
 		9227E2E81AE8DDD9008C6381 /* FoodListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2E71AE8DDD9008C6381 /* FoodListController.swift */; };
 		9227E2EE1AE8E4AE008C6381 /* FoodListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */; };
 		9259050B1B098EEE00F343D4 /* UserInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */; };
+		9267443F1B1855C60075EDB5 /* EditUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */; };
 		927779D61B0B02F3002A50EB /* FloatLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D41B0B02F3002A50EB /* FloatLabelTextField.swift */; };
 		927779D71B0B02F3002A50EB /* FloatLabelTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D51B0B02F3002A50EB /* FloatLabelTextView.swift */; };
 		927779DC1B0B0304002A50EB /* CTMemCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D91B0B0304002A50EB /* CTMemCache.swift */; };
@@ -52,15 +68,14 @@
 		9284A13D1AF0AECD00E662B2 /* wealthy.png in Resources */ = {isa = PBXBuildFile; fileRef = 9284A12D1AF0AECD00E662B2 /* wealthy.png */; };
 		9284A13F1AF0AF2500E662B2 /* FoodCollectionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9284A13E1AF0AF2500E662B2 /* FoodCollectionsViewController.swift */; };
 		9284A1411AF0AF5400E662B2 /* FoodCollectionsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9284A1401AF0AF5400E662B2 /* FoodCollectionsViewCell.swift */; };
-		9284A1431AF0BE4300E662B2 /* VCAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9284A1421AF0BE4300E662B2 /* VCAppViewController.swift */; };
 		9284A1451AF0CFCF00E662B2 /* VCAppLetor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9284A1441AF0CFCF00E662B2 /* VCAppLetor.swift */; };
 		9284A14B1AF1B98100E662B2 /* VCheckGo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9284A14A1AF1B98100E662B2 /* VCheckGo.swift */; };
 		928633751B0AE43B0040CBA2 /* UserPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928633741B0AE43B0040CBA2 /* UserPanelViewController.swift */; };
 		928633801B0AE6070040CBA2 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9286337F1B0AE6070040CBA2 /* Settings.swift */; };
+		928B2FBA1B2150AF001FA746 /* FoodViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */; };
 		9293BBC91B018ECC0034F3C5 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */; };
 		9293BBCB1B01A1D80034F3C5 /* CustomDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9293BBCA1B01A1D80034F3C5 /* CustomDrawView.swift */; };
 		92987A5F1AFD1906001576B9 /* ResetMyPasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92987A5E1AFD1906001576B9 /* ResetMyPasscodeViewController.swift */; };
-		9299AE921AEE3D2E006BB453 /* FoodViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9299AE911AEE3D2E006BB453 /* FoodViewerViewController.swift */; };
 		929DCAC21B0578800050B63F /* VCTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929DCAC11B0578800050B63F /* VCTermsViewController.swift */; };
 		929DCAC41B0588B90050B63F /* RegSetPassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */; };
 		92B0F0ED1B12FF2E009F368B /* StringExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B0F0EC1B12FF2E009F368B /* StringExt.swift */; };
@@ -80,6 +95,7 @@
 		92CFFB361AF8663400C9AA7D /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CFFB2E1AF8663400C9AA7D /* user.png */; };
 		92CFFB381AF8CCB600C9AA7D /* VCMemberLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CFFB371AF8CCB600C9AA7D /* VCMemberLoginViewController.swift */; };
 		92E310291AEDD22E00771CAC /* FoodItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E310281AEDD22E00771CAC /* FoodItem.swift */; };
+		92E3586D1B1D455700D61119 /* brand.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92E3586C1B1D455700D61119 /* brand.jpg */; };
 		92E962E21AF2017400030226 /* Toucan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E962E11AF2017400030226 /* Toucan.swift */; };
 		92F3B0691B00362A003A6D76 /* SinaWeiboConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0511B00362A003A6D76 /* SinaWeiboConnection.framework */; };
 		92F3B06A1B00362A003A6D76 /* SMSConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0521B00362A003A6D76 /* SMSConnection.framework */; };
@@ -124,6 +140,21 @@
 		9203E68A1B00637300407F66 /* ShareSDKContentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareSDKContentController.h; sourceTree = "<group>"; };
 		9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareSDKContentController.m; sourceTree = "<group>"; };
 		9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCBaseViewController.swift; path = Classes/VCBaseViewController.swift; sourceTree = "<group>"; };
+		922412901B1FE2C20049A9B5 /* FoodDetailScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodDetailScrollView.swift; path = Classes/FoodDetailScrollView.swift; sourceTree = "<group>"; };
+		922412931B200D560049A9B5 /* SMSegment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSegment.swift; sourceTree = "<group>"; };
+		922412941B200D560049A9B5 /* SMSegmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSegmentView.swift; sourceTree = "<group>"; };
+		922412981B20122A0049A9B5 /* bulb_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bulb_light.png; sourceTree = "<group>"; };
+		922412991B20122A0049A9B5 /* bulb_light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bulb_light@2x.png"; sourceTree = "<group>"; };
+		9224129A1B20122A0049A9B5 /* bulb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bulb.png; sourceTree = "<group>"; };
+		9224129B1B20122A0049A9B5 /* bulb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bulb@2x.png"; sourceTree = "<group>"; };
+		9224129C1B20122A0049A9B5 /* clip_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clip_light.png; sourceTree = "<group>"; };
+		9224129D1B20122A0049A9B5 /* clip_light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clip_light@2x.png"; sourceTree = "<group>"; };
+		9224129E1B20122A0049A9B5 /* clip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clip.png; sourceTree = "<group>"; };
+		9224129F1B20122A0049A9B5 /* clip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clip@2x.png"; sourceTree = "<group>"; };
+		922412A01B20122A0049A9B5 /* cloud_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud_light.png; sourceTree = "<group>"; };
+		922412A11B20122A0049A9B5 /* cloud_light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud_light@2x.png"; sourceTree = "<group>"; };
+		922412A21B20122A0049A9B5 /* cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud.png; sourceTree = "<group>"; };
+		922412A31B20122A0049A9B5 /* cloud@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud@2x.png"; sourceTree = "<group>"; };
 		9227E2BF1AE8DCCC008C6381 /* iMenu3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iMenu3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9227E2C31AE8DCCC008C6381 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9227E2C41AE8DCCC008C6381 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -137,6 +168,7 @@
 		9227E2E71AE8DDD9008C6381 /* FoodListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodListController.swift; path = Classes/FoodListController.swift; sourceTree = "<group>"; };
 		9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodListTableViewCell.swift; path = Classes/FoodListTableViewCell.swift; sourceTree = "<group>"; };
 		9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoHeaderView.swift; path = Classes/UserInfoHeaderView.swift; sourceTree = "<group>"; };
+		9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EditUserInfoViewController.swift; path = Classes/EditUserInfoViewController.swift; sourceTree = "<group>"; };
 		927779D41B0B02F3002A50EB /* FloatLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatLabelTextField.swift; sourceTree = "<group>"; };
 		927779D51B0B02F3002A50EB /* FloatLabelTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatLabelTextView.swift; sourceTree = "<group>"; };
 		927779D91B0B0304002A50EB /* CTMemCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTMemCache.swift; sourceTree = "<group>"; };
@@ -170,15 +202,14 @@
 		9284A12D1AF0AECD00E662B2 /* wealthy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wealthy.png; sourceTree = "<group>"; };
 		9284A13E1AF0AF2500E662B2 /* FoodCollectionsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodCollectionsViewController.swift; path = Classes/FoodCollectionsViewController.swift; sourceTree = "<group>"; };
 		9284A1401AF0AF5400E662B2 /* FoodCollectionsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodCollectionsViewCell.swift; path = Classes/FoodCollectionsViewCell.swift; sourceTree = "<group>"; };
-		9284A1421AF0BE4300E662B2 /* VCAppViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCAppViewController.swift; path = Classes/VCAppViewController.swift; sourceTree = "<group>"; };
 		9284A1441AF0CFCF00E662B2 /* VCAppLetor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCAppLetor.swift; path = Classes/VCAppLetor.swift; sourceTree = "<group>"; };
 		9284A14A1AF1B98100E662B2 /* VCheckGo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCheckGo.swift; path = Classes/VCheckGo.swift; sourceTree = "<group>"; };
 		928633741B0AE43B0040CBA2 /* UserPanelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserPanelViewController.swift; path = Classes/UserPanelViewController.swift; sourceTree = "<group>"; };
 		9286337F1B0AE6070040CBA2 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodViewerViewController.swift; path = Classes/FoodViewerViewController.swift; sourceTree = "<group>"; };
 		9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegisterViewController.swift; path = Classes/RegisterViewController.swift; sourceTree = "<group>"; };
 		9293BBCA1B01A1D80034F3C5 /* CustomDrawView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomDrawView.swift; path = Classes/CustomDrawView.swift; sourceTree = "<group>"; };
 		92987A5E1AFD1906001576B9 /* ResetMyPasscodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResetMyPasscodeViewController.swift; path = Classes/ResetMyPasscodeViewController.swift; sourceTree = "<group>"; };
-		9299AE911AEE3D2E006BB453 /* FoodViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodViewerViewController.swift; path = Classes/FoodViewerViewController.swift; sourceTree = "<group>"; };
 		929DCAC11B0578800050B63F /* VCTermsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCTermsViewController.swift; path = Classes/VCTermsViewController.swift; sourceTree = "<group>"; };
 		929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegSetPassViewController.swift; path = Classes/RegSetPassViewController.swift; sourceTree = "<group>"; };
 		92B0F0EC1B12FF2E009F368B /* StringExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExt.swift; sourceTree = "<group>"; };
@@ -198,6 +229,7 @@
 		92CFFB2E1AF8663400C9AA7D /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
 		92CFFB371AF8CCB600C9AA7D /* VCMemberLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCMemberLoginViewController.swift; path = Classes/VCMemberLoginViewController.swift; sourceTree = "<group>"; };
 		92E310281AEDD22E00771CAC /* FoodItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodItem.swift; sourceTree = "<group>"; };
+		92E3586C1B1D455700D61119 /* brand.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = brand.jpg; sourceTree = "<group>"; };
 		92E962E11AF2017400030226 /* Toucan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Toucan.swift; path = Classes/Toucan.swift; sourceTree = "<group>"; };
 		92F3B0511B00362A003A6D76 /* SinaWeiboConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SinaWeiboConnection.framework; sourceTree = "<group>"; };
 		92F3B0521B00362A003A6D76 /* SMSConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SMSConnection.framework; sourceTree = "<group>"; };
@@ -285,6 +317,34 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		922412921B200D560049A9B5 /* SMSegmentView */ = {
+			isa = PBXGroup;
+			children = (
+				922412931B200D560049A9B5 /* SMSegment.swift */,
+				922412941B200D560049A9B5 /* SMSegmentView.swift */,
+			);
+			path = SMSegmentView;
+			sourceTree = "<group>";
+		};
+		922412971B2012120049A9B5 /* buttonIcon */ = {
+			isa = PBXGroup;
+			children = (
+				922412981B20122A0049A9B5 /* bulb_light.png */,
+				922412991B20122A0049A9B5 /* bulb_light@2x.png */,
+				9224129A1B20122A0049A9B5 /* bulb.png */,
+				9224129B1B20122A0049A9B5 /* bulb@2x.png */,
+				9224129C1B20122A0049A9B5 /* clip_light.png */,
+				9224129D1B20122A0049A9B5 /* clip_light@2x.png */,
+				9224129E1B20122A0049A9B5 /* clip.png */,
+				9224129F1B20122A0049A9B5 /* clip@2x.png */,
+				922412A01B20122A0049A9B5 /* cloud_light.png */,
+				922412A11B20122A0049A9B5 /* cloud_light@2x.png */,
+				922412A21B20122A0049A9B5 /* cloud.png */,
+				922412A31B20122A0049A9B5 /* cloud@2x.png */,
+			);
+			name = buttonIcon;
+			sourceTree = "<group>";
+		};
 		9227E2B61AE8DCCC008C6381 = {
 			isa = PBXGroup;
 			children = (
@@ -309,6 +369,7 @@
 			isa = PBXGroup;
 			children = (
 				927779D81B0B0304002A50EB /* THelpClass */,
+				922412921B200D560049A9B5 /* SMSegmentView */,
 				927779D31B0B02F3002A50EB /* FloatLabelFields */,
 				92F3B04F1B003629003A6D76 /* ShareSDK */,
 				92A7106E1AEF3E3600376C06 /* Toucan */,
@@ -317,28 +378,29 @@
 				92E310271AEDD22E00771CAC /* model */,
 				9227E2C41AE8DCCC008C6381 /* AppDelegate.swift */,
 				9284A14A1AF1B98100E662B2 /* VCheckGo.swift */,
-				9284A1421AF0BE4300E662B2 /* VCAppViewController.swift */,
+				9284A1441AF0CFCF00E662B2 /* VCAppLetor.swift */,
 				9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */,
 				9227E2E71AE8DDD9008C6381 /* FoodListController.swift */,
 				9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */,
-				9284A1441AF0CFCF00E662B2 /* VCAppLetor.swift */,
+				928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */,
+				922412901B1FE2C20049A9B5 /* FoodDetailScrollView.swift */,
 				9284A13E1AF0AF2500E662B2 /* FoodCollectionsViewController.swift */,
 				9284A1401AF0AF5400E662B2 /* FoodCollectionsViewCell.swift */,
-				9299AE911AEE3D2E006BB453 /* FoodViewerViewController.swift */,
 				928633741B0AE43B0040CBA2 /* UserPanelViewController.swift */,
 				92CFFB241AF774F700C9AA7D /* UserPanelTableViewCell.swift */,
 				9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */,
 				92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */,
+				9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */,
 				92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */,
-				9227E2CB1AE8DCCC008C6381 /* Main.storyboard */,
 				92CFFB371AF8CCB600C9AA7D /* VCMemberLoginViewController.swift */,
 				9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */,
 				929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */,
 				929DCAC11B0578800050B63F /* VCTermsViewController.swift */,
-				9293BBCA1B01A1D80034F3C5 /* CustomDrawView.swift */,
 				92FA19461AFCCA8400D33538 /* FindMyPasscodeViewController.swift */,
 				92FA19481AFCD6CE00D33538 /* SMSCodeViewController.swift */,
 				92987A5E1AFD1906001576B9 /* ResetMyPasscodeViewController.swift */,
+				9293BBCA1B01A1D80034F3C5 /* CustomDrawView.swift */,
+				9227E2CB1AE8DCCC008C6381 /* Main.storyboard */,
 				9227E2CE1AE8DCCC008C6381 /* Images.xcassets */,
 				9227E2D01AE8DCCC008C6381 /* LaunchScreen.xib */,
 				9227E2C21AE8DCCC008C6381 /* Supporting Files */,
@@ -415,6 +477,7 @@
 		9284A11D1AF0AECD00E662B2 /* collectionImages */ = {
 			isa = PBXGroup;
 			children = (
+				92E3586C1B1D455700D61119 /* brand.jpg */,
 				9284A11E1AF0AECD00E662B2 /* active.png */,
 				9284A11F1AF0AECD00E662B2 /* adventurous.png */,
 				9284A1201AF0AECD00E662B2 /* happy.png */,
@@ -547,6 +610,7 @@
 		92F51C8A1AEDE7D300FDD50C /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				922412971B2012120049A9B5 /* buttonIcon */,
 				92CFFB261AF8663300C9AA7D /* userPanel */,
 				9284A11D1AF0AECD00E662B2 /* collectionImages */,
 				92F51C8B1AEDE7D300FDD50C /* foodImageLarge */,
@@ -655,20 +719,28 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				922412AC1B20122A0049A9B5 /* cloud_light.png in Resources */,
 				9282050F1AEDE1330067BB92 /* Info.plist in Resources */,
 				9284A1311AF0AECD00E662B2 /* hungry.png in Resources */,
 				9284A1371AF0AECD00E662B2 /* mood5.jpg in Resources */,
 				92CFFB2F1AF8663400C9AA7D /* cards.png in Resources */,
 				9284A12F1AF0AECD00E662B2 /* adventurous.png in Resources */,
+				922412A71B20122A0049A9B5 /* bulb@2x.png in Resources */,
 				92CFFB311AF8663400C9AA7D /* gift.png in Resources */,
+				922412AE1B20122A0049A9B5 /* cloud.png in Resources */,
 				9227E2CD1AE8DCCC008C6381 /* Main.storyboard in Resources */,
 				9284A1391AF0AECD00E662B2 /* mood7.jpg in Resources */,
+				922412A91B20122A0049A9B5 /* clip_light@2x.png in Resources */,
+				922412A51B20122A0049A9B5 /* bulb_light@2x.png in Resources */,
 				9284A1351AF0AECD00E662B2 /* mood3.jpg in Resources */,
 				92CF816F1AFB441300625641 /* weibo.png in Resources */,
+				922412A61B20122A0049A9B5 /* bulb.png in Resources */,
 				92F3B06D1B00362A003A6D76 /* ShareSDKLocalizable.strings in Resources */,
+				92E3586D1B1D455700D61119 /* brand.jpg in Resources */,
 				92CFFB351AF8663400C9AA7D /* ticket.png in Resources */,
 				92F3B06E1B00362A003A6D76 /* Resource.bundle in Resources */,
 				92F3B0711B00362A003A6D76 /* WeiboSDK.bundle in Resources */,
+				922412AA1B20122A0049A9B5 /* clip.png in Resources */,
 				9227E2D21AE8DCCC008C6381 /* LaunchScreen.xib in Resources */,
 				92CFFB361AF8663400C9AA7D /* user.png in Resources */,
 				92CFFB331AF8663400C9AA7D /* like.png in Resources */,
@@ -679,17 +751,22 @@
 				9284A1321AF0AECD00E662B2 /* loved.png in Resources */,
 				92CFFB321AF8663400C9AA7D /* image.png in Resources */,
 				92F3B0741B00362A003A6D76 /* ShareSDKFlatShareViewUI.bundle in Resources */,
+				922412AF1B20122A0049A9B5 /* cloud@2x.png in Resources */,
 				9284A13A1AF0AECD00E662B2 /* mood8.jpg in Resources */,
 				9284A13B1AF0AECD00E662B2 /* playful.png in Resources */,
+				922412AD1B20122A0049A9B5 /* cloud_light@2x.png in Resources */,
 				9284A1361AF0AECD00E662B2 /* mood4.jpg in Resources */,
 				92CFFB341AF8663400C9AA7D /* shopping-bag.png in Resources */,
 				9227E2CF1AE8DCCC008C6381 /* Images.xcassets in Resources */,
 				9284A1301AF0AECD00E662B2 /* happy.png in Resources */,
+				922412AB1B20122A0049A9B5 /* clip@2x.png in Resources */,
 				9284A13D1AF0AECD00E662B2 /* wealthy.png in Resources */,
 				9284A1381AF0AECD00E662B2 /* mood6.jpg in Resources */,
 				9284A1331AF0AECD00E662B2 /* mood1.jpg in Resources */,
 				9284A12E1AF0AECD00E662B2 /* active.png in Resources */,
+				922412A81B20122A0049A9B5 /* clip_light.png in Resources */,
 				92CFFB301AF8663400C9AA7D /* coffee.png in Resources */,
+				922412A41B20122A0049A9B5 /* bulb_light.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -761,16 +838,17 @@
 				92987A5F1AFD1906001576B9 /* ResetMyPasscodeViewController.swift in Sources */,
 				9280E4481B14444B00959798 /* Reachability.swift in Sources */,
 				927779D61B0B02F3002A50EB /* FloatLabelTextField.swift in Sources */,
+				9267443F1B1855C60075EDB5 /* EditUserInfoViewController.swift in Sources */,
 				92BD603E1B05DEDF00649DDF /* UserInfoCell.swift in Sources */,
 				9282050E1AEDE1330067BB92 /* BreezeStore.swift in Sources */,
 				9282050D1AEDE1330067BB92 /* BreezeStore+Saving.swift in Sources */,
 				9227E2C81AE8DCCC008C6381 /* iMenu3.xcdatamodeld in Sources */,
 				928633751B0AE43B0040CBA2 /* UserPanelViewController.swift in Sources */,
 				92B0F0ED1B12FF2E009F368B /* StringExt.swift in Sources */,
+				922412951B200D560049A9B5 /* SMSegment.swift in Sources */,
 				9227E2EE1AE8E4AE008C6381 /* FoodListTableViewCell.swift in Sources */,
 				9284A14B1AF1B98100E662B2 /* VCheckGo.swift in Sources */,
 				9284A13F1AF0AF2500E662B2 /* FoodCollectionsViewController.swift in Sources */,
-				9299AE921AEE3D2E006BB453 /* FoodViewerViewController.swift in Sources */,
 				92CFFB381AF8CCB600C9AA7D /* VCMemberLoginViewController.swift in Sources */,
 				9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */,
 				9293BBC91B018ECC0034F3C5 /* RegisterViewController.swift in Sources */,
@@ -783,12 +861,13 @@
 				928205111AEDE1330067BB92 /* NSManagedObject+Deleting.swift in Sources */,
 				929DCAC41B0588B90050B63F /* RegSetPassViewController.swift in Sources */,
 				92E962E21AF2017400030226 /* Toucan.swift in Sources */,
+				922412961B200D560049A9B5 /* SMSegmentView.swift in Sources */,
 				9284A1411AF0AF5400E662B2 /* FoodCollectionsViewCell.swift in Sources */,
 				928205101AEDE1330067BB92 /* NSManagedObject+Creating.swift in Sources */,
 				9282050B1AEDE1330067BB92 /* BreezeStore+Defaults.swift in Sources */,
 				92B10EC51B00993C00E0674F /* Member.swift in Sources */,
+				922412911B1FE2C20049A9B5 /* FoodDetailScrollView.swift in Sources */,
 				9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */,
-				9284A1431AF0BE4300E662B2 /* VCAppViewController.swift in Sources */,
 				9282050C1AEDE1330067BB92 /* BreezeStore+iCloud.swift in Sources */,
 				92FA19491AFCD6CE00D33538 /* SMSCodeViewController.swift in Sources */,
 				92E310291AEDD22E00771CAC /* FoodItem.swift in Sources */,
@@ -798,6 +877,7 @@
 				9259050B1B098EEE00F343D4 /* UserInfoHeaderView.swift in Sources */,
 				92CFFB251AF774F700C9AA7D /* UserPanelTableViewCell.swift in Sources */,
 				928205131AEDE1330067BB92 /* NSManagedObjectContext+Breeze.swift in Sources */,
+				928B2FBA1B2150AF001FA746 /* FoodViewerViewController.swift in Sources */,
 				92BD603C1B05DE8900649DDF /* UserInfoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -951,6 +1031,7 @@
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Extend/SinaWeiboSDK",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Extend/WeChatSDK",
 				);
+				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -D DEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "iMenu3/iMenu3-Bridging-Header.h";
 			};

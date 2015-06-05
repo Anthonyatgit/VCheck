@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         // Register for ShareSDK
-        ShareSDK.registerApp("74ed3d5fc213")
+        ShareSDK.registerApp("7bcd1d7bc200")
         
         // Connect Sina Weibo
         ShareSDK.connectSinaWeiboWithAppKey("4012589497", appSecret: "cad1412fd89be70722de86337a571a54", redirectUri: "http://192.168.100.100", weiboSDKCls: WeiboSDK.classForCoder())
@@ -116,7 +116,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if error == nil {
                 
                 let status = (JSON as! NSDictionary).valueForKey("status") as! NSDictionary
-                if (status.valueForKey("succeed") as! String) == "1" {
+                if status.valueForKey("succeed") as! String == "1" {
                     
                     // Check if app update required
                     let configList = ((JSON as! NSDictionary).valueForKey("data") as! NSDictionary).valueForKey("config_list") as! [NSDictionary]

@@ -11,19 +11,31 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 
+
 struct VCheckGo {
     
     enum Router: URLRequestConvertible {
         
-        static let baseAPIURLString = "http://218.244.158.175/imenu_test/app_interface_vcheck/index.php"
+        #if DEBUG
+            static let baseAPIURLString = "http://218.244.158.175/imenu_test/app_interface_vcheck/index.php"
+        #else
+            static let baseAPIURLString = "http://www.imenu.so/imenu_test/app_interface_vcheck/index.php"
+        #endif
+        
         static let consumerKey = "yEUwUg5gPOtlymh2vFW1chwoTYJomgjWikzNva16"
         
-        case AppSettings(String, DeviceType)            // Get App Settings
-        case LoginWithToken(String, String)             // Login With Token
-        case GetVerifyCode(String, String)              // Get Verify Code
-        case ValidateMemberInfo(ValidateType, String)   // Verify Member Info
-        case MemberRegister(String, String, String)     // Member Register
-        case GetMemberInfo(String, String)              // Get Member Info
+        case AppSettings(String, DeviceType)                                // 01.基本-获取配置信息
+        case MemberLogin(String, String, LoginType, String)                 // 02.会员-登录
+        case MemberRegister(String, String, String)                         // 03.会员-注册
+        case ResetPassword(String, String, LoginType, String)               // 04.会员-密码重置
+        case LoginWithToken(String, String)                                 // 05.会员-记录登陆状态
+        case MemberLogout(String, String)                                   // 06.会员-登出
+        case ValidateMemberInfo(ValidateType, String)                       // 07.会员-校验会员信息
+        case GetVerifyCode(String, String)                                  // 09.基本-获取验证码
+        case EditMemberEmail(String, String, String)                        // 10.会员-编辑个人信息-Email
+        case EditMemberNickname(String, String, String)                     // 10.会员-编辑个人信息-Nickname
+        case EditMemberPassword(String, String, String, String)             // 10.会员-编辑个人信息-Password
+        case GetMemberInfo(String, String)                                  // 12.会员-获取个人详情
         
         var URLRequest: NSURLRequest {
             
@@ -51,10 +63,34 @@ struct VCheckGo {
                 case .MemberRegister(let mobile, let password, let code):
                     let params = ["route":"\(RoutePath.MemberRegister.rawValue)","token":"","jsonText":"{\"mobile\":\(mobile),\"password\":\"\(password)\",\"code\":\"\(code)\"}"]
                     return ("/\(RoutePath.MemberRegister.rawValue)", params)
+                //=========ResetPassword=============
+                case .ResetPassword(let mobile, let newPassword, let loginType, let code):
+                    let params = ["route":"\(RoutePath.ResetPassword.rawValue)","token":"","jsonText":"{\"login_name\":\(mobile),\"new_password\":\"\(newPassword)\",\"login_type\":\"\(loginType.rawValue)\",\"code\":\"\(code)\"}"]
+                    return ("/\(RoutePath.ResetPassword.rawValue)", params)
+                //=========MemberLogin===============
+                case .MemberLogin(let name, let password, let loginType, let code):
+                    let params = ["route":"\(RoutePath.MemberLogin.rawValue)","token":"","jsonText":"{\"login_name\":\(name),\"password\":\"\(password)\",\"login_type\":\"\(loginType.rawValue)\",\"code\":\"\(code)\"}"]
+                    return ("/\(RoutePath.MemberLogin.rawValue)", params)
                 //=========GetMemberInfo=============
                 case .GetMemberInfo(let token, let memberId):
                     let params = ["route":"\(RoutePath.GetMemberInfo.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\"}"]
                     return ("/\(RoutePath.GetMemberInfo.rawValue)", params)
+                //=========EditMemberEmail===========
+                case .EditMemberEmail(let memberId, let email, let token):
+                    let params = ["route":"\(RoutePath.EditMemberInfo.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"email\":\"\(email)\"}"]
+                    return ("/\(RoutePath.EditMemberInfo.rawValue)", params)
+                    //=========EditMemberNickname===========
+                case .EditMemberNickname(let memberId, let nickname, let token):
+                    let params = ["route":"\(RoutePath.EditMemberInfo.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"member_name\":\"\(nickname)\"}"]
+                    return ("/\(RoutePath.EditMemberInfo.rawValue)", params)
+                    //=========EditMemberPassword===========
+                case .EditMemberPassword(let memberId, let currentPass, let newPass, let token):
+                    let params = ["route":"\(RoutePath.EditMemberInfo.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"old_password\":\"\(currentPass)\",\"password\":\"\(newPass)\"}"]
+                    return ("/\(RoutePath.EditMemberInfo.rawValue)", params)
+                //=========MemberLogout==============
+                case .MemberLogout(let token, let memberId):
+                    let params = ["route":"\(RoutePath.MemberLogout.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\"}"]
+                    return ("/\(RoutePath.MemberLogout.rawValue)", params)
                 //=========DEFAULT===================
                 default: return ("/",["consumer_key": Router.consumerKey])
                 }
@@ -78,6 +114,11 @@ struct VCheckGo {
         case Android = 20
     }
     
+    enum LoginType: Int {
+        case Mobile = 1
+        case Email = 2
+    }
+    
     enum ValidateType: Int {
         case Mobile = 1
         case Email = 2
@@ -91,7 +132,11 @@ struct VCheckGo {
         case GetVerifyCode = "base/tools/getVerifyCode"
         case ValidateMemberInfo = "member/member/validateMemberInfo"
         case MemberRegister = "member/member/register"
+        case MemberLogin = "member/member/login"
         case GetMemberInfo = "member/member/getMemberDetail"
+        case MemberLogout = "member/member/logout"
+        case ResetPassword = "member/member/resetPassword"
+        case EditMemberInfo = "member/member/editMemberInfo"
     }
     
     enum ImageSize: Int {

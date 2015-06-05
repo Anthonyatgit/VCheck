@@ -32,11 +32,11 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         self.title = VCAppLetor.StringLine.AppName
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addFood")
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "userPanel")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Bookmarks, target: self, action: "userPanel")
         
         // Setup tableView
-        self.tableView = UITableView()
-        self.tableView.frame = self.view.bounds
+        self.tableView = UITableView(frame: CGRectMake(0, 0, self.view.bounds.width, self.view.bounds.height), style: UITableViewStyle.Plain)
+        //        self.tableView.frame = self.view.bounds
         self.tableView.backgroundColor = UIColor.whiteColor()
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         self.tableView.separatorColor = UIColor.clearColor()
@@ -46,15 +46,24 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         self.view.addSubview(self.tableView)
         // Register Cell View
         self.tableView.registerClass(FoodListTableViewCell.self, forCellReuseIdentifier: "foodItemCell")
+        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.estimatedRowHeight = 320.0
         
-        // Init App Info - 
+        // Init App Info -
         // Loading foodlist & init member info
         self.initAppInfo()
+        
+        self.tableView.setNeedsUpdateConstraints()
         
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
+    }
+    
+    override func updateViewConstraints() {
+        super.updateViewConstraints()
         
     }
     
@@ -91,7 +100,13 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         cell.identifier = foodItem.identifier
         cell.foodTitle.text = foodItem.title
-        cell.foodDesc.text = foodItem.desc
+        
+        let attrString: NSMutableAttributedString = NSMutableAttributedString(string: foodItem.desc)
+        let parag: NSMutableParagraphStyle = NSMutableParagraphStyle()
+        parag.lineSpacing = 5
+        attrString.addAttribute(NSParagraphStyleAttributeName, value: parag, range: NSMakeRange(0, count(foodItem.desc)))
+        cell.foodDesc.attributedText = attrString
+        cell.foodDesc.sizeToFit()
         
         let imageURL = foodItem.foodImage
         let foodImageView = cell.foodImageView
@@ -108,7 +123,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 (request, _, image, error) in
                 
                 if error == nil && image != nil {
-                    let foodImage = Toucan.Resize.resizeImage(image!, size: CGSize(width: self.view.bounds.width, height: 100.0), fitMode: Toucan.Resize.FitMode.Crop)
+                    let foodImage = Toucan.Resize.resizeImage(image!, size: CGSize(width: self.view.bounds.width - 20.0, height: 150.0), fitMode: Toucan.Resize.FitMode.Crop)
                     
                     self.imageCache.setObject(foodImage, forKey: request.URLString)
                     
@@ -122,6 +137,9 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             }
         }
         
+        cell.setNeedsUpdateConstraints()
+        cell.updateConstraintsIfNeeded()
+        
         return cell
         
     }
@@ -130,16 +148,16 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     //        println("Food: \(indexPath.row)")
     //    }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 200
-    }
+    //    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    //        return 390
+    //    }
     
     // Override to control push with item selection
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         var foodViewerViewController: FoodViewerViewController = FoodViewerViewController()
         foodViewerViewController.foodIdentifier = foodListItems[indexPath.row].identifier
-        foodViewerViewController.title = "Food Detail"
+        foodViewerViewController.foodInfo = self.foodListItems[indexPath.row] as? FoodItem
         foodViewerViewController.view.backgroundColor = UIColor.whiteColor()
         
         self.navigationController!.showViewController(foodViewerViewController, sender: self)
@@ -147,35 +165,36 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     }
     
     // Override to support editing the table view
-    /*
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-    if editingStyle == .Delete {
     
-    if(self.foodListItems.count > 0) {
-    
-    let foodDict:NSDictionary = self.foodListItems.objectAtIndex(indexPath.row) as! NSDictionary
-    let identifier:String = foodDict.objectForKey("identifier") as! String
-    let predicate:NSPredicate = NSPredicate(format: "identifier == '\(identifier)'")
-    let foodToDelete:FoodItem = FoodItem.findFirst(predicate: predicate, sortedBy: nil, ascending: false, contextType: BreezeContextType.Background) as! FoodItem
-    
-    foodToDelete.deleteInContextOfType(BreezeContextType.Background)
-    
-    BreezeStore.saveInBackground({contextType -> Void in
-    
-    }, completion: {error -> Void in
-    self.loadFoodList(indexPath: indexPath)
-    })
-    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if editingStyle == .Delete {
+            
+            if(self.foodListItems.count > 0) {
+                
+                
+                let foodItem:FoodItem = self.foodListItems.objectAtIndex(indexPath.row) as! FoodItem
+                
+                if let foodToDelete = FoodItem.findFirst(attribute: "identifier", value: foodItem.identifier, contextType: BreezeContextType.Main) as? FoodItem {
+                    foodToDelete.deleteInContextOfType(BreezeContextType.Background)
+                }
+                
+                BreezeStore.saveInBackground({contextType -> Void in
+                    
+                    }, completion: {error -> Void in
+                        self.loadFoodList(indexPath: indexPath)
+                })
+                
+            }
+            
+        }
+        else if editingStyle == .Insert {
+            
+        }
     }
     
-    }
-    else if editingStyle == .Insert {
     
-    }
-    }
-    */
-    
-    // MARK - Functions
+    // MARK: - Functions
     
     func userPanel() {
         
@@ -192,8 +211,15 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             
             let foodItem = FoodItem.createInContextOfType(contextType) as! FoodItem
             foodItem.identifier = foodIdentifier
-            foodItem.title = "Food-\(foodIdentifier)"
-            foodItem.desc = "Food Description Block with text and html content\nThis is the second line with link <a href='#'>website</a>"
+            foodItem.title = VCAppLetor.StringLine.FoodTitle
+            
+            let startIndex = arc4random_uniform(30).hashValue
+            let start = advance(VCAppLetor.StringLine.FoodDesc.startIndex, startIndex)
+            let end = advance(VCAppLetor.StringLine.FoodDesc.endIndex, -1)
+            var range = Range<String.Index>(start: start, end: end)
+            foodItem.desc = VCAppLetor.StringLine.FoodDesc.substringWithRange(range)
+            
+            
             foodItem.addDate = NSDate()
             
             let serNumber = arc4random_uniform(7)
@@ -240,7 +266,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         // Get token from app data, connect serverside to auth user login status
         if let token = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optToken, contextType: BreezeContextType.Main) as? Settings { // Get token
             
-            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: token.value, namespace: "member")
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: token.value, namespace: "token")
         }
         else { // App version DO NOT exist, create one with empty token
             
@@ -256,11 +282,11 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 
             })
             
-            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: "", namespace: "member")
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: "0", namespace: "token")
         }
         
         
-        let tokenString: String = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "member")?.data as! String
+        let tokenString: String = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
         let cMid: String = self.currentMid()
         println("token: \(tokenString), currentMid: \(cMid)")
         
@@ -281,86 +307,62 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                         // Cache token
                         if let token = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optToken, contextType: BreezeContextType.Main) as? Settings {
                             
-                            BreezeStore.saveInBackground({ contextType -> Void in
+                            BreezeStore.saveInMain({ contextType -> Void in
                                 
                                 token.sid = "\(NSDate())"
                                 token.value = json["data"]["token"].string!
                                 
                                 println("token changed: \(token.value)")
                                 
-                                }, completion: { error -> Void in
-                                    
-                                    if (error != nil) {
-                                        println("ERROR @ update token value @ loginWithToken : \(error?.localizedDescription)")
-                                    }
-                                    else {
-                                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: json["data"]["token"].string!, namespace: "member")
-                                    }
                             })
+                            
+                            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: json["data"]["token"].string!, namespace: "token")
                         }
                         // update local data
                         if let isLogin = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameIsLogin, contextType: BreezeContextType.Main) as? Settings {
                             
-                            BreezeStore.saveInBackground({ contextType -> Void in
+                            BreezeStore.saveInMain({ contextType -> Void in
                                 
                                 isLogin.sid = "\(NSDate())"
                                 isLogin.value = "1"
                                 
-                                }, completion: { error -> Void in
-                                    
-                                    if (error != nil) {
-                                        println("ERROR @ update isLogin value @ loginWithToken : \(error?.localizedDescription)")
-                                    }
-                                    else {
-                                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: true, namespace: "member")
-                                    }
                             })
+                            
+                            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: true, namespace: "member")
                         }
                         
                         if let cMid = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameCurrentMid, contextType: BreezeContextType.Main) as? Settings {
                             
-                            BreezeStore.saveInBackground({ contextType -> Void in
+                            BreezeStore.saveInMain({ contextType -> Void in
                                 
                                 cMid.sid = "\(NSDate())"
                                 cMid.value = json["data"]["member_id"].string!
                                 
                                 println("currentMid: \(cMid.value)")
                                 
-                                }, completion: { error -> Void in
-                                    
-                                    if (error != nil) {
-                                        println("ERROR @ update currentMid value @ loginWithToken : \(error?.localizedDescription)")
-                                    }
-                                    else {
-                                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: json["data"]["member_id"].string!, namespace: "member")
-                                    }
                             })
+                            
+                            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: json["data"]["member_id"].string!, namespace: "member")
                         }
                         
                         if let loginType = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameLoginType, contextType: BreezeContextType.Main) as? Settings {
                             
-                            BreezeStore.saveInBackground({ contextType -> Void in
+                            BreezeStore.saveInMain({ contextType -> Void in
                                 
                                 loginType.sid = "\(NSDate())"
                                 loginType.value = VCAppLetor.LoginType.Token
                                 
-                                }, completion: { error -> Void in
-                                    
-                                    if (error != nil) {
-                                        println("ERROR @ update loginType value @ loginWithToken : \(error?.localizedDescription)")
-                                    }
-                                    else {
-                                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.Token, namespace: "member")
-                                    }
                             })
+                            
+                            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.Token, namespace: "member")
                         }
                         
-                        
-                        
+                        self.loadMemberInfo(cMid)
                     }
                     else { // Login fail
                         println("ERROR @ Login fail with loginWithToken : " + json["status"]["error_desc"].string!)
-                        
+                        CTMemCache.sharedInstance.cleanNamespace("member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: "0", namespace: "token")
                     }
                 }
                 else {
@@ -385,6 +387,22 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         else {
             return "0"
         }
+    }
+    
+    func loadMemberInfo(mid: String) {
+        
+        if let member = Member.findFirst(attribute: "mid", value: mid, contextType: BreezeContextType.Main) as? Member{
+            
+            // setup cache & user panel interface
+            CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: member.nickname, namespace: "member")
+            CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: member.email, namespace: "member")
+            CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: member.phone, namespace: "member")
+            CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: member.iconURL, namespace: "member")
+        }
+        else {
+            println("Can not find local data after loginWithToken")
+        }
+        
     }
     
     // Clean local cache and local data
@@ -497,6 +515,36 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         }
     }
     
+    // Bar button with icon
+    func barButtonItemWithImageNamed(imageName: String?, title: String?, action: Selector? = nil) -> UIBarButtonItem {
+        
+        let button: UIButton = UIButton.newAutoLayoutView()
+        
+        if imageName != nil {
+            button.setImage(UIImage(named: imageName!)!.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
+        }
+        
+        if title != nil {
+            button.setTitle(title, forState: .Normal)
+            button.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, 0.0)
+            
+            let font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
+            button.titleLabel?.font = font
+        }
+        
+        let size = button.sizeThatFits(CGSizeMake(90.0, 24.0))
+        button.frame = CGRectMake(0.0, 0.0, 42.0, 42.0)
+        button.imageEdgeInsets = UIEdgeInsetsMake(2, 2, 2, 2)
+        
+        if action != nil {
+            button.addTarget(self, action: action!, forControlEvents: .TouchUpInside)
+        }
+        
+        let barButton = UIBarButtonItem(customView: button)
+        
+        return barButton
+    }
+    
     
     // Add new FoodItem
     func insertRowAtTop(identifier: String) {
@@ -576,7 +624,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         bgView.addSubview(internetUnreachLabel)
         
         self.tableView.backgroundView = bgView
-//        self.tableView.scrollEnabled = false
+        //        self.tableView.scrollEnabled = false
         
         internetIcon.autoAlignAxisToSuperviewAxis(.Vertical)
         internetIcon.autoPinEdgeToSuperviewEdge(.Top, withInset: 160.0)
@@ -593,11 +641,23 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         let reachability = notification.object as! Reachability
         
+        let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        hud.mode = MBProgressHUDMode.Determinate
+        hud.labelText = VCAppLetor.StringLine.isLoading
+        
         if reachability.isReachable() {
+            
+            // Foodlist
             self.loadFoodList()
-        } else {
+            
+            // Member info
+            self.initMemberStatus()
+        }
+        else {
             self.showInternetUnreachable()
         }
+        
+        hud.hide(true)
     }
     
     // MARK: - Navigation

@@ -37,7 +37,7 @@ class UserInfoHeaderView: UIView {
     func setupViews() {
         
         self.contentMode = UIViewContentMode.ScaleAspectFit
-        self.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
+//        self.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
         
         self.panelIcon.layer.cornerRadius = VCAppLetor.ConstValue.ImageCornerRadius
         self.panelIcon.alpha = 0.2
@@ -48,26 +48,21 @@ class UserInfoHeaderView: UIView {
         self.panelTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.addSubview(self.panelTitle)
         
+        let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
         
-        
-        if (CTMemCache.sharedInstance.exists("isLogin", namespace: "member")
-            && CTMemCache.sharedInstance.get("isLogin", namespace: "member")?.data as! Bool){
+        if (token != "0"){
+            
+            self.panelTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
+            let icon = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Icon, namespace: "member")?.data as! String
+            Alamofire.request(.GET, icon).validate().responseImage() {
+                (_, _, image, error) in
                 
-                if let member = Member.findFirst(attribute: "mid", value: CTMemCache.sharedInstance.get("currentMid", namespace: "member")?.data, contextType: BreezeContextType.Background) as? Member {
-                    
-                    self.panelTitle.text = member.nickname
-                    Alamofire.request(.GET, member.iconURL).validate().responseImage() {
-                        (_, _, image, error) in
-                        
-                        if error == nil && image != nil {
-                            self.panelIcon.image = image
-                            self.panelIcon.alpha = 1.0
-                        }
-                    }
+                if error == nil && image != nil {
+                    self.panelIcon.image = image
+                    self.panelIcon.alpha = 1.0
                 }
-                
-                
-                
+            }
+            
         }
         else {
             self.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)

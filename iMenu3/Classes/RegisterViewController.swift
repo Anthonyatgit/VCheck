@@ -11,9 +11,9 @@ import PureLayout
 import Alamofire
 import RKDropdownAlert
 import MBProgressHUD
-//import SwiftyJSON
+import AFViewShaker
 
-class RegisterViewController: UIViewController, UITextFieldDelegate, RKDropdownAlertDelegate {
+class RegisterViewController: VCBaseViewController, UITextFieldDelegate, RKDropdownAlertDelegate {
     
     let scrollView: UIScrollView = UIScrollView()
     
@@ -23,6 +23,8 @@ class RegisterViewController: UIViewController, UITextFieldDelegate, RKDropdownA
     
     let senDAuthCodeButton: UIButton = UIButton.newAutoLayoutView()
     
+    var phoneNumberShaker: AFViewShaker?
+    var authCodeShaker: AFViewShaker?
     
     let regStepView: CustomDrawView = CustomDrawView.newAutoLayoutView()
     let phoneUnderLine: CustomDrawView = CustomDrawView.newAutoLayoutView()
@@ -99,6 +101,9 @@ class RegisterViewController: UIViewController, UITextFieldDelegate, RKDropdownA
         self.authCode.delegate = self
         self.scrollView.addSubview(self.authCode)
         
+        self.phoneNumberShaker = AFViewShaker(view: self.phoneNumber)
+        self.authCodeShaker = AFViewShaker(view: self.authCode)
+        
         // Send auth code button
         self.senDAuthCodeButton.setTitle(VCAppLetor.StringLine.SendAutoCode, forState: .Normal)
         self.senDAuthCodeButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
@@ -132,23 +137,25 @@ class RegisterViewController: UIViewController, UITextFieldDelegate, RKDropdownA
         self.scrollView.addSubview(invUnderLine)
         
         // No invent code yet, no problem, you can set later
-        noInventYet.text = VCAppLetor.StringLine.NoInventCodeYet
-        noInventYet.textAlignment = .Left
-        noInventYet.font = VCAppLetor.Font.SmallFont
+        self.noInventYet.text = VCAppLetor.StringLine.NoInventCodeYet
+        self.noInventYet.textAlignment = .Left
+        self.noInventYet.font = VCAppLetor.Font.SmallFont
         self.scrollView.addSubview(noInventYet)
         
         // End user Terms and conditions
-        terms.text = VCAppLetor.StringLine.AgreeTermsString
-        terms.textAlignment = .Left
-        terms.font = VCAppLetor.Font.SmallFont
+        self.terms.text = VCAppLetor.StringLine.AgreeTermsString
+        self.terms.textAlignment = .Center
+        self.terms.font = VCAppLetor.Font.SmallFont
+        self.terms.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+        self.terms.backgroundColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.1)
         self.scrollView.addSubview(terms)
         
-        termsUnderline.drawType = "Line"
-        termsUnderline.lineWidth = 1.0
+        self.termsUnderline.drawType = "Line"
+        self.termsUnderline.lineWidth = 1.0
         self.scrollView.addSubview(termsUnderline)
         
-        termsButton.setTitle(" ", forState: .Normal)
-        termsButton.addTarget(self, action: "showTerms", forControlEvents: .TouchUpInside)
+        self.termsButton.setTitle(" ", forState: .Normal)
+        self.termsButton.addTarget(self, action: "showTerms", forControlEvents: .TouchUpInside)
         self.scrollView.addSubview(termsButton)
         
         self.view.addSubview(self.scrollView)
@@ -216,19 +223,20 @@ class RegisterViewController: UIViewController, UITextFieldDelegate, RKDropdownA
         invUnderLine.autoMatchDimension(ALDimension.Width, toDimension: ALDimension.Width, ofView: self.inventCode, withOffset: 10.0)
         invUnderLine.autoSetDimension(ALDimension.Height, toSize: 3.0)
         
-        noInventYet.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: invUnderLine, withOffset: VCAppLetor.ConstValue.LineGap / 2)
-        noInventYet.autoPinEdge(ALEdge.Leading, toEdge: ALEdge.Leading, ofView: self.phoneNumber)
+        self.noInventYet.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: invUnderLine, withOffset: VCAppLetor.ConstValue.LineGap / 2)
+        self.noInventYet.autoPinEdge(ALEdge.Leading, toEdge: ALEdge.Leading, ofView: self.phoneNumber)
         
-        terms.autoPinEdgeToSuperviewEdge(ALEdge.Bottom, withInset: VCAppLetor.ConstValue.LineGap)
-        terms.autoAlignAxisToSuperviewAxis(ALAxis.Vertical)
+        self.terms.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 70.0 - self.scrollView.frame.height)
+        self.terms.autoSetDimensionsToSize(CGSizeMake(300.0, 30.0))
+        self.terms.autoAlignAxisToSuperviewAxis(.Vertical)
         
-        termsUnderline.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: terms, withOffset: -2.0)
-        termsUnderline.autoPinEdge(ALEdge.Right, toEdge: ALEdge.Right, ofView: terms)
-        termsUnderline.autoSetDimensionsToSize(CGSizeMake(48.0, 3.0))
+        self.termsUnderline.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: self.terms, withOffset: -9.0)
+        self.termsUnderline.autoPinEdge(ALEdge.Trailing, toEdge: ALEdge.Trailing, ofView: terms, withOffset: -20.0)
+        self.termsUnderline.autoSetDimensionsToSize(CGSizeMake(48.0, 3.0))
         
-        termsButton.autoSetDimensionsToSize(CGSizeMake(48.0, VCAppLetor.ConstValue.ButtonHeight))
-        termsButton.autoPinEdge(ALEdge.Trailing, toEdge: ALEdge.Trailing, ofView: terms)
-        termsButton.autoAlignAxis(ALAxis.Horizontal, toSameAxisOfView: terms)
+        self.termsButton.autoSetDimensionsToSize(CGSizeMake(48.0, VCAppLetor.ConstValue.ButtonHeight))
+        self.termsButton.autoPinEdge(ALEdge.Trailing, toEdge: ALEdge.Trailing, ofView: terms)
+        self.termsButton.autoAlignAxis(ALAxis.Horizontal, toSameAxisOfView: terms)
         
     }
     
@@ -245,7 +253,20 @@ class RegisterViewController: UIViewController, UITextFieldDelegate, RKDropdownA
         let mobile: String = self.phoneNumber.text as String
         self.disableSending()
         
-        if (mobile != "") {
+        if (mobile == "") {
+            
+            self.phoneNumberShaker?.shakeWithDuration(VCAppLetor.ConstValue.TextFieldShakeTime, completion: { () -> Void in
+                RKDropdownAlert.title(VCAppLetor.StringLine.MobileCannotEmpty, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime, delegate: self)
+            })
+        }
+        else if (!self.isMobile(mobile)) {
+            self.phoneNumberShaker?.shakeWithDuration(VCAppLetor.ConstValue.TextFieldShakeTime, completion: { () -> Void in
+                RKDropdownAlert.title(VCAppLetor.StringLine.MobileIllegal, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime, delegate: self)
+            })
+        }
+        else {
+            
+            self.phoneNumber.resignFirstResponder()
             
             let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             hud.mode = MBProgressHUDMode.AnnularDeterminate
@@ -274,10 +295,6 @@ class RegisterViewController: UIViewController, UITextFieldDelegate, RKDropdownA
                 
             })
         }
-        else {
-            RKDropdownAlert.title(VCAppLetor.StringLine.MobileCannotEmpty, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime, delegate: self)
-            
-        }
         
     }
     
@@ -302,15 +319,12 @@ class RegisterViewController: UIViewController, UITextFieldDelegate, RKDropdownA
     
     func sendRegAuthCode(mobile: String) {
         
-        
         let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        hud.mode = MBProgressHUDMode.AnnularDeterminate
+        hud.mode = MBProgressHUDMode.Indeterminate
         hud.labelText = VCAppLetor.StringLine.VerifyCodeInProgress
         
         let validateCode: String = (mobile + VCAppLetor.StringLine.SaltKey).md5
         println("code: \(validateCode)")
-        
-        
         
         Alamofire.request(VCheckGo.Router.GetVerifyCode(mobile, validateCode)).validate().responseSwiftyJSON({
             (_, _, JSON, error) -> Void in
@@ -323,10 +337,10 @@ class RegisterViewController: UIViewController, UITextFieldDelegate, RKDropdownA
                     
                     self.startCounting()
                     
-                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.mobile, data: mobile, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.verifyCode, data: json["data"]["verify_code"].string, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.saltCode, data: json["data"]["code"].string, namespace: "member")
-                        
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobile, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.VerifyCode, data: json["data"]["verify_code"].string, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.SaltCode, data: json["data"]["code"].string, namespace: "member")
+                    
                     RKDropdownAlert.title(VCAppLetor.StringLine.VerifyCodeSendDone, backgroundColor: UIColor.nephritisColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                     
                 }
@@ -365,7 +379,7 @@ class RegisterViewController: UIViewController, UITextFieldDelegate, RKDropdownA
         if verifyCode != "" {
             
             // Matching verify code
-            if verifyCode == CTMemCache.sharedInstance.get(VCAppLetor.SettingName.verifyCode, namespace: "member")?.data as! String {
+            if verifyCode == CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.VerifyCode, namespace: "member")?.data as! String {
                 
                 // Set member password
                 let setPassForRegViewController: RegSetPassViewController = RegSetPassViewController()
@@ -374,15 +388,24 @@ class RegisterViewController: UIViewController, UITextFieldDelegate, RKDropdownA
                 self.parentNav?.showViewController(setPassForRegViewController, sender: self)
             }
             else {
-                RKDropdownAlert.title(VCAppLetor.StringLine.VerifyCodeWrong, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                self.authCodeShaker?.shakeWithDuration(VCAppLetor.ConstValue.TextFieldShakeTime, completion: { () -> Void in
+                    RKDropdownAlert.title(VCAppLetor.StringLine.VerifyCodeWrong, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                })
             }
             
         }
         else {
-            RKDropdownAlert.title(VCAppLetor.StringLine.VerifyCodePlease, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            self.authCodeShaker?.shakeWithDuration(VCAppLetor.ConstValue.TextFieldShakeTime, completion: { () -> Void in
+                RKDropdownAlert.title(VCAppLetor.StringLine.VerifyCodePlease, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            })
         }
+    }
+    
+    func isMobile(mobile: String) -> Bool {
         
-        
+        let mobileRegex: String = "^((13[0-9])|(15[^4,\\D])|(18[0,0-9]))\\d{8}$"
+        let mobileTest: NSPredicate = NSPredicate(format: "SELF MATCHES %@", mobileRegex)
+        return mobileTest.evaluateWithObject(mobile)
     }
     
     func showTerms() {

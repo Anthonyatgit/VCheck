@@ -25,12 +25,14 @@ class CustomDrawView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+        self.backgroundColor = UIColor.whiteColor()
         self.backgroundColor = UIColor.clearColor()
+        
     }
     
     override func drawRect(rect: CGRect) {
         
+        self.layer.backgroundColor = UIColor.clearColor().CGColor
         var context = UIGraphicsGetCurrentContext()
         CGContextSetAllowsAntialiasing(context, true)
         
@@ -48,7 +50,7 @@ class CustomDrawView: UIView {
             CGContextSetStrokeColorWithColor(context, UIColor.grayColor().colorWithAlphaComponent(0.6).CGColor)
             CGContextSetLineDash(context, 0, lengths, 2)
             CGContextMoveToPoint(context, 80, 22)
-            CGContextAddLineToPoint(context, 140, 25)
+            CGContextAddLineToPoint(context, 140, 22)
             CGContextStrokePath(context)
             
             lengths = [1,2]
@@ -78,13 +80,32 @@ class CustomDrawView: UIView {
             
             CGContextSetLineWidth(context, self.lineWidth!)
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor().CGColor)
-            CGContextMoveToPoint(context, 0, 1.0)
+            CGContextMoveToPoint(context, 0.0, 1.0)
             CGContextAddLineToPoint(context, self.bounds.width, 1.0)
             CGContextStrokePath(context)
         }
-        else if (self.drawType == "LogoutButton") {
+        else if (self.drawType == "GrayLine") {
             
-            println("render")
+            CGContextSetLineWidth(context, self.lineWidth!)
+            CGContextSetStrokeColorWithColor(context, UIColor.lightGrayColor().CGColor)
+            CGContextMoveToPoint(context, 0.0, 1.0)
+            CGContextAddLineToPoint(context, self.bounds.width, 1.0)
+            CGContextStrokePath(context)
+        }
+        else if (self.drawType == "DoubleLine") {
+            
+            CGContextSetLineWidth(context, 2)
+            CGContextSetStrokeColorWithColor(context, UIColor.blackColor().CGColor)
+            CGContextMoveToPoint(context, 0.0, 1.0)
+            CGContextAddLineToPoint(context, self.bounds.width, 1.0)
+            CGContextStrokePath(context)
+            
+            CGContextSetLineWidth(context, 1)
+            CGContextMoveToPoint(context, 0.0, 3.0)
+            CGContextAddLineToPoint(context, self.bounds.width, 3.0)
+            CGContextStrokePath(context)
+        }
+        else if (self.drawType == "LogoutButton") {
             
             let logoutButton: UIButton = UIButton.newAutoLayoutView()
             logoutButton.setTitle(self.withTitle, forState: .Normal)
@@ -98,6 +119,24 @@ class CustomDrawView: UIView {
             logoutButton.autoAlignAxisToSuperviewAxis(.Vertical)
             logoutButton.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 30.0, relation: NSLayoutRelation.GreaterThanOrEqual)
             logoutButton.autoSetDimensionsToSize(CGSizeMake(280.0, 30.0))
+        }
+        else if (self.drawType == "DateTag") {
+            
+            CGContextSetLineWidth(context, 28.0)
+            CGContextSetStrokeColorWithColor(context, UIColor.blackColor().CGColor)
+            CGContextMoveToPoint(context, 0.0, 14.0)
+            CGContextAddLineToPoint(context, 80.0, 14.0)
+            CGContextStrokePath(context)
+            
+            CGContextSetLineWidth(context, 1.0)
+            CGContextSetStrokeColorWithColor(context, UIColor.clearColor().CGColor)
+            CGContextMoveToPoint(context, 80.0, 0.0)
+            CGContextAddLineToPoint(context, 70.0, 14.0)
+            CGContextAddLineToPoint(context, 80.0, 28.0)
+            CGContextClosePath(context)
+            CGContextSetBlendMode(context, kCGBlendModeClear)
+            CGContextFillPath(context)
+            
         }
         
         

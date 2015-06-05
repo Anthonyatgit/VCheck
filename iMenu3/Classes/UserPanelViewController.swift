@@ -95,6 +95,10 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
         let icon = self.userPanelIcon.values.array[indexPath.section][indexPath.row]
         cell.panelIcon.image = UIImage(named: icon)
         
+        if indexPath.row > 2 || indexPath.section > 0 {
+            cell.countLabel.text = ""
+        }
+        
         
         cell.setNeedsUpdateConstraints()
         cell.updateConstraintsIfNeeded()
@@ -196,11 +200,11 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
     func showUserInfo(gesture: UITapGestureRecognizer) {
         
         
-        if (CTMemCache.sharedInstance.exists("isLogin", namespace: "member") &&
-            CTMemCache.sharedInstance.get("isLogin", namespace: "member")?.data as! Bool) {
+        if (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String != "0") {
                 
                 let userInfoViewController: UserInfoViewController = UserInfoViewController()
                 userInfoViewController.parentNav = self.parentNav
+                userInfoViewController.delegate = self
                 self.parentNav?.showViewController(userInfoViewController, sender: self)
         }
         else {
@@ -214,8 +218,7 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
     // IF the current user is Login to the app
     func isLogined() -> Bool {
         
-        return (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameIsLogin, namespace: "member")?.data as! Bool) &&
-            (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String != "0")
+        return CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String != "0"
     }
     
     func presentLoginPanel() {
@@ -235,21 +238,20 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
         
         if  let token = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optToken, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 token.sid = "\(NSDate())"
                 token.value = tokenStr
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update token value @ loginWithToken : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: tokenStr, namespace: "member")
-                        
-                    }
-            })
+                println("update token after login \(token.value)")
+                
+                })
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: tokenStr, namespace: "token")
+            
+            let t = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+            
+            println("After Login: token=" + t)
         }
         
         // update local data
@@ -335,14 +337,22 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                 
                 if json["status"]["succeed"].string == "1" {
                     
+                    // Member info
                     let midString = json["data"]["member_info"]["member_id"].string!
                     let emailString = json["data"]["member_info"]["email"].string!
                     let mobileString = json["data"]["member_info"]["mobile"].string!
                     let nicknameString = json["data"]["member_info"]["member_name"].string!
                     let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
                     
+                    // Listing Info
+//                    let orderCount = json["data"]["order_info"]["order_total_count"].string!
+                    // Collection Info
+//                    let collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
+                    // Coupon Info
+//                    let couponCount = json["data"]["coupon_info"]["coupon_total_count"].string!
+                    
                     // Get member info and refresh userinterface
-                    BreezeStore.saveInBackground({ (contextType) -> Void in
+                    BreezeStore.saveInMain({ (contextType) -> Void in
                         
                         let member = Member.createInContextOfType(contextType) as! Member
                         
@@ -354,36 +364,30 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                         member.lastLog = NSDate()
                         member.token = token
                         
-                    }, completion: { (error) -> Void in
+                        })
+                    
+                    // update local data
+                    self.updateSettings(token, currentMid: mid)
+                    
+                    // setup cache & user panel interface
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
+                    
+                    self.userInfoHeaderView.panelTitle.text = nicknameString
+//                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = orderCount
+//                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 1, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = collectionCount
+//                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 2, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = couponCount
+                    
+                    Alamofire.request(.GET, iconString).validate().responseImage() {
+                        (_, _, image, error) in
                         
-                        if error != nil {
-                            println("ERROR @ Save userinfo to local : \(error?.localizedDescription)")
+                        if error == nil && image != nil {
+                            self.userInfoHeaderView.panelIcon.image = image
+                            self.userInfoHeaderView.panelIcon.alpha = 1.0
                         }
-                        else {
-                            
-                            // update local data
-                            self.updateSettings(token, currentMid: mid)
-                            
-                            // setup cache & user panel interface
-                            CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
-                            CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
-                            CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
-                            CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
-                            
-                            self.userInfoHeaderView.panelTitle.text = nicknameString
-                            
-                            Alamofire.request(.GET, iconString).validate().responseImage() {
-                                (_, _, image, error) in
-                                
-                                if error == nil && image != nil {
-                                    self.userInfoHeaderView.panelIcon.image = image
-                                    self.userInfoHeaderView.panelIcon.alpha = 1.0
-                                }
-                            }
-                            
-                            
-                        }
-                    })
+                    }
                 }
                 else {
                     RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
@@ -400,47 +404,154 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
     
     // MARK: - Member Signin Delegate
     
-    func memberDidSigninSuccess(mid: String) {
+    func memberDidSigninSuccess(mid: String, token: String) {
         
-        let member: Member = Member.findFirst(attribute: "mid", value: "\(mid)", contextType: BreezeContextType.Background) as! Member
-        
-        if (member.mid != "") {
+        // Get member info which just finish register
+        Alamofire.request(VCheckGo.Router.GetMemberInfo(token, mid)).validate().responseSwiftyJSON ({
+            (_, _, JSON, error) -> Void in
             
-            CTMemCache.sharedInstance.set("isLogin", data: true, namespace: "member")
-            CTMemCache.sharedInstance.set("loginType", data: VCAppLetor.LoginType.PhoneReg, namespace: "member")
-            CTMemCache.sharedInstance.set("currentMid", data: member.mid, namespace: "member")
-            CTMemCache.sharedInstance.set("email", data: member.email, namespace: "member")
-            CTMemCache.sharedInstance.set("nickname", data: member.nickname, namespace: "member")
-            CTMemCache.sharedInstance.set("phone", data: member.phone, namespace: "member")
-            
-            self.userInfoHeaderView.panelTitle.text = member.nickname
-            
-            Alamofire.request(.GET, member.iconURL).validate().responseImage() {
-                (_, _, image, error) in
+            if error == nil {
                 
-                if error == nil && image != nil {
+                let json = JSON
+                
+                if json["status"]["succeed"].string == "1" {
                     
-                    println("member icon: \(member.iconURL)")
-                    self.userInfoHeaderView.panelIcon.image = image
-                    self.userInfoHeaderView.alpha = 0.6
+                    let midString = json["data"]["member_info"]["member_id"].string!
+                    let emailString = json["data"]["member_info"]["email"].string!
+                    let mobileString = json["data"]["member_info"]["mobile"].string!
+                    let nicknameString = json["data"]["member_info"]["member_name"].string!
+                    let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
+                    
+                    // Listing Info
+//                    let orderCount = json["data"]["order_info"]["order_total_count"].string!
+                    // Collection Info
+//                    let collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
+                    // Coupon Info
+//                    let couponCount = json["data"]["coupon_info"]["coupon_total_count"].string!
+                    
+                    if let member = Member.findFirst(attribute: "mid", value: midString, contextType: BreezeContextType.Main) as? Member {
+                        
+                        BreezeStore.saveInMain({ (contextType) -> Void in
+                            
+                            member.email = emailString
+                            member.phone = mobileString
+                            member.nickname = nicknameString
+                            member.iconURL = iconString
+                            member.lastLog = NSDate()
+                            member.token = token
+                            
+                        })
+                        
+                        // update local data
+                        self.updateSettings(token, currentMid: mid)
+                        
+                        // setup cache & user panel interface
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
+                        
+                        self.userInfoHeaderView.panelTitle.text = nicknameString
+//                        (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = orderCount
+//                        (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 1, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = collectionCount
+//                        (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 2, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = couponCount
+                        
+                        Alamofire.request(.GET, iconString).validate().responseImage() {
+                            (_, _, image, error) in
+                            
+                            if error == nil && image != nil {
+                                self.userInfoHeaderView.panelIcon.image = image
+                                self.userInfoHeaderView.panelIcon.alpha = 1.0
+                            }
+                        }
+                    }
+                    else { // Member login for the first time without register on the device
+                        // Get member info and refresh userinterface
+                        BreezeStore.saveInMain({ (contextType) -> Void in
+                            
+                            let member = Member.createInContextOfType(contextType) as! Member
+                            
+                            member.mid = midString
+                            member.email = emailString
+                            member.phone = mobileString
+                            member.nickname = nicknameString
+                            member.iconURL = iconString
+                            member.lastLog = NSDate()
+                            member.token = token
+                            
+                            })
+                        
+                        // update local data
+                        self.updateSettings(token, currentMid: mid)
+                        
+                        // setup cache & user panel interface
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
+                        
+                        self.userInfoHeaderView.panelTitle.text = nicknameString
+                        
+                        Alamofire.request(.GET, iconString).validate().responseImage() {
+                            (_, _, image, error) in
+                            
+                            if error == nil && image != nil {
+                                self.userInfoHeaderView.panelIcon.image = image
+                                self.userInfoHeaderView.panelIcon.alpha = 1.0
+                            }
+                        }
+                    }
+                }
+                else {
+                    RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                 }
             }
-            
-        }
-        else {
-            println("ERROR @ memberDidSigninSuccess: member do not exist")
-        }
+            else {
+                println("ERROR @ Request for member info : \(error?.localizedDescription)")
+            }
+        })
     }
     
     // MARK: - Member Logout Delegate
     
     func memberDidLogoutSuccess(mid: String) {
         
-        self.userInfoHeaderView.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)
-        self.userInfoHeaderView.panelTitle.text = VCAppLetor.StringLine.UserInfoWithoutSignin
-        self.userInfoHeaderView.alpha = 0.6
+        
+        // Clear Cache & token data
+        if  let token = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optToken, contextType: BreezeContextType.Main) as? Settings {
+            
+            BreezeStore.saveInMain({ contextType -> Void in
+                
+                token.sid = "\(NSDate())"
+                token.value = "0"
+                
+                })
+            
+            CTMemCache.sharedInstance.cleanNamespace("member")
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: "0", namespace: "token")
+            
+            let t = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+            println("After Logout: member_id=\(mid), token=" + t)
+            
+            // Refresh user panel interface
+            self.userInfoHeaderView.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)
+            self.userInfoHeaderView.panelTitle.text = VCAppLetor.StringLine.UserInfoWithoutSignin
+            self.userInfoHeaderView.alpha = 0.6
+            
+        } else {
+            println("ERROR @ Can not find token in the local data")
+        }
+        
+        
+        
+        
     }
     
     
     
+    
+    
 }
+
+
+

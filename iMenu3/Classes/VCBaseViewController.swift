@@ -8,9 +8,11 @@
 
 import UIKit
 import CoreData
+import PureLayout
 import Alamofire
 import RKDropdownAlert
 import MBProgressHUD
+import AFViewShaker
 
 class VCBaseViewController: UIViewController {
     
