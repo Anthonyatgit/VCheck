@@ -20,8 +20,9 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
     let scrollView: UIScrollView = UIScrollView()
     let checkView: UIView = UIView.newAutoLayoutView()
     let detailSegmentView: UIView = UIView.newAutoLayoutView()
-//    let detailView: UIView = UIView.newAutoLayoutView()
-    let detailScrollView: FoodDetailScrollView = FoodDetailScrollView.newAutoLayoutView()
+    let detailView: UIView = UIView.newAutoLayoutView()
+    var detailScrollView: FoodDetailScrollView!
+    
     
     var photos: NSArray = VCAppLetor.FoodInfo.photos
     var photoViewer: HYBLoopScrollView?
@@ -71,22 +72,20 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         
         self.view.setNeedsUpdateConstraints()
         
-//        self.detailSegmentControl.selectSegmentAtIndex(0)
-        
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
+        self.detailSegmentControl.selectSegmentAtIndex(0)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.width, self.detailScrollView.originY + self.detailScrollView.frame.height + 20.0)
+        self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.width, self.detailView.originY + self.detailView.height + 20.0)
         self.scrollView.showsVerticalScrollIndicator = false
         self.scrollView.delegate = self
-        
-        
         
     }
     
@@ -155,11 +154,11 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         
         self.shareBtn.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
         self.shareBtn.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodDesc, withOffset: 20.0)
-        self.shareBtn.autoSetDimensionsToSize(CGSizeMake(138.0, 38.0))
+        self.shareBtn.autoSetDimensionsToSize(CGSizeMake(145.0, 38.0))
         
         self.likeBtn.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.shareBtn, withOffset: 10.0)
         self.likeBtn.autoPinEdge(.Top, toEdge: .Top, ofView: self.shareBtn)
-        self.likeBtn.autoSetDimensionsToSize(CGSizeMake(64.0, 38.0))
+        self.likeBtn.autoSetDimensionsToSize(CGSizeMake(72.0, 38.0))
         
         self.detailSegmentControl?.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
         self.detailSegmentControl?.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
@@ -167,9 +166,10 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.detailSegmentControl?.autoSetDimension(.Height, toSize: 40.0)
         
         
-        self.detailScrollView.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.detailSegmentControl, withOffset: 20.0)
-        self.detailScrollView.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.detailScrollView.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+        self.detailView.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.detailSegmentControl, withOffset: 20.0)
+        self.detailView.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+        self.detailView.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+        self.detailView.autoSetDimension(.Height, toSize: self.foodDetailHeight)
         
     }
     
@@ -301,18 +301,22 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.scrollView.addSubview(self.likeBtn)
         
         // Detail segment control
-        self.detailSegmentControl = SMSegmentView(frame: CGRectMake(0, 0, self.scrollView.frame.width - 40.0, 40.0), separatorColour: UIColor.lightGrayColor(), separatorWidth: 0.5, segmentProperties: [keySegmentTitleFont: UIFont.systemFontOfSize(14.0), keySegmentOnSelectionColour: UIColor.blackColor().colorWithAlphaComponent(0.2), keySegmentOffSelectionColour: UIColor.whiteColor(), keyContentVerticalMargin: Float(10.0)])
+        self.detailSegmentControl = SMSegmentView(frame: CGRectMake(0, 0, self.scrollView.frame.width - 40.0, 40.0), separatorColour: UIColor.lightGrayColor(), separatorWidth: 0, segmentProperties: [keySegmentTitleFont: UIFont.systemFontOfSize(16.0), keySegmentOnSelectionColour: UIColor.blackColor().colorWithAlphaComponent(0.2), keySegmentOffSelectionColour: UIColor.blackColor().colorWithAlphaComponent(0.2), keyContentVerticalMargin: Float(10.0)])
         self.detailSegmentControl.delegate = self
         self.detailSegmentControl.layer.borderColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.4).CGColor
         self.detailSegmentControl.layer.borderWidth = 0
         
-        self.detailSegmentControl.addSegmentWithTitle("亮点", onSelectionImage: UIImage(named: "bulb_light"), offSelectionImage: UIImage(named: "bulb"))
-        self.detailSegmentControl.addSegmentWithTitle("菜单", onSelectionImage: UIImage(named: "clip_light"), offSelectionImage: UIImage(named: "clip"))
-        self.detailSegmentControl.addSegmentWithTitle("须知", onSelectionImage: UIImage(named: "cloud_light"), offSelectionImage: UIImage(named: "cloud"))
+        self.detailSegmentControl.addSegmentWithTitle("亮点", onSelectionImage: nil, offSelectionImage: nil)
+        self.detailSegmentControl.addSegmentWithTitle("菜单", onSelectionImage: nil, offSelectionImage: nil)
+        self.detailSegmentControl.addSegmentWithTitle("须知", onSelectionImage: nil, offSelectionImage: nil)
         
         self.scrollView.addSubview(self.detailSegmentControl)
         
-        self.scrollView.addSubview(self.detailScrollView)
+        self.detailScrollView = FoodDetailScrollView(frame: CGRectMake(0, 0, self.scrollView.width-40, 400))
+        self.detailScrollView.segmentedControl = self.detailSegmentControl
+        self.foodDetailHeight = detailScrollView.height
+        self.detailView.addSubview(self.detailScrollView)
+        self.scrollView.addSubview(self.detailView)
         
     }
     
@@ -331,18 +335,20 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         if index == 1 {
             indexPage = 1.0
             
-            
+            self.detailScrollView.viewType = VCAppLetor.FoodInfoType.menu
         }
         else if index == 2 {
             indexPage = 2.0
             
+            self.detailScrollView.viewType = VCAppLetor.FoodInfoType.info
         }
         else {
-            
+            self.detailScrollView.viewType = VCAppLetor.FoodInfoType.spot
         }
         
-        self.detailScrollView.setNeedsUpdateConstraints()
-        
+        self.detailView.height = self.detailScrollView.height
+        self.scrollView.contentSize.height = self.detailView.originY + self.detailView.height + 20.0
+        self.detailScrollView.scrollRectToVisible(CGRectMake(self.detailScrollView.width * indexPage, 0, self.detailScrollView.width, 200), animated: true)
         
         
     }

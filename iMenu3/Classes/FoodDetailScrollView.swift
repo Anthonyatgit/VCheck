@@ -17,7 +17,7 @@ class FoodDetailScrollView: UIScrollView, UIScrollViewDelegate {
     var segmentedControl: SMSegmentView!
     var viewType: VCAppLetor.FoodInfoType! {
         didSet {
-            
+            self.updateView()
         }
     }
     
@@ -47,20 +47,11 @@ class FoodDetailScrollView: UIScrollView, UIScrollViewDelegate {
         
         self.bottomLineMenu.autoSetDimensionsToSize(CGSizeMake(self.frame.width, 5.0))
         self.bottomLineMenu.autoPinEdgeToSuperviewEdge(.Leading, withInset: self.frame.width)
-        self.bottomLineMenu.autoPinEdgeToSuperviewEdge(.Top, withInset: 180)
+        self.bottomLineMenu.autoPinEdgeToSuperviewEdge(.Top, withInset: 200)
         
         self.bottomLineInfo.autoSetDimensionsToSize(CGSizeMake(self.frame.width, 5.0))
-        self.bottomLineInfo.autoPinEdgeToSuperviewEdge(.Trailing)
-        self.bottomLineInfo.autoPinEdgeToSuperviewEdge(.Top, withInset: 180)
-        
-        
-        println("bottom line frame: \(self.bottomLineSpot.frame)")
-        
-        
-        self.autoSetDimension(.Height, toSize: self.bottomLineSpot.originY + 20.0)
-        self.contentSize.height = self.frame.size.height
-        
-        println("detailScroll: \(self.frame) | \(self.contentSize)")
+        self.bottomLineInfo.autoPinEdgeToSuperviewEdge(.Leading, withInset: self.frame.width * 2)
+        self.bottomLineInfo.autoPinEdgeToSuperviewEdge(.Top, withInset: 160)
         
     }
     
@@ -70,7 +61,8 @@ class FoodDetailScrollView: UIScrollView, UIScrollViewDelegate {
         self.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
         self.pagingEnabled = true
         self.showsHorizontalScrollIndicator = false
-        self.contentSize = self.frame.size
+        self.contentSize.width = self.frame.size.width * 3
+        self.contentSize.height = self.frame.size.height
         self.delegate = self
         
         
@@ -90,24 +82,36 @@ class FoodDetailScrollView: UIScrollView, UIScrollViewDelegate {
     
     func updateView() {
         
+        if self.viewType == VCAppLetor.FoodInfoType.spot {
+            self.height = self.bottomLineSpot.originY + 20.0
+        }
+        else if self.viewType == VCAppLetor.FoodInfoType.menu {
+            self.height = self.bottomLineMenu.originY + 20.0
+        }
+        else {
+            self.height = self.bottomLineInfo.originY + 20.0
+        }
+        
+        self.contentSize.height = self.height
     }
     
     // MARK: - UIScrollView Delegate
     
-//    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-//        let pageWidth: CGFloat = self.frame.size.width
-//        let page: CGFloat = self.contentOffset.x / pageWidth
-//        var pageIndex: Int = 0
-//        
-//        if page == 1.0 {
-//            pageIndex = 1
-//        }
-//        else if page == 2.0 {
-//            pageIndex = 2
-//        }
-//        
-//        self.segmentedControl.selectSegmentAtIndex(pageIndex)
-//    }
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        
+        let pageWidth: CGFloat = self.frame.size.width
+        let page: CGFloat = self.contentOffset.x / pageWidth
+        var pageIndex: Int = 0
+        
+        if page == 1.0 {
+            pageIndex = 1
+        }
+        else if page == 2.0 {
+            pageIndex = 2
+        }
+        
+        self.segmentedControl.selectSegmentAtIndex(pageIndex)
+    }
     
     
 }

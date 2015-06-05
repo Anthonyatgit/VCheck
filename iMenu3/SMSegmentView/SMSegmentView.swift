@@ -72,7 +72,7 @@ class SMSegmentView: UIView, SMSegmentDelegate {
     }
     
     // Segment Colour
-    var segmentOnSelectionColour: UIColor = UIColor.darkGrayColor() {
+    var segmentOnSelectionColour: UIColor = UIColor.whiteColor() {
         didSet {
             for segment in self.segments {
                 segment.onSelectionColour = self.segmentOnSelectionColour
@@ -88,7 +88,7 @@ class SMSegmentView: UIView, SMSegmentDelegate {
     }
     
     // Segment Title Text Colour & Font
-    var segmentOnSelectionTextColour: UIColor = UIColor.whiteColor() {
+    var segmentOnSelectionTextColour: UIColor = UIColor.darkGrayColor() {
         didSet {
             for segment in self.segments {
                 segment.onSelectionTextColour = self.segmentOnSelectionTextColour
