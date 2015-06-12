@@ -95,9 +95,9 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
         let icon = self.userPanelIcon.values.array[indexPath.section][indexPath.row]
         cell.panelIcon.image = UIImage(named: icon)
         
-        if indexPath.row > 2 || indexPath.section > 0 {
-            cell.countLabel.text = ""
-        }
+        //        if indexPath.row > 2 || indexPath.section > 0 {
+        //            cell.countLabel.text = ""
+        //        }
         
         
         cell.setNeedsUpdateConstraints()
@@ -115,7 +115,6 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
         let selected = userPanelDataSource.values.array[indexPath.section][indexPath.row]
-        println("\(selected) selected")
         
         if (indexPath.section == 0 && indexPath.row == 0) { // My Orders
             
@@ -164,6 +163,10 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
             if (isLogined()) {
                 
                 // Display Feedback editor
+                let feedbackVC: FeedbackViewController = FeedbackViewController()
+                feedbackVC.parentNav = self.parentNav
+                self.parentNav?.showViewController(feedbackVC, sender: self)
+                
             }
             else {
                 
@@ -194,6 +197,44 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
         return view
     }
     
+    override func tableView(tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        
+        if section == 1 {
+            
+            let v: UITableViewHeaderFooterView = UITableViewHeaderFooterView.newAutoLayoutView()
+            v.frame = CGRectMake(0, 0, self.tableView.bounds.width, VCAppLetor.ConstValue.UserPanelFooterViewHeight)
+            
+            let logoutButton: UIButton = UIButton.newAutoLayoutView()
+            logoutButton.setTitle(VCAppLetor.StringLine.ServiceTel, forState: .Normal)
+            logoutButton.titleLabel?.font = VCAppLetor.Font.BigFont
+            logoutButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+            logoutButton.backgroundColor = UIColor.turquoiseColor().colorWithAlphaComponent(0.8)
+//            logoutButton.addTarget(self, action: "Logout", forControlEvents: .TouchUpInside)
+            logoutButton.layer.cornerRadius = VCAppLetor.ConstValue.ButtonCornerRadius
+            v.contentView.addSubview(logoutButton)
+            
+            logoutButton.autoCenterInSuperview()
+            logoutButton.autoPinEdgeToSuperviewEdge(.Leading, withInset: 30.0)
+            logoutButton.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 30.0)
+            logoutButton.autoSetDimension(.Height, toSize: 42.0)
+            
+            v.setNeedsUpdateConstraints()
+            return v
+        }
+        else {
+            return UIView(frame: CGRectZero)
+        }
+    }
+    
+    override func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        
+        if section == 1 {
+            return VCAppLetor.ConstValue.UserPanelFooterViewHeight
+        }
+        else {
+            return 20.0
+        }
+    }
     
     // MARK: - Functions
     
@@ -201,11 +242,11 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
         
         
         if (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String != "0") {
-                
-                let userInfoViewController: UserInfoViewController = UserInfoViewController()
-                userInfoViewController.parentNav = self.parentNav
-                userInfoViewController.delegate = self
-                self.parentNav?.showViewController(userInfoViewController, sender: self)
+            
+            let userInfoViewController: UserInfoViewController = UserInfoViewController()
+            userInfoViewController.parentNav = self.parentNav
+            userInfoViewController.delegate = self
+            self.parentNav?.showViewController(userInfoViewController, sender: self)
         }
         else {
             
@@ -245,7 +286,7 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                 
                 println("update token after login \(token.value)")
                 
-                })
+            })
             
             CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: tokenStr, namespace: "token")
             
@@ -345,11 +386,11 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                     let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
                     
                     // Listing Info
-//                    let orderCount = json["data"]["order_info"]["order_total_count"].string!
+                    //                    let orderCount = json["data"]["order_info"]["order_total_count"].string!
                     // Collection Info
-//                    let collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
+                    //                    let collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
                     // Coupon Info
-//                    let couponCount = json["data"]["coupon_info"]["coupon_total_count"].string!
+                    //                    let couponCount = json["data"]["coupon_info"]["coupon_total_count"].string!
                     
                     // Get member info and refresh userinterface
                     BreezeStore.saveInMain({ (contextType) -> Void in
@@ -364,7 +405,7 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                         member.lastLog = NSDate()
                         member.token = token
                         
-                        })
+                    })
                     
                     // update local data
                     self.updateSettings(token, currentMid: mid)
@@ -376,9 +417,10 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                     CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
                     
                     self.userInfoHeaderView.panelTitle.text = nicknameString
-//                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = orderCount
-//                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 1, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = collectionCount
-//                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 2, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = couponCount
+                    
+                    //                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = orderCount
+                    //                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 1, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = collectionCount
+                    //                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 2, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = couponCount
                     
                     Alamofire.request(.GET, iconString).validate().responseImage() {
                         (_, _, image, error) in
@@ -423,11 +465,11 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                     let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
                     
                     // Listing Info
-//                    let orderCount = json["data"]["order_info"]["order_total_count"].string!
+                    //                    let orderCount = json["data"]["order_info"]["order_total_count"].string!
                     // Collection Info
-//                    let collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
+                    //                    let collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
                     // Coupon Info
-//                    let couponCount = json["data"]["coupon_info"]["coupon_total_count"].string!
+                    //                    let couponCount = json["data"]["coupon_info"]["coupon_total_count"].string!
                     
                     if let member = Member.findFirst(attribute: "mid", value: midString, contextType: BreezeContextType.Main) as? Member {
                         
@@ -452,9 +494,9 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                         CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
                         
                         self.userInfoHeaderView.panelTitle.text = nicknameString
-//                        (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = orderCount
-//                        (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 1, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = collectionCount
-//                        (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 2, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = couponCount
+                        //                        (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = orderCount
+                        //                        (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 1, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = collectionCount
+                        //                        (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 2, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = couponCount
                         
                         Alamofire.request(.GET, iconString).validate().responseImage() {
                             (_, _, image, error) in
@@ -479,7 +521,7 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                             member.lastLog = NSDate()
                             member.token = token
                             
-                            })
+                        })
                         
                         // update local data
                         self.updateSettings(token, currentMid: mid)
@@ -525,7 +567,7 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                 token.sid = "\(NSDate())"
                 token.value = "0"
                 
-                })
+            })
             
             CTMemCache.sharedInstance.cleanNamespace("member")
             CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: "0", namespace: "token")
@@ -536,7 +578,7 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
             // Refresh user panel interface
             self.userInfoHeaderView.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)
             self.userInfoHeaderView.panelTitle.text = VCAppLetor.StringLine.UserInfoWithoutSignin
-            self.userInfoHeaderView.alpha = 0.6
+            self.userInfoHeaderView.panelIcon.alpha = 0.1
             
         } else {
             println("ERROR @ Can not find token in the local data")
@@ -551,6 +593,32 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
     
     
     
+}
+
+
+
+class UserPanelSectionFooterView: UITableViewHeaderFooterView {
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.setupViews()
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupViews()
+    }
+    
+    override init(reuseIdentifier: String?) {
+        super.init(reuseIdentifier: reuseIdentifier)
+        self.setupViews()
+    }
+    
+    func setupViews() {
+        
+        //        self.contentView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
+        
+    }
 }
 
 

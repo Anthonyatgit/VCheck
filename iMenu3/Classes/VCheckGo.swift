@@ -31,11 +31,13 @@ struct VCheckGo {
         case LoginWithToken(String, String)                                 // 05.会员-记录登陆状态
         case MemberLogout(String, String)                                   // 06.会员-登出
         case ValidateMemberInfo(ValidateType, String)                       // 07.会员-校验会员信息
+        case QuickLogin(String, String)                                     // 08.快速登陆
         case GetVerifyCode(String, String)                                  // 09.基本-获取验证码
         case EditMemberEmail(String, String, String)                        // 10.会员-编辑个人信息-Email
         case EditMemberNickname(String, String, String)                     // 10.会员-编辑个人信息-Nickname
         case EditMemberPassword(String, String, String, String)             // 10.会员-编辑个人信息-Password
         case GetMemberInfo(String, String)                                  // 12.会员-获取个人详情
+        case FeedBack(String, String, String)                                       // 16.基本-提交反馈信息
         
         var URLRequest: NSURLRequest {
             
@@ -59,6 +61,10 @@ struct VCheckGo {
                 case .ValidateMemberInfo(let validateType, let value):
                     let params = ["route":"\(RoutePath.ValidateMemberInfo.rawValue)","token":"","jsonText":"{\"validate_type\":\"\(validateType.rawValue)\",\"validate_value\":\(value)}"]
                     return ("/\(RoutePath.ValidateMemberInfo.rawValue)", params)
+                //=========QuickLogin================
+                case .QuickLogin(let mobile, let code):
+                    let params = ["route":"\(RoutePath.QuickLogin.rawValue)","token":"","jsonText":"{\"mobile\":\"\(mobile)\",\"code\":\"\(code)\"}"]
+                    return ("/\(RoutePath.QuickLogin.rawValue)", params)
                 //=========MemberRegister============
                 case .MemberRegister(let mobile, let password, let code):
                     let params = ["route":"\(RoutePath.MemberRegister.rawValue)","token":"","jsonText":"{\"mobile\":\(mobile),\"password\":\"\(password)\",\"code\":\"\(code)\"}"]
@@ -91,6 +97,10 @@ struct VCheckGo {
                 case .MemberLogout(let token, let memberId):
                     let params = ["route":"\(RoutePath.MemberLogout.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\"}"]
                     return ("/\(RoutePath.MemberLogout.rawValue)", params)
+                //=========FeedBack==================
+                case .FeedBack(let memberId, let token, let feedbackInfo):
+                    let params = ["route":"\(RoutePath.FeedBack.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"feedback_content\":\"\(feedbackInfo)\"}"]
+                    return ("/\(RoutePath.FeedBack.rawValue)", params)
                 //=========DEFAULT===================
                 default: return ("/",["consumer_key": Router.consumerKey])
                 }
@@ -137,6 +147,8 @@ struct VCheckGo {
         case MemberLogout = "member/member/logout"
         case ResetPassword = "member/member/resetPassword"
         case EditMemberInfo = "member/member/editMemberInfo"
+        case QuickLogin = "member/member/quickLogin"
+        case FeedBack = "base/feedback/submitFeedbackInfo"
     }
     
     enum ImageSize: Int {
@@ -162,6 +174,24 @@ struct VCheckGo {
             }
         }
     }
+    
+}
+
+class OrderInfo: NSObject {
+    
+    let order_id: String
+    var order_title: String?
+    var order_price: String?
+    var order_amount: String?
+    let order_total: String
+    
+    init(id: String, price: String) {
+        
+        self.order_id = id
+        self.order_total = price
+    }
+    
+    
     
 }
 

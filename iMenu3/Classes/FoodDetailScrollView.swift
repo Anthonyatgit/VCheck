@@ -21,6 +21,9 @@ class FoodDetailScrollView: UIScrollView, UIScrollViewDelegate {
         }
     }
     
+    
+    let mapView: BMKMapView = BMKMapView(frame: CGRectMake(0, 0, 280, 100))
+    
     let bottomLineSpot: CustomDrawView = CustomDrawView.newAutoLayoutView()
     let bottomLineMenu: CustomDrawView = CustomDrawView.newAutoLayoutView()
     let bottomLineInfo: CustomDrawView = CustomDrawView.newAutoLayoutView()
@@ -65,6 +68,8 @@ class FoodDetailScrollView: UIScrollView, UIScrollViewDelegate {
         self.contentSize.height = self.frame.size.height
         self.delegate = self
         
+        // Map Test
+        self.addSubview(self.mapView)
         
         
         // Bottom Line

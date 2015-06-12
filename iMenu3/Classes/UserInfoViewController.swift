@@ -10,6 +10,7 @@ import UIKit
 import Alamofire
 import PureLayout
 import RKDropdownAlert
+import MBProgressHUD
 
 protocol MemberLogoutDelegate {
     func memberDidLogoutSuccess(mid: String)
@@ -34,7 +35,7 @@ class UserInfoSectionHeaderView: UITableViewHeaderFooterView {
     
     func setupViews() {
         
-//        self.contentView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
+        //        self.contentView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
         
     }
 }
@@ -48,6 +49,8 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
     var parentNav: UINavigationController?
     
     let reachability = Reachability.reachabilityForInternetConnection()
+    
+    var hud: MBProgressHUD!
     
     // MARK: - Life-Cycle
     
@@ -99,18 +102,20 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         
         if (indexPath.section == 0 && indexPath.row == 0) { // Email
             cell.title.text = VCAppLetor.UserPanel.Email
-            cell.subTitle.text = CTMemCache.sharedInstance.get("email", namespace: "member")?.data as? String ?? VCAppLetor.StringLine.NotSetYet
+            cell.subTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Email, namespace: "member")?.data as? String ?? VCAppLetor.StringLine.NotSetYet
         }
         else if (indexPath.section == 0 && indexPath.row == 1) { // Nickname
             cell.title.text = VCAppLetor.UserPanel.Nickname
-            cell.subTitle.text = CTMemCache.sharedInstance.get("nickname", namespace: "member")?.data as? String ?? VCAppLetor.StringLine.NotSetYet
+            cell.subTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String ?? VCAppLetor.StringLine.NotSetYet
         }
         else if (indexPath.section == 1 && indexPath.row == 0) { // Phone Number
             cell.title.text = VCAppLetor.UserPanel.PhoneNumber
-            //            var phoneNumber = CTMemCache.sharedInstance.get("phoneNumber", namespace: "member")?.data as! String
-            var phoneNumber: String = "15229354910"
-            var range = Range<String.Index>(start: advance(phoneNumber.startIndex, 3),end: advance(phoneNumber.endIndex, -4))
-            phoneNumber.replaceRange(range, with: "••••")
+            var phoneNumber = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Mobile, namespace: "member")?.data as? String ??  VCAppLetor.StringLine.NotSetYet
+            
+            if phoneNumber != VCAppLetor.StringLine.NotSetYet {
+                var range = Range<String.Index>(start: advance(phoneNumber.startIndex, 3),end: advance(phoneNumber.endIndex, -4))
+                phoneNumber.replaceRange(range, with: "••••")
+            }
             
             cell.subTitle.text = phoneNumber
             
@@ -156,12 +161,11 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
             editMemberInfoViewController.editType = VCAppLetor.EditType.Nickname
         }
         else if (indexPath.section == 1 && indexPath.row == 0) { // Phone number
-            editMemberInfoViewController.editType = VCAppLetor.EditType.Password
-        }
-        else if (indexPath.section == 1 && indexPath.row == 1) { // Passcode
-            
             RKDropdownAlert.title(VCAppLetor.StringLine.MobileCannotChange, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
             return
+        }
+        else if (indexPath.section == 1 && indexPath.row == 1) { // Passcode
+            editMemberInfoViewController.editType = VCAppLetor.EditType.Password
         }
         else if (indexPath.section == 2 && indexPath.row == 0) { // Weibo
             // Logout with ShareSDK if neccesory
@@ -338,6 +342,9 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         
         if reachability.isReachable() {
             
+            self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            self.hud.mode = MBProgressHUDMode.Indeterminate
+            
             let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
             let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
             
@@ -367,18 +374,22 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
                             self.delegate?.memberDidLogoutSuccess(memberId)
                             self.parentNav?.popViewControllerAnimated(true)
                             
+                            self.hud.hide(true)
                             
                         }
                         else {
+                            self.hud.hide(true)
                             RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                         }
                     }
                     else {
+                        self.hud.hide(true)
                         println("ERROR @ request for member logout : \(error?.localizedDescription)")
                     }
                 })
             }
             else {
+                self.hud.hide(true)
                 println("ERROR @ Unexpected empty value with member_id OR token!")
             }
         }

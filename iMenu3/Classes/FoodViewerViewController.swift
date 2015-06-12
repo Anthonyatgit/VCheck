@@ -15,7 +15,9 @@ import HMSegmentedControl
 class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSegmentViewDelegate, UIActionSheetDelegate {
     
     var foodIdentifier: String?
-    var foodInfo: FoodItem?
+    var foodItem: FoodItem?
+    
+    var parentNav: UINavigationController?
     
     let scrollView: UIScrollView = UIScrollView()
     let checkView: UIView = UIView.newAutoLayoutView()
@@ -57,6 +59,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         super.viewDidLoad()
         
         self.title = VCAppLetor.StringLine.FoodViewerTitle
+        self.view.backgroundColor = UIColor.whiteColor()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Bookmarks, target: self, action: "shareFood")
         
         self.scrollView.frame = self.view.bounds
@@ -78,6 +81,16 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         super.viewDidAppear(animated)
         
         self.detailSegmentControl.selectSegmentAtIndex(0)
+        
+        self.detailScrollView.mapView.viewWillAppear()
+        self.detailScrollView.mapView.delegate = nil
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        self.detailScrollView.mapView.viewWillDisappear()
+        self.detailScrollView.mapView.delegate = nil
     }
     
     override func viewDidLayoutSubviews() {
@@ -190,6 +203,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.checkNow.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         self.checkNow.layer.borderWidth = 1.0
         self.checkNow.layer.borderColor = UIColor.whiteColor().CGColor
+        self.checkNow.addTarget(self, action: "checkNowAction", forControlEvents: UIControlEvents.TouchUpInside)
         self.checkView.addSubview(self.checkNow)
         
         self.price.text = "288"
@@ -249,7 +263,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.scrollView.addSubview(self.dateTag)
         
         // Food title
-        self.foodTitle.text = self.foodInfo!.title
+        self.foodTitle.text = self.foodItem!.title
         self.foodTitle.font = VCAppLetor.Font.XLarge
         self.foodTitle.numberOfLines = 2
         self.foodTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
@@ -275,12 +289,12 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.scrollView.addSubview(self.returnable)
         
         // Food Description
-        self.foodDesc.text = self.foodInfo?.desc
+        self.foodDesc.text = self.foodItem?.desc
         
-        let attrString: NSMutableAttributedString = NSMutableAttributedString(string: self.foodInfo!.desc)
+        let attrString: NSMutableAttributedString = NSMutableAttributedString(string: self.foodItem!.desc)
         let parag: NSMutableParagraphStyle = NSMutableParagraphStyle()
         parag.lineSpacing = 5
-        attrString.addAttribute(NSParagraphStyleAttributeName, value: parag, range: NSMakeRange(0, count(self.foodInfo!.desc)))
+        attrString.addAttribute(NSParagraphStyleAttributeName, value: parag, range: NSMakeRange(0, count(self.foodItem!.desc)))
         self.foodDesc.attributedText = attrString
         self.foodDesc.sizeToFit()
         self.foodDesc.font = VCAppLetor.Font.NormalFont
@@ -323,6 +337,17 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
     func shareFood() {
         
     }
+    
+    // Submit order action
+    func checkNowAction() {
+        
+        let orderCheckViewController: VCCheckNowViewController = VCCheckNowViewController()
+        orderCheckViewController.parentNav = self.parentNav
+        orderCheckViewController.foodItem = self.foodItem
+        self.parentNav?.showViewController(orderCheckViewController, sender: self)
+    }
+    
+    
     
     // MARK: - UIScrollViewDelegate
     

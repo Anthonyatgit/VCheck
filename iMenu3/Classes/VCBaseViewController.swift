@@ -7,18 +7,17 @@
 //
 
 import UIKit
-import CoreData
-import PureLayout
 import Alamofire
 import RKDropdownAlert
-import MBProgressHUD
-import AFViewShaker
 
 class VCBaseViewController: UIViewController {
     
     
     // Internet connection Reachability
     let reachability = Reachability.reachabilityForInternetConnection()
+    
+    // Detection of loading action
+    let isInitReady: Bool = false
     
     // MARK: - Lifecycle
     
@@ -44,6 +43,24 @@ class VCBaseViewController: UIViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func reachabilityChanged(notification: NSNotification) {
+        
+        var internetStat: String = ""
+        var bgColor: UIColor = UIColor.nephritisColor()
+        if self.reachability.isReachableViaWiFi() {
+            internetStat = "Connection: Via WIFI"
+        }
+        else if self.reachability.isReachableViaWWAN() {
+            internetStat = "Connection: Via Cellular"
+        }
+        else if !self.reachability.isReachable() {
+            internetStat = "NO Internet"
+            bgColor = UIColor.alizarinColor()
+        }
+        
+        RKDropdownAlert.title(internetStat, backgroundColor: bgColor, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
     }
     
     

@@ -12,8 +12,9 @@ import Alamofire
 import RKDropdownAlert
 import MBProgressHUD
 import AFViewShaker
+import IHKeyboardAvoiding
 
-class RegisterViewController: VCBaseViewController, UITextFieldDelegate, RKDropdownAlertDelegate {
+class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UITextFieldDelegate, RKDropdownAlertDelegate {
     
     let scrollView: UIScrollView = UIScrollView()
     
@@ -72,6 +73,7 @@ class RegisterViewController: VCBaseViewController, UITextFieldDelegate, RKDropd
         self.title = VCAppLetor.StringLine.RegPageTitle
         self.view.backgroundColor = UIColor.whiteColor()
         self.scrollView.frame = self.view.bounds
+        self.scrollView.height = self.view.height - 180.0
         self.scrollView.contentMode = UIViewContentMode.Top
         self.scrollView.backgroundColor = UIColor.whiteColor()
         
@@ -86,18 +88,22 @@ class RegisterViewController: VCBaseViewController, UITextFieldDelegate, RKDropd
         // input your phone number
         self.phoneNumber.placeholder = VCAppLetor.StringLine.PhoneNumber
         self.phoneNumber.clearButtonMode = .WhileEditing
-        self.phoneNumber.keyboardType = UIKeyboardType.PhonePad
+        self.phoneNumber.keyboardType = UIKeyboardType.NumbersAndPunctuation
+        self.phoneNumber.returnKeyType = UIReturnKeyType.Done
         self.phoneNumber.textAlignment = .Left
         self.phoneNumber.font = VCAppLetor.Font.BigFont
+        self.phoneNumber.tag = 1
         self.phoneNumber.delegate = self
         self.scrollView.addSubview(self.phoneNumber)
         
         // Input your authcode which send to your smartphone by SMS
         self.authCode.placeholder = VCAppLetor.StringLine.SMSCode
         self.authCode.clearButtonMode = .WhileEditing
-        self.authCode.keyboardType = UIKeyboardType.NumberPad
+        self.authCode.keyboardType = UIKeyboardType.NumbersAndPunctuation
+        self.authCode.returnKeyType = UIReturnKeyType.Done
         self.authCode.textAlignment = .Left
         self.authCode.font = VCAppLetor.Font.BigFont
+        self.authCode.tag = 2
         self.authCode.delegate = self
         self.scrollView.addSubview(self.authCode)
         
@@ -106,13 +112,13 @@ class RegisterViewController: VCBaseViewController, UITextFieldDelegate, RKDropd
         
         // Send auth code button
         self.senDAuthCodeButton.setTitle(VCAppLetor.StringLine.SendAutoCode, forState: .Normal)
-        self.senDAuthCodeButton.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        self.senDAuthCodeButton.setTitleColor(UIColor.blackColor().colorWithAlphaComponent(0.8), forState: .Normal)
         self.senDAuthCodeButton.titleLabel?.font = VCAppLetor.Font.SmallFont
         self.senDAuthCodeButton.titleLabel?.textAlignment = .Center
         self.senDAuthCodeButton.backgroundColor = UIColor.whiteColor()
         self.senDAuthCodeButton.layer.borderWidth = VCAppLetor.ConstValue.ButtonBorderWidth
-        self.senDAuthCodeButton.layer.borderColor = UIColor.grayColor().CGColor
-        self.senDAuthCodeButton.layer.cornerRadius = VCAppLetor.ConstValue.ButtonCornerRadius
+        self.senDAuthCodeButton.layer.borderColor = UIColor.lightGrayColor().CGColor
+        //        self.senDAuthCodeButton.layer.cornerRadius = VCAppLetor.ConstValue.ButtonCornerRadius
         self.senDAuthCodeButton.addTarget(self, action: "checkMobile", forControlEvents: .TouchUpInside)
         self.scrollView.addSubview(self.senDAuthCodeButton)
         
@@ -148,15 +154,15 @@ class RegisterViewController: VCBaseViewController, UITextFieldDelegate, RKDropd
         self.terms.font = VCAppLetor.Font.SmallFont
         self.terms.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.terms.backgroundColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.1)
-        self.scrollView.addSubview(terms)
+        self.view.addSubview(terms)
         
         self.termsUnderline.drawType = "Line"
         self.termsUnderline.lineWidth = 1.0
-        self.scrollView.addSubview(termsUnderline)
+        self.view.addSubview(termsUnderline)
         
         self.termsButton.setTitle(" ", forState: .Normal)
         self.termsButton.addTarget(self, action: "showTerms", forControlEvents: .TouchUpInside)
-        self.scrollView.addSubview(termsButton)
+        self.view.addSubview(termsButton)
         
         self.view.addSubview(self.scrollView)
         
@@ -179,13 +185,20 @@ class RegisterViewController: VCBaseViewController, UITextFieldDelegate, RKDropd
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
     
+    override func viewDidLayoutSubviews() {
+        
+        self.scrollView.contentSize = self.scrollView.frame.size
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.delegate = self
+    }
+    
     override func updateViewConstraints() {
         super.updateViewConstraints()
         
         
         regStepView.autoSetDimensionsToSize(CGSizeMake(220.0, 44.0))
         regStepView.autoAlignAxisToSuperviewAxis(ALAxis.Vertical)
-        regStepView.autoPinEdgeToSuperviewEdge(ALEdge.Top, withInset: 30.0)
+        regStepView.autoPinEdgeToSuperviewEdge(ALEdge.Top, withInset: 70.0)
         
         
         self.phoneNumber.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: regStepView, withOffset: VCAppLetor.ConstValue.LineGap)
@@ -198,10 +211,9 @@ class RegisterViewController: VCBaseViewController, UITextFieldDelegate, RKDropd
         phoneUnderLine.autoMatchDimension(ALDimension.Width, toDimension: ALDimension.Width, ofView: self.phoneNumber)
         phoneUnderLine.autoSetDimension(ALDimension.Height, toSize: 3.0)
         
-        
-        self.authCode.autoPinEdge(ALEdge.Leading, toEdge: ALEdge.Leading, ofView: self.phoneNumber)
-        self.authCode.autoPinEdge(ALEdge.Trailing, toEdge: ALEdge.Trailing, ofView: self.senDAuthCodeButton)
-        self.authCode.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: self.phoneNumber, withOffset: VCAppLetor.ConstValue.LineGap)
+        self.authCode.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.phoneNumber)
+        self.authCode.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.senDAuthCodeButton)
+        self.authCode.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.phoneNumber, withOffset: VCAppLetor.ConstValue.LineGap)
         self.authCode.autoMatchDimension(ALDimension.Height, toDimension: ALDimension.Height, ofView: self.phoneNumber)
         
         codeUnderLine.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: self.authCode)
@@ -226,7 +238,7 @@ class RegisterViewController: VCBaseViewController, UITextFieldDelegate, RKDropd
         self.noInventYet.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: invUnderLine, withOffset: VCAppLetor.ConstValue.LineGap / 2)
         self.noInventYet.autoPinEdge(ALEdge.Leading, toEdge: ALEdge.Leading, ofView: self.phoneNumber)
         
-        self.terms.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 70.0 - self.scrollView.frame.height)
+        self.terms.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 20.0)
         self.terms.autoSetDimensionsToSize(CGSizeMake(300.0, 30.0))
         self.terms.autoAlignAxisToSuperviewAxis(.Vertical)
         
@@ -375,11 +387,12 @@ class RegisterViewController: VCBaseViewController, UITextFieldDelegate, RKDropd
     func phoneRegAction() {
         
         let verifyCode = self.authCode.text
+        let sendingCode = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.VerifyCode, namespace: "member")?.data as? String ?? ""
         
         if verifyCode != "" {
             
             // Matching verify code
-            if verifyCode == CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.VerifyCode, namespace: "member")?.data as! String {
+            if verifyCode == sendingCode {
                 
                 // Set member password
                 let setPassForRegViewController: RegSetPassViewController = RegSetPassViewController()
@@ -455,8 +468,20 @@ class RegisterViewController: VCBaseViewController, UITextFieldDelegate, RKDropd
     
     // MARK: - UITextFieldDelegate
     
+    func textFieldDidBeginEditing(textField: UITextField) {
+        IHKeyboardAvoiding.setAvoidingView(self.scrollView)
+    }
+    
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         textField.resignFirstResponder()
+        
+        if textField.tag == 1 {
+            self.checkMobile()
+        }
+        else if textField.tag == 2 {
+            self.phoneRegAction()
+        }
+        
         return true
     }
     

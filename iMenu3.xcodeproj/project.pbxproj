@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0BE02F5CD93607CAD28B61E4 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E1B9F71B7F8A3007EFAD6E6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */; };
+		9203E68D1B0063FD00407F66 /* ShareSDKContentController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9203E68C1B0063FD00407F66 /* ShareSDKContentController.mm */; };
 		9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */; };
 		922412911B1FE2C20049A9B5 /* FoodDetailScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412901B1FE2C20049A9B5 /* FoodDetailScrollView.swift */; };
 		922412951B200D560049A9B5 /* SMSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412931B200D560049A9B5 /* SMSegment.swift */; };
@@ -34,12 +34,19 @@
 		9227E2E81AE8DDD9008C6381 /* FoodListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2E71AE8DDD9008C6381 /* FoodListController.swift */; };
 		9227E2EE1AE8E4AE008C6381 /* FoodListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */; };
 		9259050B1B098EEE00F343D4 /* UserInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */; };
+		9264F8ED1B2597CD00AF8640 /* VCPayNowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9264F8EC1B2597CD00AF8640 /* VCPayNowViewController.swift */; };
+		9264F8F01B26765500AF8640 /* ali_68.png in Resources */ = {isa = PBXBuildFile; fileRef = 9264F8EF1B26765400AF8640 /* ali_68.png */; };
 		9267443F1B1855C60075EDB5 /* EditUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */; };
 		927779D61B0B02F3002A50EB /* FloatLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D41B0B02F3002A50EB /* FloatLabelTextField.swift */; };
 		927779D71B0B02F3002A50EB /* FloatLabelTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D51B0B02F3002A50EB /* FloatLabelTextView.swift */; };
 		927779DC1B0B0304002A50EB /* CTMemCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D91B0B0304002A50EB /* CTMemCache.swift */; };
 		927779DD1B0B0304002A50EB /* FlatUIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779DA1B0B0304002A50EB /* FlatUIColor.swift */; };
 		927779DE1B0B0304002A50EB /* JSSAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779DB1B0B0304002A50EB /* JSSAlertView.swift */; };
+		927B7C901B29607D00B55DB2 /* BaiduMapAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C8F1B29607D00B55DB2 /* BaiduMapAPI.framework */; };
+		927B7C921B29629100B55DB2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C911B29629100B55DB2 /* CoreLocation.framework */; };
+		927B7C941B2962A700B55DB2 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C931B2962A700B55DB2 /* OpenGLES.framework */; };
+		927B7C961B2962C700B55DB2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C951B2962C700B55DB2 /* CoreGraphics.framework */; };
+		927B7C981B29641100B55DB2 /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 927B7C971B29641100B55DB2 /* mapapi.bundle */; };
 		9280E4481B14444B00959798 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9280E4471B14444B00959798 /* Reachability.swift */; };
 		9282050B1AEDE1330067BB92 /* BreezeStore+Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928205021AEDE1330067BB92 /* BreezeStore+Defaults.swift */; };
 		9282050C1AEDE1330067BB92 /* BreezeStore+iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928205031AEDE1330067BB92 /* BreezeStore+iCloud.swift */; };
@@ -80,8 +87,12 @@
 		929DCAC41B0588B90050B63F /* RegSetPassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */; };
 		92B0F0ED1B12FF2E009F368B /* StringExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B0F0EC1B12FF2E009F368B /* StringExt.swift */; };
 		92B10EC51B00993C00E0674F /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B10EC41B00993C00E0674F /* Member.swift */; };
+		92BD2E141B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BD2E111B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m */; };
+		92BD2E151B27BE810053408B /* UzysRadialProgressActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BD2E131B27BE810053408B /* UzysRadialProgressActivityIndicator.m */; };
+		92BD2E181B2827EF0053408B /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD2E171B2827EF0053408B /* FeedbackViewController.swift */; };
 		92BD603C1B05DE8900649DDF /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */; };
 		92BD603E1B05DEDF00649DDF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */; };
+		92BDB6931B267D3F00D1EEEA /* wx_logo_64.png in Resources */ = {isa = PBXBuildFile; fileRef = 92BDB6921B267D3F00D1EEEA /* wx_logo_64.png */; };
 		92CF816E1AFB441300625641 /* wechat.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CF816C1AFB441300625641 /* wechat.png */; };
 		92CF816F1AFB441300625641 /* weibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CF816D1AFB441300625641 /* weibo.png */; };
 		92CFFB251AF774F700C9AA7D /* UserPanelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CFFB241AF774F700C9AA7D /* UserPanelTableViewCell.swift */; };
@@ -97,6 +108,7 @@
 		92E310291AEDD22E00771CAC /* FoodItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E310281AEDD22E00771CAC /* FoodItem.swift */; };
 		92E3586D1B1D455700D61119 /* brand.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92E3586C1B1D455700D61119 /* brand.jpg */; };
 		92E962E21AF2017400030226 /* Toucan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E962E11AF2017400030226 /* Toucan.swift */; };
+		92EAF9371B218F8900B5EEA8 /* VCCheckNowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */; };
 		92F3B0691B00362A003A6D76 /* SinaWeiboConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0511B00362A003A6D76 /* SinaWeiboConnection.framework */; };
 		92F3B06A1B00362A003A6D76 /* SMSConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0521B00362A003A6D76 /* SMSConnection.framework */; };
 		92F3B06B1B00362A003A6D76 /* WeChatConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0531B00362A003A6D76 /* WeChatConnection.framework */; };
@@ -138,7 +150,7 @@
 		0C40656762C7729B9DD514C9 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		1E1B9F71B7F8A3007EFAD6E6 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9203E68A1B00637300407F66 /* ShareSDKContentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareSDKContentController.h; sourceTree = "<group>"; };
-		9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareSDKContentController.m; sourceTree = "<group>"; };
+		9203E68C1B0063FD00407F66 /* ShareSDKContentController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ShareSDKContentController.mm; sourceTree = "<group>"; };
 		9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCBaseViewController.swift; path = Classes/VCBaseViewController.swift; sourceTree = "<group>"; };
 		922412901B1FE2C20049A9B5 /* FoodDetailScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodDetailScrollView.swift; path = Classes/FoodDetailScrollView.swift; sourceTree = "<group>"; };
 		922412931B200D560049A9B5 /* SMSegment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSegment.swift; sourceTree = "<group>"; };
@@ -168,12 +180,19 @@
 		9227E2E71AE8DDD9008C6381 /* FoodListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodListController.swift; path = Classes/FoodListController.swift; sourceTree = "<group>"; };
 		9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodListTableViewCell.swift; path = Classes/FoodListTableViewCell.swift; sourceTree = "<group>"; };
 		9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoHeaderView.swift; path = Classes/UserInfoHeaderView.swift; sourceTree = "<group>"; };
+		9264F8EC1B2597CD00AF8640 /* VCPayNowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCPayNowViewController.swift; path = Classes/VCPayNowViewController.swift; sourceTree = "<group>"; };
+		9264F8EF1B26765400AF8640 /* ali_68.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ali_68.png; sourceTree = "<group>"; };
 		9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EditUserInfoViewController.swift; path = Classes/EditUserInfoViewController.swift; sourceTree = "<group>"; };
 		927779D41B0B02F3002A50EB /* FloatLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatLabelTextField.swift; sourceTree = "<group>"; };
 		927779D51B0B02F3002A50EB /* FloatLabelTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatLabelTextView.swift; sourceTree = "<group>"; };
 		927779D91B0B0304002A50EB /* CTMemCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTMemCache.swift; sourceTree = "<group>"; };
 		927779DA1B0B0304002A50EB /* FlatUIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlatUIColor.swift; sourceTree = "<group>"; };
 		927779DB1B0B0304002A50EB /* JSSAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSSAlertView.swift; sourceTree = "<group>"; };
+		927B7C8F1B29607D00B55DB2 /* BaiduMapAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI.framework; path = iMenu3/BMK/BaiduMapAPI.framework; sourceTree = "<group>"; };
+		927B7C911B29629100B55DB2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		927B7C931B2962A700B55DB2 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		927B7C951B2962C700B55DB2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		927B7C971B29641100B55DB2 /* mapapi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = mapapi.bundle; path = BMK/BaiduMapAPI.framework/Resources/mapapi.bundle; sourceTree = "<group>"; };
 		9280E4471B14444B00959798 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		928205021AEDE1330067BB92 /* BreezeStore+Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BreezeStore+Defaults.swift"; sourceTree = "<group>"; };
 		928205031AEDE1330067BB92 /* BreezeStore+iCloud.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BreezeStore+iCloud.swift"; sourceTree = "<group>"; };
@@ -214,8 +233,14 @@
 		929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegSetPassViewController.swift; path = Classes/RegSetPassViewController.swift; sourceTree = "<group>"; };
 		92B0F0EC1B12FF2E009F368B /* StringExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExt.swift; sourceTree = "<group>"; };
 		92B10EC41B00993C00E0674F /* Member.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
+		92BD2E101B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+UzysCircularProgressPullToRefresh.h"; sourceTree = "<group>"; };
+		92BD2E111B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+UzysCircularProgressPullToRefresh.m"; sourceTree = "<group>"; };
+		92BD2E121B27BE810053408B /* UzysRadialProgressActivityIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysRadialProgressActivityIndicator.h; sourceTree = "<group>"; };
+		92BD2E131B27BE810053408B /* UzysRadialProgressActivityIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysRadialProgressActivityIndicator.m; sourceTree = "<group>"; };
+		92BD2E171B2827EF0053408B /* FeedbackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedbackViewController.swift; path = Classes/FeedbackViewController.swift; sourceTree = "<group>"; };
 		92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoViewController.swift; path = Classes/UserInfoViewController.swift; sourceTree = "<group>"; };
 		92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoCell.swift; path = Classes/UserInfoCell.swift; sourceTree = "<group>"; };
+		92BDB6921B267D3F00D1EEEA /* wx_logo_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wx_logo_64.png; sourceTree = "<group>"; };
 		92CF816C1AFB441300625641 /* wechat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wechat.png; sourceTree = "<group>"; };
 		92CF816D1AFB441300625641 /* weibo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = weibo.png; sourceTree = "<group>"; };
 		92CFFB241AF774F700C9AA7D /* UserPanelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserPanelTableViewCell.swift; path = Classes/UserPanelTableViewCell.swift; sourceTree = "<group>"; };
@@ -231,6 +256,7 @@
 		92E310281AEDD22E00771CAC /* FoodItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodItem.swift; sourceTree = "<group>"; };
 		92E3586C1B1D455700D61119 /* brand.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = brand.jpg; sourceTree = "<group>"; };
 		92E962E11AF2017400030226 /* Toucan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Toucan.swift; path = Classes/Toucan.swift; sourceTree = "<group>"; };
+		92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCCheckNowViewController.swift; path = Classes/VCCheckNowViewController.swift; sourceTree = "<group>"; };
 		92F3B0511B00362A003A6D76 /* SinaWeiboConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SinaWeiboConnection.framework; sourceTree = "<group>"; };
 		92F3B0521B00362A003A6D76 /* SMSConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SMSConnection.framework; sourceTree = "<group>"; };
 		92F3B0531B00362A003A6D76 /* WeChatConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WeChatConnection.framework; sourceTree = "<group>"; };
@@ -269,6 +295,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				927B7C961B2962C700B55DB2 /* CoreGraphics.framework in Frameworks */,
+				927B7C941B2962A700B55DB2 /* OpenGLES.framework in Frameworks */,
+				927B7C921B29629100B55DB2 /* CoreLocation.framework in Frameworks */,
+				927B7C901B29607D00B55DB2 /* BaiduMapAPI.framework in Frameworks */,
 				92F3B0861B0036F0003A6D76 /* MessageUI.framework in Frameworks */,
 				92F3B0841B0036E2003A6D76 /* ImageIO.framework in Frameworks */,
 				92F3B0821B0036C6003A6D76 /* Security.framework in Frameworks */,
@@ -304,6 +334,10 @@
 		05B8E7EB2168B867A50937F6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				927B7C951B2962C700B55DB2 /* CoreGraphics.framework */,
+				927B7C931B2962A700B55DB2 /* OpenGLES.framework */,
+				927B7C911B29629100B55DB2 /* CoreLocation.framework */,
+				927B7C8F1B29607D00B55DB2 /* BaiduMapAPI.framework */,
 				92F3B0851B0036F0003A6D76 /* MessageUI.framework */,
 				92F3B0831B0036E2003A6D76 /* ImageIO.framework */,
 				92F3B0811B0036C6003A6D76 /* Security.framework */,
@@ -368,6 +402,7 @@
 		9227E2C11AE8DCCC008C6381 /* iMenu3 */ = {
 			isa = PBXGroup;
 			children = (
+				92BD2E0F1B27BE810053408B /* UPullToRefresh */,
 				927779D81B0B0304002A50EB /* THelpClass */,
 				922412921B200D560049A9B5 /* SMSegmentView */,
 				927779D31B0B02F3002A50EB /* FloatLabelFields */,
@@ -384,6 +419,8 @@
 				9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */,
 				928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */,
 				922412901B1FE2C20049A9B5 /* FoodDetailScrollView.swift */,
+				92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */,
+				9264F8EC1B2597CD00AF8640 /* VCPayNowViewController.swift */,
 				9284A13E1AF0AF2500E662B2 /* FoodCollectionsViewController.swift */,
 				9284A1401AF0AF5400E662B2 /* FoodCollectionsViewCell.swift */,
 				928633741B0AE43B0040CBA2 /* UserPanelViewController.swift */,
@@ -392,6 +429,7 @@
 				92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */,
 				9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */,
 				92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */,
+				92BD2E171B2827EF0053408B /* FeedbackViewController.swift */,
 				92CFFB371AF8CCB600C9AA7D /* VCMemberLoginViewController.swift */,
 				9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */,
 				929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */,
@@ -412,9 +450,10 @@
 			isa = PBXGroup;
 			children = (
 				9227E2C31AE8DCCC008C6381 /* Info.plist */,
+				927B7C971B29641100B55DB2 /* mapapi.bundle */,
 				92F3B0891B003802003A6D76 /* iMenu3-Bridging-Header.h */,
 				9203E68A1B00637300407F66 /* ShareSDKContentController.h */,
-				9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */,
+				9203E68C1B0063FD00407F66 /* ShareSDKContentController.mm */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -434,6 +473,15 @@
 				9227E2DC1AE8DCCC008C6381 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		9264F8EE1B26765400AF8640 /* pay */ = {
+			isa = PBXGroup;
+			children = (
+				92BDB6921B267D3F00D1EEEA /* wx_logo_64.png */,
+				9264F8EF1B26765400AF8640 /* ali_68.png */,
+			);
+			path = pay;
 			sourceTree = "<group>";
 		};
 		927779D31B0B02F3002A50EB /* FloatLabelFields */ = {
@@ -504,6 +552,17 @@
 				92E962E11AF2017400030226 /* Toucan.swift */,
 			);
 			name = Toucan;
+			sourceTree = "<group>";
+		};
+		92BD2E0F1B27BE810053408B /* UPullToRefresh */ = {
+			isa = PBXGroup;
+			children = (
+				92BD2E101B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.h */,
+				92BD2E111B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m */,
+				92BD2E121B27BE810053408B /* UzysRadialProgressActivityIndicator.h */,
+				92BD2E131B27BE810053408B /* UzysRadialProgressActivityIndicator.m */,
+			);
+			path = UPullToRefresh;
 			sourceTree = "<group>";
 		};
 		92CFFB261AF8663300C9AA7D /* userPanel */ = {
@@ -610,6 +669,7 @@
 		92F51C8A1AEDE7D300FDD50C /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				9264F8EE1B26765400AF8640 /* pay */,
 				922412971B2012120049A9B5 /* buttonIcon */,
 				92CFFB261AF8663300C9AA7D /* userPanel */,
 				9284A11D1AF0AECD00E662B2 /* collectionImages */,
@@ -687,6 +747,7 @@
 				TargetAttributes = {
 					9227E2BE1AE8DCCC008C6381 = {
 						CreatedOnToolsVersion = 6.3;
+						DevelopmentTeam = 9449XN8XQG;
 					};
 					9227E2D61AE8DCCC008C6381 = {
 						CreatedOnToolsVersion = 6.3;
@@ -719,6 +780,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				927B7C981B29641100B55DB2 /* mapapi.bundle in Resources */,
 				922412AC1B20122A0049A9B5 /* cloud_light.png in Resources */,
 				9282050F1AEDE1330067BB92 /* Info.plist in Resources */,
 				9284A1311AF0AECD00E662B2 /* hungry.png in Resources */,
@@ -745,6 +807,7 @@
 				92CFFB361AF8663400C9AA7D /* user.png in Resources */,
 				92CFFB331AF8663400C9AA7D /* like.png in Resources */,
 				92CF816E1AFB441300625641 /* wechat.png in Resources */,
+				9264F8F01B26765500AF8640 /* ali_68.png in Resources */,
 				9284A13C1AF0AECD00E662B2 /* relax.png in Resources */,
 				9284A1341AF0AECD00E662B2 /* mood2.jpg in Resources */,
 				92F51C8D1AEDE7D300FDD50C /* hagaki.jpg in Resources */,
@@ -759,6 +822,7 @@
 				92CFFB341AF8663400C9AA7D /* shopping-bag.png in Resources */,
 				9227E2CF1AE8DCCC008C6381 /* Images.xcassets in Resources */,
 				9284A1301AF0AECD00E662B2 /* happy.png in Resources */,
+				92BDB6931B267D3F00D1EEEA /* wx_logo_64.png in Resources */,
 				922412AB1B20122A0049A9B5 /* clip@2x.png in Resources */,
 				9284A13D1AF0AECD00E662B2 /* wealthy.png in Resources */,
 				9284A1381AF0AECD00E662B2 /* mood6.jpg in Resources */,
@@ -850,14 +914,18 @@
 				9284A14B1AF1B98100E662B2 /* VCheckGo.swift in Sources */,
 				9284A13F1AF0AF2500E662B2 /* FoodCollectionsViewController.swift in Sources */,
 				92CFFB381AF8CCB600C9AA7D /* VCMemberLoginViewController.swift in Sources */,
-				9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */,
+				92BD2E141B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m in Sources */,
+				9203E68D1B0063FD00407F66 /* ShareSDKContentController.mm in Sources */,
+				92EAF9371B218F8900B5EEA8 /* VCCheckNowViewController.swift in Sources */,
 				9293BBC91B018ECC0034F3C5 /* RegisterViewController.swift in Sources */,
 				927779DC1B0B0304002A50EB /* CTMemCache.swift in Sources */,
+				92BD2E181B2827EF0053408B /* FeedbackViewController.swift in Sources */,
 				9227E2E81AE8DDD9008C6381 /* FoodListController.swift in Sources */,
 				9227E2C51AE8DCCC008C6381 /* AppDelegate.swift in Sources */,
 				928633801B0AE6070040CBA2 /* Settings.swift in Sources */,
 				92FA19471AFCCA8400D33538 /* FindMyPasscodeViewController.swift in Sources */,
 				9284A1451AF0CFCF00E662B2 /* VCAppLetor.swift in Sources */,
+				92BD2E151B27BE810053408B /* UzysRadialProgressActivityIndicator.m in Sources */,
 				928205111AEDE1330067BB92 /* NSManagedObject+Deleting.swift in Sources */,
 				929DCAC41B0588B90050B63F /* RegSetPassViewController.swift in Sources */,
 				92E962E21AF2017400030226 /* Toucan.swift in Sources */,
@@ -868,6 +936,7 @@
 				92B10EC51B00993C00E0674F /* Member.swift in Sources */,
 				922412911B1FE2C20049A9B5 /* FoodDetailScrollView.swift in Sources */,
 				9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */,
+				9264F8ED1B2597CD00AF8640 /* VCPayNowViewController.swift in Sources */,
 				9282050C1AEDE1330067BB92 /* BreezeStore+iCloud.swift in Sources */,
 				92FA19491AFCD6CE00D33538 /* SMSCodeViewController.swift in Sources */,
 				92E310291AEDD22E00771CAC /* FoodItem.swift in Sources */,
@@ -1017,13 +1086,17 @@
 			baseConfigurationReference = 0C40656762C7729B9DD514C9 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Connection",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Core",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/UI",
+					"$(PROJECT_DIR)/iMenu3/BMK",
 				);
+				GCC_INPUT_FILETYPE = automatic;
 				INFOPLIST_FILE = iMenu3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1033,6 +1106,7 @@
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -D DEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "iMenu3/iMenu3-Bridging-Header.h";
 			};
 			name = Debug;
@@ -1042,13 +1116,17 @@
 			baseConfigurationReference = F1602DDA1EBACDED044ADFD3 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Connection",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Core",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/UI",
+					"$(PROJECT_DIR)/iMenu3/BMK",
 				);
+				GCC_INPUT_FILETYPE = automatic;
 				INFOPLIST_FILE = iMenu3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1057,6 +1135,7 @@
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Extend/WeChatSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "iMenu3/iMenu3-Bridging-Header.h";
 			};
 			name = Release;

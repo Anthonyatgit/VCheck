@@ -98,8 +98,8 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
             self.currentPass.autoSetDimension(.Height, toSize: VCAppLetor.ConstValue.TextFieldHeight)
             self.currentPass.autoAlignAxisToSuperviewAxis(.Vertical)
             
-            self.currentPassUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.nickname, withOffset: 3.0)
-            self.currentPassUnderline.autoMatchDimension(.Width, toDimension: .Width, ofView: self.nickname, withOffset: 20.0)
+            self.currentPassUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.currentPass, withOffset: 3.0)
+            self.currentPassUnderline.autoMatchDimension(.Width, toDimension: .Width, ofView: self.currentPass, withOffset: 20.0)
             self.currentPassUnderline.autoSetDimension(.Height, toSize: 3.0)
             self.currentPassUnderline.autoAlignAxisToSuperviewAxis(.Vertical)
             
@@ -142,6 +142,7 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
             self.email.placeholder = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Email, namespace: "member")?.data as? String
             self.email.clearButtonMode = .WhileEditing
             self.email.keyboardType = UIKeyboardType.EmailAddress
+            self.email.returnKeyType = UIReturnKeyType.Done
             self.email.textAlignment = .Left
             self.email.font = VCAppLetor.Font.BigFont
             self.email.delegate = self
@@ -163,6 +164,7 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
             self.nickname.placeholder = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
             self.nickname.clearButtonMode = .WhileEditing
             self.nickname.keyboardType = UIKeyboardType.EmailAddress
+            self.nickname.returnKeyType = UIReturnKeyType.Done
             self.nickname.textAlignment = .Left
             self.nickname.font = VCAppLetor.Font.BigFont
             self.nickname.delegate = self
@@ -183,9 +185,12 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
             
             self.currentPass.placeholder = VCAppLetor.StringLine.CurrentPass
             self.currentPass.keyboardType = UIKeyboardType.EmailAddress
+            self.currentPass.returnKeyType = UIReturnKeyType.Next
             self.currentPass.textAlignment = .Left
             self.currentPass.font = VCAppLetor.Font.BigFont
             self.currentPass.secureTextEntry = true
+            self.currentPass.delegate = self
+            self.currentPass.tag = 1
             self.scrollView.addSubview(self.currentPass)
             
             self.currentPassShacker = AFViewShaker(view: self.currentPass)
@@ -194,22 +199,27 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
             self.currentPassUnderline.lineWidth = 1.0
             self.scrollView.addSubview(self.currentPassUnderline)
             
-            self.newPass.placeholder = VCAppLetor.StringLine.CurrentPass
+            self.newPass.placeholder = VCAppLetor.StringLine.NewPass
             self.newPass.keyboardType = UIKeyboardType.EmailAddress
+            self.newPass.returnKeyType = UIReturnKeyType.Next
             self.newPass.textAlignment = .Left
             self.newPass.font = VCAppLetor.Font.BigFont
             self.newPass.secureTextEntry = true
+            self.newPass.delegate = self
+            self.newPass.tag = 2
             self.scrollView.addSubview(self.newPass)
             
             self.newPassUnderline.drawType = "Line"
             self.newPassUnderline.lineWidth = 1.0
             self.scrollView.addSubview(self.newPassUnderline)
             
-            self.againPass.placeholder = VCAppLetor.StringLine.CurrentPass
+            self.againPass.placeholder = VCAppLetor.StringLine.AgainPasscode
             self.againPass.keyboardType = UIKeyboardType.EmailAddress
+            self.againPass.returnKeyType = UIReturnKeyType.Done
             self.againPass.textAlignment = .Left
             self.againPass.font = VCAppLetor.Font.BigFont
             self.againPass.secureTextEntry = true
+            self.againPass.delegate = self
             self.scrollView.addSubview(self.againPass)
             
             self.againPassUnderline.drawType = "Line"
@@ -317,6 +327,8 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
             let newPassText = self.newPass.text
             let againPassText = self.againPass.text
             
+            self.currentPass.resignFirstResponder()
+            self.newPass.resignFirstResponder()
             self.againPass.resignFirstResponder()
             
             if  count(currentPassText) < 6 {
@@ -375,7 +387,15 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         
-        self.editDone()
+        if textField.tag == 1 {
+            self.newPass.becomeFirstResponder()
+        }
+        else if textField.tag == 2 {
+            self.againPass.becomeFirstResponder()
+        }
+        else {
+            self.editDone()
+        }
         return true
     }
     

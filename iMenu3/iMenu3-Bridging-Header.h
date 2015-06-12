@@ -20,6 +20,12 @@
 
 #import "ShareSDKContentController.h"
 
+// Baidu Map
+#import <BaiduMapAPI/BMapKit.h>
+#import <BaiduMapAPI/BMKMapView.h>
+
+// UPullToRefresh
+#import "UIScrollView+UzysCircularProgressPullToRefresh.h"
 
 // String
 // =======================

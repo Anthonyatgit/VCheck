@@ -17,7 +17,7 @@ protocol MemberSigninDelegate {
     func memberDidSigninSuccess(mid: String, token: String)
 }
 
-class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITextFieldDelegate, RKDropdownAlertDelegate {
+class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, UITextFieldDelegate, RKDropdownAlertDelegate {
     
     let scrollView: UIScrollView = UIScrollView()
     
@@ -363,26 +363,33 @@ class VCMemberLoginViewController: UIViewController, UIScrollViewDelegate, UITex
             
             let code: String = (loginNameText + VCAppLetor.StringLine.SaltKey).md5
             
-            Alamofire.request(VCheckGo.Router.MemberLogin(loginNameText, loginPassText, loginType, code)).validate().responseSwiftyJSON({
-                (_, _, JSON, error) -> Void in
+            if self.reachability.isReachable() {
                 
-                if error == nil {
+                Alamofire.request(VCheckGo.Router.MemberLogin(loginNameText, loginPassText, loginType, code)).validate().responseSwiftyJSON({
+                    (_, _, JSON, error) -> Void in
                     
-                    let json = JSON
-                    
-                    if json["status"]["succeed"].string == "1" {
+                    if error == nil {
                         
-                        self.delegate?.memberDidSigninSuccess(json["data"]["member_id"].string!, token: json["data"]["token"].string!)
-                        self.dismiss()
+                        let json = JSON
+                        
+                        if json["status"]["succeed"].string == "1" {
+                            
+                            self.delegate?.memberDidSigninSuccess(json["data"]["member_id"].string!, token: json["data"]["token"].string!)
+                            self.dismiss()
+                        }
+                        else {
+                            RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                        }
                     }
                     else {
-                        RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                        println("ERROR @ Request for member login : \(error?.localizedDescription)")
                     }
-                }
-                else {
-                    println("ERROR @ Request for member login : \(error?.localizedDescription)")
-                }
-            })
+                })
+            }
+            else {
+                RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            }
+            
             
             hud.hide(true)
         }

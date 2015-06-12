@@ -67,6 +67,7 @@ struct VCAppLetor {
         static let VerifyCodeInProgress: String = "正在发送..."
         static let RegisterInProgress: String = "正在注册..."
         static let Done: String = "确定"
+        static let Send: String = "发送"
         static let Gotit: String = "我知道了"
         static let FindBackMyPassTitle: String = "找回密码"
         static let SMSCode: String = "验证码"
@@ -108,11 +109,43 @@ struct VCAppLetor {
         static let EditPasswordSuccess: String = "密码修改成功"
         static let MobileCannotChange: String = "手机号码绑定后不能修改[联系客服]"
         static let Logout: String = "退出登录"
+        static let ServiceTel: String = "7×24客户服务"
+        static let FeedBackTitle: String = "反馈意见"
+        static let FeedBackPlaceholder: String = "请在这里写下对VCheck的感受，我们将不断进步，为你做的更好~"
+        static let ContactInfo: String = "联系方式"
+        static let ContactPlaceHolder: String = "邮箱，微信，QQ，手机皆可"
+        static let FeedbackTextEmpty: String = "给我们写点什么吧"
+        static let FeedbackSucceed: String = "我们已经收悉你的反馈信息，我们会努力为你做的更好~"
         
         static let FoodViewerTitle: String = "礼遇详情"
         static let ShareToGetCoupon: String = "分享获取丰富礼券"
         static let CheckNow: String = "Check NOW"
         static let SegmentTitles: [AnyObject] = ["亮点","菜单","须知"]
+        
+        static let CheckNowTitle: String = "填写订单"
+        static let CheckNowTip: String = "请注意，该礼遇需要到店享用"
+        static let PayNowTip: String = "该礼遇支持随时申请退款"
+        static let PriceName: String = "价格"
+        static let AmountName: String = "数量"
+        static let TotalPriceName: String = "合计"
+        static let MobilePlease: String = "请输入手机号"
+        static let InputVerifyCode: String = "请输入验证码"
+        static let MobileName: String = "手机号码"
+        static let LoginWithCoupon: String = "使用VCheck账号登陆可立即获得礼券，"
+        static let LoginNow: String = "立即登录"
+        static let OrderPriceName: String = "合计："
+        static let SubmitBtnTitle: String = "提交订单"
+        static let SubmitOrderInProgress: String = "正在提交您的订单..."
+        
+        static let PayOrderTitle: String = "确认订单"
+        static let UseCouponName: String = "使用礼券"
+        static let CouponNone: String = "未使用"
+        static let FinalOrderTotal: String = "还需支付"
+        static let ChoosePayType: String = "选择支付方式"
+        static let AlipayType: String = "支付宝钱包支付"
+        static let WechatType: String = "微信支付"
+        static let PayNow: String = "立即支付"
+        
         
         
         static let FoodTitle: String = "设计师新贵打造花园式餐厅 澜悦双人菜单"
@@ -125,8 +158,8 @@ struct VCAppLetor {
             "http://www.siyo.cc/t/mood1.jpg",
             "http://www.siyo.cc/t/mood2.jpg",
             "http://www.siyo.cc/t/mood3.jpg",
-                "http://www.siyo.cc/t/mood4.jpg",
-        "http://www.siyo.cc/t/mood5.jpg"
+            "http://www.siyo.cc/t/mood4.jpg",
+            "http://www.siyo.cc/t/mood5.jpg"
         ]
         
         static let spot: [NSDictionary] = [
@@ -159,6 +192,9 @@ struct VCAppLetor {
         static let InternetBlack: String = "internet_black"
         static let ShareBlack: String = "share_black"
         static let ThumbUpBlack: String = "thumb_up_black"
+        
+        static let AlipayIcon: String = "ali_68.png"
+        static let WechatIcon: String = "wx_logo_64.png"
     }
     
     // MARK: - ConstValue
@@ -168,7 +204,7 @@ struct VCAppLetor {
         static let SMSRemainingSeconds: Int = 5 // 验证码倒计时总秒数
         static let PI: CGFloat = 3.14159265358979323846 // 圆周率
         static let TopAlertStayTime: Int = 3
-        static let LineGap: CGFloat = 20.0
+        static let LineGap: CGFloat = 15.0
         static let ToplineWithNavBar: CGFloat = 80.0
         static let TextFieldHeight: CGFloat = 30.0
         static let ButtonHeight: CGFloat = 30.0
@@ -184,10 +220,16 @@ struct VCAppLetor {
         static let UserInfoSectionHeaderHight: CGFloat = 40.0 // 用户信息分区标题视图高度
         static let UserInfoHeaderViewHeight: CGFloat = 80.0 // 顶部用户信息视图高度
         static let UserInfoFooterViewHeight: CGFloat = 100.0 // 底部用户信息视图高度
+        static let UserPanelFooterViewHeight: CGFloat = 120.0
         static let MinLengthOfPasscode: Int = 6 // 用户密码最小长度
         static let ReachableClosures: Bool = false
         static let TextFieldShakeTime: NSTimeInterval = 0.6
         static let CheckNowBarHeight: CGFloat = 60.0
+        static let IconImageCornerRadius: CGFloat = 3.0
+    }
+    
+    enum BMK {
+        static let MapKey: String = "lwnYrg9Q209NsFD22Z7lTfrv"
     }
     
     // MARK: - SettingName
@@ -276,6 +318,11 @@ struct VCAppLetor {
         case spot = 1
         case menu = 2
         case info = 3
+    }
+    
+    enum PayType: Int {
+        case AliPay = 1
+        case WechatPay = 2
     }
     
 }

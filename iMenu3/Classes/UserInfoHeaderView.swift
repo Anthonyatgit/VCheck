@@ -40,7 +40,7 @@ class UserInfoHeaderView: UIView {
 //        self.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
         
         self.panelIcon.layer.cornerRadius = VCAppLetor.ConstValue.ImageCornerRadius
-        self.panelIcon.alpha = 0.2
+        self.panelIcon.alpha = 0.1
         self.panelIcon.layer.cornerRadius = self.panelIcon.frame.size.width / 2.0
         self.addSubview(self.panelIcon)
         

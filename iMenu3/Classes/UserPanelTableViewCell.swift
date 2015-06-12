@@ -42,7 +42,7 @@ class UserPanelTableViewCell: UITableViewCell {
         self.panelTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.contentView.addSubview(self.panelTitle)
         
-        self.countLabel.text = "0"
+        self.countLabel.text = ""
         self.countLabel.font = VCAppLetor.Font.BigFont
         self.countLabel.textColor = UIColor.lightGrayColor()
         self.contentView.addSubview(self.countLabel)

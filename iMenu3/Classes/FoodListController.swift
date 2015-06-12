@@ -22,6 +22,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     
     let imageCache = NSCache()
     
+    var hud: MBProgressHUD!
+    
     
     // MARK - Controller Life-time
     
@@ -42,6 +44,12 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         self.tableView.separatorColor = UIColor.clearColor()
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        
+        self.tableView.addPullToRefreshActionHandler { () -> Void in
+            self.loadFoodList()
+        }
+        
+        self.tableView.pullToRefreshView.borderColor = UIColor.pumpkinColor()
         
         self.view.addSubview(self.tableView)
         // Register Cell View
@@ -157,8 +165,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         var foodViewerViewController: FoodViewerViewController = FoodViewerViewController()
         foodViewerViewController.foodIdentifier = foodListItems[indexPath.row].identifier
-        foodViewerViewController.foodInfo = self.foodListItems[indexPath.row] as? FoodItem
-        foodViewerViewController.view.backgroundColor = UIColor.whiteColor()
+        foodViewerViewController.foodItem = self.foodListItems[indexPath.row] as? FoodItem
+        foodViewerViewController.parentNav = self.navigationController
         
         self.navigationController!.showViewController(foodViewerViewController, sender: self)
         
@@ -242,9 +250,9 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     func initAppInfo() {
         
         // Show hud
-        let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        hud.mode = MBProgressHUDMode.Determinate
-        hud.labelText = VCAppLetor.StringLine.isLoading
+        self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        self.hud.mode = MBProgressHUDMode.Determinate
+        self.hud.labelText = VCAppLetor.StringLine.isLoading
         
         if reachability.isReachable() {
             
@@ -256,9 +264,9 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         }
         else {
             self.showInternetUnreachable()
+            self.hud.hide(true)
         }
         
-        hud.hide(true)
     }
     
     func initMemberStatus() {
@@ -296,6 +304,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             
             Alamofire.request(VCheckGo.Router.LoginWithToken(tokenString, cMid)).validate().responseSwiftyJSON({
                 (request, response, JSON, error) -> Void in
+                
                 
                 if error == nil {
                     
@@ -357,10 +366,17 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                             CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.Token, namespace: "member")
                         }
                         
-                        self.loadMemberInfo(cMid)
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            self.loadMemberInfo(cMid)
+                        })
+                        
+                        
                     }
                     else { // Login fail
-                        println("ERROR @ Login fail with loginWithToken : " + json["status"]["error_desc"].string!)
+                        
+                        self.hud.hide(true)
+                        RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                        
                         CTMemCache.sharedInstance.cleanNamespace("member")
                         CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: "0", namespace: "token")
                     }
@@ -368,6 +384,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 else {
                     println("ERROR @ Request for LoginWithToken: \(error?.localizedDescription)")
                 }
+                
             })
             
         }
@@ -375,6 +392,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             
             // Clean up local cache with member status to ensure true
             self.cleanLocalMemberStatus()
+            self.hud!.hide(true)
         }
     }
     
@@ -402,6 +420,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         else {
             println("Can not find local data after loginWithToken")
         }
+        
+        self.hud.hide(true)
         
     }
     
@@ -590,6 +610,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         self.tableView.reloadData()
         
+        self.tableView.stopRefreshAnimation()
     }
     
     func setInternetReachableTableStyle(reachability: Bool) {

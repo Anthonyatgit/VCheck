@@ -18,6 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
     
+    var _mapManager: BMKMapManager?
+    
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
@@ -31,6 +33,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         else {
             BreezeStore.setupStoreWithName("\(BreezeStore.appName())", storeType: NSSQLiteStoreType, options: [NSMigratePersistentStoresAutomaticallyOption: true, NSInferMappingModelAutomaticallyOption: true])
+        }
+        
+        // BaiduMap
+        _mapManager = BMKMapManager()
+        let ret: Bool = _mapManager!.start(VCAppLetor.BMK.MapKey, generalDelegate: nil)
+        if !ret {
+            println("BMK Manager start failed!")
         }
         
         // Register for ShareSDK
