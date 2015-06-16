@@ -37,7 +37,8 @@ struct VCheckGo {
         case EditMemberNickname(String, String, String)                     // 10.会员-编辑个人信息-Nickname
         case EditMemberPassword(String, String, String, String)             // 10.会员-编辑个人信息-Password
         case GetMemberInfo(String, String)                                  // 12.会员-获取个人详情
-        case FeedBack(String, String, String)                                       // 16.基本-提交反馈信息
+        case FeedBack(String, String, String)                               // 16.基本-提交反馈信息
+        case GetCityList()                                                  // 17.基本-获取地区列表
         
         var URLRequest: NSURLRequest {
             
@@ -101,6 +102,9 @@ struct VCheckGo {
                 case .FeedBack(let memberId, let token, let feedbackInfo):
                     let params = ["route":"\(RoutePath.FeedBack.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"feedback_content\":\"\(feedbackInfo)\"}"]
                     return ("/\(RoutePath.FeedBack.rawValue)", params)
+                case .GetCityList():
+                    let params = ["route":"\(RoutePath.GetCityList.rawValue)","token":"","jsonText":""]
+                    return ("/\(RoutePath.GetCityList.rawValue)", params)
                 //=========DEFAULT===================
                 default: return ("/",["consumer_key": Router.consumerKey])
                 }
@@ -149,6 +153,7 @@ struct VCheckGo {
         case EditMemberInfo = "member/member/editMemberInfo"
         case QuickLogin = "member/member/quickLogin"
         case FeedBack = "base/feedback/submitFeedbackInfo"
+        case GetCityList = "base/region/getRegionList"
     }
     
     enum ImageSize: Int {
@@ -173,6 +178,23 @@ struct VCheckGo {
                 }
             }
         }
+    }
+}
+
+class CityInfo: NSObject {
+    
+    let city_id: String
+    var parent_id: String?
+    let city_name: String
+    var sort_order: Int?
+    var allias_name: String?
+    var level: String?
+    var open_status: String?
+    
+    init(cid: String, name: String) {
+        
+        self.city_id = cid
+        self.city_name = name
     }
     
 }

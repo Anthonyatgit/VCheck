@@ -114,6 +114,7 @@ public struct FlatUIColors {
         public static let silver = "BDC3C7"
         public static let concrete = "95A5A6"
         public static let asbestos = "7F8C8D"
+        public static let darkGray = "666666"
     }
     
     

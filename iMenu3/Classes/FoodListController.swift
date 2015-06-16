@@ -11,10 +11,12 @@ import CoreData
 import Alamofire
 import RKDropdownAlert
 import MBProgressHUD
+import JTMaterialTransition
 
-class FoodListController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, RKDropdownAlertDelegate {
+class FoodListController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, RKDropdownAlertDelegate, UIViewControllerTransitioningDelegate {
     
     var foodListItems: NSMutableArray = NSMutableArray()
+    var cityList: NSMutableArray = NSMutableArray()
     
     var parentNavigationController : UINavigationController?
     
@@ -24,6 +26,27 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     
     var hud: MBProgressHUD!
     
+    var cityListView: UIView!
+    let cityListViewWrap: UIView = UIView.newAutoLayoutView()
+    var cityListAnimatedView: MGFashionMenuView!
+    
+    let cityButton: UIButton = UIButton(frame: CGRectMake(0.0, 0.0, 32.0, 32.0))
+    let cityName: UIButton = UIButton(frame: CGRectMake(38.0, 0.0, 32.0, 32.0))
+    let memberButton: UIButton = UIButton(frame: CGRectMake(6.0, 6.0, 32.0, 32.0))
+    var transition: JTMaterialTransition?
+    
+    
+    // City listing
+    var cityNames: NSMutableArray = NSMutableArray()
+    
+    var serviceCityTitle: UILabel!
+    var serviceCityTitleUnderline: CustomDrawView!
+    
+    var serviceCityNote: UILabel!
+    
+    var cityNamesView: UIView!
+    
+    var tapGuesture: UITapGestureRecognizer!
     
     // MARK - Controller Life-time
     
@@ -33,8 +56,35 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         // Prepare for interface
         self.title = VCAppLetor.StringLine.AppName
         
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addFood")
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Bookmarks, target: self, action: "userPanel")
+        let cityView: UIView = UIView(frame: CGRectMake(6.0, 0.0, 74.0, 32.0))
+        cityView.backgroundColor = UIColor.clearColor()
+        
+        self.cityButton.setImage(UIImage(named: VCAppLetor.IconName.PlaceBlack)?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
+        self.cityButton.layer.cornerRadius = self.cityButton.width / 2.0
+        self.cityButton.backgroundColor = UIColor.clearColor()
+        self.cityButton.addTarget(self, action: "willSwitchCity", forControlEvents: .TouchUpInside)
+        cityView.addSubview(self.cityButton)
+        
+        self.cityName.setTitle(VCAppLetor.StringLine.CityName, forState: .Normal)
+        self.cityName.titleLabel?.font = VCAppLetor.Font.BigFont
+        self.cityName.titleLabel?.textAlignment = .Left
+        self.cityName.titleLabel?.textColor = UIColor.whiteColor()
+        self.cityName.backgroundColor = UIColor.clearColor()
+        self.cityName.layer.cornerRadius = self.cityName.width / 2.0
+        self.cityName.addTarget(self, action: "willSwitchCity", forControlEvents: .TouchUpInside)
+        cityView.addSubview(self.cityName)
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cityView)
+        
+        self.memberButton.setImage(UIImage(named: VCAppLetor.IconName.MemberBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate), forState: .Normal)
+        self.memberButton.addTarget(self, action: "userPanel", forControlEvents: .TouchUpInside)
+        self.memberButton.backgroundColor = UIColor.clearColor()
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.memberButton)
+        
+        self.createTransition()
+        
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addFood")
+//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Bookmarks, target: self, action: "userPanel")
         
         // Setup tableView
         self.tableView = UITableView(frame: CGRectMake(0, 0, self.view.bounds.width, self.view.bounds.height), style: UITableViewStyle.Plain)
@@ -49,7 +99,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             self.loadFoodList()
         }
         
-        self.tableView.pullToRefreshView.borderColor = UIColor.pumpkinColor()
+        self.tableView.pullToRefreshView.borderColor = UIColor.nephritisColor()
+        self.tableView.pullToRefreshView.imageIcon = UIImage(named: VCAppLetor.IconName.LoadingBlack)
         
         self.view.addSubview(self.tableView)
         // Register Cell View
@@ -61,7 +112,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         // Loading foodlist & init member info
         self.initAppInfo()
         
-        self.tableView.setNeedsUpdateConstraints()
+        
+        self.view.setNeedsUpdateConstraints()
         
     }
     
@@ -72,6 +124,37 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
+//        
+//        self.cityListViewWrap.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(20.0, 20.0, 20.0, 20.0))
+//        
+//        self.serviceCityTitle.autoPinEdgeToSuperviewEdge(.Top, withInset: 80.0)
+//        self.serviceCityTitle.autoPinEdgeToSuperviewEdge(.Leading, withInset: 40.0)
+//        self.serviceCityTitle.autoSetDimensionsToSize(CGSizeMake(self.view.width - 80.0, 30.0))
+//        
+//        self.serviceCityTitleUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.serviceCityTitle)
+//        self.serviceCityTitleUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.serviceCityTitle, withOffset: 10.0)
+//        self.serviceCityTitleUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.serviceCityTitle)
+//        self.serviceCityTitleUnderline.autoSetDimension(.Height, toSize: 5.0)
+//
+//        self.serviceCityNote.autoPinEdgeToSuperviewEdge(.Top, withInset: self.view.height - 50.0)
+//        self.serviceCityNote.autoAlignAxisToSuperviewAxis(.Vertical)
+//        self.serviceCityNote.autoSetDimension(.Width, toSize: self.view.width-80.0)
+//        self.serviceCityNote.autoSetDimension(.Height, toSize: 20.0)
+//        
+//        
+//        self.cityNamesView.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.serviceCityTitle)
+//        self.cityNamesView.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.serviceCityTitleUnderline, withOffset: 20.0)
+//        self.cityNamesView.autoSetDimensionsToSize(CGSizeMake(self.view.width - 80.0, 320.0))
+//        
+//        for (var i=0; i<self.cityNames.count; i++) {
+//            self.cityNames[i].autoPinEdge(.Leading, toEdge: .Leading, ofView: self.serviceCityTitle)
+//            if i>0 {
+//                self.cityNames[i].autoPinEdge(.Top, toEdge: .Bottom, ofView: self.cityNames[i-1] as! UIView, withOffset: 40.0)
+//            }
+//            else {
+//                self.cityNames[i].autoPinEdge(.Top, toEdge: .Bottom, ofView: self.serviceCityTitleUnderline, withOffset: 40.0)
+//            }
+//        }
         
     }
     
@@ -201,8 +284,48 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         }
     }
     
+    // MARK: - Transition
+    func animationControllerForPresentedController(presented: UIViewController, presentingController presenting: UIViewController, sourceController source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        self.transition?.reverse = false
+        return self.transition
+    }
+    
+    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        self.transition?.reverse = true
+        return self.transition
+    }
     
     // MARK: - Functions
+    func willSwitchCity() {
+        
+        
+        
+        if (!self.cityListAnimatedView.isShown) {
+            self.cityListAnimatedView.show()
+        }
+        else {
+            self.cityListAnimatedView.hide()
+        }
+        
+        
+        
+//        let cityListVC: VCCityListViewController = VCCityListViewController()
+//        cityListVC.view.frame = CGRectMake(0, 80, self.view.width, self.view.height-80)
+//        cityListVC.modalPresentationStyle = UIModalPresentationStyle.Custom
+//        cityListVC.cityList = self.cityList
+//        cityListVC.transitioningDelegate = self
+//        
+//        
+//        
+//        self.presentViewController(cityListVC, animated: true) { () -> Void in
+//            // Do something after present citylist vc
+//        }
+    }
+    
+    func createTransition() {
+        
+        self.transition = JTMaterialTransition(animatedView: self.cityButton)
+    }
     
     func userPanel() {
         
@@ -261,12 +384,128 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             
             // Member info
             self.initMemberStatus()
+            
+            // City list
+            self.getCityList()
         }
         else {
             self.showInternetUnreachable()
             self.hud.hide(true)
         }
         
+    }
+    
+    func getCityList() {
+        
+        Alamofire.request(VCheckGo.Router.GetCityList()).validate().responseSwiftyJSON ({
+            (_, _, JSON, error) -> Void in
+            
+            if error == nil {
+                
+                let json = JSON
+                
+                if json["status"]["succeed"].string == "1" {
+                    
+                    let list: Array = json["data"]["region_list"].arrayValue
+                    
+                    for item in list {
+                        
+                        let cid: String = item["region_id"].string!
+                        let name: String = item["region_name"].string!
+                        let orderId: Int = (item["sort_order"].string! as NSString).integerValue
+                        
+                        
+                        let city: CityInfo = CityInfo(cid: cid, name: name)
+                        city.sort_order = orderId
+                        self.cityList.addObject(city)
+                        
+                    }
+                    
+                    for (var i=0; i<self.cityList.count; i++) {
+                        
+                        let city: CityInfo = self.cityList[i] as! CityInfo
+                        
+                        for (var j=i+1; j<self.cityList.count; j++) {
+                            
+                            let cityToBeCompared: CityInfo = self.cityList[j] as! CityInfo
+                            
+                            if city.sort_order > cityToBeCompared.sort_order {
+                                self.cityList.exchangeObjectAtIndex(i, withObjectAtIndex: j)
+                            }
+                        }
+                    }
+                    
+                    self.cityListView = UIView(frame: CGRectMake(0, 64, self.view.width, self.view.height-64))
+                    self.cityListView.backgroundColor = UIColor.grayColor()
+                    
+                    
+                    self.serviceCityTitle = UILabel(frame: CGRectMake(60, 80, self.view.width-120, 30))
+                    self.serviceCityTitle.text = VCAppLetor.StringLine.ServiceCityTitle
+                    self.serviceCityTitle.font = VCAppLetor.Font.NormalFont
+                    self.serviceCityTitle.textAlignment = .Left
+                    self.serviceCityTitle.textColor = UIColor.whiteColor()
+                    self.cityListView.addSubview(self.serviceCityTitle)
+                    
+                    self.serviceCityTitleUnderline = CustomDrawView(frame: CGRectMake(60, 115, self.view.width-120, 5))
+                    self.serviceCityTitleUnderline.drawType = "DoubleLine"
+                    self.serviceCityTitleUnderline.lineColor = UIColor.whiteColor()
+                    self.cityListView.addSubview(self.serviceCityTitleUnderline)
+                    
+                    self.serviceCityNote = UILabel(frame: CGRectMake(30, self.cityListView.height-50, self.view.width-60, 20))
+                    self.serviceCityNote.text = VCAppLetor.StringLine.ServiceCityNote
+                    self.serviceCityNote.font = VCAppLetor.Font.SmallFont
+                    self.serviceCityNote.textAlignment = .Center
+                    self.serviceCityNote.textColor = UIColor.lightGrayColor()
+                    self.cityListView.addSubview(self.serviceCityNote)
+                    
+                    
+                    self.cityNamesView = UIView(frame: CGRectMake(60, 150, self.view.width, 180))
+                    if self.cityList.count > 0 {
+                        
+                        for (var i=0; i<self.cityList.count; i++) {
+                            
+                            let ins: CGFloat = CGFloat(i)
+                            
+                            var cityItem: CityInfo = self.cityList.objectAtIndex(i) as! CityInfo
+                            
+                            let cityNameLabel: UILabel = UILabel(frame: CGRectMake(0.0, 60.0*ins, self.view.width, 60.0))
+                            cityNameLabel.text = cityItem.city_name
+                            cityNameLabel.textAlignment = .Left
+                            cityNameLabel.textColor = UIColor.whiteColor()
+                            cityNameLabel.font = VCAppLetor.Font.XXXLarge
+                            self.cityNamesView.addSubview(cityNameLabel)
+                            
+                            self.cityNames.addObject(cityNameLabel)
+                            
+                        }
+                    }
+                    
+                    self.cityListView.addSubview(self.cityNamesView)
+                    
+                    self.tapGuesture = UITapGestureRecognizer(target: self, action: "cityViewDidTap:")
+                    self.tapGuesture.numberOfTapsRequired = 1
+                    self.tapGuesture.numberOfTouchesRequired = 1
+                    
+                    self.cityListView.addGestureRecognizer(self.tapGuesture)
+                    
+                    self.cityListAnimatedView = MGFashionMenuView(menuView: self.cityListView, animationType: MGAnimationType.Wave)
+                    
+                    self.view.addSubview(self.cityListAnimatedView)
+                    
+                }
+                else {
+                    RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                }
+            }
+            else {
+                println("ERROR @ Request for city list : \(error?.localizedDescription)")
+            }
+        })
+    }
+    
+    func cityViewDidTap(gesture: UITapGestureRecognizer) {
+        
+        self.cityListAnimatedView.hide()
     }
     
     func initMemberStatus() {
@@ -657,8 +896,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     }
     
     
-    // MARK: - Notification
-    func reachabilityChanged(notification: NSNotification) {
+    // MARK: - Internet Connection Notification
+    override func reachabilityChanged(notification: NSNotification) {
         
         let reachability = notification.object as! Reachability
         

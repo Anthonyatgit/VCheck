@@ -18,6 +18,7 @@ class CustomDrawView: UIView {
     var drawType: String?
     var withTitle: String?
     var lineWidth: CGFloat?
+    var lineColor: UIColor?
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -95,7 +96,13 @@ class CustomDrawView: UIView {
         else if (self.drawType == "DoubleLine") {
             
             CGContextSetLineWidth(context, 2)
-            CGContextSetStrokeColorWithColor(context, UIColor.blackColor().CGColor)
+            if self.lineColor != nil {
+                CGContextSetStrokeColorWithColor(context, self.lineColor?.CGColor)
+            }
+            else {
+                CGContextSetStrokeColorWithColor(context, UIColor.blackColor().CGColor)
+            }
+            
             CGContextMoveToPoint(context, 0.0, 1.0)
             CGContextAddLineToPoint(context, self.bounds.width, 1.0)
             CGContextStrokePath(context)

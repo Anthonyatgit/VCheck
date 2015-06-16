@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0BE02F5CD93607CAD28B61E4 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E1B9F71B7F8A3007EFAD6E6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		9203E68D1B0063FD00407F66 /* ShareSDKContentController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9203E68C1B0063FD00407F66 /* ShareSDKContentController.mm */; };
+		9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */; };
 		9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */; };
 		922412911B1FE2C20049A9B5 /* FoodDetailScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412901B1FE2C20049A9B5 /* FoodDetailScrollView.swift */; };
 		922412951B200D560049A9B5 /* SMSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412931B200D560049A9B5 /* SMSegment.swift */; };
@@ -85,6 +85,8 @@
 		92987A5F1AFD1906001576B9 /* ResetMyPasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92987A5E1AFD1906001576B9 /* ResetMyPasscodeViewController.swift */; };
 		929DCAC21B0578800050B63F /* VCTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929DCAC11B0578800050B63F /* VCTermsViewController.swift */; };
 		929DCAC41B0588B90050B63F /* RegSetPassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */; };
+		92ACC2461B2ECEF100C824F2 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 92ACC2431B2ECEF100C824F2 /* LICENSE */; };
+		92ACC2471B2ECEF100C824F2 /* MGFashionMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92ACC2451B2ECEF100C824F2 /* MGFashionMenuView.m */; };
 		92B0F0ED1B12FF2E009F368B /* StringExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B0F0EC1B12FF2E009F368B /* StringExt.swift */; };
 		92B10EC51B00993C00E0674F /* Member.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B10EC41B00993C00E0674F /* Member.swift */; };
 		92BD2E141B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BD2E111B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m */; };
@@ -107,6 +109,8 @@
 		92CFFB381AF8CCB600C9AA7D /* VCMemberLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CFFB371AF8CCB600C9AA7D /* VCMemberLoginViewController.swift */; };
 		92E310291AEDD22E00771CAC /* FoodItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E310281AEDD22E00771CAC /* FoodItem.swift */; };
 		92E3586D1B1D455700D61119 /* brand.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92E3586C1B1D455700D61119 /* brand.jpg */; };
+		92E57FFE1B2A6C4E00E463A3 /* VCCityListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */; };
+		92E580001B2AD09200E463A3 /* BMKObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 92E57FFF1B2AD09200E463A3 /* BMKObject.mm */; };
 		92E962E21AF2017400030226 /* Toucan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E962E11AF2017400030226 /* Toucan.swift */; };
 		92EAF9371B218F8900B5EEA8 /* VCCheckNowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */; };
 		92F3B0691B00362A003A6D76 /* SinaWeiboConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0511B00362A003A6D76 /* SinaWeiboConnection.framework */; };
@@ -150,7 +154,7 @@
 		0C40656762C7729B9DD514C9 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		1E1B9F71B7F8A3007EFAD6E6 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9203E68A1B00637300407F66 /* ShareSDKContentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareSDKContentController.h; sourceTree = "<group>"; };
-		9203E68C1B0063FD00407F66 /* ShareSDKContentController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ShareSDKContentController.mm; sourceTree = "<group>"; };
+		9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareSDKContentController.m; sourceTree = "<group>"; };
 		9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCBaseViewController.swift; path = Classes/VCBaseViewController.swift; sourceTree = "<group>"; };
 		922412901B1FE2C20049A9B5 /* FoodDetailScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodDetailScrollView.swift; path = Classes/FoodDetailScrollView.swift; sourceTree = "<group>"; };
 		922412931B200D560049A9B5 /* SMSegment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSegment.swift; sourceTree = "<group>"; };
@@ -231,6 +235,9 @@
 		92987A5E1AFD1906001576B9 /* ResetMyPasscodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResetMyPasscodeViewController.swift; path = Classes/ResetMyPasscodeViewController.swift; sourceTree = "<group>"; };
 		929DCAC11B0578800050B63F /* VCTermsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCTermsViewController.swift; path = Classes/VCTermsViewController.swift; sourceTree = "<group>"; };
 		929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegSetPassViewController.swift; path = Classes/RegSetPassViewController.swift; sourceTree = "<group>"; };
+		92ACC2431B2ECEF100C824F2 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		92ACC2441B2ECEF100C824F2 /* MGFashionMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGFashionMenuView.h; sourceTree = "<group>"; };
+		92ACC2451B2ECEF100C824F2 /* MGFashionMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGFashionMenuView.m; sourceTree = "<group>"; };
 		92B0F0EC1B12FF2E009F368B /* StringExt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExt.swift; sourceTree = "<group>"; };
 		92B10EC41B00993C00E0674F /* Member.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Member.swift; sourceTree = "<group>"; };
 		92BD2E101B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+UzysCircularProgressPullToRefresh.h"; sourceTree = "<group>"; };
@@ -255,6 +262,8 @@
 		92CFFB371AF8CCB600C9AA7D /* VCMemberLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCMemberLoginViewController.swift; path = Classes/VCMemberLoginViewController.swift; sourceTree = "<group>"; };
 		92E310281AEDD22E00771CAC /* FoodItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodItem.swift; sourceTree = "<group>"; };
 		92E3586C1B1D455700D61119 /* brand.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = brand.jpg; sourceTree = "<group>"; };
+		92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCCityListViewController.swift; path = Classes/VCCityListViewController.swift; sourceTree = "<group>"; };
+		92E57FFF1B2AD09200E463A3 /* BMKObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BMKObject.mm; sourceTree = "<group>"; };
 		92E962E11AF2017400030226 /* Toucan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Toucan.swift; path = Classes/Toucan.swift; sourceTree = "<group>"; };
 		92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCCheckNowViewController.swift; path = Classes/VCCheckNowViewController.swift; sourceTree = "<group>"; };
 		92F3B0511B00362A003A6D76 /* SinaWeiboConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SinaWeiboConnection.framework; sourceTree = "<group>"; };
@@ -402,6 +411,7 @@
 		9227E2C11AE8DCCC008C6381 /* iMenu3 */ = {
 			isa = PBXGroup;
 			children = (
+				92ACC2421B2ECEF100C824F2 /* MGFashionMenuView */,
 				92BD2E0F1B27BE810053408B /* UPullToRefresh */,
 				927779D81B0B0304002A50EB /* THelpClass */,
 				922412921B200D560049A9B5 /* SMSegmentView */,
@@ -415,6 +425,7 @@
 				9284A14A1AF1B98100E662B2 /* VCheckGo.swift */,
 				9284A1441AF0CFCF00E662B2 /* VCAppLetor.swift */,
 				9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */,
+				92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */,
 				9227E2E71AE8DDD9008C6381 /* FoodListController.swift */,
 				9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */,
 				928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */,
@@ -452,8 +463,9 @@
 				9227E2C31AE8DCCC008C6381 /* Info.plist */,
 				927B7C971B29641100B55DB2 /* mapapi.bundle */,
 				92F3B0891B003802003A6D76 /* iMenu3-Bridging-Header.h */,
+				92E57FFF1B2AD09200E463A3 /* BMKObject.mm */,
 				9203E68A1B00637300407F66 /* ShareSDKContentController.h */,
-				9203E68C1B0063FD00407F66 /* ShareSDKContentController.mm */,
+				9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -552,6 +564,16 @@
 				92E962E11AF2017400030226 /* Toucan.swift */,
 			);
 			name = Toucan;
+			sourceTree = "<group>";
+		};
+		92ACC2421B2ECEF100C824F2 /* MGFashionMenuView */ = {
+			isa = PBXGroup;
+			children = (
+				92ACC2431B2ECEF100C824F2 /* LICENSE */,
+				92ACC2441B2ECEF100C824F2 /* MGFashionMenuView.h */,
+				92ACC2451B2ECEF100C824F2 /* MGFashionMenuView.m */,
+			);
+			path = MGFashionMenuView;
 			sourceTree = "<group>";
 		};
 		92BD2E0F1B27BE810053408B /* UPullToRefresh */ = {
@@ -782,6 +804,7 @@
 			files = (
 				927B7C981B29641100B55DB2 /* mapapi.bundle in Resources */,
 				922412AC1B20122A0049A9B5 /* cloud_light.png in Resources */,
+				92ACC2461B2ECEF100C824F2 /* LICENSE in Resources */,
 				9282050F1AEDE1330067BB92 /* Info.plist in Resources */,
 				9284A1311AF0AECD00E662B2 /* hungry.png in Resources */,
 				9284A1371AF0AECD00E662B2 /* mood5.jpg in Resources */,
@@ -902,6 +925,7 @@
 				92987A5F1AFD1906001576B9 /* ResetMyPasscodeViewController.swift in Sources */,
 				9280E4481B14444B00959798 /* Reachability.swift in Sources */,
 				927779D61B0B02F3002A50EB /* FloatLabelTextField.swift in Sources */,
+				92ACC2471B2ECEF100C824F2 /* MGFashionMenuView.m in Sources */,
 				9267443F1B1855C60075EDB5 /* EditUserInfoViewController.swift in Sources */,
 				92BD603E1B05DEDF00649DDF /* UserInfoCell.swift in Sources */,
 				9282050E1AEDE1330067BB92 /* BreezeStore.swift in Sources */,
@@ -915,8 +939,9 @@
 				9284A13F1AF0AF2500E662B2 /* FoodCollectionsViewController.swift in Sources */,
 				92CFFB381AF8CCB600C9AA7D /* VCMemberLoginViewController.swift in Sources */,
 				92BD2E141B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m in Sources */,
-				9203E68D1B0063FD00407F66 /* ShareSDKContentController.mm in Sources */,
+				9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */,
 				92EAF9371B218F8900B5EEA8 /* VCCheckNowViewController.swift in Sources */,
+				92E580001B2AD09200E463A3 /* BMKObject.mm in Sources */,
 				9293BBC91B018ECC0034F3C5 /* RegisterViewController.swift in Sources */,
 				927779DC1B0B0304002A50EB /* CTMemCache.swift in Sources */,
 				92BD2E181B2827EF0053408B /* FeedbackViewController.swift in Sources */,
@@ -937,6 +962,7 @@
 				922412911B1FE2C20049A9B5 /* FoodDetailScrollView.swift in Sources */,
 				9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */,
 				9264F8ED1B2597CD00AF8640 /* VCPayNowViewController.swift in Sources */,
+				92E57FFE1B2A6C4E00E463A3 /* VCCityListViewController.swift in Sources */,
 				9282050C1AEDE1330067BB92 /* BreezeStore+iCloud.swift in Sources */,
 				92FA19491AFCD6CE00D33538 /* SMSCodeViewController.swift in Sources */,
 				92E310291AEDD22E00771CAC /* FoodItem.swift in Sources */,

@@ -31,4 +31,7 @@
 // =======================
 #import <CommonCrypto/CommonDigest.h>
 
+// Animated View
+#import "MGFashionMenuView.h"
+
 #endif

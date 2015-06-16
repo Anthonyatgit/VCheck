@@ -28,6 +28,8 @@ struct VCAppLetor {
         static let NormalFont: UIFont = UIFont(name: "HelveticaNeue", size: 14.0)!
         static let BigFont: UIFont = UIFont(name: "HelveticaNeue", size: 16.0)!
         static let XLarge: UIFont = UIFont(name: "HelveticaNeue", size: 18.0)!
+        static let XXLarge: UIFont = UIFont(name: "HelveticaNeue", size: 22.0)!
+        static let XXXLarge: UIFont = UIFont(name: "HelveticaNeue", size: 28.0)!
     }
     
     // MARK: - StringLing
@@ -117,6 +119,12 @@ struct VCAppLetor {
         static let FeedbackTextEmpty: String = "给我们写点什么吧"
         static let FeedbackSucceed: String = "我们已经收悉你的反馈信息，我们会努力为你做的更好~"
         
+        static let ServiceCityTitle: String = "选择服务的城市"
+        static let ServiceCityNote: String = "我们正在努力为更多城市提供服务"
+        static let CityName: String = "城市"
+        static let CityXian: String = "西安"
+        
+        
         static let FoodViewerTitle: String = "礼遇详情"
         static let ShareToGetCoupon: String = "分享获取丰富礼券"
         static let CheckNow: String = "Check NOW"
@@ -185,6 +193,8 @@ struct VCAppLetor {
     // MARK: - IconName
     enum IconName {
         
+        static let LoadingBlack: String = "group_black"
+        
         static let UserInfoIconWithoutSignin: String = "account_circle_black"
         static let RightDisclosureIcon: String = "right_black"
         static let ClearIconBlack: String = "clear_black"
@@ -192,6 +202,9 @@ struct VCAppLetor {
         static let InternetBlack: String = "internet_black"
         static let ShareBlack: String = "share_black"
         static let ThumbUpBlack: String = "thumb_up_black"
+        
+        static let PlaceBlack: String = "place_black"
+        static let MemberBlack: String = "member_black"
         
         static let AlipayIcon: String = "ali_68.png"
         static let WechatIcon: String = "wx_logo_64.png"
