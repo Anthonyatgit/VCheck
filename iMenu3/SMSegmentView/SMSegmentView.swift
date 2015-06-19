@@ -154,14 +154,14 @@ class SMSegmentView: UIView, SMSegmentDelegate {
             self.segmentOnSelectionTextColour = onSelectionTextColour
         }
         else {
-            self.segmentOnSelectionTextColour = UIColor.whiteColor()
+            self.segmentOnSelectionTextColour = UIColor.blackColor().colorWithAlphaComponent(0.8)
         }
         
         if let offSelectionTextColour = segmentProperties?[keySegmentOffSelectionTextColour] as? UIColor {
             self.segmentOffSelectionTextColour = offSelectionTextColour
         }
         else {
-            self.segmentOffSelectionTextColour = UIColor.darkGrayColor()
+            self.segmentOffSelectionTextColour = UIColor.blackColor().colorWithAlphaComponent(0.8)
         }
         
         if let titleFont = segmentProperties?[keySegmentTitleFont] as? UIFont {

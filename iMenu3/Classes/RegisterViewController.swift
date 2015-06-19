@@ -63,6 +63,9 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
     
     
     // MARK: - Lifecycle
+    override func loadView() {
+        self.view = UIView.new()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,10 +74,8 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: VCAppLetor.StringLine.Next, style: .Done, target: self, action: "phoneRegAction")
         
         self.title = VCAppLetor.StringLine.RegPageTitle
-        self.view.backgroundColor = UIColor.whiteColor()
-        self.scrollView.frame = self.view.bounds
-        self.scrollView.height = self.view.height - 180.0
-        self.scrollView.contentMode = UIViewContentMode.Top
+        self.view.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.6)
+        
         self.scrollView.backgroundColor = UIColor.whiteColor()
         
         self.tapGesture = UITapGestureRecognizer(target: self, action: "viewDidTap:")
@@ -145,6 +146,7 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
         // No invent code yet, no problem, you can set later
         self.noInventYet.text = VCAppLetor.StringLine.NoInventCodeYet
         self.noInventYet.textAlignment = .Left
+        self.noInventYet.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.noInventYet.font = VCAppLetor.Font.SmallFont
         self.scrollView.addSubview(noInventYet)
         
@@ -154,15 +156,15 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
         self.terms.font = VCAppLetor.Font.SmallFont
         self.terms.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.terms.backgroundColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.1)
-        self.view.addSubview(terms)
+        self.scrollView.addSubview(terms)
         
         self.termsUnderline.drawType = "Line"
         self.termsUnderline.lineWidth = 1.0
-        self.view.addSubview(termsUnderline)
+        self.scrollView.addSubview(termsUnderline)
         
         self.termsButton.setTitle(" ", forState: .Normal)
         self.termsButton.addTarget(self, action: "showTerms", forControlEvents: .TouchUpInside)
-        self.view.addSubview(termsButton)
+        self.scrollView.addSubview(termsButton)
         
         self.view.addSubview(self.scrollView)
         
@@ -185,70 +187,76 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
         NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
     }
     
-    override func viewDidLayoutSubviews() {
-        
-        self.scrollView.contentSize = self.scrollView.frame.size
-        self.scrollView.showsVerticalScrollIndicator = false
-        self.scrollView.delegate = self
-    }
     
     override func updateViewConstraints() {
-        super.updateViewConstraints()
         
+        self.regStepView.autoSetDimensionsToSize(CGSizeMake(220.0, 44.0))
+        self.regStepView.autoAlignAxisToSuperviewAxis(.Vertical)
+        self.regStepView.autoPinEdgeToSuperviewEdge(.Top, withInset: 30.0)
         
-        regStepView.autoSetDimensionsToSize(CGSizeMake(220.0, 44.0))
-        regStepView.autoAlignAxisToSuperviewAxis(ALAxis.Vertical)
-        regStepView.autoPinEdgeToSuperviewEdge(ALEdge.Top, withInset: 70.0)
+        self.phoneNumber.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.regStepView, withOffset: VCAppLetor.ConstValue.LineGap*2.0)
+        self.phoneNumber.autoPinEdgeToSuperviewEdge(.Leading, withInset: 40.0)
+        self.phoneNumber.autoSetDimension(.Width, toSize: self.view.width - 180.0)
+        self.phoneNumber.autoSetDimension(.Height, toSize: VCAppLetor.ConstValue.TextFieldHeight)
         
+        self.phoneUnderLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.phoneNumber, withOffset: 3.0)
+        self.phoneUnderLine.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.phoneNumber, withOffset: -10.0)
+        self.phoneUnderLine.autoMatchDimension(.Width, toDimension: .Width, ofView: self.phoneNumber, withOffset: 10.0)
+        self.phoneUnderLine.autoSetDimension(.Height, toSize: 3.0)
         
-        self.phoneNumber.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: regStepView, withOffset: VCAppLetor.ConstValue.LineGap)
-        self.phoneNumber.autoPinEdge(ALEdge.Leading, toEdge: ALEdge.Leading, ofView: regStepView, withOffset: -20.0)
-        self.phoneNumber.autoMatchDimension(ALDimension.Width, toDimension: ALDimension.Width, ofView: regStepView, withOffset: -50.0)
-        self.phoneNumber.autoSetDimension(ALDimension.Height, toSize: VCAppLetor.ConstValue.TextFieldHeight)
-        
-        phoneUnderLine.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: self.phoneNumber)
-        phoneUnderLine.autoPinEdge(ALEdge.Leading, toEdge: ALEdge.Leading, ofView: self.phoneNumber, withOffset: -10.0)
-        phoneUnderLine.autoMatchDimension(ALDimension.Width, toDimension: ALDimension.Width, ofView: self.phoneNumber)
-        phoneUnderLine.autoSetDimension(ALDimension.Height, toSize: 3.0)
+        self.senDAuthCodeButton.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.phoneNumber, withOffset: 20.0)
+        self.senDAuthCodeButton.autoSetDimensionsToSize(CGSizeMake(90.0, VCAppLetor.ConstValue.ButtonHeight))
+        self.senDAuthCodeButton.autoPinEdge(.Top, toEdge: .Bottom, ofView: regStepView, withOffset: VCAppLetor.ConstValue.LineGap*2.0)
         
         self.authCode.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.phoneNumber)
         self.authCode.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.senDAuthCodeButton)
         self.authCode.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.phoneNumber, withOffset: VCAppLetor.ConstValue.LineGap)
-        self.authCode.autoMatchDimension(ALDimension.Height, toDimension: ALDimension.Height, ofView: self.phoneNumber)
+        self.authCode.autoMatchDimension(.Height, toDimension: .Height, ofView: self.phoneNumber)
         
-        codeUnderLine.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: self.authCode)
-        codeUnderLine.autoPinEdge(ALEdge.Leading, toEdge: ALEdge.Leading, ofView: self.authCode, withOffset: -10.0)
-        codeUnderLine.autoMatchDimension(ALDimension.Width, toDimension: ALDimension.Width, ofView: self.authCode, withOffset: 10.0)
-        codeUnderLine.autoSetDimension(ALDimension.Height, toSize: 3.0)
+        self.codeUnderLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.authCode)
+        self.codeUnderLine.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.authCode, withOffset: -10.0)
+        self.codeUnderLine.autoMatchDimension(.Width, toDimension: .Width, ofView: self.authCode, withOffset: 10.0)
+        self.codeUnderLine.autoSetDimension(.Height, toSize: 3.0)
         
-        self.senDAuthCodeButton.autoPinEdge(ALEdge.Trailing, toEdge: ALEdge.Trailing, ofView: regStepView, withOffset: 20.0)
-        self.senDAuthCodeButton.autoSetDimensionsToSize(CGSizeMake(90.0, VCAppLetor.ConstValue.ButtonHeight))
-        self.senDAuthCodeButton.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: regStepView, withOffset: VCAppLetor.ConstValue.LineGap)
+        self.inventCode.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.authCode, withOffset: VCAppLetor.ConstValue.LineGap)
+        self.inventCode.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.authCode)
+        self.inventCode.autoMatchDimension(.Width, toDimension: .Width, ofView: self.authCode)
+        self.inventCode.autoMatchDimension(.Height, toDimension: .Height, ofView: self.authCode)
         
-        self.inventCode.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: self.authCode, withOffset: VCAppLetor.ConstValue.LineGap)
-        self.inventCode.autoPinEdge(ALEdge.Leading, toEdge: ALEdge.Leading, ofView: self.authCode)
-        self.inventCode.autoMatchDimension(ALDimension.Width, toDimension: ALDimension.Width, ofView: self.authCode)
-        self.inventCode.autoMatchDimension(ALDimension.Height, toDimension: ALDimension.Height, ofView: self.authCode)
+        self.invUnderLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.inventCode)
+        self.invUnderLine.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.inventCode, withOffset: -10.0)
+        self.invUnderLine.autoMatchDimension(.Width, toDimension: .Width, ofView: self.inventCode, withOffset: 10.0)
+        self.invUnderLine.autoSetDimension(.Height, toSize: 3.0)
         
-        invUnderLine.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: self.inventCode)
-        invUnderLine.autoPinEdge(ALEdge.Leading, toEdge: ALEdge.Leading, ofView: self.inventCode, withOffset: -10.0)
-        invUnderLine.autoMatchDimension(ALDimension.Width, toDimension: ALDimension.Width, ofView: self.inventCode, withOffset: 10.0)
-        invUnderLine.autoSetDimension(ALDimension.Height, toSize: 3.0)
+        self.noInventYet.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.invUnderLine, withOffset: 10.0)
+        self.noInventYet.autoSetDimension(.Height, toSize: 20.0)
+        self.noInventYet.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.phoneNumber)
         
-        self.noInventYet.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: invUnderLine, withOffset: VCAppLetor.ConstValue.LineGap / 2)
-        self.noInventYet.autoPinEdge(ALEdge.Leading, toEdge: ALEdge.Leading, ofView: self.phoneNumber)
-        
-        self.terms.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 20.0)
+        self.terms.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.noInventYet, withOffset: self.view.height - 340.0)
         self.terms.autoSetDimensionsToSize(CGSizeMake(300.0, 30.0))
         self.terms.autoAlignAxisToSuperviewAxis(.Vertical)
         
-        self.termsUnderline.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: self.terms, withOffset: -9.0)
-        self.termsUnderline.autoPinEdge(ALEdge.Trailing, toEdge: ALEdge.Trailing, ofView: terms, withOffset: -20.0)
+        
+        self.termsUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.terms, withOffset: -9.0)
+        self.termsUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: terms, withOffset: -18.0)
         self.termsUnderline.autoSetDimensionsToSize(CGSizeMake(48.0, 3.0))
         
         self.termsButton.autoSetDimensionsToSize(CGSizeMake(48.0, VCAppLetor.ConstValue.ButtonHeight))
-        self.termsButton.autoPinEdge(ALEdge.Trailing, toEdge: ALEdge.Trailing, ofView: terms)
-        self.termsButton.autoAlignAxis(ALAxis.Horizontal, toSameAxisOfView: terms)
+        self.termsButton.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: terms)
+        self.termsButton.autoAlignAxis(.Horizontal, toSameAxisOfView: terms)
+        
+        super.updateViewConstraints()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.scrollView.frame = CGRectMake(0, 62.0, self.view.width, self.view.height-62.0)
+        self.scrollView.contentSize = self.scrollView.frame.size
+        self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        self.scrollView.contentOffset = CGPointMake(0, 0)
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.delegate = self
         
     }
     

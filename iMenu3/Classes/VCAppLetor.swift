@@ -123,17 +123,34 @@ struct VCAppLetor {
         static let ServiceCityNote: String = "我们正在努力为更多城市提供服务"
         static let CityName: String = "城市"
         static let CityXian: String = "西安"
+        static let Cancle: String = "取消"
+        
+        static let Weibo: String = "新浪微博"
+        static let Wechat: String = "微信好友"
+        static let Friends: String = "朋友圈"
+        
+        static let DefaultShareContent: String = "好友来自VCheck的美食分享，快去看看"
+        static let ShareSucceed: String = "分享成功"
+        static let ShareFailed: String = "分享失败"
+        static let ShareCancledByUser: String = "用户取消了分享"
+        
+        static let MailboxTitle: String = "信息中心"
+        static let MailboxEmpty: String = "暂无消息"
+        
+        static let FavoritesTitle: String = "我喜欢的礼遇"
+        static let FavoritesEmpty: String = "你还没有喜欢的礼遇"
         
         
         static let FoodViewerTitle: String = "礼遇详情"
         static let ShareToGetCoupon: String = "分享获取丰富礼券"
-        static let CheckNow: String = "Check NOW"
+        static let CheckNow: String = "CHECK NOW"
         static let SegmentTitles: [AnyObject] = ["亮点","菜单","须知"]
         
         static let CheckNowTitle: String = "填写订单"
         static let CheckNowTip: String = "请注意，该礼遇需要到店享用"
         static let PayNowTip: String = "该礼遇支持随时申请退款"
         static let PriceName: String = "价格"
+        static let PricePU: String = "单价: "
         static let AmountName: String = "数量"
         static let TotalPriceName: String = "合计"
         static let MobilePlease: String = "请输入手机号"
@@ -154,6 +171,10 @@ struct VCAppLetor {
         static let WechatType: String = "微信支付"
         static let PayNow: String = "立即支付"
         
+        static let AboutTitle: String = "关于我们"
+        static let AppSubtitle: String = "精 选 限 量 美 食"
+        static let AppWebsiteURL: String = "imenu.so"
+        static let AppCopyRight: String = "Copyright © 2015 Siyo Tech All Rights Reserved"
         
         
         static let FoodTitle: String = "设计师新贵打造花园式餐厅 澜悦双人菜单"
@@ -202,9 +223,11 @@ struct VCAppLetor {
         static let InternetBlack: String = "internet_black"
         static let ShareBlack: String = "share_black"
         static let ThumbUpBlack: String = "thumb_up_black"
+        static let FavoriteBlack: String = "favorite_black"
         
         static let PlaceBlack: String = "place_black"
         static let MemberBlack: String = "member_black"
+        static let MailBlack: String = "mail_black"
         
         static let AlipayIcon: String = "ali_68.png"
         static let WechatIcon: String = "wx_logo_64.png"
@@ -217,7 +240,7 @@ struct VCAppLetor {
         static let SMSRemainingSeconds: Int = 5 // 验证码倒计时总秒数
         static let PI: CGFloat = 3.14159265358979323846 // 圆周率
         static let TopAlertStayTime: Int = 3
-        static let LineGap: CGFloat = 15.0
+        static let LineGap: CGFloat = 10.0
         static let ToplineWithNavBar: CGFloat = 80.0
         static let TextFieldHeight: CGFloat = 30.0
         static let ButtonHeight: CGFloat = 30.0
@@ -241,8 +264,24 @@ struct VCAppLetor {
         static let IconImageCornerRadius: CGFloat = 3.0
     }
     
+    enum ShareSDK {
+        static let appKey: String = "7bcd1d7bc200"
+        
+        static let SinaAppKey: String = "4092097690"
+        static let SinaAppSecret: String = "58bbc54bc29f5b9f78f095a432d4ed9e"
+        static let SinaRedirectURL: String = "http://192.168.100.100"
+        
+        static let WeChatAppKey: String = "wx76e86073a6e91077"
+        static let WeChatAppSecret: String = "f02a4fac3a25c49245e6b7317a7e8026"
+    }
+    
     enum BMK {
         static let MapKey: String = "lwnYrg9Q209NsFD22Z7lTfrv"
+    }
+    
+    enum XGPush {
+        static let appID: UInt32 = 2200125218
+        static let appKey: String = "IZ83TA36M5HW"
     }
     
     // MARK: - SettingName
@@ -319,6 +358,12 @@ struct VCAppLetor {
         static let Icon: String = "icon"
         static let VerifyCode: String = "verify_code"
         static let SaltCode: String = "salt_code"
+    }
+    
+    enum ShareType: String {
+        
+        case Food = "Food"
+        case Invite = "Invite"
     }
     
     enum EditType: String {

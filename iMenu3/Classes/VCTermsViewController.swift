@@ -9,15 +9,18 @@
 import UIKit
 import PureLayout
 
-class VCTermsViewController: VCBaseViewController {
-    
-    let scrollView: UIScrollView = UIScrollView.newAutoLayoutView()
+class VCTermsViewController: VCBaseViewController, UIScrollViewDelegate {
     
     let contentView: UIWebView = UIWebView.newAutoLayoutView()
     
     var parentNav: UINavigationController?
     
+    
     // MARK: - Lifecycle
+    
+    override func loadView() {
+        self.view = UIView.new()
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,16 +28,10 @@ class VCTermsViewController: VCBaseViewController {
         self.title = VCAppLetor.StringLine.UserTerms
         self.view.backgroundColor = UIColor.whiteColor()
         
-        self.scrollView.frame = self.view.bounds
-//        self.scrollView.contentMode = UIViewContentMode.Top
-        self.scrollView.backgroundColor = UIColor.whiteColor()
-        
         self.contentView.loadRequest(NSURLRequest(URL: NSURL(string: VCAppLetor.StringLine.TermsURL)!))
         self.contentView.scalesPageToFit = true
         self.contentView.backgroundColor = UIColor.clearColor()
-        self.scrollView.addSubview(self.contentView)
-        
-        self.view.addSubview(self.scrollView)
+        self.view.addSubview(self.contentView)
         
         self.view.setNeedsUpdateConstraints()
         
@@ -43,8 +40,14 @@ class VCTermsViewController: VCBaseViewController {
     override func updateViewConstraints() {
         super.updateViewConstraints()
         
-        self.contentView.autoPinEdgeToSuperviewEdge(.Top, withInset: 30.0)
-        self.contentView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(0.0, 5.0, 10.0, 5.0), excludingEdge: ALEdge.Top)
+        self.contentView.autoPinEdgeToSuperviewEdge(.Top, withInset: 20.0)
+        self.contentView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(0.0, 5.0, 10.0, 5.0), excludingEdge: .Top)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        
     }
     
     override func didReceiveMemoryWarning() {

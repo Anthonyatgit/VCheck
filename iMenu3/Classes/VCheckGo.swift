@@ -48,7 +48,7 @@ struct VCheckGo {
                 switch self {
                 //=========AppSettings================
                 case .AppSettings(let version_ios, let deviceType):
-                    let params = ["route":"\(RoutePath.GetClientConfig.rawValue)","token":"","jsonText": "{\"version_ios\":\(version_ios), \"device_type\":\"\(deviceType.rawValue)\"}"]
+                    let params = ["route":"\(RoutePath.GetClientConfig.rawValue)","token":"","jsonText": "{\"version_ios\":\"\(version_ios)\", \"device_type\":\"\(deviceType.rawValue)\"}"]
                     return ("/\(RoutePath.GetClientConfig.rawValue)", params)
                 //=========LoginWithToken============
                 case .LoginWithToken(let token, let mid):
@@ -273,9 +273,6 @@ final class Comment {
         userAvatarURL = JSON.valueForKeyPath("user.userpic_url") as! String
         commentBody = JSON.valueForKeyPath("body") as! String
     }
-    
-    
-    
     
     
 }

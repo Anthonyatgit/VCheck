@@ -36,10 +36,7 @@ class RegSetPassViewController: VCBaseViewController {
         self.title = VCAppLetor.StringLine.LoginPass
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: VCAppLetor.StringLine.Next, style: .Done, target: self, action: "regSetpassDone")
         
-        self.scrollView.frame = self.view.bounds
-        self.scrollView.contentMode = UIViewContentMode.Top
         self.scrollView.backgroundColor = UIColor.whiteColor()
-        
         
         self.newPasscode.placeholder = VCAppLetor.StringLine.InitPasscode
         self.newPasscode.clearButtonMode = .WhileEditing
@@ -63,15 +60,26 @@ class RegSetPassViewController: VCBaseViewController {
         super.updateViewConstraints()
         
         
-        self.newPasscode.autoPinEdgeToSuperviewEdge(ALEdge.Top, withInset: 30.0)
-        self.newPasscode.autoAlignAxisToSuperviewAxis(ALAxis.Vertical)
-        self.newPasscode.autoMatchDimension(ALDimension.Width, toDimension: ALDimension.Width, ofView: self.view, withMultiplier: 0.6, relation: NSLayoutRelation.GreaterThanOrEqual)
-        self.newPasscode.autoSetDimension(ALDimension.Height, toSize: VCAppLetor.ConstValue.TextFieldHeight)
+        self.newPasscode.autoPinEdgeToSuperviewEdge(.Top, withInset: 30.0)
+        self.newPasscode.autoAlignAxisToSuperviewAxis(.Vertical)
+        self.newPasscode.autoMatchDimension(.Width, toDimension: .Width, ofView: self.view, withMultiplier: 0.618)
+        self.newPasscode.autoSetDimension(.Height, toSize: VCAppLetor.ConstValue.TextFieldHeight)
         
-        newPassUnderline.autoMatchDimension(ALDimension.Width, toDimension: ALDimension.Width, ofView: self.newPasscode, withOffset: 20.0)
-        newPassUnderline.autoSetDimension(ALDimension.Height, toSize: VCAppLetor.ConstValue.UnderlineHeight)
-        newPassUnderline.autoPinEdge(ALEdge.Top, toEdge: ALEdge.Bottom, ofView: self.newPasscode)
-        newPassUnderline.autoAlignAxisToSuperviewAxis(ALAxis.Vertical)
+        self.newPassUnderline.autoMatchDimension(.Width, toDimension: .Width, ofView: self.newPasscode, withOffset: 20.0)
+        self.newPassUnderline.autoSetDimension(.Height, toSize: VCAppLetor.ConstValue.UnderlineHeight)
+        self.newPassUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.newPasscode, withOffset: 3.0)
+        self.newPassUnderline.autoAlignAxisToSuperviewAxis(.Vertical)
+        
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.scrollView.frame = CGRectMake(0, 62.0, self.view.width, self.view.height-62.0)
+        self.scrollView.contentSize = self.scrollView.frame.size
+        self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        self.scrollView.contentOffset = CGPointMake(0, 0)
+        self.scrollView.showsVerticalScrollIndicator = false
         
     }
     

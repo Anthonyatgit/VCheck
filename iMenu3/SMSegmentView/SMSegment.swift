@@ -27,17 +27,17 @@ class SMSegment: UIView {
     var separatorWidth: CGFloat
     
     // Segment Colour
-    var onSelectionColour: UIColor = UIColor.darkGrayColor() {
+    var onSelectionColour: UIColor = UIColor.clearColor() {
         didSet {
             if self.isSelected == true {
-                self.backgroundColor = self.onSelectionColour
+                self.backgroundColor = UIColor.clearColor()
             }
         }
     }
-    var offSelectionColour: UIColor = UIColor.whiteColor() {
+    var offSelectionColour: UIColor = UIColor.clearColor() {
         didSet {
             if self.isSelected == false {
-                self.backgroundColor = self.offSelectionColour
+                self.backgroundColor = UIColor.clearColor()
             }
         }
     }
@@ -48,7 +48,7 @@ class SMSegment: UIView {
             var brightness: CGFloat = 0.0
             var alpha: CGFloat = 0.0
             self.onSelectionColour.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
-            return UIColor(hue: hue, saturation: saturation*0.5, brightness: min(brightness*1.5, 1.0), alpha: alpha)
+            return UIColor.clearColor()
         }
     }
     
@@ -67,17 +67,17 @@ class SMSegment: UIView {
             self.resetContentFrame()
         }
     }
-    var onSelectionTextColour: UIColor = UIColor.whiteColor() {
+    var onSelectionTextColour: UIColor = UIColor.blackColor().colorWithAlphaComponent(0.8) {
         didSet {
             if self.isSelected == true {
-                self.label.textColor = self.onSelectionTextColour
+                self.label.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
             }
         }
     }
-    var offSelectionTextColour: UIColor = UIColor.darkGrayColor() {
+    var offSelectionTextColour: UIColor = UIColor.blackColor().colorWithAlphaComponent(0.8) {
         didSet {
             if self.isSelected == false {
-                self.label.textColor = self.offSelectionTextColour
+                self.label.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
             }
         }
     }

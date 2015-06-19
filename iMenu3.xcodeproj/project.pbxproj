@@ -9,22 +9,13 @@
 /* Begin PBXBuildFile section */
 		0BE02F5CD93607CAD28B61E4 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E1B9F71B7F8A3007EFAD6E6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */; };
+		9214D7981B32B1B3007AC818 /* VCShareActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9214D7971B32B1B2007AC818 /* VCShareActionView.swift */; };
+		9214D79C1B32CE78007AC818 /* friends_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D7991B32CE78007AC818 /* friends_color.png */; };
+		9214D79D1B32CE78007AC818 /* wechat_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D79A1B32CE78007AC818 /* wechat_color.png */; };
+		9214D79E1B32CE78007AC818 /* weibo_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D79B1B32CE78007AC818 /* weibo_color.png */; };
 		9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */; };
-		922412911B1FE2C20049A9B5 /* FoodDetailScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412901B1FE2C20049A9B5 /* FoodDetailScrollView.swift */; };
 		922412951B200D560049A9B5 /* SMSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412931B200D560049A9B5 /* SMSegment.swift */; };
 		922412961B200D560049A9B5 /* SMSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412941B200D560049A9B5 /* SMSegmentView.swift */; };
-		922412A41B20122A0049A9B5 /* bulb_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 922412981B20122A0049A9B5 /* bulb_light.png */; };
-		922412A51B20122A0049A9B5 /* bulb_light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 922412991B20122A0049A9B5 /* bulb_light@2x.png */; };
-		922412A61B20122A0049A9B5 /* bulb.png in Resources */ = {isa = PBXBuildFile; fileRef = 9224129A1B20122A0049A9B5 /* bulb.png */; };
-		922412A71B20122A0049A9B5 /* bulb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9224129B1B20122A0049A9B5 /* bulb@2x.png */; };
-		922412A81B20122A0049A9B5 /* clip_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 9224129C1B20122A0049A9B5 /* clip_light.png */; };
-		922412A91B20122A0049A9B5 /* clip_light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9224129D1B20122A0049A9B5 /* clip_light@2x.png */; };
-		922412AA1B20122A0049A9B5 /* clip.png in Resources */ = {isa = PBXBuildFile; fileRef = 9224129E1B20122A0049A9B5 /* clip.png */; };
-		922412AB1B20122A0049A9B5 /* clip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9224129F1B20122A0049A9B5 /* clip@2x.png */; };
-		922412AC1B20122A0049A9B5 /* cloud_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 922412A01B20122A0049A9B5 /* cloud_light.png */; };
-		922412AD1B20122A0049A9B5 /* cloud_light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 922412A11B20122A0049A9B5 /* cloud_light@2x.png */; };
-		922412AE1B20122A0049A9B5 /* cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 922412A21B20122A0049A9B5 /* cloud.png */; };
-		922412AF1B20122A0049A9B5 /* cloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 922412A31B20122A0049A9B5 /* cloud@2x.png */; };
 		9227E2C51AE8DCCC008C6381 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2C41AE8DCCC008C6381 /* AppDelegate.swift */; };
 		9227E2C81AE8DCCC008C6381 /* iMenu3.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2C61AE8DCCC008C6381 /* iMenu3.xcdatamodeld */; };
 		9227E2CD1AE8DCCC008C6381 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9227E2CB1AE8DCCC008C6381 /* Main.storyboard */; };
@@ -33,10 +24,15 @@
 		9227E2DE1AE8DCCC008C6381 /* iMenu3Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2DD1AE8DCCC008C6381 /* iMenu3Tests.swift */; };
 		9227E2E81AE8DDD9008C6381 /* FoodListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2E71AE8DDD9008C6381 /* FoodListController.swift */; };
 		9227E2EE1AE8E4AE008C6381 /* FoodListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */; };
+		92347F7E1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92347F7D1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift */; };
+		92347F801B306AB100DF0A47 /* FoodDetailScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92347F7F1B306AB100DF0A47 /* FoodDetailScrollView.swift */; };
+		92457CD81B2FD2EC005B0E33 /* VCAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92457CD71B2FD2EC005B0E33 /* VCAboutViewController.swift */; };
+		92457CDA1B300949005B0E33 /* VCMailBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92457CD91B300949005B0E33 /* VCMailBoxViewController.swift */; };
 		9259050B1B098EEE00F343D4 /* UserInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */; };
 		9264F8ED1B2597CD00AF8640 /* VCPayNowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9264F8EC1B2597CD00AF8640 /* VCPayNowViewController.swift */; };
 		9264F8F01B26765500AF8640 /* ali_68.png in Resources */ = {isa = PBXBuildFile; fileRef = 9264F8EF1B26765400AF8640 /* ali_68.png */; };
 		9267443F1B1855C60075EDB5 /* EditUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */; };
+		9271B6E71B30396A00BC0F29 /* CustomDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9271B6E61B30396A00BC0F29 /* CustomDrawView.swift */; };
 		927779D61B0B02F3002A50EB /* FloatLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D41B0B02F3002A50EB /* FloatLabelTextField.swift */; };
 		927779D71B0B02F3002A50EB /* FloatLabelTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D51B0B02F3002A50EB /* FloatLabelTextView.swift */; };
 		927779DC1B0B0304002A50EB /* CTMemCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D91B0B0304002A50EB /* CTMemCache.swift */; };
@@ -81,8 +77,6 @@
 		928633801B0AE6070040CBA2 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9286337F1B0AE6070040CBA2 /* Settings.swift */; };
 		928B2FBA1B2150AF001FA746 /* FoodViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */; };
 		9293BBC91B018ECC0034F3C5 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */; };
-		9293BBCB1B01A1D80034F3C5 /* CustomDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9293BBCA1B01A1D80034F3C5 /* CustomDrawView.swift */; };
-		92987A5F1AFD1906001576B9 /* ResetMyPasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92987A5E1AFD1906001576B9 /* ResetMyPasscodeViewController.swift */; };
 		929DCAC21B0578800050B63F /* VCTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929DCAC11B0578800050B63F /* VCTermsViewController.swift */; };
 		929DCAC41B0588B90050B63F /* RegSetPassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */; };
 		92ACC2461B2ECEF100C824F2 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 92ACC2431B2ECEF100C824F2 /* LICENSE */; };
@@ -95,8 +89,6 @@
 		92BD603C1B05DE8900649DDF /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */; };
 		92BD603E1B05DEDF00649DDF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */; };
 		92BDB6931B267D3F00D1EEEA /* wx_logo_64.png in Resources */ = {isa = PBXBuildFile; fileRef = 92BDB6921B267D3F00D1EEEA /* wx_logo_64.png */; };
-		92CF816E1AFB441300625641 /* wechat.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CF816C1AFB441300625641 /* wechat.png */; };
-		92CF816F1AFB441300625641 /* weibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CF816D1AFB441300625641 /* weibo.png */; };
 		92CFFB251AF774F700C9AA7D /* UserPanelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CFFB241AF774F700C9AA7D /* UserPanelTableViewCell.swift */; };
 		92CFFB2F1AF8663400C9AA7D /* cards.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CFFB271AF8663300C9AA7D /* cards.png */; };
 		92CFFB301AF8663400C9AA7D /* coffee.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CFFB281AF8663300C9AA7D /* coffee.png */; };
@@ -107,7 +99,13 @@
 		92CFFB351AF8663400C9AA7D /* ticket.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CFFB2D1AF8663300C9AA7D /* ticket.png */; };
 		92CFFB361AF8663400C9AA7D /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CFFB2E1AF8663400C9AA7D /* user.png */; };
 		92CFFB381AF8CCB600C9AA7D /* VCMemberLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CFFB371AF8CCB600C9AA7D /* VCMemberLoginViewController.swift */; };
-		92E310291AEDD22E00771CAC /* FoodItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E310281AEDD22E00771CAC /* FoodItem.swift */; };
+		92D5C4241B30756C00DAFB36 /* libXG-SDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92457CDF1B302095005B0E33 /* libXG-SDK.a */; };
+		92D5C4261B3075FD00DAFB36 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92D5C4251B3075FD00DAFB36 /* CFNetwork.framework */; };
+		92D5C4281B30765B00DAFB36 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92D5C4271B30765B00DAFB36 /* libz.dylib */; };
+		92D5C42A1B3076E400DAFB36 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92D5C4291B3076E400DAFB36 /* libsqlite3.dylib */; };
+		92D6DBE41B33C4D5003E80AE /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D6DBE31B33C4D5003E80AE /* FavoritesViewController.swift */; };
+		92D6DBE61B33C503003E80AE /* FavoritesViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D6DBE51B33C503003E80AE /* FavoritesViewCell.swift */; };
+		92D6DBE81B33E087003E80AE /* FoodItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D6DBE71B33E087003E80AE /* FoodItem.swift */; };
 		92E3586D1B1D455700D61119 /* brand.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92E3586C1B1D455700D61119 /* brand.jpg */; };
 		92E57FFE1B2A6C4E00E463A3 /* VCCityListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */; };
 		92E580001B2AD09200E463A3 /* BMKObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 92E57FFF1B2AD09200E463A3 /* BMKObject.mm */; };
@@ -138,6 +136,22 @@
 		92F51C8D1AEDE7D300FDD50C /* hagaki.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92F51C8C1AEDE7D300FDD50C /* hagaki.jpg */; };
 		92FA19471AFCCA8400D33538 /* FindMyPasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FA19461AFCCA8400D33538 /* FindMyPasscodeViewController.swift */; };
 		92FA19491AFCD6CE00D33538 /* SMSCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FA19481AFCD6CE00D33538 /* SMSCodeViewController.swift */; };
+		92FB21721B31114200877C07 /* bar_black.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB21711B31114200877C07 /* bar_black.png */; };
+		92FB21741B311F4000877C07 /* MailBoxCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92FB21731B311F4000877C07 /* MailBoxCell.swift */; };
+		92FB21821B31571800877C07 /* bulb.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB21761B31571800877C07 /* bulb.png */; };
+		92FB21831B31571800877C07 /* bulb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB21771B31571800877C07 /* bulb@2x.png */; };
+		92FB21841B31571800877C07 /* bulb_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB21781B31571800877C07 /* bulb_light.png */; };
+		92FB21851B31571800877C07 /* bulb_light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB21791B31571800877C07 /* bulb_light@2x.png */; };
+		92FB21861B31571800877C07 /* clip.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB217A1B31571800877C07 /* clip.png */; };
+		92FB21871B31571800877C07 /* clip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB217B1B31571800877C07 /* clip@2x.png */; };
+		92FB21881B31571800877C07 /* clip_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB217C1B31571800877C07 /* clip_light.png */; };
+		92FB21891B31571800877C07 /* clip_light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB217D1B31571800877C07 /* clip_light@2x.png */; };
+		92FB218A1B31571800877C07 /* cloud.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB217E1B31571800877C07 /* cloud.png */; };
+		92FB218B1B31571800877C07 /* cloud@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB217F1B31571800877C07 /* cloud@2x.png */; };
+		92FB218C1B31571800877C07 /* cloud_light.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB21801B31571800877C07 /* cloud_light.png */; };
+		92FB218D1B31571800877C07 /* cloud_light@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB21811B31571800877C07 /* cloud_light@2x.png */; };
+		92FB21911B31572200877C07 /* wechat.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB218F1B31572200877C07 /* wechat.png */; };
+		92FB21921B31572200877C07 /* weibo.png in Resources */ = {isa = PBXBuildFile; fileRef = 92FB21901B31572200877C07 /* weibo.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -155,22 +169,13 @@
 		1E1B9F71B7F8A3007EFAD6E6 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9203E68A1B00637300407F66 /* ShareSDKContentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareSDKContentController.h; sourceTree = "<group>"; };
 		9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareSDKContentController.m; sourceTree = "<group>"; };
+		9214D7971B32B1B2007AC818 /* VCShareActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCShareActionView.swift; path = Classes/VCShareActionView.swift; sourceTree = "<group>"; };
+		9214D7991B32CE78007AC818 /* friends_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends_color.png; sourceTree = "<group>"; };
+		9214D79A1B32CE78007AC818 /* wechat_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wechat_color.png; sourceTree = "<group>"; };
+		9214D79B1B32CE78007AC818 /* weibo_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = weibo_color.png; sourceTree = "<group>"; };
 		9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCBaseViewController.swift; path = Classes/VCBaseViewController.swift; sourceTree = "<group>"; };
-		922412901B1FE2C20049A9B5 /* FoodDetailScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodDetailScrollView.swift; path = Classes/FoodDetailScrollView.swift; sourceTree = "<group>"; };
 		922412931B200D560049A9B5 /* SMSegment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSegment.swift; sourceTree = "<group>"; };
 		922412941B200D560049A9B5 /* SMSegmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSegmentView.swift; sourceTree = "<group>"; };
-		922412981B20122A0049A9B5 /* bulb_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bulb_light.png; sourceTree = "<group>"; };
-		922412991B20122A0049A9B5 /* bulb_light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bulb_light@2x.png"; sourceTree = "<group>"; };
-		9224129A1B20122A0049A9B5 /* bulb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bulb.png; sourceTree = "<group>"; };
-		9224129B1B20122A0049A9B5 /* bulb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bulb@2x.png"; sourceTree = "<group>"; };
-		9224129C1B20122A0049A9B5 /* clip_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clip_light.png; sourceTree = "<group>"; };
-		9224129D1B20122A0049A9B5 /* clip_light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clip_light@2x.png"; sourceTree = "<group>"; };
-		9224129E1B20122A0049A9B5 /* clip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clip.png; sourceTree = "<group>"; };
-		9224129F1B20122A0049A9B5 /* clip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clip@2x.png"; sourceTree = "<group>"; };
-		922412A01B20122A0049A9B5 /* cloud_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud_light.png; sourceTree = "<group>"; };
-		922412A11B20122A0049A9B5 /* cloud_light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud_light@2x.png"; sourceTree = "<group>"; };
-		922412A21B20122A0049A9B5 /* cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud.png; sourceTree = "<group>"; };
-		922412A31B20122A0049A9B5 /* cloud@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud@2x.png"; sourceTree = "<group>"; };
 		9227E2BF1AE8DCCC008C6381 /* iMenu3.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iMenu3.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9227E2C31AE8DCCC008C6381 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9227E2C41AE8DCCC008C6381 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -183,10 +188,18 @@
 		9227E2DD1AE8DCCC008C6381 /* iMenu3Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iMenu3Tests.swift; sourceTree = "<group>"; };
 		9227E2E71AE8DDD9008C6381 /* FoodListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodListController.swift; path = Classes/FoodListController.swift; sourceTree = "<group>"; };
 		9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodListTableViewCell.swift; path = Classes/FoodListTableViewCell.swift; sourceTree = "<group>"; };
+		92347F7D1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResetMyPasscodeViewController.swift; path = Classes/ResetMyPasscodeViewController.swift; sourceTree = "<group>"; };
+		92347F7F1B306AB100DF0A47 /* FoodDetailScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodDetailScrollView.swift; path = Classes/FoodDetailScrollView.swift; sourceTree = "<group>"; };
+		92457CD71B2FD2EC005B0E33 /* VCAboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCAboutViewController.swift; path = Classes/VCAboutViewController.swift; sourceTree = "<group>"; };
+		92457CD91B300949005B0E33 /* VCMailBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCMailBoxViewController.swift; path = Classes/VCMailBoxViewController.swift; sourceTree = "<group>"; };
+		92457CDC1B302031005B0E33 /* XGPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XGPush.h; path = XGSDK/XGPush.h; sourceTree = "<group>"; };
+		92457CDD1B302031005B0E33 /* XGSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XGSetting.h; path = XGSDK/XGSetting.h; sourceTree = "<group>"; };
+		92457CDF1B302095005B0E33 /* libXG-SDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libXG-SDK.a"; path = "iMenu3/XGSDK/libXG-SDK.a"; sourceTree = "<group>"; };
 		9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoHeaderView.swift; path = Classes/UserInfoHeaderView.swift; sourceTree = "<group>"; };
 		9264F8EC1B2597CD00AF8640 /* VCPayNowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCPayNowViewController.swift; path = Classes/VCPayNowViewController.swift; sourceTree = "<group>"; };
 		9264F8EF1B26765400AF8640 /* ali_68.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ali_68.png; sourceTree = "<group>"; };
 		9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EditUserInfoViewController.swift; path = Classes/EditUserInfoViewController.swift; sourceTree = "<group>"; };
+		9271B6E61B30396A00BC0F29 /* CustomDrawView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomDrawView.swift; path = Classes/CustomDrawView.swift; sourceTree = "<group>"; };
 		927779D41B0B02F3002A50EB /* FloatLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatLabelTextField.swift; sourceTree = "<group>"; };
 		927779D51B0B02F3002A50EB /* FloatLabelTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatLabelTextView.swift; sourceTree = "<group>"; };
 		927779D91B0B0304002A50EB /* CTMemCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTMemCache.swift; sourceTree = "<group>"; };
@@ -231,8 +244,6 @@
 		9286337F1B0AE6070040CBA2 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodViewerViewController.swift; path = Classes/FoodViewerViewController.swift; sourceTree = "<group>"; };
 		9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegisterViewController.swift; path = Classes/RegisterViewController.swift; sourceTree = "<group>"; };
-		9293BBCA1B01A1D80034F3C5 /* CustomDrawView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomDrawView.swift; path = Classes/CustomDrawView.swift; sourceTree = "<group>"; };
-		92987A5E1AFD1906001576B9 /* ResetMyPasscodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResetMyPasscodeViewController.swift; path = Classes/ResetMyPasscodeViewController.swift; sourceTree = "<group>"; };
 		929DCAC11B0578800050B63F /* VCTermsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCTermsViewController.swift; path = Classes/VCTermsViewController.swift; sourceTree = "<group>"; };
 		929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegSetPassViewController.swift; path = Classes/RegSetPassViewController.swift; sourceTree = "<group>"; };
 		92ACC2431B2ECEF100C824F2 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
@@ -248,8 +259,6 @@
 		92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoViewController.swift; path = Classes/UserInfoViewController.swift; sourceTree = "<group>"; };
 		92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoCell.swift; path = Classes/UserInfoCell.swift; sourceTree = "<group>"; };
 		92BDB6921B267D3F00D1EEEA /* wx_logo_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wx_logo_64.png; sourceTree = "<group>"; };
-		92CF816C1AFB441300625641 /* wechat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wechat.png; sourceTree = "<group>"; };
-		92CF816D1AFB441300625641 /* weibo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = weibo.png; sourceTree = "<group>"; };
 		92CFFB241AF774F700C9AA7D /* UserPanelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserPanelTableViewCell.swift; path = Classes/UserPanelTableViewCell.swift; sourceTree = "<group>"; };
 		92CFFB271AF8663300C9AA7D /* cards.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cards.png; sourceTree = "<group>"; };
 		92CFFB281AF8663300C9AA7D /* coffee.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coffee.png; sourceTree = "<group>"; };
@@ -260,7 +269,12 @@
 		92CFFB2D1AF8663300C9AA7D /* ticket.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ticket.png; sourceTree = "<group>"; };
 		92CFFB2E1AF8663400C9AA7D /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
 		92CFFB371AF8CCB600C9AA7D /* VCMemberLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCMemberLoginViewController.swift; path = Classes/VCMemberLoginViewController.swift; sourceTree = "<group>"; };
-		92E310281AEDD22E00771CAC /* FoodItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodItem.swift; sourceTree = "<group>"; };
+		92D5C4251B3075FD00DAFB36 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		92D5C4271B30765B00DAFB36 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		92D5C4291B3076E400DAFB36 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		92D6DBE31B33C4D5003E80AE /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FavoritesViewController.swift; path = Classes/FavoritesViewController.swift; sourceTree = "<group>"; };
+		92D6DBE51B33C503003E80AE /* FavoritesViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FavoritesViewCell.swift; path = Classes/FavoritesViewCell.swift; sourceTree = "<group>"; };
+		92D6DBE71B33E087003E80AE /* FoodItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodItem.swift; sourceTree = "<group>"; };
 		92E3586C1B1D455700D61119 /* brand.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = brand.jpg; sourceTree = "<group>"; };
 		92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCCityListViewController.swift; path = Classes/VCCityListViewController.swift; sourceTree = "<group>"; };
 		92E57FFF1B2AD09200E463A3 /* BMKObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BMKObject.mm; sourceTree = "<group>"; };
@@ -296,6 +310,22 @@
 		92F51C8C1AEDE7D300FDD50C /* hagaki.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hagaki.jpg; sourceTree = "<group>"; };
 		92FA19461AFCCA8400D33538 /* FindMyPasscodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FindMyPasscodeViewController.swift; path = Classes/FindMyPasscodeViewController.swift; sourceTree = "<group>"; };
 		92FA19481AFCD6CE00D33538 /* SMSCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SMSCodeViewController.swift; path = Classes/SMSCodeViewController.swift; sourceTree = "<group>"; };
+		92FB21711B31114200877C07 /* bar_black.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bar_black.png; sourceTree = "<group>"; };
+		92FB21731B311F4000877C07 /* MailBoxCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MailBoxCell.swift; path = Classes/MailBoxCell.swift; sourceTree = "<group>"; };
+		92FB21761B31571800877C07 /* bulb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bulb.png; sourceTree = "<group>"; };
+		92FB21771B31571800877C07 /* bulb@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bulb@2x.png"; sourceTree = "<group>"; };
+		92FB21781B31571800877C07 /* bulb_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bulb_light.png; sourceTree = "<group>"; };
+		92FB21791B31571800877C07 /* bulb_light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bulb_light@2x.png"; sourceTree = "<group>"; };
+		92FB217A1B31571800877C07 /* clip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clip.png; sourceTree = "<group>"; };
+		92FB217B1B31571800877C07 /* clip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clip@2x.png"; sourceTree = "<group>"; };
+		92FB217C1B31571800877C07 /* clip_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clip_light.png; sourceTree = "<group>"; };
+		92FB217D1B31571800877C07 /* clip_light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "clip_light@2x.png"; sourceTree = "<group>"; };
+		92FB217E1B31571800877C07 /* cloud.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud.png; sourceTree = "<group>"; };
+		92FB217F1B31571800877C07 /* cloud@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud@2x.png"; sourceTree = "<group>"; };
+		92FB21801B31571800877C07 /* cloud_light.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloud_light.png; sourceTree = "<group>"; };
+		92FB21811B31571800877C07 /* cloud_light@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cloud_light@2x.png"; sourceTree = "<group>"; };
+		92FB218F1B31572200877C07 /* wechat.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wechat.png; sourceTree = "<group>"; };
+		92FB21901B31572200877C07 /* weibo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = weibo.png; sourceTree = "<group>"; };
 		F1602DDA1EBACDED044ADFD3 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -304,6 +334,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92D5C42A1B3076E400DAFB36 /* libsqlite3.dylib in Frameworks */,
+				92D5C4281B30765B00DAFB36 /* libz.dylib in Frameworks */,
+				92F3B07C1B003697003A6D76 /* CoreTelephony.framework in Frameworks */,
+				92D5C4261B3075FD00DAFB36 /* CFNetwork.framework in Frameworks */,
+				92D5C4241B30756C00DAFB36 /* libXG-SDK.a in Frameworks */,
 				927B7C961B2962C700B55DB2 /* CoreGraphics.framework in Frameworks */,
 				927B7C941B2962A700B55DB2 /* OpenGLES.framework in Frameworks */,
 				927B7C921B29629100B55DB2 /* CoreLocation.framework in Frameworks */,
@@ -313,7 +348,6 @@
 				92F3B0821B0036C6003A6D76 /* Security.framework in Frameworks */,
 				92F3B0801B0036BB003A6D76 /* libz.1.2.5.dylib in Frameworks */,
 				92F3B07E1B0036B0003A6D76 /* libicucore.dylib in Frameworks */,
-				92F3B07C1B003697003A6D76 /* CoreTelephony.framework in Frameworks */,
 				92F3B07A1B00368C003A6D76 /* QuartzCore.framework in Frameworks */,
 				92F3B0781B00367A003A6D76 /* SystemConfiguration.framework in Frameworks */,
 				92F3B06A1B00362A003A6D76 /* SMSConnection.framework in Frameworks */,
@@ -343,6 +377,10 @@
 		05B8E7EB2168B867A50937F6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				92D5C4291B3076E400DAFB36 /* libsqlite3.dylib */,
+				92D5C4271B30765B00DAFB36 /* libz.dylib */,
+				92D5C4251B3075FD00DAFB36 /* CFNetwork.framework */,
+				92457CDF1B302095005B0E33 /* libXG-SDK.a */,
 				927B7C951B2962C700B55DB2 /* CoreGraphics.framework */,
 				927B7C931B2962A700B55DB2 /* OpenGLES.framework */,
 				927B7C911B29629100B55DB2 /* CoreLocation.framework */,
@@ -369,25 +407,6 @@
 			path = SMSegmentView;
 			sourceTree = "<group>";
 		};
-		922412971B2012120049A9B5 /* buttonIcon */ = {
-			isa = PBXGroup;
-			children = (
-				922412981B20122A0049A9B5 /* bulb_light.png */,
-				922412991B20122A0049A9B5 /* bulb_light@2x.png */,
-				9224129A1B20122A0049A9B5 /* bulb.png */,
-				9224129B1B20122A0049A9B5 /* bulb@2x.png */,
-				9224129C1B20122A0049A9B5 /* clip_light.png */,
-				9224129D1B20122A0049A9B5 /* clip_light@2x.png */,
-				9224129E1B20122A0049A9B5 /* clip.png */,
-				9224129F1B20122A0049A9B5 /* clip@2x.png */,
-				922412A01B20122A0049A9B5 /* cloud_light.png */,
-				922412A11B20122A0049A9B5 /* cloud_light@2x.png */,
-				922412A21B20122A0049A9B5 /* cloud.png */,
-				922412A31B20122A0049A9B5 /* cloud@2x.png */,
-			);
-			name = buttonIcon;
-			sourceTree = "<group>";
-		};
 		9227E2B61AE8DCCC008C6381 = {
 			isa = PBXGroup;
 			children = (
@@ -411,6 +430,8 @@
 		9227E2C11AE8DCCC008C6381 /* iMenu3 */ = {
 			isa = PBXGroup;
 			children = (
+				92457CE11B3020E5005B0E33 /* BMK */,
+				92457CDE1B302035005B0E33 /* XGSDK */,
 				92ACC2421B2ECEF100C824F2 /* MGFashionMenuView */,
 				92BD2E0F1B27BE810053408B /* UPullToRefresh */,
 				927779D81B0B0304002A50EB /* THelpClass */,
@@ -421,38 +442,12 @@
 				92F51C8A1AEDE7D300FDD50C /* Assets */,
 				928205011AEDE1330067BB92 /* Breeze */,
 				92E310271AEDD22E00771CAC /* model */,
+				92457CDB1B301FFD005B0E33 /* Classes */,
+				9227E2C21AE8DCCC008C6381 /* Supporting Files */,
 				9227E2C41AE8DCCC008C6381 /* AppDelegate.swift */,
-				9284A14A1AF1B98100E662B2 /* VCheckGo.swift */,
-				9284A1441AF0CFCF00E662B2 /* VCAppLetor.swift */,
-				9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */,
-				92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */,
-				9227E2E71AE8DDD9008C6381 /* FoodListController.swift */,
-				9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */,
-				928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */,
-				922412901B1FE2C20049A9B5 /* FoodDetailScrollView.swift */,
-				92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */,
-				9264F8EC1B2597CD00AF8640 /* VCPayNowViewController.swift */,
-				9284A13E1AF0AF2500E662B2 /* FoodCollectionsViewController.swift */,
-				9284A1401AF0AF5400E662B2 /* FoodCollectionsViewCell.swift */,
-				928633741B0AE43B0040CBA2 /* UserPanelViewController.swift */,
-				92CFFB241AF774F700C9AA7D /* UserPanelTableViewCell.swift */,
-				9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */,
-				92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */,
-				9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */,
-				92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */,
-				92BD2E171B2827EF0053408B /* FeedbackViewController.swift */,
-				92CFFB371AF8CCB600C9AA7D /* VCMemberLoginViewController.swift */,
-				9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */,
-				929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */,
-				929DCAC11B0578800050B63F /* VCTermsViewController.swift */,
-				92FA19461AFCCA8400D33538 /* FindMyPasscodeViewController.swift */,
-				92FA19481AFCD6CE00D33538 /* SMSCodeViewController.swift */,
-				92987A5E1AFD1906001576B9 /* ResetMyPasscodeViewController.swift */,
-				9293BBCA1B01A1D80034F3C5 /* CustomDrawView.swift */,
 				9227E2CB1AE8DCCC008C6381 /* Main.storyboard */,
 				9227E2CE1AE8DCCC008C6381 /* Images.xcassets */,
 				9227E2D01AE8DCCC008C6381 /* LaunchScreen.xib */,
-				9227E2C21AE8DCCC008C6381 /* Supporting Files */,
 			);
 			path = iMenu3;
 			sourceTree = "<group>";
@@ -461,7 +456,6 @@
 			isa = PBXGroup;
 			children = (
 				9227E2C31AE8DCCC008C6381 /* Info.plist */,
-				927B7C971B29641100B55DB2 /* mapapi.bundle */,
 				92F3B0891B003802003A6D76 /* iMenu3-Bridging-Header.h */,
 				92E57FFF1B2AD09200E463A3 /* BMKObject.mm */,
 				9203E68A1B00637300407F66 /* ShareSDKContentController.h */,
@@ -485,6 +479,34 @@
 				9227E2DC1AE8DCCC008C6381 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		92457CDB1B301FFD005B0E33 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				92D6DBE21B33C450003E80AE /* VCCommon */,
+				92D6DBE01B33C3B6003E80AE /* FoodRoll */,
+				92D6DBE11B33C426003E80AE /* MemberCenter */,
+				92D6DBDF1B33C383003E80AE /* MemberLoginAndReg */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		92457CDE1B302035005B0E33 /* XGSDK */ = {
+			isa = PBXGroup;
+			children = (
+				92457CDC1B302031005B0E33 /* XGPush.h */,
+				92457CDD1B302031005B0E33 /* XGSetting.h */,
+			);
+			name = XGSDK;
+			sourceTree = "<group>";
+		};
+		92457CE11B3020E5005B0E33 /* BMK */ = {
+			isa = PBXGroup;
+			children = (
+				927B7C971B29641100B55DB2 /* mapapi.bundle */,
+			);
+			name = BMK;
 			sourceTree = "<group>";
 		};
 		9264F8EE1B26765400AF8640 /* pay */ = {
@@ -590,8 +612,6 @@
 		92CFFB261AF8663300C9AA7D /* userPanel */ = {
 			isa = PBXGroup;
 			children = (
-				92CF816C1AFB441300625641 /* wechat.png */,
-				92CF816D1AFB441300625641 /* weibo.png */,
 				92CFFB271AF8663300C9AA7D /* cards.png */,
 				92CFFB281AF8663300C9AA7D /* coffee.png */,
 				92CFFB291AF8663300C9AA7D /* gift.png */,
@@ -604,12 +624,73 @@
 			path = userPanel;
 			sourceTree = "<group>";
 		};
+		92D6DBDF1B33C383003E80AE /* MemberLoginAndReg */ = {
+			isa = PBXGroup;
+			children = (
+				92CFFB371AF8CCB600C9AA7D /* VCMemberLoginViewController.swift */,
+				9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */,
+				929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */,
+				929DCAC11B0578800050B63F /* VCTermsViewController.swift */,
+				92FA19461AFCCA8400D33538 /* FindMyPasscodeViewController.swift */,
+				92FA19481AFCD6CE00D33538 /* SMSCodeViewController.swift */,
+				92347F7D1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift */,
+			);
+			name = MemberLoginAndReg;
+			sourceTree = "<group>";
+		};
+		92D6DBE01B33C3B6003E80AE /* FoodRoll */ = {
+			isa = PBXGroup;
+			children = (
+				9227E2E71AE8DDD9008C6381 /* FoodListController.swift */,
+				9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */,
+				928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */,
+				92347F7F1B306AB100DF0A47 /* FoodDetailScrollView.swift */,
+				92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */,
+				9264F8EC1B2597CD00AF8640 /* VCPayNowViewController.swift */,
+				9284A13E1AF0AF2500E662B2 /* FoodCollectionsViewController.swift */,
+				9284A1401AF0AF5400E662B2 /* FoodCollectionsViewCell.swift */,
+			);
+			name = FoodRoll;
+			sourceTree = "<group>";
+		};
+		92D6DBE11B33C426003E80AE /* MemberCenter */ = {
+			isa = PBXGroup;
+			children = (
+				928633741B0AE43B0040CBA2 /* UserPanelViewController.swift */,
+				92CFFB241AF774F700C9AA7D /* UserPanelTableViewCell.swift */,
+				9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */,
+				92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */,
+				9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */,
+				92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */,
+				92D6DBE31B33C4D5003E80AE /* FavoritesViewController.swift */,
+				92D6DBE51B33C503003E80AE /* FavoritesViewCell.swift */,
+				92BD2E171B2827EF0053408B /* FeedbackViewController.swift */,
+				92457CD71B2FD2EC005B0E33 /* VCAboutViewController.swift */,
+				92457CD91B300949005B0E33 /* VCMailBoxViewController.swift */,
+				92FB21731B311F4000877C07 /* MailBoxCell.swift */,
+			);
+			name = MemberCenter;
+			sourceTree = "<group>";
+		};
+		92D6DBE21B33C450003E80AE /* VCCommon */ = {
+			isa = PBXGroup;
+			children = (
+				9284A14A1AF1B98100E662B2 /* VCheckGo.swift */,
+				9284A1441AF0CFCF00E662B2 /* VCAppLetor.swift */,
+				9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */,
+				92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */,
+				9271B6E61B30396A00BC0F29 /* CustomDrawView.swift */,
+				9214D7971B32B1B2007AC818 /* VCShareActionView.swift */,
+			);
+			name = VCCommon;
+			sourceTree = "<group>";
+		};
 		92E310271AEDD22E00771CAC /* model */ = {
 			isa = PBXGroup;
 			children = (
 				9227E2C61AE8DCCC008C6381 /* iMenu3.xcdatamodeld */,
+				92D6DBE71B33E087003E80AE /* FoodItem.swift */,
 				92B10EC41B00993C00E0674F /* Member.swift */,
-				92E310281AEDD22E00771CAC /* FoodItem.swift */,
 				9286337F1B0AE6070040CBA2 /* Settings.swift */,
 			);
 			name = model;
@@ -691,8 +772,10 @@
 		92F51C8A1AEDE7D300FDD50C /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				92FB218E1B31572200877C07 /* social */,
+				92FB21751B31571800877C07 /* buttonIcon */,
+				92FB21701B31114200877C07 /* bg */,
 				9264F8EE1B26765400AF8640 /* pay */,
-				922412971B2012120049A9B5 /* buttonIcon */,
 				92CFFB261AF8663300C9AA7D /* userPanel */,
 				9284A11D1AF0AECD00E662B2 /* collectionImages */,
 				92F51C8B1AEDE7D300FDD50C /* foodImageLarge */,
@@ -706,6 +789,45 @@
 				92F51C8C1AEDE7D300FDD50C /* hagaki.jpg */,
 			);
 			path = foodImageLarge;
+			sourceTree = "<group>";
+		};
+		92FB21701B31114200877C07 /* bg */ = {
+			isa = PBXGroup;
+			children = (
+				92FB21711B31114200877C07 /* bar_black.png */,
+			);
+			path = bg;
+			sourceTree = "<group>";
+		};
+		92FB21751B31571800877C07 /* buttonIcon */ = {
+			isa = PBXGroup;
+			children = (
+				92FB21761B31571800877C07 /* bulb.png */,
+				92FB21771B31571800877C07 /* bulb@2x.png */,
+				92FB21781B31571800877C07 /* bulb_light.png */,
+				92FB21791B31571800877C07 /* bulb_light@2x.png */,
+				92FB217A1B31571800877C07 /* clip.png */,
+				92FB217B1B31571800877C07 /* clip@2x.png */,
+				92FB217C1B31571800877C07 /* clip_light.png */,
+				92FB217D1B31571800877C07 /* clip_light@2x.png */,
+				92FB217E1B31571800877C07 /* cloud.png */,
+				92FB217F1B31571800877C07 /* cloud@2x.png */,
+				92FB21801B31571800877C07 /* cloud_light.png */,
+				92FB21811B31571800877C07 /* cloud_light@2x.png */,
+			);
+			path = buttonIcon;
+			sourceTree = "<group>";
+		};
+		92FB218E1B31572200877C07 /* social */ = {
+			isa = PBXGroup;
+			children = (
+				9214D7991B32CE78007AC818 /* friends_color.png */,
+				9214D79A1B32CE78007AC818 /* wechat_color.png */,
+				9214D79B1B32CE78007AC818 /* weibo_color.png */,
+				92FB218F1B31572200877C07 /* wechat.png */,
+				92FB21901B31572200877C07 /* weibo.png */,
+			);
+			path = social;
 			sourceTree = "<group>";
 		};
 		C08401B725EE433811DEF9EA /* Pods */ = {
@@ -803,57 +925,61 @@
 			buildActionMask = 2147483647;
 			files = (
 				927B7C981B29641100B55DB2 /* mapapi.bundle in Resources */,
-				922412AC1B20122A0049A9B5 /* cloud_light.png in Resources */,
 				92ACC2461B2ECEF100C824F2 /* LICENSE in Resources */,
+				9214D79D1B32CE78007AC818 /* wechat_color.png in Resources */,
 				9282050F1AEDE1330067BB92 /* Info.plist in Resources */,
 				9284A1311AF0AECD00E662B2 /* hungry.png in Resources */,
 				9284A1371AF0AECD00E662B2 /* mood5.jpg in Resources */,
 				92CFFB2F1AF8663400C9AA7D /* cards.png in Resources */,
 				9284A12F1AF0AECD00E662B2 /* adventurous.png in Resources */,
-				922412A71B20122A0049A9B5 /* bulb@2x.png in Resources */,
+				9214D79C1B32CE78007AC818 /* friends_color.png in Resources */,
+				92FB218D1B31571800877C07 /* cloud_light@2x.png in Resources */,
 				92CFFB311AF8663400C9AA7D /* gift.png in Resources */,
-				922412AE1B20122A0049A9B5 /* cloud.png in Resources */,
 				9227E2CD1AE8DCCC008C6381 /* Main.storyboard in Resources */,
 				9284A1391AF0AECD00E662B2 /* mood7.jpg in Resources */,
-				922412A91B20122A0049A9B5 /* clip_light@2x.png in Resources */,
-				922412A51B20122A0049A9B5 /* bulb_light@2x.png in Resources */,
 				9284A1351AF0AECD00E662B2 /* mood3.jpg in Resources */,
-				92CF816F1AFB441300625641 /* weibo.png in Resources */,
-				922412A61B20122A0049A9B5 /* bulb.png in Resources */,
 				92F3B06D1B00362A003A6D76 /* ShareSDKLocalizable.strings in Resources */,
 				92E3586D1B1D455700D61119 /* brand.jpg in Resources */,
+				92FB21851B31571800877C07 /* bulb_light@2x.png in Resources */,
+				92FB21861B31571800877C07 /* clip.png in Resources */,
+				92FB21881B31571800877C07 /* clip_light.png in Resources */,
 				92CFFB351AF8663400C9AA7D /* ticket.png in Resources */,
 				92F3B06E1B00362A003A6D76 /* Resource.bundle in Resources */,
 				92F3B0711B00362A003A6D76 /* WeiboSDK.bundle in Resources */,
-				922412AA1B20122A0049A9B5 /* clip.png in Resources */,
+				92FB21871B31571800877C07 /* clip@2x.png in Resources */,
+				92FB21721B31114200877C07 /* bar_black.png in Resources */,
 				9227E2D21AE8DCCC008C6381 /* LaunchScreen.xib in Resources */,
+				92FB21891B31571800877C07 /* clip_light@2x.png in Resources */,
 				92CFFB361AF8663400C9AA7D /* user.png in Resources */,
+				92FB21821B31571800877C07 /* bulb.png in Resources */,
 				92CFFB331AF8663400C9AA7D /* like.png in Resources */,
-				92CF816E1AFB441300625641 /* wechat.png in Resources */,
 				9264F8F01B26765500AF8640 /* ali_68.png in Resources */,
+				92FB21921B31572200877C07 /* weibo.png in Resources */,
 				9284A13C1AF0AECD00E662B2 /* relax.png in Resources */,
+				92FB21911B31572200877C07 /* wechat.png in Resources */,
 				9284A1341AF0AECD00E662B2 /* mood2.jpg in Resources */,
 				92F51C8D1AEDE7D300FDD50C /* hagaki.jpg in Resources */,
 				9284A1321AF0AECD00E662B2 /* loved.png in Resources */,
 				92CFFB321AF8663400C9AA7D /* image.png in Resources */,
 				92F3B0741B00362A003A6D76 /* ShareSDKFlatShareViewUI.bundle in Resources */,
-				922412AF1B20122A0049A9B5 /* cloud@2x.png in Resources */,
+				92FB218A1B31571800877C07 /* cloud.png in Resources */,
 				9284A13A1AF0AECD00E662B2 /* mood8.jpg in Resources */,
 				9284A13B1AF0AECD00E662B2 /* playful.png in Resources */,
-				922412AD1B20122A0049A9B5 /* cloud_light@2x.png in Resources */,
 				9284A1361AF0AECD00E662B2 /* mood4.jpg in Resources */,
+				92FB21841B31571800877C07 /* bulb_light.png in Resources */,
 				92CFFB341AF8663400C9AA7D /* shopping-bag.png in Resources */,
 				9227E2CF1AE8DCCC008C6381 /* Images.xcassets in Resources */,
 				9284A1301AF0AECD00E662B2 /* happy.png in Resources */,
 				92BDB6931B267D3F00D1EEEA /* wx_logo_64.png in Resources */,
-				922412AB1B20122A0049A9B5 /* clip@2x.png in Resources */,
+				92FB218C1B31571800877C07 /* cloud_light.png in Resources */,
+				92FB21831B31571800877C07 /* bulb@2x.png in Resources */,
 				9284A13D1AF0AECD00E662B2 /* wealthy.png in Resources */,
 				9284A1381AF0AECD00E662B2 /* mood6.jpg in Resources */,
 				9284A1331AF0AECD00E662B2 /* mood1.jpg in Resources */,
 				9284A12E1AF0AECD00E662B2 /* active.png in Resources */,
-				922412A81B20122A0049A9B5 /* clip_light.png in Resources */,
 				92CFFB301AF8663400C9AA7D /* coffee.png in Resources */,
-				922412A41B20122A0049A9B5 /* bulb_light.png in Resources */,
+				9214D79E1B32CE78007AC818 /* weibo_color.png in Resources */,
+				92FB218B1B31571800877C07 /* cloud@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -921,14 +1047,13 @@
 			files = (
 				927779DD1B0B0304002A50EB /* FlatUIColor.swift in Sources */,
 				927779DE1B0B0304002A50EB /* JSSAlertView.swift in Sources */,
-				9293BBCB1B01A1D80034F3C5 /* CustomDrawView.swift in Sources */,
-				92987A5F1AFD1906001576B9 /* ResetMyPasscodeViewController.swift in Sources */,
 				9280E4481B14444B00959798 /* Reachability.swift in Sources */,
 				927779D61B0B02F3002A50EB /* FloatLabelTextField.swift in Sources */,
 				92ACC2471B2ECEF100C824F2 /* MGFashionMenuView.m in Sources */,
 				9267443F1B1855C60075EDB5 /* EditUserInfoViewController.swift in Sources */,
 				92BD603E1B05DEDF00649DDF /* UserInfoCell.swift in Sources */,
 				9282050E1AEDE1330067BB92 /* BreezeStore.swift in Sources */,
+				92347F7E1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift in Sources */,
 				9282050D1AEDE1330067BB92 /* BreezeStore+Saving.swift in Sources */,
 				9227E2C81AE8DCCC008C6381 /* iMenu3.xcdatamodeld in Sources */,
 				928633751B0AE43B0040CBA2 /* UserPanelViewController.swift in Sources */,
@@ -941,6 +1066,7 @@
 				92BD2E141B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m in Sources */,
 				9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */,
 				92EAF9371B218F8900B5EEA8 /* VCCheckNowViewController.swift in Sources */,
+				92347F801B306AB100DF0A47 /* FoodDetailScrollView.swift in Sources */,
 				92E580001B2AD09200E463A3 /* BMKObject.mm in Sources */,
 				9293BBC91B018ECC0034F3C5 /* RegisterViewController.swift in Sources */,
 				927779DC1B0B0304002A50EB /* CTMemCache.swift in Sources */,
@@ -952,27 +1078,33 @@
 				9284A1451AF0CFCF00E662B2 /* VCAppLetor.swift in Sources */,
 				92BD2E151B27BE810053408B /* UzysRadialProgressActivityIndicator.m in Sources */,
 				928205111AEDE1330067BB92 /* NSManagedObject+Deleting.swift in Sources */,
+				92457CD81B2FD2EC005B0E33 /* VCAboutViewController.swift in Sources */,
 				929DCAC41B0588B90050B63F /* RegSetPassViewController.swift in Sources */,
 				92E962E21AF2017400030226 /* Toucan.swift in Sources */,
 				922412961B200D560049A9B5 /* SMSegmentView.swift in Sources */,
+				92D6DBE61B33C503003E80AE /* FavoritesViewCell.swift in Sources */,
 				9284A1411AF0AF5400E662B2 /* FoodCollectionsViewCell.swift in Sources */,
 				928205101AEDE1330067BB92 /* NSManagedObject+Creating.swift in Sources */,
 				9282050B1AEDE1330067BB92 /* BreezeStore+Defaults.swift in Sources */,
 				92B10EC51B00993C00E0674F /* Member.swift in Sources */,
-				922412911B1FE2C20049A9B5 /* FoodDetailScrollView.swift in Sources */,
+				9271B6E71B30396A00BC0F29 /* CustomDrawView.swift in Sources */,
 				9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */,
 				9264F8ED1B2597CD00AF8640 /* VCPayNowViewController.swift in Sources */,
+				9214D7981B32B1B3007AC818 /* VCShareActionView.swift in Sources */,
 				92E57FFE1B2A6C4E00E463A3 /* VCCityListViewController.swift in Sources */,
 				9282050C1AEDE1330067BB92 /* BreezeStore+iCloud.swift in Sources */,
+				92457CDA1B300949005B0E33 /* VCMailBoxViewController.swift in Sources */,
 				92FA19491AFCD6CE00D33538 /* SMSCodeViewController.swift in Sources */,
-				92E310291AEDD22E00771CAC /* FoodItem.swift in Sources */,
 				928205121AEDE1330067BB92 /* NSManagedObject+Finding.swift in Sources */,
 				929DCAC21B0578800050B63F /* VCTermsViewController.swift in Sources */,
 				927779D71B0B02F3002A50EB /* FloatLabelTextView.swift in Sources */,
 				9259050B1B098EEE00F343D4 /* UserInfoHeaderView.swift in Sources */,
+				92D6DBE81B33E087003E80AE /* FoodItem.swift in Sources */,
+				92FB21741B311F4000877C07 /* MailBoxCell.swift in Sources */,
 				92CFFB251AF774F700C9AA7D /* UserPanelTableViewCell.swift in Sources */,
 				928205131AEDE1330067BB92 /* NSManagedObjectContext+Breeze.swift in Sources */,
 				928B2FBA1B2150AF001FA746 /* FoodViewerViewController.swift in Sources */,
+				92D6DBE41B33C4D5003E80AE /* FavoritesViewController.swift in Sources */,
 				92BD603C1B05DE8900649DDF /* UserInfoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1112,8 +1244,8 @@
 			baseConfigurationReference = 0C40656762C7729B9DD514C9 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Bin Wang (QF86KF3QJ6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bin Wang (QF86KF3QJ6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Connection",
@@ -1129,11 +1261,14 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Extend/SinaWeiboSDK",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Extend/WeChatSDK",
+					"$(PROJECT_DIR)/iMenu3/XGSDK",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -D DEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "52cd0ccf-7925-4889-998e-10e63b37f22e";
 				SWIFT_OBJC_BRIDGING_HEADER = "iMenu3/iMenu3-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -1142,8 +1277,8 @@
 			baseConfigurationReference = F1602DDA1EBACDED044ADFD3 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: Bin Wang (QF86KF3QJ6)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bin Wang (QF86KF3QJ6)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Connection",
@@ -1159,10 +1294,13 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Extend/SinaWeiboSDK",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Extend/WeChatSDK",
+					"$(PROJECT_DIR)/iMenu3/XGSDK",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "52cd0ccf-7925-4889-998e-10e63b37f22e";
 				SWIFT_OBJC_BRIDGING_HEADER = "iMenu3/iMenu3-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

@@ -14,12 +14,13 @@ import MBProgressHUD
 import AFViewShaker
 
 protocol MemberSigninDelegate {
+    
     func memberDidSigninSuccess(mid: String, token: String)
 }
 
 class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, UITextFieldDelegate, RKDropdownAlertDelegate {
     
-    let scrollView: UIScrollView = UIScrollView()
+    let scrollView: UIScrollView = UIScrollView.newAutoLayoutView()
     
     let loginTitle: UILabel = UILabel.newAutoLayoutView()
     let loginName: UITextField = UITextField.newAutoLayoutView()
@@ -30,7 +31,6 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
     
     let weiboSignInButton: UIButton = UIButton.newAutoLayoutView()
     let wechatSignInButton: UIButton = UIButton.newAutoLayoutView()
-    let logoutButton: UIButton = UIButton.newAutoLayoutView()
     
     let forgetPassButton = UIButton.newAutoLayoutView()
     let nameUnderLine = CustomDrawView.newAutoLayoutView()
@@ -42,9 +42,10 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
     var userPanelController: UserPanelViewController?
     
     
-    let socialLine1 = CustomDrawView.newAutoLayoutView()
-    let socialLine2 = CustomDrawView.newAutoLayoutView()
+    let socialLine = CustomDrawView.newAutoLayoutView()
     let socialSignInTitle: UILabel = UILabel.newAutoLayoutView()
+    
+    let closeButton: UIButton = UIButton(frame: CGRectMake(0.0, 0.0, 30.0, 30.0))
     
     var tapGesture: UITapGestureRecognizer!
     
@@ -53,13 +54,28 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.scrollView.frame = self.view.bounds
-        self.scrollView.contentMode = UIViewContentMode.Top
-        self.scrollView.backgroundColor = UIColor.whiteColor()
+//        self.scrollView.originX = 0.0
+//        self.scrollView.originY = 62.0
+//        self.scrollView.width = self.view.width
+//        self.scrollView.height = self.view.height-62.0
         
         self.title = VCAppLetor.StringLine.LoginPageTitle
+        self.view.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+        
+        self.scrollView.backgroundColor = UIColor.whiteColor()
+        
+        let closeView: UIView = UIView(frame: CGRectMake(6.0, 0.0, 32.0, 32.0))
+        closeView.backgroundColor = UIColor.clearColor()
+        
+        self.closeButton.setImage(UIImage(named: VCAppLetor.IconName.ClearIconBlack)?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
+        self.closeButton.backgroundColor = UIColor.clearColor()
+        self.closeButton.addTarget(self, action: "dismiss", forControlEvents: .TouchUpInside)
+        closeView.addSubview(self.closeButton)
+        
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeView)
+        self.navigationController?.navigationBar.alpha = 0.2
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: VCAppLetor.StringLine.Done, style: .Done, target: self, action: "letMeLogin")
-        navigationItem.leftBarButtonItem = barButtonItemWithImageNamed(VCAppLetor.IconName.ClearIconBlack, title: nil, action: "dismiss")
         
         self.tapGesture = UITapGestureRecognizer(target: self, action: "viewDidTap:")
         self.tapGesture.numberOfTapsRequired = 1
@@ -68,7 +84,7 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
         // Top Description Text
         self.loginTitle.text = VCAppLetor.StringLine.LoginTitle
         self.loginTitle.font = VCAppLetor.Font.NormalFont
-        self.loginTitle.textColor = UIColor.blackColor()
+        self.loginTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.loginTitle.textAlignment = .Center
         self.scrollView.addSubview(self.loginTitle)
         
@@ -97,20 +113,22 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
         self.scrollView.addSubview(self.loginPass)
         
         // Forget Passcode Button
-        forgetPassButton.setImage(UIImage(named: VCAppLetor.IconName.HelpIconBlack), forState: .Normal)
-        forgetPassButton.alpha = 0.1
-        forgetPassButton.addTarget(self, action: "forgotMyPasscode", forControlEvents: .TouchUpInside)
-        self.scrollView.addSubview(forgetPassButton)
+        self.forgetPassButton.setImage(UIImage(named: VCAppLetor.IconName.HelpIconBlack), forState: .Normal)
+        self.forgetPassButton.alpha = 0.1
+        self.forgetPassButton.addTarget(self, action: "forgotMyPasscode", forControlEvents: .TouchUpInside)
+        self.scrollView.addSubview(self.forgetPassButton)
         
         // Login Passcode Underline
-        passUnderLine.drawType = "Line"
-        passUnderLine.lineWidth = 1.0
+        self.passUnderLine.drawType = "Line"
+        self.passUnderLine.lineWidth = 1.0
         self.scrollView.addSubview(passUnderLine)
         
         // SignUp Description Text
-        signUpText.text = VCAppLetor.StringLine.SignUpText
-        signUpText.font = VCAppLetor.Font.NormalFont
-        self.scrollView.addSubview(signUpText)
+        self.signUpText.text = VCAppLetor.StringLine.SignUpText
+        self.signUpText.font = VCAppLetor.Font.NormalFont
+        self.signUpText.textAlignment = .Left
+        self.signUpText.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+        self.scrollView.addSubview(self.signUpText)
         
         // SignUp Button
         signUpButton.setTitle(VCAppLetor.StringLine.SignUpButtonText, forState: .Normal)
@@ -119,29 +137,36 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
         signUpButton.addTarget(self, action: "letMeRegister", forControlEvents: .TouchUpInside)
         self.scrollView.addSubview(signUpButton)
         
+        self.socialLine.drawType = "DoubleLine"
+        self.scrollView.addSubview(self.socialLine)
+        
+        self.socialSignInTitle.text = VCAppLetor.StringLine.SocialSignUpTitle
+        self.socialSignInTitle.textAlignment = .Center
+        self.socialSignInTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+        self.socialSignInTitle.backgroundColor = UIColor.whiteColor()
+        self.socialSignInTitle.font = VCAppLetor.Font.NormalFont
+        self.scrollView.addSubview(self.socialSignInTitle)
+        
         
         self.weiboSignInButton.setImage(UIImage(named: "weibo.png"), forState: .Normal)
+        self.weiboSignInButton.backgroundColor = UIColor.whiteColor()
+        self.weiboSignInButton.imageEdgeInsets = UIEdgeInsetsMake(16.0, 16.0, 16.0, 16.0)
         self.weiboSignInButton.addTarget(self, action: "signinWithWeibo", forControlEvents: .TouchUpInside)
+        self.weiboSignInButton.layer.cornerRadius = 26.0
+        self.weiboSignInButton.layer.borderWidth = 1.0
+        self.weiboSignInButton.layer.borderColor = UIColor.blackColor().CGColor
+        self.weiboSignInButton.alpha = 0.8
         self.scrollView.addSubview(self.weiboSignInButton)
         
         self.wechatSignInButton.setImage(UIImage(named: "wechat.png"), forState: .Normal)
+        self.wechatSignInButton.backgroundColor = UIColor.whiteColor()
+        self.wechatSignInButton.imageEdgeInsets = UIEdgeInsetsMake(16.0, 16.0, 16.0, 16.0)
         self.wechatSignInButton.addTarget(self, action: "signinWithWechat", forControlEvents: .TouchUpInside)
+        self.wechatSignInButton.layer.cornerRadius = 26.0
+        self.wechatSignInButton.layer.borderWidth = 1.0
+        self.wechatSignInButton.layer.borderColor = UIColor.blackColor().CGColor
+        self.wechatSignInButton.alpha = 0.8
         self.scrollView.addSubview(self.wechatSignInButton)
-        
-        
-        socialLine1.drawType = "Line"
-        socialLine1.lineWidth = 2.0
-        self.scrollView.addSubview(socialLine1)
-        
-        socialLine2.drawType = "Line"
-        socialLine2.lineWidth = 1.0
-        self.scrollView.addSubview(socialLine2)
-        
-        socialSignInTitle.text = VCAppLetor.StringLine.SocialSignUpTitle
-        socialSignInTitle.textAlignment = .Center
-        socialSignInTitle.backgroundColor = UIColor.whiteColor()
-        socialSignInTitle.font = VCAppLetor.Font.NormalFont
-        self.scrollView.addSubview(socialSignInTitle)
         
         // Shake Animation
         self.loginNameShaker = AFViewShaker(view: self.loginName)
@@ -163,6 +188,10 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
     override func updateViewConstraints() {
         super.updateViewConstraints()
         
+        self.scrollView.autoSetDimensionsToSize(CGSizeMake(self.view.width, self.view.height - 62.0))
+        self.scrollView.autoPinEdgeToSuperviewEdge(.Top, withInset: 62.0)
+        self.scrollView.autoPinEdgeToSuperviewEdge(.Leading)
+        
         self.loginTitle.autoPinEdgeToSuperviewEdge(.Top, withInset: 30.0)
         self.loginTitle.autoMatchDimension(.Width, toDimension: .Width, ofView: self.scrollView, withMultiplier: 0.8)
         self.loginTitle.autoSetDimension(.Height, toSize: 20.0)
@@ -170,59 +199,63 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
         
         self.loginName.autoMatchDimension(.Width, toDimension: .Width, ofView: self.scrollView, withMultiplier: 0.8)
         self.loginName.autoSetDimension(.Height, toSize: VCAppLetor.ConstValue.TextFieldHeight)
-        self.loginName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.loginTitle, withOffset: VCAppLetor.ConstValue.LineGap)
+        self.loginName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.loginTitle, withOffset: VCAppLetor.ConstValue.LineGap*2.0)
         self.loginName.autoAlignAxisToSuperviewAxis(.Vertical)
         
+        self.nameUnderLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.loginName, withOffset: 3.0)
+        self.nameUnderLine.autoMatchDimension(.Width, toDimension: .Width, ofView: self.loginName, withOffset: 20.0)
+        self.nameUnderLine.autoSetDimension(.Height, toSize: 3.0)
+        self.nameUnderLine.autoAlignAxisToSuperviewAxis(.Vertical)
+        
         self.loginPass.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.loginName)
-        self.loginPass.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.loginName, withOffset: VCAppLetor.ConstValue.LineGap)
+        self.loginPass.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.nameUnderLine, withOffset: VCAppLetor.ConstValue.LineGap)
         self.loginPass.autoMatchDimension(.Width, toDimension: .Width, ofView: self.loginName, withOffset: -24.0)
         self.loginPass.autoMatchDimension(.Height, toDimension: .Height, ofView: self.loginName)
         
-        nameUnderLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.loginName, withOffset: 1.0)
-        nameUnderLine.autoMatchDimension(.Width, toDimension: .Width, ofView: self.loginName, withOffset: 20.0)
-        nameUnderLine.autoSetDimension(.Height, toSize: 3.0)
-        nameUnderLine.autoAlignAxisToSuperviewAxis(.Vertical)
+        self.forgetPassButton.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
+        self.forgetPassButton.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.loginName)
+        self.forgetPassButton.autoAlignAxis(.Horizontal, toSameAxisOfView: self.loginPass)
         
-        forgetPassButton.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
-        forgetPassButton.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.loginName)
-        forgetPassButton.autoAlignAxis(.Horizontal, toSameAxisOfView: self.loginPass)
+        self.passUnderLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.loginPass, withOffset: 3.0)
+        self.passUnderLine.autoMatchDimension(.Width, toDimension: .Width, ofView: self.loginName, withOffset: 20.0)
+        self.passUnderLine.autoSetDimension(.Height, toSize: 3.0)
+        self.passUnderLine.autoAlignAxisToSuperviewAxis(.Vertical)
         
-        passUnderLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.loginPass, withOffset: 1.0)
-        passUnderLine.autoMatchDimension(.Width, toDimension: .Width, ofView: self.loginName, withOffset: 20.0)
-        passUnderLine.autoSetDimension(.Height, toSize: 3.0)
-        passUnderLine.autoAlignAxisToSuperviewAxis(.Vertical)
+        self.signUpText.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.loginName, withOffset: self.view.width/2.0)
+        self.signUpText.autoSetDimensionsToSize(CGSizeMake(140.0, 20.0))
+        self.signUpText.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.loginPass, withOffset: VCAppLetor.ConstValue.LineGap)
         
-        signUpText.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.loginName, withOffset: 20.0)
-        signUpText.autoSetDimensionsToSize(CGSizeMake(140.0, 20.0))
-        signUpText.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.loginPass, withOffset: VCAppLetor.ConstValue.LineGap)
+        self.signUpButton.autoSetDimensionsToSize(CGSizeMake(75.0, 20.0))
+        self.signUpButton.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.signUpText, withOffset: 0.0)
+        self.signUpButton.autoAlignAxis(.Horizontal, toSameAxisOfView: self.signUpText)
         
-        signUpButton.autoSetDimensionsToSize(CGSizeMake(75.0, 20.0))
-        signUpButton.autoPinEdge(.Leading, toEdge: .Trailing, ofView: signUpText, withOffset: 0.0)
-        signUpButton.autoAlignAxis(.Horizontal, toSameAxisOfView: signUpText)
+        self.socialLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.signUpText, withOffset: self.view.height-400.0)
+        self.socialLine.autoMatchDimension(.Width, toDimension: .Width, ofView: self.scrollView, withMultiplier: 0.8)
+        self.socialLine.autoSetDimension(.Height, toSize: 5.0)
+        self.socialLine.autoAlignAxisToSuperviewAxis(.Vertical)
+        
+        self.socialSignInTitle.autoSetDimensionsToSize(CGSizeMake(140.0, 20.0))
+        self.socialSignInTitle.autoAlignAxisToSuperviewAxis(.Vertical)
+        self.socialSignInTitle.autoAlignAxis(.Horizontal, toSameAxisOfView: self.socialLine)
         
         self.weiboSignInButton.autoSetDimensionsToSize(CGSizeMake(52.0, 52.0))
-        self.weiboSignInButton.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.signUpText, withOffset: 120.0)
-        self.weiboSignInButton.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.signUpText)
+        self.weiboSignInButton.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.socialSignInTitle, withOffset: 30.0)
+        self.weiboSignInButton.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.loginName, withOffset: 40.0)
         
         self.wechatSignInButton.autoSetDimensionsToSize(CGSizeMake(52.0, 52.0))
         self.wechatSignInButton.autoAlignAxis(.Horizontal, toSameAxisOfView: self.weiboSignInButton)
-        self.wechatSignInButton.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.signUpButton)
+        self.wechatSignInButton.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.loginName, withOffset: -40.0)
         
-        socialLine1.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.weiboSignInButton, withOffset: -45.0)
-        socialLine1.autoMatchDimension(.Width, toDimension: .Width, ofView: self.scrollView, withMultiplier: 0.8)
-        socialLine1.autoSetDimension(.Height, toSize: 3.0)
-        socialLine1.autoAlignAxisToSuperviewAxis(.Vertical)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-        socialLine2.autoPinEdge(.Top, toEdge: .Bottom, ofView: socialLine1, withOffset: 1.0)
-        socialLine2.autoAlignAxisToSuperviewAxis(.Vertical)
-        socialLine2.autoMatchDimension(.Width, toDimension: .Width, ofView: self.scrollView, withMultiplier: 0.8)
-        socialLine2.autoSetDimension(.Height, toSize: 2.0)
-        
-        socialSignInTitle.autoSetDimensionsToSize(CGSizeMake(140.0, 20.0))
-        socialSignInTitle.autoAlignAxisToSuperviewAxis(.Vertical)
-        socialSignInTitle.autoPinEdge(.Top, toEdge: .Top, ofView: socialLine1, withOffset: -7.0)
-        
-        
+        self.scrollView.contentSize = self.scrollView.frame.size
+        self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        self.scrollView.contentOffset = CGPointMake(0, 0)
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.delegate = self
         
     }
     
@@ -295,35 +328,6 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
     }
     
     // MARK: Functions
-    
-    func barButtonItemWithImageNamed(imageName: String?, title: String?, action: Selector? = nil) -> UIBarButtonItem {
-        
-        let button: UIButton = UIButton.newAutoLayoutView()
-        
-        if imageName != nil {
-            button.setImage(UIImage(named: imageName!)!.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
-        }
-        
-        if title != nil {
-            button.setTitle(title, forState: .Normal)
-            button.titleEdgeInsets = UIEdgeInsetsMake(0.0, 10.0, 0.0, 0.0)
-            
-            let font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
-            button.titleLabel?.font = font
-        }
-        
-        let size = button.sizeThatFits(CGSizeMake(90.0, 24.0))
-        button.frame = CGRectMake(0.0, 0.0, 42.0, 42.0)
-        button.imageEdgeInsets = UIEdgeInsetsMake(2, 2, 2, 2)
-        
-        if action != nil {
-            button.addTarget(self, action: action!, forControlEvents: .TouchUpInside)
-        }
-        
-        let barButton = UIBarButtonItem(customView: button)
-        
-        return barButton
-    }
     
     func letMeLogin() {
         
@@ -468,7 +472,6 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
                             CTMemCache.sharedInstance.set("currentMid", data: mid, namespace: "member")
                             
                             self.delegate?.memberDidSigninSuccess(mid, token: "0")
-                            self.logoutButton.hidden = false
                             self.dismiss()
                         }
                 })
@@ -510,7 +513,6 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
                             CTMemCache.sharedInstance.set("currentMid", data: mid, namespace: "member")
                             // Prepare for member login refresh
                             self.delegate?.memberDidSigninSuccess(mid, token: "0")
-                            self.logoutButton.hidden = false
                             self.dismiss()
                         }
                 })
@@ -522,43 +524,7 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func showShareAction() {
-        
-        var shareContent: ISSContent = ShareSDK.content("分享文字", defaultContent: "默认分享内容，没内容时显示", image: nil, title: "提示", url: "返回链接", description: "这是一条测试内容", mediaType: SSPublishContentMediaTypeNews)
-        
-        var shareList: NSArray = ShareSDKContentController.getCustomShareList()
-        
-        println("\(shareList)")
-        
-        let container: ISSContainer = ShareSDK.container()
-        container.setIPhoneContainerWithViewController(self)
-        
-        ShareSDK.showShareActionSheet(nil,
-            shareList: nil,
-            content: shareContent,
-            statusBarTips: true,
-            authOptions: nil,
-            shareOptions: nil,
-            result: { (type: ShareType, state:SSResponseState, statusInfo: ISSPlatformShareInfo!, error: ICMErrorInfo!, end: Bool) in
-                
-                println(state.value)
-                
-                if (state.value == SSResponseStateSuccess.value) {
-                    println("分享成功")
-                    var alert = UIAlertView(title: "提示", message: "分享成功", delegate: self, cancelButtonTitle: "确定")
-                    alert.show()
-                }
-                else {
-                    if (state.value == 2) {
-                        var alert = UIAlertView(title: "提示", message: "您没有安装客户端", delegate: self, cancelButtonTitle: "确定")
-                        alert.show()
-                        println(error.errorCode())
-                        println(error.errorDescription())
-                    }
-                }
-                
-        })
-    }
+    
     
     func isEmail(email: String) -> Bool {
         

@@ -9,20 +9,19 @@
 import UIKit
 import PureLayout
 import Alamofire
-import HMSegmentedControl
 
 
 class FoodDetailScrollView: UIScrollView, UIScrollViewDelegate {
     
     var segmentedControl: SMSegmentView!
+    
     var viewType: VCAppLetor.FoodInfoType! {
         didSet {
             self.updateView()
         }
     }
     
-    
-    let mapView: BMKMapView = BMKMapView(frame: CGRectMake(0, 0, 280, 100))
+    var mapView: BMKMapView!
     
     let bottomLineSpot: CustomDrawView = CustomDrawView.newAutoLayoutView()
     let bottomLineMenu: CustomDrawView = CustomDrawView.newAutoLayoutView()
@@ -69,6 +68,7 @@ class FoodDetailScrollView: UIScrollView, UIScrollViewDelegate {
         self.delegate = self
         
         // Map Test
+        self.mapView = BMKMapView(frame: CGRectMake(self.width, 0, self.width, 150))
         self.addSubview(self.mapView)
         
         

@@ -61,7 +61,7 @@ class FindMyPasscodeViewController: VCBaseViewController, RKDropdownAlertDelegat
     override func updateViewConstraints() {
         super.updateViewConstraints()
         
-        self.phoneNumber.autoSetDimensionsToSize(CGSizeMake(200.0, 30.0))
+        self.phoneNumber.autoSetDimensionsToSize(CGSizeMake(self.scrollView.width*0.8, 30.0))
         self.phoneNumber.autoAlignAxisToSuperviewAxis(.Vertical)
         self.phoneNumber.autoPinEdgeToSuperviewEdge(.Top, withInset: 30.0)
         
@@ -113,6 +113,7 @@ class FindMyPasscodeViewController: VCBaseViewController, RKDropdownAlertDelegat
                     let smsCodeViewController: SMSCodeViewController = SMSCodeViewController()
                     smsCodeViewController.parentNav = self.parentNav
                     smsCodeViewController.phoneNumber.text = self.phoneNumber.text
+                    smsCodeViewController.sendNow = true
                     self.parentNav?.showViewController(smsCodeViewController, sender: self)
                 }
                 else {

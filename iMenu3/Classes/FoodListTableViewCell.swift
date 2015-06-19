@@ -9,8 +9,12 @@
 import UIKit
 import QuartzCore
 import Alamofire
+import Kingfisher
+import DKChainableAnimationKit
 
 class FoodListTableViewCell: UITableViewCell {
+    
+    var foodItem: FoodItem!
     
     let foodImageView: UIImageView = UIImageView.newAutoLayoutView()
     let foodBrandImageView: UIImageView = UIImageView.newAutoLayoutView()
@@ -34,13 +38,11 @@ class FoodListTableViewCell: UITableViewCell {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        setupViews()
     }
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        setupViews()
     }
     
     func setupViews() {
@@ -48,7 +50,34 @@ class FoodListTableViewCell: UITableViewCell {
         self.selectionStyle = UITableViewCellSelectionStyle.None
         self.contentView.frame = CGRectMake(0, 0, self.contentView.bounds.width, 350)
         
+        self.identifier = self.foodItem.identifier
+        
+        let imageURL = self.foodItem.foodImage
+        
+        
         self.contentView.addSubview(self.foodImageView)
+        self.foodImageView.alpha = 0.2
+        
+        let progressIndicatorView = UIProgressView(frame: CGRect(x: 10.0, y: 10.0, width: self.width-20.0, height: 4.0))
+        self.foodImageView.kf_setImageWithURL(NSURL(string: imageURL)!, placeholderImage: nil, optionsInfo: nil,
+            progressBlock: { (receivedSize, totalSize) -> () in
+                
+                progressIndicatorView.tintColor = UIColor.nephritisColor()
+                progressIndicatorView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.2)
+                self.addSubview(progressIndicatorView)
+                
+                progressIndicatorView.setProgress(Float(receivedSize) / Float(totalSize), animated: true)
+                
+            },
+            completionHandler: { (image, error, cacheType, imageURL) -> () in
+                
+                let foodImage: UIImage = Toucan.Resize.resizeImage(image!, size: CGSize(width: self.width - 20.0, height: 150.0), fitMode: Toucan.Resize.FitMode.Crop)
+                self.foodImageView.image = foodImage
+                
+                self.foodImageView.animation.makeAlpha(1.0).animate(0.2)
+                
+                progressIndicatorView.removeFromSuperview()
+        })
         
         self.foodDateBg.drawType = "DateTag"
         self.foodDateBg.alpha = 0.6
@@ -66,10 +95,19 @@ class FoodListTableViewCell: UITableViewCell {
         self.foodBrandImageView.layer.borderColor = UIColor.lightGrayColor().CGColor
         self.contentView.addSubview(self.foodBrandImageView)
         
+        self.foodTitle.text = self.foodItem.title
         self.foodTitle.font = VCAppLetor.Font.XLarge
         self.foodTitle.numberOfLines = 2
         self.foodTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.contentView.addSubview(self.foodTitle)
+        
+        
+        let attrString: NSMutableAttributedString = NSMutableAttributedString(string: self.foodItem.desc)
+        let parag: NSMutableParagraphStyle = NSMutableParagraphStyle()
+        parag.lineSpacing = 5
+        attrString.addAttribute(NSParagraphStyleAttributeName, value: parag, range: NSMakeRange(0, count(self.foodItem.desc)))
+        self.foodDesc.attributedText = attrString
+        self.foodDesc.sizeToFit()
         
         self.foodDesc.font = VCAppLetor.Font.NormalFont
         self.foodDesc.textColor = UIColor.grayColor()
@@ -78,19 +116,19 @@ class FoodListTableViewCell: UITableViewCell {
         self.contentView.addSubview(self.foodDesc)
         
         self.foodPrice.font = VCAppLetor.Font.XLarge
-        self.foodPrice.text = "128"
+        self.foodPrice.text = self.foodItem.price
         self.foodPrice.textAlignment = .Left
         self.foodPrice.textColor = UIColor.pumpkinColor()
         self.contentView.addSubview(self.foodPrice)
         
         self.foodUnit.font = VCAppLetor.Font.SmallFont
-        self.foodUnit.text = "元/位"
+        self.foodUnit.text = self.foodItem.unit
         self.foodUnit.textAlignment = .Left
         self.foodUnit.textColor = UIColor.pumpkinColor()
         self.contentView.addSubview(self.foodUnit)
         
         self.foodOriginPrice.font = VCAppLetor.Font.SmallFont
-        self.foodOriginPrice.text = "158元"
+        self.foodOriginPrice.text = self.foodItem.originalPrice
         self.foodOriginPrice.textAlignment = .Center
         self.foodOriginPrice.textColor = UIColor.lightGrayColor()
         self.foodOriginPrice.sizeToFit()
@@ -101,7 +139,7 @@ class FoodListTableViewCell: UITableViewCell {
         self.contentView.addSubview(self.foodOriginPriceStricke)
         
         self.foodRemainAmount.font = VCAppLetor.Font.SmallFont
-        self.foodRemainAmount.text = "剩余 17 份"
+        self.foodRemainAmount.text = "剩余 \(self.foodItem.remainingCount) 份"
         self.foodRemainAmount.textAlignment = .Left
         self.foodRemainAmount.textColor = UIColor.lightGrayColor()
         self.contentView.addSubview(self.foodRemainAmount)
@@ -149,7 +187,7 @@ class FoodListTableViewCell: UITableViewCell {
             
             self.foodPrice.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.foodSeparator, withOffset: -10.0)
             self.foodPrice.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodDesc)
-            self.foodPrice.autoSetDimensionsToSize(CGSizeMake(38.0, 22.0))
+            self.foodPrice.autoSetDimensionsToSize(CGSizeMake(52.0, 22.0))
             
             self.foodUnit.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.foodPrice, withOffset: 4.0)
             self.foodUnit.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.foodPrice)

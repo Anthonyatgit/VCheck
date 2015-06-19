@@ -34,4 +34,8 @@
 // Animated View
 #import "MGFashionMenuView.h"
 
+// XG SDK
+#import "XGPush.h"
+#import "XGSetting.h"
+
 #endif

@@ -75,7 +75,7 @@ class CustomDrawView: UIView {
             secStep.textColor = UIColor.grayColor().colorWithAlphaComponent(0.6)
             self.addSubview(secStep)
             secStep.autoAlignAxisToSuperviewAxis(.Horizontal)
-            secStep.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 24.0)
+            secStep.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 23.0)
         }
         else if (self.drawType == "Line") {
             
@@ -108,7 +108,7 @@ class CustomDrawView: UIView {
             CGContextStrokePath(context)
             
             CGContextSetLineWidth(context, 1)
-            CGContextMoveToPoint(context, 0.0, 3.0)
+            CGContextMoveToPoint(context, 0.0, 4.0)
             CGContextAddLineToPoint(context, self.bounds.width, 3.0)
             CGContextStrokePath(context)
         }
@@ -216,6 +216,33 @@ class CustomDrawView: UIView {
             tipText.autoSetDimensionsToSize(CGSizeMake(200.0, 14.0))
             tipText.autoPinEdgeToSuperviewEdge(.Top, withInset: 8.0)
         }
+        else if self.drawType == "segBG" {
+            
+            CGContextSetLineWidth(context, 2.0)
+            CGContextSetStrokeColorWithColor(context, UIColor.blackColor().colorWithAlphaComponent(0.2).CGColor)
+            CGContextMoveToPoint(context, 0, 1)
+            CGContextAddLineToPoint(context, self.width, 1)
+            CGContextStrokePath(context)
+            
+            CGContextMoveToPoint(context, 0, self.height-1)
+            CGContextAddLineToPoint(context, self.width, self.height-1)
+            CGContextStrokePath(context)
+            
+        }
+        else if self.drawType == "segFore" {
+            
+            CGContextSetLineWidth(context, 2.0)
+            CGContextSetStrokeColorWithColor(context, UIColor.blackColor().colorWithAlphaComponent(0.8).CGColor)
+            CGContextMoveToPoint(context, 0, 1)
+            CGContextAddLineToPoint(context, self.width, 1)
+            CGContextStrokePath(context)
+            
+            CGContextMoveToPoint(context, 0, self.height-1)
+            CGContextAddLineToPoint(context, self.width, self.height-1)
+            CGContextStrokePath(context)
+            
+        }
+        
         
         
     }

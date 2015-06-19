@@ -20,6 +20,8 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
     let userPanelDataSource: [String: [String]] = VCAppLetor.UserPanel.MyMenus
     let userPanelIcon: [String: [String]] = VCAppLetor.UserPanel.MyIcons
     
+    let mailBox: UIButton = UIButton(frame: CGRectMake(6.0, 6.0, 32.0, 32.0))
+    
     var parentNav: UINavigationController?
     
     var userInfoHeaderView: UserInfoHeaderView!
@@ -32,6 +34,16 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
         
         self.title = VCAppLetor.StringLine.UserPanelTitle
         self.view.userInteractionEnabled = true
+        
+        // Rewrite back bar button
+        let backButton: UIBarButtonItem = UIBarButtonItem()
+        backButton.title = ""
+        self.navigationItem.backBarButtonItem = backButton
+        
+        self.mailBox.setImage(UIImage(named: VCAppLetor.IconName.MailBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate), forState: .Normal)
+        self.mailBox.addTarget(self, action: "showMailBox", forControlEvents: .TouchUpInside)
+        self.mailBox.backgroundColor = UIColor.clearColor()
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.mailBox)
         
         // Config tableView Style
         let userPanelTableView: UITableView = UITableView(frame: self.tableView.frame, style: UITableViewStyle.Grouped)
@@ -133,6 +145,9 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
             if (isLogined()) {
                 
                 // Get Favorites List
+                let favoritesVC: FavoritesViewController = FavoritesViewController()
+                favoritesVC.parentNav = self.parentNav
+                self.parentNav?.showViewController(favoritesVC, sender: self)
             }
             else {
                 
@@ -175,7 +190,8 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
         }
         else if (indexPath.section == 1 && indexPath.row == 1) { // About
             // Display App Info
-            
+            let aboutVC: VCAboutViewController = VCAboutViewController()
+            self.parentNav?.showViewController(aboutVC, sender: self)
         }
         else {
             return
@@ -254,7 +270,16 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
         }
     }
     
-    
+    func showMailBox() {
+        
+        let mailBoxVC: VCMailBoxViewController = VCMailBoxViewController()
+        mailBoxVC.modalPresentationStyle = .Popover
+        mailBoxVC.modalTransitionStyle = .CoverVertical
+        mailBoxVC.popoverPresentationController?.delegate = self
+        presentViewController(mailBoxVC, animated: true, completion: nil)
+        
+        
+    }
     
     // IF the current user is Login to the app
     func isLogined() -> Bool {

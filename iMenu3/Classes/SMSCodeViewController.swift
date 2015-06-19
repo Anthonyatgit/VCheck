@@ -13,9 +13,11 @@ import RKDropdownAlert
 import AFViewShaker
 import MBProgressHUD
 
-class SMSCodeViewController: VCBaseViewController, RKDropdownAlertDelegate {
+class SMSCodeViewController: VCBaseViewController, UIScrollViewDelegate, RKDropdownAlertDelegate {
     
     let scrollView: UIScrollView = UIScrollView()
+    
+    var sendNow: Bool?
     
     let phoneNumber: UILabel = UILabel.newAutoLayoutView()
     let verifyCode: UITextField = UITextField.newAutoLayoutView()
@@ -50,12 +52,12 @@ class SMSCodeViewController: VCBaseViewController, RKDropdownAlertDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.scrollView.frame = self.view.bounds
-        self.scrollView.contentMode = UIViewContentMode.Top
-        self.scrollView.backgroundColor = UIColor.whiteColor()
         
         self.title = VCAppLetor.StringLine.SMSCode
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.view.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.6)
+        
+        self.scrollView.backgroundColor = UIColor.whiteColor()
+        
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: VCAppLetor.StringLine.Next, style: .Done, target: self, action: "resetMyPasscode")
         
         self.phoneNumber.font = VCAppLetor.Font.NormalFont
@@ -69,7 +71,6 @@ class SMSCodeViewController: VCBaseViewController, RKDropdownAlertDelegate {
         self.resentButton.backgroundColor = UIColor.grayColor().colorWithAlphaComponent(0.2)
         self.resentButton.layer.borderWidth = VCAppLetor.ConstValue.ButtonBorderWidth
         self.resentButton.layer.borderColor = UIColor.grayColor().CGColor
-        self.resentButton.layer.cornerRadius = VCAppLetor.ConstValue.ButtonCornerRadius
         self.resentButton.addTarget(self, action: "sentVerifyCode", forControlEvents: .TouchUpInside)
         self.resentButton.enabled = false
         self.scrollView.addSubview(self.resentButton)
@@ -97,25 +98,28 @@ class SMSCodeViewController: VCBaseViewController, RKDropdownAlertDelegate {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
-        self.sentVerifyCode()
+        if self.sendNow != nil && self.sendNow == true {
+            self.sentVerifyCode()
+        }
+        
     }
     
     override func updateViewConstraints() {
         super.updateViewConstraints()
         
-        self.phoneNumber.autoPinEdgeToSuperviewEdge(.Top, withInset: 30.0)
-        self.phoneNumber.autoPinEdgeToSuperviewEdge(.Leading, withInset: 30.0)
-        self.phoneNumber.autoSetDimension(.Height, toSize: VCAppLetor.ConstValue.TextFieldHeight)
-        self.phoneNumber.autoMatchDimension(.Width, toDimension: .Width, ofView: self.scrollView, withMultiplier: 0.5)
-        
-        self.resentButton.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.phoneNumber, withOffset: 20.0)
+        self.resentButton.autoPinEdgeToSuperviewEdge(.Leading, withInset: self.view.width - 110.0)
         self.resentButton.autoSetDimension(.Height, toSize: VCAppLetor.ConstValue.ButtonHeight)
         self.resentButton.autoSetDimension(.Width, toSize: 80.0)
-        self.resentButton.autoPinEdge(.Top, toEdge: .Top, ofView: self.phoneNumber)
+        self.resentButton.autoPinEdgeToSuperviewEdge(.Top, withInset: 30.0)
+        
+        self.phoneNumber.autoPinEdgeToSuperviewEdge(.Top, withInset: 30.0)
+        self.phoneNumber.autoPinEdgeToSuperviewEdge(.Leading, withInset: 40.0)
+        self.phoneNumber.autoSetDimension(.Height, toSize: VCAppLetor.ConstValue.TextFieldHeight)
+        self.phoneNumber.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.resentButton, withOffset: -10.0)
         
         self.phoneNumberUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.phoneNumber, withOffset: -10.0)
         self.phoneNumberUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.phoneNumber, withOffset: 3.0)
-        self.phoneNumberUnderline.autoMatchDimension(.Width, toDimension: .Width, ofView: self.phoneNumber, withOffset: 20.0)
+        self.phoneNumberUnderline.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.resentButton, withOffset: -10.0)
         self.phoneNumberUnderline.autoSetDimension(.Height, toSize: 3.0)
         
         self.verifyCode.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.phoneNumberUnderline, withOffset: VCAppLetor.ConstValue.LineGap)
@@ -127,6 +131,18 @@ class SMSCodeViewController: VCBaseViewController, RKDropdownAlertDelegate {
         self.verifyCodeUnderLine.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.phoneNumberUnderline)
         self.verifyCodeUnderLine.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.resentButton)
         self.verifyCodeUnderLine.autoSetDimension(.Height, toSize: 3.0)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        self.scrollView.frame = CGRectMake(0, 62.0, self.view.width, self.view.height-62.0)
+        self.scrollView.contentSize = self.scrollView.frame.size
+        self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
+        self.scrollView.contentOffset = CGPointMake(0, 0)
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.delegate = self
+        
     }
     
     override func didReceiveMemoryWarning() {
