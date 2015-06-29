@@ -30,6 +30,7 @@ struct VCAppLetor {
         static let XLarge: UIFont = UIFont(name: "HelveticaNeue", size: 18.0)!
         static let XXLarge: UIFont = UIFont(name: "HelveticaNeue", size: 22.0)!
         static let XXXLarge: UIFont = UIFont(name: "HelveticaNeue", size: 28.0)!
+        static let boldLarge: UIFont = UIFont.boldSystemFontOfSize(18.0)
     }
     
     // MARK: - StringLing
@@ -40,7 +41,7 @@ struct VCAppLetor {
         static let AppName: String = "VCheck"
         static let SaltKey: String = "siyo_vcheck"
         static let isLoading: String = "努力加载中.."
-        static let InternetUnreachable: String = "网络不给力，快检查一下吧"
+        static let InternetUnreachable: String = "网络好像不给力啊"
         static let UpdateNowButtonTitle: String = "立即更新"
         static let UpdateNoticeTitle: String = "更新提示"
         static let UpdateDescription: String = "有最新的可用版本，建议升级应用保持内容为最新"
@@ -89,7 +90,7 @@ struct VCAppLetor {
         static let NoInventCodeYet: String = "还没有邀请码？没关系，以后还可以补填"
         static let AgreeTermsString: String = "点击下一步，代表理解并同意 VCheck 的用户协议"
         static let UserTerms: String = "用户协议"
-        static let TermsURL: String = "http://218.244.158.175/static/userterms.html"
+        static let TermsURL: String = "http://218.244.158.175/static/vcheck/userterms.html"
         static let InitPasscode: String = "请设置您的登陆密码"
         static let BlackUserIconURL: String = "http://218.244.158.175/siyocc/t/account_circle_black.png"
         static let NotSetYet: String = "未设置"
@@ -118,6 +119,7 @@ struct VCAppLetor {
         static let ContactPlaceHolder: String = "邮箱，微信，QQ，手机皆可"
         static let FeedbackTextEmpty: String = "给我们写点什么吧"
         static let FeedbackSucceed: String = "我们已经收悉你的反馈信息，我们会努力为你做的更好~"
+        static let NoMore: String = "• VCHECK •"
         
         static let ServiceCityTitle: String = "选择服务的城市"
         static let ServiceCityNote: String = "我们正在努力为更多城市提供服务"
@@ -136,6 +138,9 @@ struct VCAppLetor {
         
         static let MailboxTitle: String = "信息中心"
         static let MailboxEmpty: String = "暂无消息"
+        
+        static let OrderTitle: String = "我的订单"
+        static let OrderEmpty: String = "你还没有任何订单"
         
         static let FavoritesTitle: String = "我喜欢的礼遇"
         static let FavoritesEmpty: String = "你还没有喜欢的礼遇"
@@ -177,8 +182,15 @@ struct VCAppLetor {
         static let AppCopyRight: String = "Copyright © 2015 Siyo Tech All Rights Reserved"
         
         
-        static let FoodTitle: String = "设计师新贵打造花园式餐厅 澜悦双人菜单"
-        static let FoodDesc: String = "紫荆上海花园旁的新开餐厅澜悦，天蓝色沙发，桃红色气球，翠绿的墙面，花藤爬满屋顶，设计师将其打造成一个花团锦簇，色彩斑斓的艺术空间。拥有当地五星酒店从业经验的大厨献上充满热带风情东南亚融合料理，在花园般的景色中尽享泰国，马来西亚和新加坡美食。独享74折"
+        static let FoodTitle: String = "[title]"
+        static let FoodDesc: String = "[desc]"
+        
+        static let rateName: String = "好评率:"
+        static let addressName: String = "地址:"
+        static let contectTelName: String = "联系餐厅:"
+        static let tipsName: String = "温馨提示"
+        static let wechatServiceName: String = "• 点击这里联系"
+        static let wechatServiceTitle: String = "微信客服 •"
     }
     
     enum FoodInfo {
@@ -224,10 +236,15 @@ struct VCAppLetor {
         static let ShareBlack: String = "share_black"
         static let ThumbUpBlack: String = "thumb_up_black"
         static let FavoriteBlack: String = "favorite_black"
+        static let FavoriteRed: String = "favorite_red"
+        static let PhotosBlack: String = "photos_black"
+        static let telBlack: String = "call_black"
         
         static let PlaceBlack: String = "place_black"
         static let MemberBlack: String = "member_black"
         static let MailBlack: String = "mail_black"
+        static let OrderBlack: String = "order_black"
+        static let CouponBlack: String = "coupon_black"
         
         static let AlipayIcon: String = "ali_68.png"
         static let WechatIcon: String = "wx_logo_64.png"
@@ -262,6 +279,12 @@ struct VCAppLetor {
         static let TextFieldShakeTime: NSTimeInterval = 0.6
         static let CheckNowBarHeight: CGFloat = 60.0
         static let IconImageCornerRadius: CGFloat = 3.0
+        static let FoodImageHeight: CGFloat = 230.0
+        static let FoodItemCellHeight: CGFloat = 320.0
+        
+        static let DefaultItemCountPerPage: Int = 5
+        static let DefaultDateFormat: String = "yyyy-MM-dd HH:mm:ss"
+        static let DateWithoutTimeFormat: String = "yyyy.MM.dd"
     }
     
     enum ShareSDK {
@@ -376,6 +399,23 @@ struct VCAppLetor {
         case spot = 1
         case menu = 2
         case info = 3
+    }
+    
+    enum OrderStatus: Int {
+        case waitForPay = 10
+        case done = 20
+        case close = 30
+        
+        var description: String {
+            get {
+                switch self {
+                case .waitForPay: return "等待支付"
+                case .done: return "交易完成"
+                case .close: return "交易关闭"
+                default: return "等待状态"
+                }
+            }
+        }
     }
     
     enum PayType: Int {

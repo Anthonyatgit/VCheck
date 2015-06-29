@@ -88,6 +88,11 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
         
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+    }
+    
     
     // MARK: - UITableViewDataSource
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -133,13 +138,13 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
             if (isLogined()) {
                 
                 // Get OrderList
+                let orderListVC: OrderListViewController = OrderListViewController()
+                orderListVC.parentNav = self.parentNav
+                self.parentNav?.showViewController(orderListVC, sender: self)
             }
             else {
-                
                 self.presentLoginPanel() // Present user login interface
             }
-            
-            
         }
         else if (indexPath.section == 0 && indexPath.row == 1) { // My Favorites
             if (isLogined()) {
@@ -150,7 +155,6 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                 self.parentNav?.showViewController(favoritesVC, sender: self)
             }
             else {
-                
                 self.presentLoginPanel() // Present user login interface
             }
         }
@@ -160,7 +164,6 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                 // Get Gift Card
             }
             else {
-                
                 self.presentLoginPanel() // Present user login interface
             }
         }
@@ -170,7 +173,6 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                 // Get Share Code
             }
             else {
-                
                 self.presentLoginPanel() // Present user login interface
             }
         }
@@ -184,7 +186,6 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
                 
             }
             else {
-                
                 self.presentLoginPanel() // Present user login interface
             }
         }

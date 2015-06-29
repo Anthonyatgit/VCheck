@@ -258,7 +258,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Read config from server
         let appVersion: String = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optVersioniOS, namespace: "appConfig")?.data as! String
         
-        println("\(appVersion)")
+        println("\(VCAppLetor.StringLine.AppName) : \(appVersion)")
         
         Alamofire.request(VCheckGo.Router.AppSettings(appVersion,VCheckGo.DeviceType.iPhone)).validate().responseJSON() {
             (request, response, JSON, error) -> Void in
@@ -271,18 +271,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     // Check if app update required
                     let configList = ((JSON as! NSDictionary).valueForKey("data") as! NSDictionary).valueForKey("config_list") as! [NSDictionary]
                     
-                    println("configlist: \(configList)")
-                    
                     for config in configList {
                         
                         let key = config.valueForKey("key") as! String
-                        println("key: \(key)")
-                        println("config: \(config)")
                         CTMemCache.sharedInstance.set(config.valueForKey("key") as! String, data: config, namespace: "appConfig")
                     }
                     
-                    let c = CTMemCache.sharedInstance.get("need_update", namespace: "appConfig")?.data as! NSDictionary
-                    println("\(c)")
                     
                     let needUpdate: String = (CTMemCache.sharedInstance.get("need_update", namespace: "appConfig")?.data as! NSDictionary).valueForKey("value") as! String
                     if (needUpdate == "1") { // Enforce to update app
@@ -301,7 +295,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                 }
                 else {
-                    println("Error: JSON Return ERROR: Succeed fail")
+                    
+                    let errorDesc = status.valueForKey("error_desc") as! String
+                    println("Error @ \(errorDesc)")
                 }
             }
             else {
@@ -318,11 +314,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // MARK: - ShareSDK URL Schemes Handler
     
     func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
-        return ShareSDK.handleOpenURL(url, wxDelegate: self)
+        
+        println("url[handle]: \(url)")
+        if url.scheme == "vcheck" {
+            
+            println("handle call: Scheme:\(url.scheme) : Query:\(url.query)")
+            
+            return true
+        }
+        else {
+            return ShareSDK.handleOpenURL(url, wxDelegate: self)
+        }
     }
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
-        return ShareSDK.handleOpenURL(url, sourceApplication: sourceApplication, annotation: annotation, wxDelegate: self)
+        
+        println("url: \(url)")
+        
+        if url.scheme == "vcheck" {
+            
+            println("out call: Scheme:\(url.scheme) : Query:\(url.query)")
+            return true
+        }
+        else {
+            return ShareSDK.handleOpenURL(url, sourceApplication: sourceApplication, annotation: annotation, wxDelegate: self)
+        }
     }
     
     // MARK: - Core Data stack

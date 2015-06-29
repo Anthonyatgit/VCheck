@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		0BE02F5CD93607CAD28B61E4 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E1B9F71B7F8A3007EFAD6E6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */; };
+		920940A81B37036C006686C7 /* OrderListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920940A71B37036C006686C7 /* OrderListViewController.swift */; };
+		920940AA1B370390006686C7 /* OrderListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920940A91B370390006686C7 /* OrderListViewCell.swift */; };
+		920940AC1B370D8E006686C7 /* OrderInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920940AB1B370D8E006686C7 /* OrderInfoViewController.swift */; };
 		9214D7981B32B1B3007AC818 /* VCShareActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9214D7971B32B1B2007AC818 /* VCShareActionView.swift */; };
 		9214D79C1B32CE78007AC818 /* friends_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D7991B32CE78007AC818 /* friends_color.png */; };
 		9214D79D1B32CE78007AC818 /* wechat_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D79A1B32CE78007AC818 /* wechat_color.png */; };
@@ -26,6 +29,15 @@
 		9227E2EE1AE8E4AE008C6381 /* FoodListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */; };
 		92347F7E1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92347F7D1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift */; };
 		92347F801B306AB100DF0A47 /* FoodDetailScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92347F7F1B306AB100DF0A47 /* FoodDetailScrollView.swift */; };
+		923C253D1B3F9B630060DBFC /* NSMutableAttributedString+TY.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C252C1B3F9B630060DBFC /* NSMutableAttributedString+TY.m */; };
+		923C253E1B3F9B630060DBFC /* TYAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C252E1B3F9B630060DBFC /* TYAttributedLabel.m */; };
+		923C253F1B3F9B630060DBFC /* TYDrawStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C25301B3F9B630060DBFC /* TYDrawStorage.m */; };
+		923C25401B3F9B630060DBFC /* TYImageStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C25321B3F9B630060DBFC /* TYImageStorage.m */; };
+		923C25411B3F9B630060DBFC /* TYLinkTextStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C25341B3F9B630060DBFC /* TYLinkTextStorage.m */; };
+		923C25421B3F9B630060DBFC /* TYTextContainer+Extended.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C25351B3F9B630060DBFC /* TYTextContainer+Extended.m */; };
+		923C25431B3F9B630060DBFC /* TYTextContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C25371B3F9B630060DBFC /* TYTextContainer.m */; };
+		923C25441B3F9B630060DBFC /* TYTextStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C25391B3F9B630060DBFC /* TYTextStorage.m */; };
+		923C25451B3F9B630060DBFC /* TYViewStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C253C1B3F9B630060DBFC /* TYViewStorage.m */; };
 		92457CD81B2FD2EC005B0E33 /* VCAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92457CD71B2FD2EC005B0E33 /* VCAboutViewController.swift */; };
 		92457CDA1B300949005B0E33 /* VCMailBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92457CD91B300949005B0E33 /* VCMailBoxViewController.swift */; };
 		9259050B1B098EEE00F343D4 /* UserInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */; };
@@ -33,8 +45,6 @@
 		9264F8F01B26765500AF8640 /* ali_68.png in Resources */ = {isa = PBXBuildFile; fileRef = 9264F8EF1B26765400AF8640 /* ali_68.png */; };
 		9267443F1B1855C60075EDB5 /* EditUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */; };
 		9271B6E71B30396A00BC0F29 /* CustomDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9271B6E61B30396A00BC0F29 /* CustomDrawView.swift */; };
-		927779D61B0B02F3002A50EB /* FloatLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D41B0B02F3002A50EB /* FloatLabelTextField.swift */; };
-		927779D71B0B02F3002A50EB /* FloatLabelTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D51B0B02F3002A50EB /* FloatLabelTextView.swift */; };
 		927779DC1B0B0304002A50EB /* CTMemCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D91B0B0304002A50EB /* CTMemCache.swift */; };
 		927779DD1B0B0304002A50EB /* FlatUIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779DA1B0B0304002A50EB /* FlatUIColor.swift */; };
 		927779DE1B0B0304002A50EB /* JSSAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779DB1B0B0304002A50EB /* JSSAlertView.swift */; };
@@ -75,10 +85,12 @@
 		9284A14B1AF1B98100E662B2 /* VCheckGo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9284A14A1AF1B98100E662B2 /* VCheckGo.swift */; };
 		928633751B0AE43B0040CBA2 /* UserPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928633741B0AE43B0040CBA2 /* UserPanelViewController.swift */; };
 		928633801B0AE6070040CBA2 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9286337F1B0AE6070040CBA2 /* Settings.swift */; };
+		92868A241B395BD600DB9B91 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92868A231B395BD600DB9B91 /* Functions.swift */; };
 		928B2FBA1B2150AF001FA746 /* FoodViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */; };
 		9293BBC91B018ECC0034F3C5 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */; };
 		929DCAC21B0578800050B63F /* VCTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929DCAC11B0578800050B63F /* VCTermsViewController.swift */; };
 		929DCAC41B0588B90050B63F /* RegSetPassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */; };
+		92A9AD781B3C011B0025D29A /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92A9AD771B3C011B0025D29A /* libxml2.dylib */; };
 		92ACC2461B2ECEF100C824F2 /* LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = 92ACC2431B2ECEF100C824F2 /* LICENSE */; };
 		92ACC2471B2ECEF100C824F2 /* MGFashionMenuView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92ACC2451B2ECEF100C824F2 /* MGFashionMenuView.m */; };
 		92B0F0ED1B12FF2E009F368B /* StringExt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92B0F0EC1B12FF2E009F368B /* StringExt.swift */; };
@@ -169,6 +181,9 @@
 		1E1B9F71B7F8A3007EFAD6E6 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9203E68A1B00637300407F66 /* ShareSDKContentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareSDKContentController.h; sourceTree = "<group>"; };
 		9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareSDKContentController.m; sourceTree = "<group>"; };
+		920940A71B37036C006686C7 /* OrderListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrderListViewController.swift; path = Classes/OrderListViewController.swift; sourceTree = "<group>"; };
+		920940A91B370390006686C7 /* OrderListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrderListViewCell.swift; path = Classes/OrderListViewCell.swift; sourceTree = "<group>"; };
+		920940AB1B370D8E006686C7 /* OrderInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrderInfoViewController.swift; path = Classes/OrderInfoViewController.swift; sourceTree = "<group>"; };
 		9214D7971B32B1B2007AC818 /* VCShareActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCShareActionView.swift; path = Classes/VCShareActionView.swift; sourceTree = "<group>"; };
 		9214D7991B32CE78007AC818 /* friends_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends_color.png; sourceTree = "<group>"; };
 		9214D79A1B32CE78007AC818 /* wechat_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wechat_color.png; sourceTree = "<group>"; };
@@ -190,18 +205,35 @@
 		9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodListTableViewCell.swift; path = Classes/FoodListTableViewCell.swift; sourceTree = "<group>"; };
 		92347F7D1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResetMyPasscodeViewController.swift; path = Classes/ResetMyPasscodeViewController.swift; sourceTree = "<group>"; };
 		92347F7F1B306AB100DF0A47 /* FoodDetailScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodDetailScrollView.swift; path = Classes/FoodDetailScrollView.swift; sourceTree = "<group>"; };
+		923C252B1B3F9B630060DBFC /* NSMutableAttributedString+TY.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+TY.h"; sourceTree = "<group>"; };
+		923C252C1B3F9B630060DBFC /* NSMutableAttributedString+TY.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+TY.m"; sourceTree = "<group>"; };
+		923C252D1B3F9B630060DBFC /* TYAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYAttributedLabel.h; sourceTree = "<group>"; };
+		923C252E1B3F9B630060DBFC /* TYAttributedLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYAttributedLabel.m; sourceTree = "<group>"; };
+		923C252F1B3F9B630060DBFC /* TYDrawStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYDrawStorage.h; sourceTree = "<group>"; };
+		923C25301B3F9B630060DBFC /* TYDrawStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYDrawStorage.m; sourceTree = "<group>"; };
+		923C25311B3F9B630060DBFC /* TYImageStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYImageStorage.h; sourceTree = "<group>"; };
+		923C25321B3F9B630060DBFC /* TYImageStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYImageStorage.m; sourceTree = "<group>"; };
+		923C25331B3F9B630060DBFC /* TYLinkTextStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYLinkTextStorage.h; sourceTree = "<group>"; };
+		923C25341B3F9B630060DBFC /* TYLinkTextStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYLinkTextStorage.m; sourceTree = "<group>"; };
+		923C25351B3F9B630060DBFC /* TYTextContainer+Extended.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "TYTextContainer+Extended.m"; sourceTree = "<group>"; };
+		923C25361B3F9B630060DBFC /* TYTextContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYTextContainer.h; sourceTree = "<group>"; };
+		923C25371B3F9B630060DBFC /* TYTextContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYTextContainer.m; sourceTree = "<group>"; };
+		923C25381B3F9B630060DBFC /* TYTextStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYTextStorage.h; sourceTree = "<group>"; };
+		923C25391B3F9B630060DBFC /* TYTextStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYTextStorage.m; sourceTree = "<group>"; };
+		923C253A1B3F9B630060DBFC /* TYTextStorageProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYTextStorageProtocol.h; sourceTree = "<group>"; };
+		923C253B1B3F9B630060DBFC /* TYViewStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYViewStorage.h; sourceTree = "<group>"; };
+		923C253C1B3F9B630060DBFC /* TYViewStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYViewStorage.m; sourceTree = "<group>"; };
 		92457CD71B2FD2EC005B0E33 /* VCAboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCAboutViewController.swift; path = Classes/VCAboutViewController.swift; sourceTree = "<group>"; };
 		92457CD91B300949005B0E33 /* VCMailBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCMailBoxViewController.swift; path = Classes/VCMailBoxViewController.swift; sourceTree = "<group>"; };
 		92457CDC1B302031005B0E33 /* XGPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XGPush.h; path = XGSDK/XGPush.h; sourceTree = "<group>"; };
 		92457CDD1B302031005B0E33 /* XGSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XGSetting.h; path = XGSDK/XGSetting.h; sourceTree = "<group>"; };
 		92457CDF1B302095005B0E33 /* libXG-SDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libXG-SDK.a"; path = "iMenu3/XGSDK/libXG-SDK.a"; sourceTree = "<group>"; };
+		9255AC251B3CDA050076C107 /* iMenu3-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iMenu3-Bridging-Header.h"; sourceTree = "<group>"; };
 		9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoHeaderView.swift; path = Classes/UserInfoHeaderView.swift; sourceTree = "<group>"; };
 		9264F8EC1B2597CD00AF8640 /* VCPayNowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCPayNowViewController.swift; path = Classes/VCPayNowViewController.swift; sourceTree = "<group>"; };
 		9264F8EF1B26765400AF8640 /* ali_68.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ali_68.png; sourceTree = "<group>"; };
 		9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EditUserInfoViewController.swift; path = Classes/EditUserInfoViewController.swift; sourceTree = "<group>"; };
 		9271B6E61B30396A00BC0F29 /* CustomDrawView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomDrawView.swift; path = Classes/CustomDrawView.swift; sourceTree = "<group>"; };
-		927779D41B0B02F3002A50EB /* FloatLabelTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatLabelTextField.swift; sourceTree = "<group>"; };
-		927779D51B0B02F3002A50EB /* FloatLabelTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatLabelTextView.swift; sourceTree = "<group>"; };
 		927779D91B0B0304002A50EB /* CTMemCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTMemCache.swift; sourceTree = "<group>"; };
 		927779DA1B0B0304002A50EB /* FlatUIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlatUIColor.swift; sourceTree = "<group>"; };
 		927779DB1B0B0304002A50EB /* JSSAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSSAlertView.swift; sourceTree = "<group>"; };
@@ -242,10 +274,12 @@
 		9284A14A1AF1B98100E662B2 /* VCheckGo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCheckGo.swift; path = Classes/VCheckGo.swift; sourceTree = "<group>"; };
 		928633741B0AE43B0040CBA2 /* UserPanelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserPanelViewController.swift; path = Classes/UserPanelViewController.swift; sourceTree = "<group>"; };
 		9286337F1B0AE6070040CBA2 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		92868A231B395BD600DB9B91 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodViewerViewController.swift; path = Classes/FoodViewerViewController.swift; sourceTree = "<group>"; };
 		9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegisterViewController.swift; path = Classes/RegisterViewController.swift; sourceTree = "<group>"; };
 		929DCAC11B0578800050B63F /* VCTermsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCTermsViewController.swift; path = Classes/VCTermsViewController.swift; sourceTree = "<group>"; };
 		929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegSetPassViewController.swift; path = Classes/RegSetPassViewController.swift; sourceTree = "<group>"; };
+		92A9AD771B3C011B0025D29A /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = usr/lib/libxml2.dylib; sourceTree = SDKROOT; };
 		92ACC2431B2ECEF100C824F2 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		92ACC2441B2ECEF100C824F2 /* MGFashionMenuView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MGFashionMenuView.h; sourceTree = "<group>"; };
 		92ACC2451B2ECEF100C824F2 /* MGFashionMenuView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MGFashionMenuView.m; sourceTree = "<group>"; };
@@ -306,7 +340,6 @@
 		92F3B0811B0036C6003A6D76 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		92F3B0831B0036E2003A6D76 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		92F3B0851B0036F0003A6D76 /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
-		92F3B0891B003802003A6D76 /* iMenu3-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "iMenu3-Bridging-Header.h"; sourceTree = "<group>"; };
 		92F51C8C1AEDE7D300FDD50C /* hagaki.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = hagaki.jpg; sourceTree = "<group>"; };
 		92FA19461AFCCA8400D33538 /* FindMyPasscodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FindMyPasscodeViewController.swift; path = Classes/FindMyPasscodeViewController.swift; sourceTree = "<group>"; };
 		92FA19481AFCD6CE00D33538 /* SMSCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SMSCodeViewController.swift; path = Classes/SMSCodeViewController.swift; sourceTree = "<group>"; };
@@ -334,6 +367,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92A9AD781B3C011B0025D29A /* libxml2.dylib in Frameworks */,
 				92D5C42A1B3076E400DAFB36 /* libsqlite3.dylib in Frameworks */,
 				92D5C4281B30765B00DAFB36 /* libz.dylib in Frameworks */,
 				92F3B07C1B003697003A6D76 /* CoreTelephony.framework in Frameworks */,
@@ -377,6 +411,7 @@
 		05B8E7EB2168B867A50937F6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				92A9AD771B3C011B0025D29A /* libxml2.dylib */,
 				92D5C4291B3076E400DAFB36 /* libsqlite3.dylib */,
 				92D5C4271B30765B00DAFB36 /* libz.dylib */,
 				92D5C4251B3075FD00DAFB36 /* CFNetwork.framework */,
@@ -430,13 +465,13 @@
 		9227E2C11AE8DCCC008C6381 /* iMenu3 */ = {
 			isa = PBXGroup;
 			children = (
+				923C252A1B3F9B630060DBFC /* TYAttributedLabel */,
 				92457CE11B3020E5005B0E33 /* BMK */,
 				92457CDE1B302035005B0E33 /* XGSDK */,
 				92ACC2421B2ECEF100C824F2 /* MGFashionMenuView */,
 				92BD2E0F1B27BE810053408B /* UPullToRefresh */,
 				927779D81B0B0304002A50EB /* THelpClass */,
 				922412921B200D560049A9B5 /* SMSegmentView */,
-				927779D31B0B02F3002A50EB /* FloatLabelFields */,
 				92F3B04F1B003629003A6D76 /* ShareSDK */,
 				92A7106E1AEF3E3600376C06 /* Toucan */,
 				92F51C8A1AEDE7D300FDD50C /* Assets */,
@@ -455,8 +490,8 @@
 		9227E2C21AE8DCCC008C6381 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				9255AC251B3CDA050076C107 /* iMenu3-Bridging-Header.h */,
 				9227E2C31AE8DCCC008C6381 /* Info.plist */,
-				92F3B0891B003802003A6D76 /* iMenu3-Bridging-Header.h */,
 				92E57FFF1B2AD09200E463A3 /* BMKObject.mm */,
 				9203E68A1B00637300407F66 /* ShareSDKContentController.h */,
 				9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */,
@@ -479,6 +514,31 @@
 				9227E2DC1AE8DCCC008C6381 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		923C252A1B3F9B630060DBFC /* TYAttributedLabel */ = {
+			isa = PBXGroup;
+			children = (
+				923C252B1B3F9B630060DBFC /* NSMutableAttributedString+TY.h */,
+				923C252C1B3F9B630060DBFC /* NSMutableAttributedString+TY.m */,
+				923C252D1B3F9B630060DBFC /* TYAttributedLabel.h */,
+				923C252E1B3F9B630060DBFC /* TYAttributedLabel.m */,
+				923C252F1B3F9B630060DBFC /* TYDrawStorage.h */,
+				923C25301B3F9B630060DBFC /* TYDrawStorage.m */,
+				923C25311B3F9B630060DBFC /* TYImageStorage.h */,
+				923C25321B3F9B630060DBFC /* TYImageStorage.m */,
+				923C25331B3F9B630060DBFC /* TYLinkTextStorage.h */,
+				923C25341B3F9B630060DBFC /* TYLinkTextStorage.m */,
+				923C25351B3F9B630060DBFC /* TYTextContainer+Extended.m */,
+				923C25361B3F9B630060DBFC /* TYTextContainer.h */,
+				923C25371B3F9B630060DBFC /* TYTextContainer.m */,
+				923C25381B3F9B630060DBFC /* TYTextStorage.h */,
+				923C25391B3F9B630060DBFC /* TYTextStorage.m */,
+				923C253A1B3F9B630060DBFC /* TYTextStorageProtocol.h */,
+				923C253B1B3F9B630060DBFC /* TYViewStorage.h */,
+				923C253C1B3F9B630060DBFC /* TYViewStorage.m */,
+			);
+			path = TYAttributedLabel;
 			sourceTree = "<group>";
 		};
 		92457CDB1B301FFD005B0E33 /* Classes */ = {
@@ -518,15 +578,6 @@
 			path = pay;
 			sourceTree = "<group>";
 		};
-		927779D31B0B02F3002A50EB /* FloatLabelFields */ = {
-			isa = PBXGroup;
-			children = (
-				927779D41B0B02F3002A50EB /* FloatLabelTextField.swift */,
-				927779D51B0B02F3002A50EB /* FloatLabelTextView.swift */,
-			);
-			path = FloatLabelFields;
-			sourceTree = "<group>";
-		};
 		927779D81B0B0304002A50EB /* THelpClass */ = {
 			isa = PBXGroup;
 			children = (
@@ -535,6 +586,7 @@
 				927779D91B0B0304002A50EB /* CTMemCache.swift */,
 				927779DA1B0B0304002A50EB /* FlatUIColor.swift */,
 				927779DB1B0B0304002A50EB /* JSSAlertView.swift */,
+				92868A231B395BD600DB9B91 /* Functions.swift */,
 			);
 			name = THelpClass;
 			path = Classes/THelpClass;
@@ -662,6 +714,9 @@
 				92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */,
 				9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */,
 				92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */,
+				920940A71B37036C006686C7 /* OrderListViewController.swift */,
+				920940A91B370390006686C7 /* OrderListViewCell.swift */,
+				920940AB1B370D8E006686C7 /* OrderInfoViewController.swift */,
 				92D6DBE31B33C4D5003E80AE /* FavoritesViewController.swift */,
 				92D6DBE51B33C503003E80AE /* FavoritesViewCell.swift */,
 				92BD2E171B2827EF0053408B /* FeedbackViewController.swift */,
@@ -1046,25 +1101,30 @@
 			buildActionMask = 2147483647;
 			files = (
 				927779DD1B0B0304002A50EB /* FlatUIColor.swift in Sources */,
+				923C25421B3F9B630060DBFC /* TYTextContainer+Extended.m in Sources */,
 				927779DE1B0B0304002A50EB /* JSSAlertView.swift in Sources */,
 				9280E4481B14444B00959798 /* Reachability.swift in Sources */,
-				927779D61B0B02F3002A50EB /* FloatLabelTextField.swift in Sources */,
 				92ACC2471B2ECEF100C824F2 /* MGFashionMenuView.m in Sources */,
 				9267443F1B1855C60075EDB5 /* EditUserInfoViewController.swift in Sources */,
+				923C253E1B3F9B630060DBFC /* TYAttributedLabel.m in Sources */,
+				923C253F1B3F9B630060DBFC /* TYDrawStorage.m in Sources */,
 				92BD603E1B05DEDF00649DDF /* UserInfoCell.swift in Sources */,
 				9282050E1AEDE1330067BB92 /* BreezeStore.swift in Sources */,
 				92347F7E1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift in Sources */,
 				9282050D1AEDE1330067BB92 /* BreezeStore+Saving.swift in Sources */,
 				9227E2C81AE8DCCC008C6381 /* iMenu3.xcdatamodeld in Sources */,
 				928633751B0AE43B0040CBA2 /* UserPanelViewController.swift in Sources */,
+				923C253D1B3F9B630060DBFC /* NSMutableAttributedString+TY.m in Sources */,
 				92B0F0ED1B12FF2E009F368B /* StringExt.swift in Sources */,
 				922412951B200D560049A9B5 /* SMSegment.swift in Sources */,
 				9227E2EE1AE8E4AE008C6381 /* FoodListTableViewCell.swift in Sources */,
 				9284A14B1AF1B98100E662B2 /* VCheckGo.swift in Sources */,
 				9284A13F1AF0AF2500E662B2 /* FoodCollectionsViewController.swift in Sources */,
 				92CFFB381AF8CCB600C9AA7D /* VCMemberLoginViewController.swift in Sources */,
+				92868A241B395BD600DB9B91 /* Functions.swift in Sources */,
 				92BD2E141B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m in Sources */,
 				9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */,
+				923C25411B3F9B630060DBFC /* TYLinkTextStorage.m in Sources */,
 				92EAF9371B218F8900B5EEA8 /* VCCheckNowViewController.swift in Sources */,
 				92347F801B306AB100DF0A47 /* FoodDetailScrollView.swift in Sources */,
 				92E580001B2AD09200E463A3 /* BMKObject.mm in Sources */,
@@ -1076,6 +1136,8 @@
 				928633801B0AE6070040CBA2 /* Settings.swift in Sources */,
 				92FA19471AFCCA8400D33538 /* FindMyPasscodeViewController.swift in Sources */,
 				9284A1451AF0CFCF00E662B2 /* VCAppLetor.swift in Sources */,
+				923C25441B3F9B630060DBFC /* TYTextStorage.m in Sources */,
+				923C25401B3F9B630060DBFC /* TYImageStorage.m in Sources */,
 				92BD2E151B27BE810053408B /* UzysRadialProgressActivityIndicator.m in Sources */,
 				928205111AEDE1330067BB92 /* NSManagedObject+Deleting.swift in Sources */,
 				92457CD81B2FD2EC005B0E33 /* VCAboutViewController.swift in Sources */,
@@ -1085,27 +1147,31 @@
 				92D6DBE61B33C503003E80AE /* FavoritesViewCell.swift in Sources */,
 				9284A1411AF0AF5400E662B2 /* FoodCollectionsViewCell.swift in Sources */,
 				928205101AEDE1330067BB92 /* NSManagedObject+Creating.swift in Sources */,
+				923C25451B3F9B630060DBFC /* TYViewStorage.m in Sources */,
 				9282050B1AEDE1330067BB92 /* BreezeStore+Defaults.swift in Sources */,
 				92B10EC51B00993C00E0674F /* Member.swift in Sources */,
 				9271B6E71B30396A00BC0F29 /* CustomDrawView.swift in Sources */,
 				9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */,
 				9264F8ED1B2597CD00AF8640 /* VCPayNowViewController.swift in Sources */,
+				923C25431B3F9B630060DBFC /* TYTextContainer.m in Sources */,
 				9214D7981B32B1B3007AC818 /* VCShareActionView.swift in Sources */,
 				92E57FFE1B2A6C4E00E463A3 /* VCCityListViewController.swift in Sources */,
 				9282050C1AEDE1330067BB92 /* BreezeStore+iCloud.swift in Sources */,
 				92457CDA1B300949005B0E33 /* VCMailBoxViewController.swift in Sources */,
+				920940A81B37036C006686C7 /* OrderListViewController.swift in Sources */,
 				92FA19491AFCD6CE00D33538 /* SMSCodeViewController.swift in Sources */,
 				928205121AEDE1330067BB92 /* NSManagedObject+Finding.swift in Sources */,
 				929DCAC21B0578800050B63F /* VCTermsViewController.swift in Sources */,
-				927779D71B0B02F3002A50EB /* FloatLabelTextView.swift in Sources */,
 				9259050B1B098EEE00F343D4 /* UserInfoHeaderView.swift in Sources */,
 				92D6DBE81B33E087003E80AE /* FoodItem.swift in Sources */,
 				92FB21741B311F4000877C07 /* MailBoxCell.swift in Sources */,
+				920940AA1B370390006686C7 /* OrderListViewCell.swift in Sources */,
 				92CFFB251AF774F700C9AA7D /* UserPanelTableViewCell.swift in Sources */,
 				928205131AEDE1330067BB92 /* NSManagedObjectContext+Breeze.swift in Sources */,
 				928B2FBA1B2150AF001FA746 /* FoodViewerViewController.swift in Sources */,
 				92D6DBE41B33C4D5003E80AE /* FavoritesViewController.swift in Sources */,
 				92BD603C1B05DE8900649DDF /* UserInfoViewController.swift in Sources */,
+				920940AC1B370D8E006686C7 /* OrderInfoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1255,6 +1321,11 @@
 					"$(PROJECT_DIR)/iMenu3/BMK",
 				);
 				GCC_INPUT_FILETYPE = automatic;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/include/libxml2,
+				);
 				INFOPLIST_FILE = iMenu3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1268,6 +1339,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "52cd0ccf-7925-4889-998e-10e63b37f22e";
 				SWIFT_OBJC_BRIDGING_HEADER = "iMenu3/iMenu3-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1288,6 +1360,11 @@
 					"$(PROJECT_DIR)/iMenu3/BMK",
 				);
 				GCC_INPUT_FILETYPE = automatic;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/include/libxml2,
+				);
 				INFOPLIST_FILE = iMenu3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
@@ -1300,6 +1377,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "52cd0ccf-7925-4889-998e-10e63b37f22e";
 				SWIFT_OBJC_BRIDGING_HEADER = "iMenu3/iMenu3-Bridging-Header.h";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

@@ -37,8 +37,12 @@ struct VCheckGo {
         case EditMemberNickname(String, String, String)                     // 10.会员-编辑个人信息-Nickname
         case EditMemberPassword(String, String, String, String)             // 10.会员-编辑个人信息-Password
         case GetMemberInfo(String, String)                                  // 12.会员-获取个人详情
+        case GetMyCollections(String, Int, Int, String)                     // 13.会员-获取我的收藏列表
+        case EditMyCollection(String, CollectionEditType, String, String)   // 14.会员-编辑我的收藏列表
         case FeedBack(String, String, String)                               // 16.基本-提交反馈信息
         case GetCityList()                                                  // 17.基本-获取地区列表
+        case GetProductList(Int, Int)                                       // 18.产品-获取产品列表
+        case GetProductDetail(Int)                                          // 19.产品-获取产品详细
         
         var URLRequest: NSURLRequest {
             
@@ -105,6 +109,22 @@ struct VCheckGo {
                 case .GetCityList():
                     let params = ["route":"\(RoutePath.GetCityList.rawValue)","token":"","jsonText":""]
                     return ("/\(RoutePath.GetCityList.rawValue)", params)
+                //=========GetProductList============
+                case .GetProductList(let regionId, let pageNum):
+                    let params = ["route":"\(RoutePath.GetProductList.rawValue)","token":"","jsonText":"{\"filter_info\":{\"region_id\":\"\(regionId)\"},\"pagination\":{\"page\":\"\(pageNum)\",\"count\":\"\(VCAppLetor.ConstValue.DefaultItemCountPerPage)\"}}"]
+                    return ("/\(RoutePath.GetProductList.rawValue)", params)
+                //=========GetProductDetail==========
+                case .GetProductDetail(let productId):
+                    let params = ["route":"\(RoutePath.GetProductDetail.rawValue)","token":"","jsonText":"{\"article_id\":\"\(productId)\"}"]
+                    return ("/\(RoutePath.GetProductDetail.rawValue)", params)
+                //=========GetMyCollections==========
+                case .GetMyCollections(let memberId, let page, let count, let token):
+                    let params = ["route":"\(RoutePath.GetMyCollection.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"pagination\":{\"page\":\"\(page)\",\"count\":\"\(count)\"}}"]
+                    return ("/\(RoutePath.GetMyCollection.rawValue)", params)
+                //=========EditMyCollecton===========
+                case .EditMyCollection(let memberId, let collectionEditType, let articleId, let token):
+                    let params = ["route":"\(RoutePath.EditMyCollection.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"operator_type\":\"\(collectionEditType.rawValue)\",\"article_list\":{\"article_id\":\"\(articleId)\"}}"]
+                    return ("/\(RoutePath.EditMyCollection.rawValue)", params)
                 //=========DEFAULT===================
                 default: return ("/",["consumer_key": Router.consumerKey])
                 }
@@ -139,6 +159,12 @@ struct VCheckGo {
         case Nickname = 3
     }
     
+    enum CollectionEditType: Int {
+        case add = 1
+        case remove = 2
+        case clean = 3
+    }
+    
     // MARK: - InterfacePath 
     enum RoutePath: String {
         case GetClientConfig = "base/client_config/getClientConfig"
@@ -152,8 +178,12 @@ struct VCheckGo {
         case ResetPassword = "member/member/resetPassword"
         case EditMemberInfo = "member/member/editMemberInfo"
         case QuickLogin = "member/member/quickLogin"
+        case EditMyCollection = "member/collection/editCollectionProduct"
+        case GetMyCollection = "member/collection/getCollectionProductList"
         case FeedBack = "base/feedback/submitFeedbackInfo"
         case GetCityList = "base/region/getRegionList"
+        case GetProductList = "product/product/getProductList"
+        case GetProductDetail = "product/product/getProductDetail"
     }
     
     enum ImageSize: Int {
@@ -201,16 +231,20 @@ class CityInfo: NSObject {
 
 class OrderInfo: NSObject {
     
-    let order_id: String
-    var order_title: String?
-    var order_price: String?
-    var order_amount: String?
-    let order_total: String
+    let oid: String
+    let totalPrice: String
+    
+    var title: String?
+    var status: VCAppLetor.OrderStatus?
+    var price: String?
+    var amount: String?
+    
+    var orderImageURL: String?
     
     init(id: String, price: String) {
         
-        self.order_id = id
-        self.order_total = price
+        self.oid = id
+        self.totalPrice = price
     }
     
     
@@ -222,33 +256,53 @@ class OrderInfo: NSObject {
 class FoodInfo: NSObject {
     
     let id: Int
-    let url: String
     
-    var name: String?
+    var title: String?
+    var addDate: NSDate?
     
-    var favoritesCount: Int?
-    var votesCount: Int?
-    var commentsCount: Int?
-    
-    var category: VCheckGo.Category?
+    // FOOD
     var desc: String?
+    var subTitle: String?
+    var foodImage: String?
+    var status: String?
+    var originalPrice: String?
+    var price: String?
+    var priceUnit: String?
+    var unit: String?
+    var remainingCount: String?
+    var remainingCountUnit: String?
+    var endDate: String?
+    var returnable: String?
+    var favoriteCount: String?
+    var isCollected: String?
     
-    init(id: Int, url: String) {
+    // STORE
+    var storeId: String?
+    var storeName: String?
+    var address: String?
+    var longitude: String?
+    var latitude: String?
+    var tel1: String?
+    var tel2: String?
+    var acp: String?
+    var icon_thumb: String?
+    var icon_source: String?
+    
+    // CONTENT
+    var contentImages: NSMutableArray?
+    var contentTitles: NSMutableArray?
+    var contentDesc: NSMutableArray?
+    var menuTitles: NSMutableArray?
+    var menuContents: NSMutableArray?
+    var tips: String?
+    var slideImages: NSMutableArray?
+    
+    
+    init(id: Int) {
+    
         self.id = id
-        self.url = url
     }
     
-    required init(response: NSHTTPURLResponse, representation: AnyObject) {
-        
-        self.id = representation.valueForKeyPath("photo.id") as! Int
-        self.url = representation.valueForKeyPath("photo.image_url") as! String
-        
-        self.favoritesCount = representation.valueForKeyPath("photo.favorities_count") as? Int
-        self.votesCount = representation.valueForKeyPath("photo.votes_count") as? Int
-        self.commentsCount = representation.valueForKeyPath("photo.comments_count") as? Int
-        self.name = representation.valueForKeyPath("photo.name") as? String
-        self.desc = representation.valueForKeyPath("photo.description") as? String
-    }
     
     override func isEqual(object: AnyObject?) -> Bool {
         return (object as! FoodInfo).id == self.id

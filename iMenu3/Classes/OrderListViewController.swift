@@ -1,8 +1,8 @@
 //
-//  FavoritesViewController.swift
+//  OrderListViewController.swift
 //  iMenu3
 //
-//  Created by Gabriel Anthony on 15/6/19.
+//  Created by Gabriel Anthony on 15/6/21.
 //  Copyright (c) 2015年 Siyo Technology Co., Ltd. All rights reserved.
 //
 
@@ -12,11 +12,11 @@ import Alamofire
 import RKDropdownAlert
 import MBProgressHUD
 
-class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, RKDropdownAlertDelegate {
+class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, RKDropdownAlertDelegate {
     
     var parentNav: UINavigationController?
     
-    var favoritesList: NSMutableArray = NSMutableArray()
+    var orderList: NSMutableArray = NSMutableArray()
     
     var tableView: UITableView!
     
@@ -28,7 +28,7 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
         super.viewDidLoad()
         
         // Prepare for interface
-        self.title = VCAppLetor.StringLine.FavoritesTitle
+        self.title = VCAppLetor.StringLine.OrderTitle
         
         // Rewrite back bar button
         let backButton: UIBarButtonItem = UIBarButtonItem()
@@ -46,11 +46,11 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
         self.view.addSubview(self.tableView)
         
         // Register Cell View
-        self.tableView.registerClass(FavoritesViewCell.self, forCellReuseIdentifier: "favoritesItemCell")
-//        self.tableView.rowHeight = UITableViewAutomaticDimension
+        self.tableView.registerClass(FavoritesViewCell.self, forCellReuseIdentifier: "orderItemCell")
+        //        self.tableView.rowHeight = UITableViewAutomaticDimension
         self.tableView.estimatedRowHeight = 120.0
         
-        self.getFavoritesList()
+        self.getOrderList()
         
         self.view.setNeedsUpdateConstraints()
         
@@ -89,13 +89,13 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of rows in the section
-        return self.favoritesList.count
+        return self.orderList.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell:FavoritesViewCell = self.tableView.dequeueReusableCellWithIdentifier("favoritesItemCell", forIndexPath: indexPath) as! FavoritesViewCell
+        let cell:OrderListViewCell = self.tableView.dequeueReusableCellWithIdentifier("orderItemCell", forIndexPath: indexPath) as! OrderListViewCell
         
-        cell.foodItem = self.favoritesList[indexPath.row] as? FoodItem
+        cell.orderInfo = self.orderList[indexPath.row] as! OrderInfo
         cell.parentNav = self.parentNav
         cell.setupViews()
         
@@ -108,46 +108,47 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
     // Override to control push with item selection
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        var foodViewerViewController: FoodViewerViewController = FoodViewerViewController()
-        foodViewerViewController.foodInfo = self.favoritesList[indexPath.row] as? FoodInfo
-        foodViewerViewController.parentNav = self.navigationController
+        var orderInfoVC: OrderInfoViewController = OrderInfoViewController()
+        orderInfoVC.orderInfo = self.orderList[indexPath.row] as? OrderInfo
+//        orderInfoVC.foodItem = self.foodItems[indexPath.row] as FoodItem
+        orderInfoVC.parentNav = self.navigationController
         
-        self.navigationController!.showViewController(foodViewerViewController, sender: self)
+        self.navigationController!.showViewController(orderInfoVC, sender: self)
         
     }
     
     // Override to support editing the table view
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        
-        if editingStyle == .Delete {
-            
-            if(self.favoritesList.count > 0) {
-                
-                
-                let foodItem:FoodItem = self.favoritesList.objectAtIndex(indexPath.row) as! FoodItem
-                
-                if let foodToDelete = FoodItem.findFirst(attribute: "identifier", value: foodItem.identifier, contextType: BreezeContextType.Main) as? FoodItem {
-                    foodToDelete.deleteInContextOfType(BreezeContextType.Background)
-                }
-                
-                BreezeStore.saveInBackground({ contextType -> Void in
-                    
-                    },
-                    completion: { (error) -> Void in
-                        self.loadFavoritesList(indexPath: indexPath)
-                })
-                
-            }
-            
-        }
-        else if editingStyle == .Insert {
-            
-        }
-    }
+//    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+//        
+//        if editingStyle == .Delete {
+//            
+//            if(self.orderList.count > 0) {
+//                
+//                
+//                let orderInfo: OrderInfo = self.orderList[indexPath.row] as OrderInfo
+//                
+//                if let orderToDelete = OrderItem.findFirst(attribute: "identifier", value: foodItem.identifier, contextType: BreezeContextType.Main) as? FoodItem {
+//                    foodToDelete.deleteInContextOfType(BreezeContextType.Background)
+//                }
+//                
+//                BreezeStore.saveInBackground({ contextType -> Void in
+//                    
+//                    },
+//                    completion: { (error) -> Void in
+//                        self.loadOrderList(indexPath: indexPath)
+//                })
+//                
+//            }
+//            
+//        }
+//        else if editingStyle == .Insert {
+//            
+//        }
+//    }
     
     // MARK: - Functions
     
-    func getFavoritesList() {
+    func getOrderList() {
         
         // Show hud
         self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
@@ -156,7 +157,7 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
         
         if reachability.isReachable() {
             
-            self.loadFavoritesList()
+            self.loadOrderList()
             //            self.setupRefresh()
         }
         else {
@@ -177,48 +178,47 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
         self.tableView.pullToRefreshView.imageIcon = UIImage(named: VCAppLetor.IconName.LoadingBlack)
     }
     
-    func dismiss() {
-        dismissViewControllerAnimated(true, completion: nil)
-        println("dismiss")
-    }
     
-    
-    func loadFavoritesList(indexPath:NSIndexPath? = nil) {
+    func loadOrderList(indexPath:NSIndexPath? = nil) {
         
-        // Load favorites list, if empty ..
+        
+        self.orderList.removeAllObjects()
+        
+        // Load order list, if empty ..
         
         
         let bgView: UIView = UIView()
         bgView.frame = self.view.bounds
         
-        let favoriteIcon: UIImageView = UIImageView.newAutoLayoutView()
-        favoriteIcon.alpha = 0.1
-        favoriteIcon.image = UIImage(named: VCAppLetor.IconName.FavoriteBlack)
-        bgView.addSubview(favoriteIcon)
+        let orderIcon: UIImageView = UIImageView.newAutoLayoutView()
+        orderIcon.alpha = 0.1
+        orderIcon.image = UIImage(named: VCAppLetor.IconName.OrderBlack)
+        bgView.addSubview(orderIcon)
         
-        let favoriteEmptyLabel: UILabel = UILabel.newAutoLayoutView()
-        favoriteEmptyLabel.text = VCAppLetor.StringLine.FavoritesEmpty
-        favoriteEmptyLabel.font = VCAppLetor.Font.NormalFont
-        favoriteEmptyLabel.textColor = UIColor.lightGrayColor()
-        favoriteEmptyLabel.textAlignment = .Center
-        bgView.addSubview(favoriteEmptyLabel)
+        let orderEmptyLabel: UILabel = UILabel.newAutoLayoutView()
+        orderEmptyLabel.text = VCAppLetor.StringLine.OrderEmpty
+        orderEmptyLabel.font = VCAppLetor.Font.NormalFont
+        orderEmptyLabel.textColor = UIColor.lightGrayColor()
+        orderEmptyLabel.textAlignment = .Center
+        bgView.addSubview(orderEmptyLabel)
         
         self.tableView.backgroundView = bgView
-//        self.tableView.scrollEnabled = false
+        //        self.tableView.scrollEnabled = false
         
-        favoriteIcon.autoAlignAxisToSuperviewAxis(.Vertical)
-        favoriteIcon.autoPinEdgeToSuperviewEdge(.Top, withInset: 160.0)
-        favoriteIcon.autoSetDimensionsToSize(CGSizeMake(48.0, 48.0))
+        orderIcon.autoAlignAxisToSuperviewAxis(.Vertical)
+        orderIcon.autoPinEdgeToSuperviewEdge(.Top, withInset: 160.0)
+        orderIcon.autoSetDimensionsToSize(CGSizeMake(48.0, 48.0))
         
-        favoriteEmptyLabel.autoSetDimensionsToSize(CGSizeMake(200.0, 20.0))
-        favoriteEmptyLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: favoriteIcon, withOffset: 20.0)
-        favoriteEmptyLabel.autoAlignAxisToSuperviewAxis(.Vertical)
+        orderEmptyLabel.autoSetDimensionsToSize(CGSizeMake(200.0, 20.0))
+        orderEmptyLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: orderIcon, withOffset: 20.0)
+        orderEmptyLabel.autoAlignAxisToSuperviewAxis(.Vertical)
+        
+        self.tableView.reloadData()
     }
     
     func showInternetUnreachable() {
         
-        self.favoritesList.removeAllObjects()
-        self.tableView.reloadData()
+        self.orderList.removeAllObjects()
         
         let bgView: UIView = UIView()
         bgView.frame = self.view.bounds
@@ -245,6 +245,9 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
         internetUnreachLabel.autoSetDimensionsToSize(CGSizeMake(200.0, 20.0))
         internetUnreachLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: internetIcon, withOffset: 20.0)
         internetUnreachLabel.autoAlignAxisToSuperviewAxis(.Vertical)
+        
+        
+        self.tableView.reloadData()
     }
     
     

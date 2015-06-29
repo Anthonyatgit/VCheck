@@ -27,3 +27,18 @@ class FoodItem: NSManagedObject {
     @NSManaged var favoriteCount: String
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

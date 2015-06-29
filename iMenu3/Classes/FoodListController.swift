@@ -12,7 +12,7 @@ import Alamofire
 import RKDropdownAlert
 import MBProgressHUD
 
-class FoodListController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, RKDropdownAlertDelegate, UIViewControllerTransitioningDelegate {
+class FoodListController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, RKDropdownAlertDelegate, UIViewControllerTransitioningDelegate {
     
     var foodListItems: NSMutableArray = NSMutableArray()
     var cityList: NSMutableArray = NSMutableArray()
@@ -21,17 +21,21 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     
     var tableView: UITableView!
     
-    let imageCache = NSCache()
+    var currentPage: Int = 1
+    var haveMore: Bool?
+    
+    var isLoadingFood: Bool = false
+    
+    let foodImageCache = NSCache()
     
     var hud: MBProgressHUD!
     
     var cityListView: UIView!
-    let cityListViewWrap: UIView = UIView.newAutoLayoutView()
     var cityListAnimatedView: MGFashionMenuView!
     
-    let cityButton: UIButton = UIButton(frame: CGRectMake(0.0, 0.0, 30.0, 30.0))
+    let cityButton: UIButton = UIButton(frame: CGRectMake(0.0, 0.0, 26.0, 26.0))
     let selectedCityName: UIButton = UIButton(frame: CGRectMake(38.0, 0.0, 32.0, 32.0))
-    let memberButton: UIButton = UIButton(frame: CGRectMake(6.0, 6.0, 32.0, 32.0))
+    let memberButton: UIButton = UIButton(frame: CGRectMake(6.0, 6.0, 26.0, 26.0))
     
     
     // City listing
@@ -45,6 +49,11 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     var tapGuesture: UITapGestureRecognizer!
     
     // MARK: - LifetimeCycle
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +75,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         self.selectedCityName.titleLabel?.textAlignment = .Left
         self.selectedCityName.titleLabel?.textColor = UIColor.whiteColor()
         self.selectedCityName.backgroundColor = UIColor.clearColor()
-        self.selectedCityName.addTarget(self, action: "addFood", forControlEvents: .TouchUpInside)
+        self.selectedCityName.addTarget(self, action: "willSwitchCity", forControlEvents: .TouchUpInside)
         cityView.addSubview(self.selectedCityName)
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: cityView)
@@ -83,19 +92,15 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.memberButton)
         
         
-//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addFood")
-        
         // Setup tableView
         self.tableView = UITableView(frame: CGRectMake(0, 0, self.view.width, self.view.height), style: UITableViewStyle.Plain)
-        //        self.tableView.frame = self.view.bounds
         self.tableView.backgroundColor = UIColor.whiteColor()
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
-        self.tableView.separatorColor = UIColor.clearColor()
         self.tableView.delegate = self
         self.tableView.dataSource = self
         
         self.tableView.addPullToRefreshActionHandler { () -> Void in
-            self.loadFoodList()
+            self.initAppInfo()
         }
         
         self.tableView.pullToRefreshView.borderColor = UIColor.nephritisColor()
@@ -105,12 +110,17 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         // Register Cell View
         self.tableView.registerClass(FoodListTableViewCell.self, forCellReuseIdentifier: "foodItemCell")
         self.tableView.rowHeight = UITableViewAutomaticDimension
-        self.tableView.estimatedRowHeight = 320.0
+        self.tableView.estimatedRowHeight = VCAppLetor.ConstValue.FoodItemCellHeight
+        
+        let noMoreView: CustomDrawView = CustomDrawView(frame: CGRectMake(0, 0, self.view.width, 60.0))
+        noMoreView.drawType = "noMore"
+        noMoreView.backgroundColor = UIColor.whiteColor()
+        self.tableView.tableFooterView = noMoreView
         
         // Init App Info -
         // Loading foodlist & init member info
+        self.setupCityView()
         self.initAppInfo()
-        
         
         self.view.setNeedsUpdateConstraints()
         
@@ -155,9 +165,10 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         let cell:FoodListTableViewCell = self.tableView.dequeueReusableCellWithIdentifier("foodItemCell", forIndexPath: indexPath) as! FoodListTableViewCell
         
         //let foodDict:NSDictionary = foodListItems.objectAtIndex(indexPath.row) as! NSDictionary
-        let foodItem: FoodItem = self.foodListItems.objectAtIndex(indexPath.row) as! FoodItem
+        let foodInfo: FoodInfo = self.foodListItems.objectAtIndex(indexPath.row) as! FoodInfo
         
-        cell.foodItem = foodItem
+        cell.foodInfo = foodInfo
+        cell.imageCache = self.foodImageCache
         cell.setupViews()
         
         cell.setNeedsUpdateConstraints()
@@ -166,9 +177,6 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
     }
     
-    //    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-    //        println("Food: \(indexPath.row)")
-    //    }
     
     //    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
     //        return 390
@@ -177,46 +185,148 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     // Override to control push with item selection
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        var foodViewerViewController: FoodViewerViewController = FoodViewerViewController()
-        foodViewerViewController.foodIdentifier = foodListItems[indexPath.row].identifier
-        foodViewerViewController.foodItem = self.foodListItems[indexPath.row] as? FoodItem
+        
+        let foodViewerViewController: FoodViewerViewController = FoodViewerViewController()
+        foodViewerViewController.foodInfo = self.foodListItems[indexPath.row] as? FoodInfo
         foodViewerViewController.parentNav = self.navigationController
         
         self.navigationController!.showViewController(foodViewerViewController, sender: self)
         
     }
     
-    // Override to support editing the table view
     
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    // MARK: - UIScrollViewDelegate
+    
+    func scrollViewDidScroll(scrollView: UIScrollView) {
         
-        if editingStyle == .Delete {
+        if self.isLoadingFood {
             
-            if(self.foodListItems.count > 0) {
+            return
+        }
+        
+        if (scrollView.contentOffset.y + self.view.height > scrollView.contentSize.height * 0.8) && self.haveMore != nil && self.haveMore! {
+            
+            self.isLoadingFood = true
+            
+            UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+            
+            let currentPageNum: Int = ("\(ceil(CGFloat(self.foodListItems.count / VCAppLetor.ConstValue.DefaultItemCountPerPage)))" as NSString).integerValue
+            let nextPageNum: Int = currentPageNum + 1
+            Alamofire.request(VCheckGo.Router.GetProductList(29, nextPageNum)).validate().responseSwiftyJSON({
+                (_, _, JSON, error) -> Void in
                 
-                
-                let foodItem:FoodItem = self.foodListItems.objectAtIndex(indexPath.row) as! FoodItem
-                
-                if let foodToDelete = FoodItem.findFirst(attribute: "identifier", value: foodItem.identifier, contextType: BreezeContextType.Main) as? FoodItem {
-                    foodToDelete.deleteInContextOfType(BreezeContextType.Background)
+                if error == nil {
+                    
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+                        
+                        let json = JSON
+                        
+                        if json["status"]["succeed"].string! == "1" {
+                            
+                            // Deal with paging
+                            if json["paginated"]["more"].string! == "1" {
+                                self.haveMore = true
+                            }
+                            else {
+                                self.haveMore = false
+                            }
+                            
+                            // Deal with the listing
+                            
+                            let productList: Array = json["data"]["article_list"].arrayValue
+                            let addedFood: NSMutableArray = NSMutableArray()
+                            
+                            for item in productList {
+                                
+                                let product: FoodInfo = FoodInfo(id: (item["article_id"].string! as NSString).integerValue)
+                                
+                                product.title = item["title"].string!
+                                
+                                var dateFormatter = NSDateFormatter()
+                                dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                                product.addDate = dateFormatter.dateFromString(item["article_date"].string!)!
+                                
+                                product.desc = item["summary"].string!
+                                product.subTitle = item["sub_title"].string!
+                                product.foodImage = item["article_image"]["source"].string!
+                                product.status = item["menu_info"]["menu_status"]["menu_status_id"].string!
+                                product.originalPrice = item["menu_info"]["price"]["original_price"].string!
+                                product.price = item["menu_info"]["price"]["special_price"].string!
+                                product.priceUnit = item["menu_info"]["price"]["price_unit"].string!
+                                product.unit = item["menu_info"]["menu_unit"]["menu_unit"].string!
+                                product.remainingCount = item["menu_info"]["stock"]["menu_count"].string!
+                                product.remainingCountUnit = item["menu_info"]["stock"]["menu_unit"].string!
+                                product.endDate = item["menu_info"]["end_date"].string!
+                                product.returnable = "1"
+                                product.favoriteCount = "17"
+                                
+                                product.storeId = item["store_info"]["store_id"].string!
+                                product.storeName = item["store_info"]["store_name"].string!
+                                product.address = item["store_info"]["address"].string!
+                                product.longitude = item["store_info"]["longitude_num"].string!
+                                product.latitude = item["store_info"]["latitude_num"].string!
+                                product.tel1 = item["store_info"]["tel_1"].string!
+                                product.tel2 = item["store_info"]["tel_2"].string!
+                                product.acp = item["store_info"]["per"].string!
+                                product.icon_thumb = item["store_info"]["icon_image"]["thumb"].string!
+                                product.icon_source = item["store_info"]["icon_image"]["source"].string!
+                                
+                                
+                                addedFood.addObject(product)
+                            }
+                            
+                            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                
+                                self.insertRowsAtBottom(addedFood)
+                                self.isLoadingFood = false
+                                
+                                if !self.haveMore! {
+                                    
+                                    
+                                }
+                            })
+                            
+                        }
+                        else {
+                            self.isLoadingFood = false
+                            RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                        }
+                    }
+                    
+                }
+                else {
+                    println("ERROR @ Loading nore food : \(error?.localizedDescription)")
+                    self.isLoadingFood = false
+                    
+                    RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                 }
                 
-                BreezeStore.saveInBackground({contextType -> Void in
-                    
-                    }, completion: {error -> Void in
-                        self.loadFoodList(indexPath: indexPath)
-                })
-                
-            }
-            
-        }
-        else if editingStyle == .Insert {
-            
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+            })
         }
     }
     
     
     // MARK: - Functions
+    
+    func setupCityView() {
+        
+        // Setup city list views
+        self.cityListView = UIView(frame: CGRectMake(0, 64, self.view.width, self.view.height-64))
+        self.cityListView.tag = 1
+        self.cityListView.backgroundColor = UIColor.darkGrayColor()
+        
+        
+        self.tapGuesture = UITapGestureRecognizer(target: self, action: "cityViewDidTap:")
+        self.tapGuesture.numberOfTapsRequired = 1
+        self.tapGuesture.numberOfTouchesRequired = 1
+        
+        self.cityListView.addGestureRecognizer(self.tapGuesture)
+        self.cityListAnimatedView = MGFashionMenuView(menuView: self.cityListView, animationType: MGAnimationType.Wave)
+        
+        self.view.addSubview(self.cityListAnimatedView)
+    }
+    
     func willSwitchCity() {
         
         
@@ -227,17 +337,6 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             self.cityListAnimatedView.hide()
         }
         
-//        let cityListVC: VCCityListViewController = VCCityListViewController()
-//        cityListVC.view.frame = CGRectMake(0, 80, self.view.width, self.view.height-80)
-//        cityListVC.modalPresentationStyle = UIModalPresentationStyle.Custom
-//        cityListVC.cityList = self.cityList
-//        cityListVC.transitioningDelegate = self
-//        
-//        
-//        
-//        self.presentViewController(cityListVC, animated: true) { () -> Void in
-//            // Do something after present citylist vc
-//        }
     }
     
     func userPanel() {
@@ -296,33 +395,124 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         // Show hud
         self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        self.hud.mode = MBProgressHUDMode.Determinate
+        self.hud.mode = MBProgressHUDMode.Indeterminate
         self.hud.labelText = VCAppLetor.StringLine.isLoading
         
         if reachability.isReachable() {
             
             // Foodlist
             self.loadFoodList()
-            
-            // Member info
-            self.initMemberStatus()
-            
-            // City list
-            self.getCityList()
         }
         else {
-            self.showInternetUnreachable()
             self.hud.hide(true)
+            self.showInternetUnreachable()
         }
+        
+        
+    }
+    
+    func loadFoodList() {
+        
+        self.foodListItems.removeAllObjects()
+        
+        // Request for product list
+        let regionId: Int = 29
+        
+        Alamofire.request(VCheckGo.Router.GetProductList(regionId, self.currentPage)).validate().responseSwiftyJSON ({
+            (_, _, JSON, error) -> Void in
+            
+            if error == nil {
+                
+                let json = JSON
+                
+                if json["status"]["succeed"].string! == "1" {
+                    
+                    // Deal with paging
+                    if json["paginated"]["more"].string! == "1" {
+                        self.haveMore = true
+                    }
+                    else {
+                        self.haveMore = false
+                    }
+                    
+                    // Deal with the current page listing
+                    
+                    let productList: Array = json["data"]["article_list"].arrayValue
+                    
+                    for item in productList {
+                        
+                        let product: FoodInfo = FoodInfo(id: (item["article_id"].string! as NSString).integerValue)
+                        
+                        product.title = item["title"].string!
+                        
+                        var dateFormatter = NSDateFormatter()
+                        dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                        product.addDate = dateFormatter.dateFromString(item["article_date"].string!)!
+                        
+                        product.desc = item["summary"].string!
+                        product.subTitle = item["sub_title"].string!
+                        product.foodImage = item["article_image"]["source"].string!
+                        product.status = item["menu_info"]["menu_status"]["menu_status_id"].string!
+                        product.originalPrice = item["menu_info"]["price"]["original_price"].string!
+                        product.price = item["menu_info"]["price"]["special_price"].string!
+                        product.priceUnit = item["menu_info"]["price"]["price_unit"].string!
+                        product.unit = item["menu_info"]["menu_unit"]["menu_unit"].string!
+                        product.remainingCount = item["menu_info"]["stock"]["menu_count"].string!
+                        product.remainingCountUnit = item["menu_info"]["stock"]["menu_unit"].string!
+                        product.endDate = item["menu_info"]["end_date"].string!
+                        product.returnable = "1"
+                        product.favoriteCount = "17"
+                        
+                        product.storeId = item["store_info"]["store_id"].string!
+                        product.storeName = item["store_info"]["store_name"].string!
+                        product.address = item["store_info"]["address"].string!
+                        product.longitude = item["store_info"]["longitude_num"].string!
+                        product.latitude = item["store_info"]["latitude_num"].string!
+                        product.tel1 = item["store_info"]["tel_1"].string!
+                        product.tel2 = item["store_info"]["tel_2"].string!
+                        product.acp = item["store_info"]["per"].string!
+                        product.icon_thumb = item["store_info"]["icon_image"]["thumb"].string!
+                        product.icon_source = item["store_info"]["icon_image"]["source"].string!
+                        
+                        
+                        self.foodListItems.addObject(product)
+                    }
+                    
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.getCityList()
+                    })
+                    
+                }
+                else {
+                    RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    self.hud.hide(true)
+                    self.tableView.stopRefreshAnimation()
+                }
+            }
+            else {
+                println("ERROR @ Get Product List Request: \(error?.localizedDescription)")
+                
+                // Restore interface
+                self.hud.hide(true)
+                self.tableView.stopRefreshAnimation()
+                
+                RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            }
+            
+        })
+        
         
     }
     
     func getCityList() {
         
+        self.cityList.removeAllObjects()
+        
         Alamofire.request(VCheckGo.Router.GetCityList()).validate().responseSwiftyJSON ({
             (_, _, JSON, error) -> Void in
             
             if error == nil {
+                
                 
                 let json = JSON
                 
@@ -358,9 +548,14 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                         }
                     }
                     
-                    // Setup city list views
-                    self.cityListView = UIView(frame: CGRectMake(0, 64, self.view.width, self.view.height-64))
-                    self.cityListView.backgroundColor = UIColor.darkGrayColor()
+                    
+                    if self.serviceCityTitle != nil {
+                        self.serviceCityTitle.removeFromSuperview()
+                        self.serviceCityTitleUnderline.removeFromSuperview()
+                        self.serviceCityNote.removeFromSuperview()
+                        self.cityNamesView.removeFromSuperview()
+                    }
+                    
                     
                     
                     self.serviceCityTitle = UILabel(frame: CGRectMake(60, 80, self.view.width-120, 30))
@@ -384,6 +579,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                     
                     
                     self.cityNamesView = UIView(frame: CGRectMake(60, 120, self.view.width-120, 180))
+                    self.cityNamesView.tag = 2
                     if self.cityList.count > 0 {
                         
                         for (var i=0; i<self.cityList.count; i++) {
@@ -408,23 +604,28 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                     
                     self.cityListView.addSubview(self.cityNamesView)
                     
-                    self.tapGuesture = UITapGestureRecognizer(target: self, action: "cityViewDidTap:")
-                    self.tapGuesture.numberOfTapsRequired = 1
-                    self.tapGuesture.numberOfTouchesRequired = 1
-                    
-                    self.cityListView.addGestureRecognizer(self.tapGuesture)
-                    
-                    self.cityListAnimatedView = MGFashionMenuView(menuView: self.cityListView, animationType: MGAnimationType.Wave)
-                    
-                    self.view.addSubview(self.cityListAnimatedView)
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.initMemberStatus()
+                        
+                        self.isLoadingFood = false
+                    })
                     
                 }
                 else {
                     RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    
+                    self.hud.hide(true)
+                    self.tableView.stopRefreshAnimation()
                 }
             }
             else {
                 println("ERROR @ Request for city list : \(error?.localizedDescription)")
+                
+                // Restore interface
+                self.hud.hide(true)
+                self.tableView.stopRefreshAnimation()
+                
+                RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
             }
         })
     }
@@ -464,10 +665,9 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: "0", namespace: "token")
         }
         
-        
         let tokenString: String = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
         let cMid: String = self.currentMid()
-        println("token: \(tokenString), currentMid: \(cMid)")
+        println("Token[Local]: \(tokenString), mid: \(cMid)")
         
         if (tokenString != "0" && cMid != "0") {
             
@@ -492,7 +692,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                                 token.sid = "\(NSDate())"
                                 token.value = json["data"]["token"].string!
                                 
-                                println("token changed: \(token.value)")
+                                println("LoginWithToken[Done] (LocalTokenChanged): \(token.value)")
                                 
                             })
                             
@@ -518,8 +718,6 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                                 cMid.sid = "\(NSDate())"
                                 cMid.value = json["data"]["member_id"].string!
                                 
-                                println("currentMid: \(cMid.value)")
-                                
                             })
                             
                             CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: json["data"]["member_id"].string!, namespace: "member")
@@ -537,23 +735,30 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                             CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.Token, namespace: "member")
                         }
                         
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            self.loadMemberInfo(cMid)
-                        })
-                        
+                        self.loadMemberInfo(cMid)
                         
                     }
                     else { // Login fail
                         
-                        self.hud.hide(true)
                         RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                         
                         CTMemCache.sharedInstance.cleanNamespace("member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: "0", namespace: "token")
+                        self.clearLocalToken()
                     }
+                    
+                    self.hud.hide(true)
+                    self.tableView.stopRefreshAnimation()
+                    self.tableView.reloadData()
+                    
                 }
                 else {
                     println("ERROR @ Request for LoginWithToken: \(error?.localizedDescription)")
+                    
+                    // Restore interface
+                    self.hud.hide(true)
+                    self.tableView.stopRefreshAnimation()
+                    
+                    RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                 }
                 
             })
@@ -563,7 +768,9 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             
             // Clean up local cache with member status to ensure true
             self.cleanLocalMemberStatus()
-            self.hud!.hide(true)
+            self.hud.hide(true)
+            self.tableView.stopRefreshAnimation()
+            self.tableView.reloadData()
         }
     }
     
@@ -592,8 +799,37 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             println("Can not find local data after loginWithToken")
         }
         
-        self.hud.hide(true)
         
+    }
+    
+    // Clear expired local token
+    func clearLocalToken() {
+        
+        if let localToken = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optToken, contextType: BreezeContextType.Main) as? Settings {
+            
+            BreezeStore.saveInMain({ contextType -> Void in
+                
+                localToken.sid = "\(NSDate())"
+                localToken.value = "0"
+            })
+        }
+        else { // App version DO NOT exist, create one with empty
+            
+            BreezeStore.saveInMain({ contextType -> Void in
+                
+                let localTokenToBeCreate: Settings = Settings.createInContextOfType(contextType) as! Settings
+                
+                localTokenToBeCreate.sid = "\(NSDate())"
+                localTokenToBeCreate.name = VCAppLetor.SettingName.optToken
+                localTokenToBeCreate.value = "0"
+                localTokenToBeCreate.type = VCAppLetor.SettingType.AppConfig
+                localTokenToBeCreate.data = ""
+                
+            })
+            
+        }
+        
+        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: "0", namespace: "token")
     }
     
     // Clean local cache and local data
@@ -604,24 +840,18 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         // ========== ISLOGIN ===========
         if let isLogin = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameIsLogin, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 isLogin.sid = "\(NSDate())"
                 isLogin.value = "0"
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update isLogin value : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: false, namespace: "member")
-                    }
             })
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: false, namespace: "member")
         }
         else { // App version DO NOT exist, create one with empty
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 let isLoginToBeCreate: Settings = Settings.createInContextOfType(contextType) as! Settings
                 
@@ -638,24 +868,18 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         // ====== LOGINTYPE ========
         if let loginType = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameLoginType, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 loginType.sid = "\(NSDate())"
                 loginType.value = VCAppLetor.LoginType.None
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update loginType value : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.None, namespace: "member")
-                    }
             })
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.None, namespace: "member")
         }
         else { // App version DO NOT exist, create one with empty
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 let loginTypeToBeCreate: Settings = Settings.createInContextOfType(contextType) as! Settings
                 
@@ -671,26 +895,20 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         }
         
         // ======== CURRENT MID ============
-        if let cMid = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameCurrentMid, contextType: BreezeContextType.Main) as? Settings {
+        if let currentMid = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameCurrentMid, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
-                cMid.sid = "\(NSDate())"
-                cMid.value = "0"
+                currentMid.sid = "\(NSDate())"
+                currentMid.value = "0"
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update loginType value : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: "0", namespace: "member")
-                    }
             })
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: "0", namespace: "member")
         }
         else { // App version DO NOT exist, create one with empty
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 let cMidToBeCreate: Settings = Settings.createInContextOfType(contextType) as! Settings
                 
@@ -750,35 +968,19 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
     }
     
-    func refreshFoodList() {
+    func insertRowsAtBottom(newRows: NSMutableArray) {
         
         
-    }
-    
-    func loadFoodList(indexPath:NSIndexPath? = nil) {
+        self.tableView.beginUpdates()
         
-        // Check Internet connection
-        self.foodListItems.removeAllObjects()
-        
-        let foodItems:NSArray = FoodItem.findAll(predicate: nil, sortedBy: "addDate", ascending: false, contextType: BreezeContextType.Main)
-        
-        
-        if(foodItems.count > 0) {
+        for food in newRows {
             
-            for food in foodItems {
-                
-                let foodItem:FoodItem = food as! FoodItem
-                self.foodListItems.addObject(foodItem)
-            }
+            let currentFoodCount: Int = self.foodListItems.count
+            self.foodListItems.addObject(food)
+            self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: currentFoodCount, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
         }
         
-        if(indexPath != nil) {
-            self.tableView.deleteRowsAtIndexPaths([indexPath!], withRowAnimation: UITableViewRowAnimation.Fade)
-        }
-        
-        self.tableView.reloadData()
-        
-        self.tableView.stopRefreshAnimation()
+        self.tableView.endUpdates()
     }
     
     func setInternetReachableTableStyle(reachability: Bool) {
@@ -830,24 +1032,11 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         let reachability = notification.object as! Reachability
         
-        self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        self.hud.mode = MBProgressHUDMode.Determinate
-        self.hud.labelText = VCAppLetor.StringLine.isLoading
-        
         if reachability.isReachable() {
             
-            // Foodlist
-            self.loadFoodList()
-            
-            // Member info
-            self.initMemberStatus()
-            
-            // City List
-            self.getCityList()
         }
         else {
             self.showInternetUnreachable()
-            hud.hide(true)
         }
         
     }

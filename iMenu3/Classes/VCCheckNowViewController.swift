@@ -18,6 +18,7 @@ import IHKeyboardAvoiding
 class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITextFieldDelegate, RKDropdownAlertDelegate, UIPopoverPresentationControllerDelegate, MemberSigninDelegate, MemberRegisterDelegate {
     
     var foodItem: FoodItem!
+    var foodInfo: FoodInfo!
     
     var parentNav: UINavigationController!
     
@@ -83,6 +84,8 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             }
         }
     }
+    
+    var hud: MBProgressHUD!
     
     //MARK: - LifeCycle
     
@@ -745,9 +748,9 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             }
             else {
                 
-                let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                hud.mode = MBProgressHUDMode.Determinate
-                hud.labelText = VCAppLetor.StringLine.SubmitOrderInProgress
+                self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                self.hud.mode = MBProgressHUDMode.Determinate
+                self.hud.labelText = VCAppLetor.StringLine.SubmitOrderInProgress
                 
                 let mobileText = self.mobile.text
                 let code = (CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.SaltCode, namespace: "member")?.data as! String + VCAppLetor.StringLine.SaltKey).md5
@@ -762,7 +765,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                         if json["status"]["succeed"] == "1" {
                             
                             self.memberDidSigninSuccess(json["data"]["member_id"].string!, token: json["data"]["token"].string!)
-                            self.submitOrder(hud)
+                            self.submitOrder()
                         }
                         else {
                             RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
@@ -778,25 +781,29 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         }
         else {
             
-            let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            hud.mode = MBProgressHUDMode.Determinate
-            hud.labelText = VCAppLetor.StringLine.SubmitOrderInProgress
+            self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            self.hud.mode = MBProgressHUDMode.Determinate
+            self.hud.labelText = VCAppLetor.StringLine.SubmitOrderInProgress
             
-            self.submitOrder(hud)
+            self.submitOrder()
             
         }
         
     }
     
-    func submitOrder(hud: MBProgressHUD) {
+    func submitOrder() {
         
-        hud.hide(true)
+        // Submit order request to server side, response order details
+        let orderInfo: OrderInfo = OrderInfo(id: "0000", price: "118")
+        
+        self.hud!.hide(true)
         
         // Transfer to payment page
-        let paymentViewController: VCPayNowViewController = VCPayNowViewController()
-        paymentViewController.parentNav = self.parentNav
-        paymentViewController.foodItem = self.foodItem
-        self.parentNav.showViewController(paymentViewController, sender: self)
+        let paymentVC: VCPayNowViewController = VCPayNowViewController()
+        paymentVC.parentNav = self.parentNav
+        paymentVC.foodItem = self.foodItem
+        paymentVC.orderInfo = orderInfo
+        self.parentNav.showViewController(paymentVC, sender: self)
     }
     
     // MARK: - RKDropdownAlert Delegate

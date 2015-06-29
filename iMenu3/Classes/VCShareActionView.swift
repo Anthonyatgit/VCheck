@@ -18,6 +18,7 @@ class VCShareActionView: UIView {
     var shareType: VCAppLetor.ShareType!
     
     var foodItem: FoodItem?
+    var foodInfo: FoodInfo?
     var inviteItem: String?
     
     let blackBG: UIView = UIView.newAutoLayoutView()

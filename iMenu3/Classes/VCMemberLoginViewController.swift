@@ -73,7 +73,7 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
         closeView.addSubview(self.closeButton)
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeView)
-        self.navigationController?.navigationBar.alpha = 0.2
+//        self.navigationController?.navigationBar.alpha = 0.2
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: VCAppLetor.StringLine.Done, style: .Done, target: self, action: "letMeLogin")
         
@@ -431,16 +431,18 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
     
     func signinWithWeibo() {
         
-        ShareSDK.getUserInfoWithType(ShareTypeSinaWeibo, authOptions: nil) { (result, userInfo, error) -> Void in
+        ShareSDK.getUserInfoWithType(ShareTypeSinaWeibo, authOptions: nil) {
+            (result, userInfo, error) -> Void in
             
             if result {
+                
+                println("result: \(result) | userInfo: \(userInfo.sourceData() as NSDictionary)")
                 
                 // Fitch member info from server when login return success, cache member info in the local and refresh userinterface
                 //============================================================
                 
                 var mid: String = userInfo.uid()
                 
-                println("Userinfo: \(userInfo)")
                 
                 BreezeStore.saveInBackground({ (contextType) -> Void in
                     
@@ -483,12 +485,14 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
     
     func signinWithWechat() {
         
-        ShareSDK.getUserInfoWithType(ShareTypeWeixiTimeline, authOptions: nil) { (result, userInfo, error) -> Void in
+        ShareSDK.getUserInfoWithType(ShareTypeWeixiTimeline, authOptions: nil) {
+            (result, userInfo, error) -> Void in
             
             if result {
                 
                 
-                println("Userinfo: \(userInfo)")
+                
+                println("result: \(result) | userInfo: \(userInfo.sourceData() as NSDictionary)")
                 
                 // Fitch member info from server when login return success, cache member info in the local and refresh userinterface
                 //============================================================

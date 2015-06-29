@@ -38,4 +38,8 @@
 #import "XGPush.h"
 #import "XGSetting.h"
 
+// Attributed Text
+#import "TYAttributedLabel.h"
+
+
 #endif

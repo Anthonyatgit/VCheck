@@ -29,6 +29,8 @@ class VCTermsViewController: VCBaseViewController, UIScrollViewDelegate {
         self.view.backgroundColor = UIColor.whiteColor()
         
         self.contentView.loadRequest(NSURLRequest(URL: NSURL(string: VCAppLetor.StringLine.TermsURL)!))
+        
+        
         self.contentView.scalesPageToFit = true
         self.contentView.backgroundColor = UIColor.clearColor()
         self.view.addSubview(self.contentView)

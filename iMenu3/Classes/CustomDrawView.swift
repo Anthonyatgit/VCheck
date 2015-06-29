@@ -93,9 +93,17 @@ class CustomDrawView: UIView {
             CGContextAddLineToPoint(context, self.bounds.width, 1.0)
             CGContextStrokePath(context)
         }
+        else if (self.drawType == "GrayLineSpot") {
+            
+            CGContextSetLineWidth(context, self.lineWidth!)
+            CGContextSetStrokeColorWithColor(context, UIColor.lightGrayColor().colorWithAlphaComponent(0.2).CGColor)
+            CGContextMoveToPoint(context, 0.0, 10.0)
+            CGContextAddLineToPoint(context, self.bounds.width, 10.0)
+            CGContextStrokePath(context)
+        }
         else if (self.drawType == "DoubleLine") {
             
-            CGContextSetLineWidth(context, 2)
+            CGContextSetLineWidth(context, 1.5)
             if self.lineColor != nil {
                 CGContextSetStrokeColorWithColor(context, self.lineColor?.CGColor)
             }
@@ -108,7 +116,7 @@ class CustomDrawView: UIView {
             CGContextStrokePath(context)
             
             CGContextSetLineWidth(context, 1)
-            CGContextMoveToPoint(context, 0.0, 4.0)
+            CGContextMoveToPoint(context, 0.0, 3.0)
             CGContextAddLineToPoint(context, self.bounds.width, 3.0)
             CGContextStrokePath(context)
         }
@@ -127,7 +135,8 @@ class CustomDrawView: UIView {
             logoutButton.autoPinEdgeToSuperviewEdge(.Bottom, withInset: 30.0, relation: NSLayoutRelation.GreaterThanOrEqual)
             logoutButton.autoSetDimensionsToSize(CGSizeMake(280.0, 30.0))
         }
-        else if (self.drawType == "DateTag") {
+        else if (self.drawType == "DateTagLong") {
+            
             
             CGContextSetLineWidth(context, 28.0)
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor().CGColor)
@@ -137,12 +146,50 @@ class CustomDrawView: UIView {
             
             CGContextSetLineWidth(context, 1.0)
             CGContextSetStrokeColorWithColor(context, UIColor.clearColor().CGColor)
-            CGContextMoveToPoint(context, 80.0, 0.0)
-            CGContextAddLineToPoint(context, 70.0, 14.0)
-            CGContextAddLineToPoint(context, 80.0, 28.0)
+            CGContextMoveToPoint(context, 81.0, 0.0)
+            CGContextAddLineToPoint(context, 75.0, 14.0)
+            CGContextAddLineToPoint(context, 81.0, 28.0)
             CGContextClosePath(context)
             CGContextSetBlendMode(context, kCGBlendModeClear)
             CGContextFillPath(context)
+            
+            
+        }
+        else if (self.drawType == "DateTag") {
+            
+            CGContextSetLineWidth(context, 28.0)
+            CGContextSetStrokeColorWithColor(context, UIColor.blackColor().CGColor)
+            CGContextMoveToPoint(context, 0.0, 14.0)
+            CGContextAddLineToPoint(context, 74.0, 14.0)
+            CGContextStrokePath(context)
+            
+            CGContextSetLineWidth(context, 1.0)
+            CGContextSetStrokeColorWithColor(context, UIColor.clearColor().CGColor)
+            CGContextMoveToPoint(context, 75.0, 0.0)
+            CGContextAddLineToPoint(context, 69.0, 14.0)
+            CGContextAddLineToPoint(context, 75.0, 28.0)
+            CGContextClosePath(context)
+            CGContextSetBlendMode(context, kCGBlendModeClear)
+            CGContextFillPath(context)
+        }
+        else if (self.drawType == "noMore") {
+            
+            CGContextSetLineWidth(context, 1.0)
+            CGContextSetStrokeColorWithColor(context, UIColor.blackColor().colorWithAlphaComponent(0.2).CGColor)
+            CGContextMoveToPoint(context, self.width / 2.0 - 70.0, 30.0)
+            CGContextAddLineToPoint(context, self.width / 2.0 + 70.0, 30.0)
+            CGContextStrokePath(context)
+            
+            let noMore: UILabel = UILabel.newAutoLayoutView()
+            noMore.text = VCAppLetor.StringLine.NoMore
+            noMore.textAlignment = .Center
+            noMore.textColor = UIColor.blackColor().colorWithAlphaComponent(0.4)
+            noMore.font = VCAppLetor.Font.NormalFont
+            noMore.backgroundColor = UIColor.whiteColor()
+            self.addSubview(noMore)
+            
+            noMore.autoSetDimensionsToSize(CGSizeMake(100.0, 20.0))
+            noMore.autoCenterInSuperview()
             
         }
         else if (self.drawType == "SubmitTopTip") {
@@ -241,6 +288,48 @@ class CustomDrawView: UIView {
             CGContextAddLineToPoint(context, self.width, self.height-1)
             CGContextStrokePath(context)
             
+        }
+        else if self.drawType == "menuTag" {
+            
+            let btn1: UIButton = UIButton(frame: CGRectMake(0, 0, self.width, self.height))
+            btn1.setTitle("", forState: .Normal)
+            btn1.layer.borderWidth = 1.0
+            btn1.layer.borderColor = UIColor.blackColor().CGColor
+            btn1.backgroundColor = UIColor.whiteColor()
+            self.addSubview(btn1)
+            
+            let btn2: UIButton = UIButton(frame: CGRectMake(3, 3, self.width-6, self.height-6))
+            btn2.setTitle("", forState: .Normal)
+            btn2.layer.borderWidth = 1.0
+            btn2.layer.borderColor = UIColor.blackColor().CGColor
+            btn2.backgroundColor = UIColor.whiteColor()
+            self.addSubview(btn2)
+            
+            let label: UILabel = UILabel(frame: CGRectMake(10, 10, self.width-20, self.height-20))
+            label.text = "MENU"
+            label.textAlignment = .Center
+            label.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+            label.font = VCAppLetor.Font.boldLarge
+            self.addSubview(label)
+        }
+        else if self.drawType == "wechatService" {
+            
+            CGContextSetLineWidth(context, 1.0)
+            CGContextSetStrokeColorWithColor(context, UIColor.blackColor().colorWithAlphaComponent(0.2).CGColor)
+            CGContextMoveToPoint(context, self.width / 2.0 - 120.0, 30.0)
+            CGContextAddLineToPoint(context, self.width / 2.0 + 120.0, 30.0)
+            CGContextStrokePath(context)
+            
+            let wechat: UILabel = UILabel.newAutoLayoutView()
+            wechat.text = VCAppLetor.StringLine.wechatServiceName + VCAppLetor.StringLine.AppName + VCAppLetor.StringLine.wechatServiceTitle
+            wechat.textAlignment = .Center
+            wechat.textColor = UIColor.blackColor().colorWithAlphaComponent(0.4)
+            wechat.font = VCAppLetor.Font.SmallFont
+            wechat.backgroundColor = UIColor.whiteColor()
+            self.addSubview(wechat)
+            
+            wechat.autoSetDimensionsToSize(CGSizeMake(200.0, 20.0))
+            wechat.autoCenterInSuperview()
         }
         
         
