@@ -33,7 +33,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     var cityListView: UIView!
     var cityListAnimatedView: MGFashionMenuView!
     
-    let cityButton: UIButton = UIButton(frame: CGRectMake(0.0, 0.0, 26.0, 26.0))
+    let cityButton: UIButton = UIButton(frame: CGRectMake(0.0, 0.0, 28.0, 28.0))
     let selectedCityName: UIButton = UIButton(frame: CGRectMake(38.0, 0.0, 32.0, 32.0))
     let memberButton: UIButton = UIButton(frame: CGRectMake(6.0, 6.0, 26.0, 26.0))
     
@@ -64,7 +64,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         let cityView: UIView = UIView(frame: CGRectMake(6.0, 0.0, 74.0, 32.0))
         cityView.backgroundColor = UIColor.clearColor()
         
-        self.cityButton.setImage(UIImage(named: VCAppLetor.IconName.PlaceBlack)?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
+        self.cityButton.setImage(UIImage(named: VCAppLetor.IconName.moreBlack)?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
         self.cityButton.layer.cornerRadius = self.cityButton.width / 2.0
         self.cityButton.backgroundColor = UIColor.clearColor()
         self.cityButton.addTarget(self, action: "willSwitchCity", forControlEvents: .TouchUpInside)
@@ -121,6 +121,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         // Loading foodlist & init member info
         self.setupCityView()
         self.initAppInfo()
+        
+        self.initMemberStatus()
         
         self.view.setNeedsUpdateConstraints()
         
@@ -459,9 +461,12 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                         product.unit = item["menu_info"]["menu_unit"]["menu_unit"].string!
                         product.remainingCount = item["menu_info"]["stock"]["menu_count"].string!
                         product.remainingCountUnit = item["menu_info"]["stock"]["menu_unit"].string!
+                        product.outOfStock = item["menu_info"]["stock"]["out_of_stock_info"].string!
                         product.endDate = item["menu_info"]["end_date"].string!
                         product.returnable = "1"
-                        product.favoriteCount = "17"
+                        
+                        product.menuId = item["menu_info"]["menu_id"].string!
+                        product.menuName = item["menu_info"]["menu_name"].string!
                         
                         product.storeId = item["store_info"]["store_id"].string!
                         product.storeName = item["store_info"]["store_name"].string!
@@ -473,6 +478,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                         product.acp = item["store_info"]["per"].string!
                         product.icon_thumb = item["store_info"]["icon_image"]["thumb"].string!
                         product.icon_source = item["store_info"]["icon_image"]["source"].string!
+                        
+                        
                         
                         
                         self.foodListItems.addObject(product)
@@ -605,9 +612,12 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                     self.cityListView.addSubview(self.cityNamesView)
                     
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.initMemberStatus()
                         
                         self.isLoadingFood = false
+                        
+                        self.hud.hide(true)
+                        self.tableView.stopRefreshAnimation()
+                        self.tableView.reloadData()
                     })
                     
                 }
@@ -696,7 +706,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                                 
                             })
                             
-                            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: json["data"]["token"].string!, namespace: "token")
+                            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken as String, data: json["data"]["token"].string!, namespace: "token")
                         }
                         // update local data
                         if let isLogin = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameIsLogin, contextType: BreezeContextType.Main) as? Settings {
@@ -754,10 +764,6 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 else {
                     println("ERROR @ Request for LoginWithToken: \(error?.localizedDescription)")
                     
-                    // Restore interface
-                    self.hud.hide(true)
-                    self.tableView.stopRefreshAnimation()
-                    
                     RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                 }
                 
@@ -768,9 +774,6 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             
             // Clean up local cache with member status to ensure true
             self.cleanLocalMemberStatus()
-            self.hud.hide(true)
-            self.tableView.stopRefreshAnimation()
-            self.tableView.reloadData()
         }
     }
     

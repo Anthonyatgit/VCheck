@@ -37,7 +37,7 @@ class UserInfoHeaderView: UIView {
     func setupViews() {
         
         self.contentMode = UIViewContentMode.ScaleAspectFit
-//        self.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
+        self.backgroundColor = UIColor.clearColor()
         
         self.panelIcon.layer.cornerRadius = VCAppLetor.ConstValue.ImageCornerRadius
         self.panelIcon.alpha = 0.1

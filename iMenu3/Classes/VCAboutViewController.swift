@@ -103,11 +103,11 @@ class VCAboutViewController: VCBaseViewController {
     override func updateViewConstraints() {
         super.updateViewConstraints()
         
-        self.subtitleLine.autoSetDimensionsToSize(CGSizeMake(162.0, 3.0))
+        self.subtitleLine.autoSetDimensionsToSize(CGSizeMake(202.0, 3.0))
         self.subtitleLine.autoPinEdgeToSuperviewEdge(.Top, withInset: 200.0)
         self.subtitleLine.autoAlignAxisToSuperviewAxis(.Vertical)
         
-        self.aboutSubTitle.autoSetDimensionsToSize(CGSizeMake(142.0, 30.0))
+        self.aboutSubTitle.autoSetDimensionsToSize(CGSizeMake(162.0, 30.0))
         self.aboutSubTitle.autoAlignAxisToSuperviewAxis(.Vertical)
         self.aboutSubTitle.autoAlignAxis(.Horizontal, toSameAxisOfView: self.subtitleLine)
         
@@ -123,7 +123,7 @@ class VCAboutViewController: VCBaseViewController {
         self.appWebsiteURL.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.appCopyright, withOffset: 0.0)
         self.appWebsiteURL.autoAlignAxisToSuperviewAxis(.Vertical)
         
-        self.appVersion.autoSetDimensionsToSize(CGSizeMake(62.0, 30.0))
+        self.appVersion.autoSetDimensionsToSize(CGSizeMake(80.0, 28.0))
         self.appVersion.autoAlignAxisToSuperviewAxis(.Vertical)
         self.appVersion.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.appWebsiteURL, withOffset: -40.0)
         

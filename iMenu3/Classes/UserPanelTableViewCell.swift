@@ -33,6 +33,7 @@ class UserPanelTableViewCell: UITableViewCell {
         
         self.selectionStyle = UITableViewCellSelectionStyle.Gray
         self.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+        self.backgroundColor = UIColor.whiteColor()
         
         self.panelIcon.layer.cornerRadius = VCAppLetor.ConstValue.ImageCornerRadius
         self.panelIcon.alpha = 1.0

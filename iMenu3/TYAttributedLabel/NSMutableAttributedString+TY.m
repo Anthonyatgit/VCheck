@@ -53,7 +53,7 @@
 #pragma mark - 文本字符间隔属性
 - (void)addAttributeCharacterSpacing:(unichar)characterSpacing
 {
-    [self addAttributeCharacterSpacing:characterSpacing range:NSMakeRange(0, self.length)];
+    //[self addAttributeCharacterSpacing:characterSpacing range:NSMakeRange(0, self.length)];
 }
 
 - (void)addAttributeCharacterSpacing:(unichar)characterSpacing range:(NSRange)range

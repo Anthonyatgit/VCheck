@@ -29,7 +29,8 @@ struct VCAppLetor {
         static let BigFont: UIFont = UIFont(name: "HelveticaNeue", size: 16.0)!
         static let XLarge: UIFont = UIFont(name: "HelveticaNeue", size: 18.0)!
         static let XXLarge: UIFont = UIFont(name: "HelveticaNeue", size: 22.0)!
-        static let XXXLarge: UIFont = UIFont(name: "HelveticaNeue", size: 28.0)!
+//        static let XXXLarge: UIFont = UIFont(name: "HelveticaNeue", size: 28.0)!
+        static let XXXLarge: UIFont = UIFont.boldSystemFontOfSize(28.0)
         static let boldLarge: UIFont = UIFont.boldSystemFontOfSize(18.0)
     }
     
@@ -39,6 +40,7 @@ struct VCAppLetor {
         
         // MEMBER LOGIN
         static let AppName: String = "VCheck"
+        static let AppScheme: String = "vcheck"
         static let SaltKey: String = "siyo_vcheck"
         static let isLoading: String = "努力加载中.."
         static let InternetUnreachable: String = "网络好像不给力啊"
@@ -154,6 +156,7 @@ struct VCAppLetor {
         static let CheckNowTitle: String = "填写订单"
         static let CheckNowTip: String = "请注意，该礼遇需要到店享用"
         static let PayNowTip: String = "该礼遇支持随时申请退款"
+        static let PayDoneTip: String = "向服务商家出示你的订单号码享受您的礼遇"
         static let PriceName: String = "价格"
         static let PricePU: String = "单价: "
         static let AmountName: String = "数量"
@@ -163,21 +166,32 @@ struct VCAppLetor {
         static let MobileName: String = "手机号码"
         static let LoginWithCoupon: String = "使用VCheck账号登陆可立即获得礼券，"
         static let LoginNow: String = "立即登录"
-        static let OrderPriceName: String = "合计："
+        static let OrderPriceName: String = "合计: "
         static let SubmitBtnTitle: String = "提交订单"
-        static let SubmitOrderInProgress: String = "正在提交您的订单..."
+        static let SubmitOrderInProgress: String = "正在提交您的订单.."
+        static let AsyncPaymentInProgress: String = "正在同步交易信息.."
         
         static let PayOrderTitle: String = "确认订单"
         static let UseCouponName: String = "使用礼券"
         static let CouponNone: String = "未使用"
         static let FinalOrderTotal: String = "还需支付"
         static let ChoosePayType: String = "选择支付方式"
-        static let AlipayType: String = "支付宝钱包支付"
+        static let QuestionWithPay: String = "支付遇到问题?"
+        static let AlipayType: String = "支付宝"
+        static let AlipaySubtitle: String = "推荐支付宝用户使用"
         static let WechatType: String = "微信支付"
+        static let WechatSubtitle: String = "推荐微信5.0以上用户使用"
         static let PayNow: String = "立即支付"
         
+        static let PaymentDoneTitle: String = "购买成功"
+        static let PaymentSuccessString: String = "购买成功，感谢客官的惠顾"
+        static let OrderProductName: String = "礼遇名称:"
+        static let OrderNumber: String = "订单号码:"
+        static let CheckOrderTitle: String = "查看我的订单"
+        static let BackToGo: String = "继续浏览"
+        
         static let AboutTitle: String = "关于我们"
-        static let AppSubtitle: String = "精 选 限 量 美 食"
+        static let AppSubtitle: String = "• 精 选 限 量 美 食 •"
         static let AppWebsiteURL: String = "imenu.so"
         static let AppCopyRight: String = "Copyright © 2015 Siyo Tech All Rights Reserved"
         
@@ -223,6 +237,19 @@ struct VCAppLetor {
         
     }
     
+    // MARK: - Colors
+    enum Colors {
+        static let error: UIColor = UIColor.alizarinColor()
+        static let done: UIColor = UIColor.nephritisColor()
+        static let Action: UIColor = UIColor.pumpkinColor()
+        static let HighLight: UIColor = UIColor.orangeColor()
+        static let Title: UIColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+        static let Label: UIColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+        static let Content: UIColor = UIColor.grayColor()
+        static let Light: UIColor = UIColor.lightGrayColor()
+        static let exLight: UIColor = UIColor.exLightGrayColor()
+    }
+    
     // MARK: - IconName
     enum IconName {
         
@@ -239,6 +266,8 @@ struct VCAppLetor {
         static let FavoriteRed: String = "favorite_red"
         static let PhotosBlack: String = "photos_black"
         static let telBlack: String = "call_black"
+        static let moreBlack: String = "more_black"
+        static let backBlack: String = "back_black"
         
         static let PlaceBlack: String = "place_black"
         static let MemberBlack: String = "member_black"
@@ -248,6 +277,8 @@ struct VCAppLetor {
         
         static let AlipayIcon: String = "ali_68.png"
         static let WechatIcon: String = "wx_logo_64.png"
+        
+        static let SuccessIcon: String = "success_black"
     }
     
     // MARK: - ConstValue
@@ -258,6 +289,7 @@ struct VCAppLetor {
         static let PI: CGFloat = 3.14159265358979323846 // 圆周率
         static let TopAlertStayTime: Int = 3
         static let LineGap: CGFloat = 10.0
+        static let GrayLineWidth: CGFloat = 0.6
         static let ToplineWithNavBar: CGFloat = 80.0
         static let TextFieldHeight: CGFloat = 30.0
         static let ButtonHeight: CGFloat = 30.0
@@ -317,6 +349,9 @@ struct VCAppLetor {
         static let optNeedUpdate: String = "need_update"
         static let optTipForUpdate: String = "is_tips"
         static let optToken: String = "token"
+        
+        static let orderSessionMenuIds: String = "OrderSessionMenuIds"
+        static let orderSessionOrderObjs: String = "OrderSessionOrderObjs"
     }
     
     // MARK: - LoginType
@@ -418,10 +453,11 @@ struct VCAppLetor {
         }
     }
     
-    enum PayType: Int {
-        case AliPay = 1
-        case WechatPay = 2
+    enum PaymentCode: String {
+        case AliPay = "alipay"
+        case WechatPay = "weixin_pay"
     }
+    
     
 }
 

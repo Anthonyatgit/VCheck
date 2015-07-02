@@ -41,5 +41,8 @@
 // Attributed Text
 #import "TYAttributedLabel.h"
 
+// Alipay
+#import <AlipaySDK/AlipaySDK.h>
+
 
 #endif

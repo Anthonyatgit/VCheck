@@ -115,7 +115,7 @@ class CustomDrawView: UIView {
             CGContextAddLineToPoint(context, self.bounds.width, 1.0)
             CGContextStrokePath(context)
             
-            CGContextSetLineWidth(context, 1)
+            CGContextSetLineWidth(context, 0.6)
             CGContextMoveToPoint(context, 0.0, 3.0)
             CGContextAddLineToPoint(context, self.bounds.width, 3.0)
             CGContextStrokePath(context)
@@ -176,8 +176,8 @@ class CustomDrawView: UIView {
             
             CGContextSetLineWidth(context, 1.0)
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor().colorWithAlphaComponent(0.2).CGColor)
-            CGContextMoveToPoint(context, self.width / 2.0 - 70.0, 30.0)
-            CGContextAddLineToPoint(context, self.width / 2.0 + 70.0, 30.0)
+            CGContextMoveToPoint(context, self.width / 2.0 - 70.0, self.height / 2.0)
+            CGContextAddLineToPoint(context, self.width / 2.0 + 70.0, self.height / 2.0)
             CGContextStrokePath(context)
             
             let noMore: UILabel = UILabel.newAutoLayoutView()
@@ -200,7 +200,7 @@ class CustomDrawView: UIView {
             CGContextStrokePath(context)
             
             let tip: UILabel = UILabel.newAutoLayoutView()
-            tip.text = "!"
+            tip.text = "i"
             tip.textAlignment = .Center
             tip.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
             tip.font = VCAppLetor.Font.XSmall
@@ -212,27 +212,35 @@ class CustomDrawView: UIView {
             
             let tipText: UILabel = UILabel.newAutoLayoutView()
             tipText.text = VCAppLetor.StringLine.CheckNowTip
-            tipText.textAlignment = .Center
+            tipText.textAlignment = .Left
             tipText.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
             tipText.font = VCAppLetor.Font.SmallFont
             self.addSubview(tipText)
             
-            tipText.autoPinEdgeToSuperviewEdge(.Leading, withInset: 36.0)
-            tipText.autoSetDimensionsToSize(CGSizeMake(200.0, 14.0))
-            tipText.autoPinEdgeToSuperviewEdge(.Top, withInset: 8.0)
+            tipText.autoPinEdgeToSuperviewEdge(.Leading, withInset: 46.0)
+            tipText.autoSetDimensionsToSize(CGSizeMake(self.width - 46.0, 14.0))
+            tipText.autoAlignAxisToSuperviewAxis(.Horizontal)
         }
         else if (self.drawType == "SelectedCircle") {
             
             CGContextSetLineWidth(context, 1)
             CGContextSetFillColorWithColor(context, UIColor.orangeColor().CGColor)
-            CGContextAddArc(context, 13, 13, 12, 0, CGFloat(2*VCAppLetor.ConstValue.PI), 0)
+            CGContextAddArc(context, 13, 13, 10, 0, CGFloat(2*VCAppLetor.ConstValue.PI), 0)
             CGContextFillPath(context)
             
             CGContextSetStrokeColorWithColor(context, UIColor.whiteColor().CGColor)
             CGContextMoveToPoint(context, 7, 14)
-            CGContextAddLineToPoint(context, 10, 17)
+            CGContextAddLineToPoint(context, 11, 18)
             CGContextAddLineToPoint(context, 19, 10)
             CGContextStrokePath(context)
+        }
+        else if (self.drawType == "UnselectedCircle") {
+            
+            CGContextSetLineWidth(context, 1)
+            CGContextSetStrokeColorWithColor(context, UIColor.exLightGrayColor().CGColor)
+            CGContextAddArc(context, 13, 13, 9, 0, CGFloat(2*VCAppLetor.ConstValue.PI), 0)
+            CGContextStrokePath(context)
+            
         }
         else if (self.drawType == "PayTopTip") {
             
@@ -242,7 +250,7 @@ class CustomDrawView: UIView {
             CGContextStrokePath(context)
             
             let tip: UILabel = UILabel.newAutoLayoutView()
-            tip.text = "!"
+            tip.text = "i"
             tip.textAlignment = .Center
             tip.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
             tip.font = VCAppLetor.Font.XSmall
@@ -254,14 +262,43 @@ class CustomDrawView: UIView {
             
             let tipText: UILabel = UILabel.newAutoLayoutView()
             tipText.text = VCAppLetor.StringLine.PayNowTip
-            tipText.textAlignment = .Center
+            tipText.textAlignment = .Left
             tipText.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
             tipText.font = VCAppLetor.Font.SmallFont
             self.addSubview(tipText)
             
-            tipText.autoPinEdgeToSuperviewEdge(.Leading, withInset: 36.0)
-            tipText.autoSetDimensionsToSize(CGSizeMake(200.0, 14.0))
-            tipText.autoPinEdgeToSuperviewEdge(.Top, withInset: 8.0)
+            tipText.autoPinEdgeToSuperviewEdge(.Leading, withInset: 46.0)
+            tipText.autoSetDimensionsToSize(CGSizeMake(self.width - 46, 14.0))
+            tipText.autoAlignAxisToSuperviewAxis(.Horizontal)
+        }
+        else if (self.drawType == "PayDoneTopTip") {
+            
+            CGContextSetLineWidth(context, 1)
+            CGContextSetStrokeColorWithColor(context, UIColor.blackColor().colorWithAlphaComponent(0.8).CGColor)
+            CGContextAddArc(context, 34, 16, 6, 0, CGFloat(2*VCAppLetor.ConstValue.PI), 0)
+            CGContextStrokePath(context)
+            
+            let tip: UILabel = UILabel.newAutoLayoutView()
+            tip.text = "i"
+            tip.textAlignment = .Center
+            tip.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+            tip.font = VCAppLetor.Font.XSmall
+            self.addSubview(tip)
+            
+            tip.autoPinEdgeToSuperviewEdge(.Leading, withInset: 28.0)
+            tip.autoSetDimensionsToSize(CGSizeMake(12.0, 12.0))
+            tip.autoPinEdgeToSuperviewEdge(.Top, withInset: 10.0)
+            
+            let tipText: UILabel = UILabel.newAutoLayoutView()
+            tipText.text = VCAppLetor.StringLine.PayDoneTip
+            tipText.textAlignment = .Left
+            tipText.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+            tipText.font = VCAppLetor.Font.SmallFont
+            self.addSubview(tipText)
+            
+            tipText.autoPinEdgeToSuperviewEdge(.Leading, withInset: 46.0)
+            tipText.autoSetDimensionsToSize(CGSizeMake(self.width - 46, 14.0))
+            tipText.autoAlignAxisToSuperviewAxis(.Horizontal)
         }
         else if self.drawType == "segBG" {
             

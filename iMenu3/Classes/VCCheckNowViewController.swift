@@ -13,6 +13,7 @@ import RKDropdownAlert
 import MBProgressHUD
 import AFViewShaker
 import IHKeyboardAvoiding
+import DKChainableAnimationKit
 
 
 class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITextFieldDelegate, RKDropdownAlertDelegate, UIPopoverPresentationControllerDelegate, MemberSigninDelegate, MemberRegisterDelegate {
@@ -21,6 +22,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     var foodInfo: FoodInfo!
     
     var parentNav: UINavigationController!
+    var foodDetailVC: FoodViewerViewController!
     
     let scrollView: UIScrollView = UIScrollView()
     
@@ -66,6 +68,19 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     let orderPriceName: UILabel = UILabel.newAutoLayoutView()
     let orderPriceValue: UILabel = UILabel.newAutoLayoutView()
     
+    var orderItemCount: Int = 1 {
+        willSet(newValue) {
+            
+            self.amountValue.text = "\(newValue)"
+            
+            let price: CGFloat = CGFloat((self.foodInfo.price! as NSString).floatValue)
+            let count: CGFloat = CGFloat(("\(newValue)" as NSString).floatValue)
+            self.totalPriceValue.text = "\(price * count)\(self.foodInfo.priceUnit!)"
+            
+            self.orderPriceValue.text = "\(price * count)\(self.foodInfo.priceUnit!)"
+        }
+    }
+    
     var remainingSecond: Int = VCAppLetor.ConstValue.SMSRemainingSeconds {
         willSet(newSecond) {
             self.sendVerifyBtn.titleLabel?.text = "\(newSecond)"
@@ -87,6 +102,9 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     
     var hud: MBProgressHUD!
     
+    var tapGueture: UITapGestureRecognizer?
+    
+    
     //MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -94,6 +112,12 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         
         self.title = VCAppLetor.StringLine.CheckNowTitle
         self.view.backgroundColor = UIColor.whiteColor()
+        
+        // Rewrite back bar button
+        let backButton: UIBarButtonItem = UIBarButtonItem()
+        backButton.title = ""
+        self.navigationItem.backBarButtonItem = backButton
+        
         
         self.scrollView.frame = self.view.bounds
         self.scrollView.frame.size.height = self.view.bounds.height - VCAppLetor.ConstValue.CheckNowBarHeight
@@ -105,6 +129,11 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.setupSubmitView()
         
         self.updateViewConstraints()
+        
+        self.tapGueture = UITapGestureRecognizer(target: self, action: "viewTaped:")
+        self.tapGueture?.numberOfTapsRequired = 1
+        self.tapGueture?.numberOfTouchesRequired = 1
+        self.scrollView.addGestureRecognizer(self.tapGueture!)
         
     }
     
@@ -141,14 +170,15 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.priceName.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
         self.priceName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodTitleUnderline, withOffset: 10.0)
         self.priceName.autoSetDimensionsToSize(CGSizeMake(40.0, 20.0))
+        self.priceName.autoSetDimension(.Height, toSize: 20.0)
         
         self.priceUnit.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         self.priceUnit.autoPinEdge(.Top, toEdge: .Top, ofView: self.priceName)
-        self.priceUnit.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
+//        self.priceUnit.autoSetDimensionsToSize(CGSizeMake(40.0, 20.0))
         
         self.priceValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.priceUnit)
         self.priceValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.priceName)
-        self.priceValue.autoSetDimensionsToSize(CGSizeMake(30.0, 20.0))
+//        self.priceValue.autoSetDimensionsToSize(CGSizeMake(120.0, 20.0))
         
         self.priceUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.priceName, withOffset: 10.0)
         self.priceUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.priceName)
@@ -161,15 +191,15 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         
         self.plusBtn.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         self.plusBtn.autoPinEdge(.Top, toEdge: .Top, ofView: self.amountName)
-        self.plusBtn.autoSetDimensionsToSize(CGSizeMake(20.0, 20.0))
+        self.plusBtn.autoSetDimensionsToSize(CGSizeMake(22.0, 22.0))
         
         self.amountValue.autoAlignAxis(.Horizontal, toSameAxisOfView: self.amountName)
-        self.amountValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.plusBtn, withOffset: -10.0)
+        self.amountValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.plusBtn, withOffset: -14.0)
         self.amountValue.autoSetDimensionsToSize(CGSizeMake(20.0, 14.0))
         
         self.reduceBtn.autoPinEdge(.Top, toEdge: .Top, ofView: self.amountName)
-        self.reduceBtn.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.amountValue, withOffset: -10.0)
-        self.reduceBtn.autoSetDimensionsToSize(CGSizeMake(20.0, 20.0))
+        self.reduceBtn.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.amountValue, withOffset: -14.0)
+        self.reduceBtn.autoSetDimensionsToSize(CGSizeMake(22.0, 22.0))
         
         self.amountUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
         self.amountUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.amountName, withOffset: 10.0)
@@ -193,7 +223,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             
             self.mobile.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
             self.mobile.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.totalPriceUnderline, withOffset: 10.0)
-            self.mobile.autoMatchDimension(.Width, toDimension: .Width, ofView: self.scrollView, withMultiplier: 0.5)
+            self.mobile.autoSetDimension(.Width, toSize: self.view.width - 40 - 80 - 10)
             self.mobile.autoSetDimension(.Height, toSize: 30.0)
             
             self.sendVerifyBtn.autoSetDimensionsToSize(CGSizeMake(80.0, 32.0))
@@ -254,12 +284,12 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.submitBg.autoMatchDimension(.Width, toDimension: .Width, ofView: self.submitBtn, withOffset: 2.0)
         
         self.orderPriceValue.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.submitBtn)
-        self.orderPriceValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.submitBtn, withOffset: -40.0)
-        self.orderPriceValue.autoSetDimensionsToSize(CGSizeMake(54.0, 22.0))
+        self.orderPriceValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.submitBtn, withOffset: -20.0)
+//        self.orderPriceValue.autoSetDimensionsToSize(CGSizeMake(164.0, 22.0))
         
-        self.orderPriceName.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.orderPriceValue, withOffset: 10.0)
         self.orderPriceName.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.submitBtn)
-        self.orderPriceName.autoSetDimensionsToSize(CGSizeMake(42.0, 20.0))
+        self.orderPriceName.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.orderPriceValue, withOffset: -10.0)
+        self.orderPriceName.autoSetDimensionsToSize(CGSizeMake(40.0, 18.0))
         
     }
     
@@ -283,15 +313,16 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.submitView.addSubview(self.submitBtn)
         
         self.orderPriceName.text = VCAppLetor.StringLine.OrderPriceName
-        self.orderPriceName.textAlignment = .Left
+        self.orderPriceName.textAlignment = .Right
         self.orderPriceName.textColor = UIColor.orangeColor()
         self.orderPriceName.font = VCAppLetor.Font.NormalFont
         self.submitView.addSubview(self.orderPriceName)
         
-        self.orderPriceValue.text = "118元"
-        self.orderPriceValue.textAlignment = .Center
+        self.orderPriceValue.text = round_price(self.foodInfo.price!) + "\(self.foodInfo.priceUnit!)"
+        self.orderPriceValue.textAlignment = .Right
         self.orderPriceValue.textColor = UIColor.orangeColor()
         self.orderPriceValue.font = VCAppLetor.Font.XLarge
+        self.orderPriceValue.sizeToFit()
         self.submitView.addSubview(self.orderPriceValue)
         
         
@@ -312,13 +343,13 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         
         
         self.topTip.drawType = "SubmitTopTip"
-        self.topTip.backgroundColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.2)
+        self.topTip.backgroundColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.1)
         self.scrollView.addSubview(self.topTip)
         
-        self.foodTitle.text = self.foodItem?.title
+        self.foodTitle.text = self.foodInfo.menuName!
         self.foodTitle.font = VCAppLetor.Font.XLarge
         self.foodTitle.textAlignment = .Left
-        self.foodTitle.textColor = UIColor.blackColor()
+        self.foodTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.scrollView.addSubview(self.foodTitle)
         
         self.foodTitleUnderline.drawType = "DoubleLine"
@@ -330,20 +361,22 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.priceName.font = VCAppLetor.Font.NormalFont
         self.scrollView.addSubview(self.priceName)
         
-        self.priceValue.text = "118"
+        self.priceValue.text = round_price(self.foodInfo.price!)
         self.priceValue.textAlignment = .Right
         self.priceValue.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.priceValue.font = VCAppLetor.Font.NormalFont
+        self.priceValue.sizeToFit()
         self.scrollView.addSubview(self.priceValue)
         
-        self.priceUnit.text = "元/2位"
+        self.priceUnit.text = "\(self.foodInfo.priceUnit!)/\(self.foodInfo.unit!)"
         self.priceUnit.textAlignment = .Right
         self.priceUnit.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.priceUnit.font = VCAppLetor.Font.NormalFont
+        self.priceUnit.sizeToFit()
         self.scrollView.addSubview(self.priceUnit)
         
         self.priceUnderline.drawType = "GrayLine"
-        self.priceUnderline.lineWidth = 1.0
+        self.priceUnderline.lineWidth = VCAppLetor.ConstValue.GrayLineWidth
         self.scrollView.addSubview(self.priceUnderline)
         
         self.amountName.text = VCAppLetor.StringLine.AmountName
@@ -353,18 +386,18 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.scrollView.addSubview(self.amountName)
         
         self.reduceBtn.setTitle("-", forState: .Normal)
-        self.reduceBtn.setTitle("-", forState: UIControlState.Disabled)
+        self.reduceBtn.setTitle("-", forState: .Disabled)
         self.reduceBtn.setTitleColor(UIColor.lightGrayColor(), forState: .Disabled)
         self.reduceBtn.setTitleColor(UIColor.blackColor(), forState: .Normal)
         self.reduceBtn.enabled = false
-        self.reduceBtn.titleEdgeInsets = UIEdgeInsetsMake(1.0, 1.0, 1.0, 1.0)
+        self.reduceBtn.titleEdgeInsets = UIEdgeInsetsMake(0.0, 1.0, 1.0, 1.0)
         self.reduceBtn.titleLabel?.font = VCAppLetor.Font.NormalFont
         self.reduceBtn.layer.borderColor = UIColor.lightGrayColor().CGColor
-        self.reduceBtn.layer.borderWidth = 1.0
+        self.reduceBtn.layer.borderWidth = VCAppLetor.ConstValue.GrayLineWidth
         self.reduceBtn.addTarget(self, action: "reduceAmount", forControlEvents: .TouchUpInside)
         self.scrollView.addSubview(self.reduceBtn)
         
-        self.amountValue.text = "1"
+        self.amountValue.text = "\(self.orderItemCount)"
         self.amountValue.textAlignment = .Center
         self.amountValue.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.amountValue.font = VCAppLetor.Font.NormalFont
@@ -373,14 +406,14 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.plusBtn.setTitle("+", forState: .Normal)
         self.plusBtn.setTitleColor(UIColor.blackColor(), forState: .Normal)
         self.plusBtn.layer.borderColor = UIColor.lightGrayColor().CGColor
-        self.plusBtn.titleEdgeInsets = UIEdgeInsetsMake(1.0, 1.0, 1.0, 1.0)
+        self.plusBtn.titleEdgeInsets = UIEdgeInsetsMake(0.0, 1.0, 1.0, 1.0)
         self.plusBtn.titleLabel?.font = VCAppLetor.Font.NormalFont
-        self.plusBtn.layer.borderWidth = 1.0
+        self.plusBtn.layer.borderWidth = VCAppLetor.ConstValue.GrayLineWidth
         self.plusBtn.addTarget(self, action: "plusAmount", forControlEvents: .TouchUpInside)
         self.scrollView.addSubview(self.plusBtn)
         
         self.amountUnderline.drawType = "GrayLine"
-        self.amountUnderline.lineWidth = 1.0
+        self.amountUnderline.lineWidth = VCAppLetor.ConstValue.GrayLineWidth
         self.scrollView.addSubview(self.amountUnderline)
         
         self.totalPriceName.text = VCAppLetor.StringLine.TotalPriceName
@@ -389,21 +422,21 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.totalPriceName.font = VCAppLetor.Font.NormalFont
         self.scrollView.addSubview(self.totalPriceName)
         
-        self.totalPriceValue.text = "\((self.priceValue.text! as NSString).floatValue * (self.amountValue.text! as NSString).floatValue)" + "元"
+        self.totalPriceValue.text = round_price(self.priceValue.text!) + "\(self.foodInfo.priceUnit!)"
         self.totalPriceValue.textAlignment = .Left
         self.totalPriceValue.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.totalPriceValue.font = VCAppLetor.Font.NormalFont
         self.scrollView.addSubview(self.totalPriceValue)
         
         self.totalPriceUnderline.drawType = "GrayLine"
-        self.totalPriceUnderline.lineWidth = 1.0
+        self.totalPriceUnderline.lineWidth = VCAppLetor.ConstValue.GrayLineWidth
         self.scrollView.addSubview(self.totalPriceUnderline)
         
         if !self.isLogin() {
             
             self.mobile.placeholder = VCAppLetor.StringLine.MobilePlease
             self.mobile.clearButtonMode = .WhileEditing
-            self.mobile.keyboardType = UIKeyboardType.PhonePad
+            self.mobile.keyboardType = UIKeyboardType.DecimalPad
             self.mobile.textAlignment = .Left
             self.mobile.font = VCAppLetor.Font.BigFont
             self.mobile.delegate = self
@@ -416,17 +449,17 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             self.sendVerifyBtn.titleLabel?.font = VCAppLetor.Font.SmallFont
             self.sendVerifyBtn.titleLabel?.textAlignment = .Center
             self.sendVerifyBtn.layer.borderColor = UIColor.lightGrayColor().CGColor
-            self.sendVerifyBtn.layer.borderWidth = 1.0
+            self.sendVerifyBtn.layer.borderWidth = VCAppLetor.ConstValue.GrayLineWidth
             self.sendVerifyBtn.addTarget(self, action: "checkMobile", forControlEvents: .TouchUpInside)
             self.scrollView.addSubview(self.sendVerifyBtn)
             
             self.mobileUnderline.drawType = "GrayLine"
-            self.mobileUnderline.lineWidth = 1.0
+            self.mobileUnderline.lineWidth = VCAppLetor.ConstValue.GrayLineWidth
             self.scrollView.addSubview(self.mobileUnderline)
             
             self.verifyCode.placeholder = VCAppLetor.StringLine.InputVerifyCode
             self.verifyCode.clearButtonMode = .WhileEditing
-            self.verifyCode.keyboardType = UIKeyboardType.PhonePad
+            self.verifyCode.keyboardType = UIKeyboardType.DecimalPad
             self.verifyCode.textAlignment = .Left
             self.verifyCode.font = VCAppLetor.Font.BigFont
             self.verifyCode.delegate = self
@@ -435,7 +468,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             self.verifyCodeShaker = AFViewShaker(view: self.verifyCode)
             
             self.verifyCodeUnderline.drawType = "GrayLine"
-            self.verifyCodeUnderline.lineWidth = 1.0
+            self.verifyCodeUnderline.lineWidth = VCAppLetor.ConstValue.GrayLineWidth
             self.scrollView.addSubview(self.verifyCodeUnderline)
             
             self.loginNote.text = VCAppLetor.StringLine.LoginWithCoupon
@@ -470,7 +503,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             self.scrollView.addSubview(self.mobileNumber)
             
             self.mobileUnderline.drawType = "GrayLine"
-            self.mobileUnderline.lineWidth = 1.0
+            self.mobileUnderline.lineWidth = VCAppLetor.ConstValue.GrayLineWidth
             self.scrollView.addSubview(self.mobileUnderline)
         }
         
@@ -614,25 +647,26 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     
     func reduceAmount() {
         
-        var amount: Int = (self.amountValue.text! as NSString).integerValue
-        if amount > 1 {
-            self.amountValue.text = "\(amount-1)"
-            
-        }
-        
-        if amount == 2 {
+        if self.orderItemCount == 2 {
             self.reduceBtn.enabled = false
         }
+        
+        if self.orderItemCount > 1 {
+            
+            self.orderItemCount -= 1
+        }
+        
+        
     }
     
     func plusAmount() {
         
-        var amount: Int = (self.amountValue.text! as NSString).integerValue
-        self.amountValue.text = "\(amount+1)"
-        
-        if amount >= 1 {
+        if self.orderItemCount == 1 {
             self.reduceBtn.enabled = true
         }
+        
+        self.orderItemCount += 1
+        
     }
     
     func isMobile(mobile: String) -> Bool {
@@ -782,7 +816,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         else {
             
             self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            self.hud.mode = MBProgressHUDMode.Determinate
+            self.hud.mode = MBProgressHUDMode.Indeterminate
             self.hud.labelText = VCAppLetor.StringLine.SubmitOrderInProgress
             
             self.submitOrder()
@@ -793,17 +827,128 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     
     func submitOrder() {
         
-        // Submit order request to server side, response order details
-        let orderInfo: OrderInfo = OrderInfo(id: "0000", price: "118")
+        // Update cart
         
-        self.hud!.hide(true)
+        let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+        let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+        let editType = VCheckGo.EditCartType.edit
+        let menuId = self.foodInfo.menuId!
+        let count = "\(self.orderItemCount)"
+        let articleId = "\(self.foodInfo.id)"
         
-        // Transfer to payment page
-        let paymentVC: VCPayNowViewController = VCPayNowViewController()
-        paymentVC.parentNav = self.parentNav
-        paymentVC.foodItem = self.foodItem
-        paymentVC.orderInfo = orderInfo
-        self.parentNav.showViewController(paymentVC, sender: self)
+        Alamofire.request(VCheckGo.Router.EditCart(memberId, editType, menuId, count, articleId, token)).validate().responseSwiftyJSON ({
+            (_, _, JSON, error) -> Void in
+            
+            if error == nil {
+                
+                let json = JSON
+                
+                if json["status"]["succeed"].string! == "1" {
+                    
+                    // Add Order
+                    Alamofire.request(VCheckGo.Router.AddOrder(memberId, token)).validate().responseSwiftyJSON({
+                        (_, _, JSON, error) -> Void in
+                        
+                        if error == nil {
+                            
+                            let json = JSON
+                            
+                            if json["status"]["succeed"].string! == "1" {
+                                
+                                let orderId = json["data"]["order_info"]["order_id"].string!
+                                let orderNo = json["data"]["order_info"]["order_no"].string!
+                                let newOrder: OrderInfo = OrderInfo(id: orderId, no: orderNo)
+                                
+                                newOrder.createDate = json["data"]["order_info"]["create_date"].string!
+                                newOrder.orderType = json["data"]["order_info"]["order_type"].string!
+                                newOrder.totalPrice = json["data"]["order_info"]["total_price"]["special_price"].string!
+                                newOrder.originalTotalPrice = json["data"]["order_info"]["total_price"]["original_price"].string!
+                                newOrder.menuId = json["data"]["order_info"]["menu_info"]["menu_id"].string!
+                                newOrder.menuTitle = json["data"]["order_info"]["menu_info"]["menu_name"].string!
+                                newOrder.itemCount = json["data"]["order_info"]["menu_info"]["count"].string!
+                                
+                                
+                                // Cache member order session, CAN NOT submit order with same menu until the order session complete (Deleted OR Paid)
+                                let orderSessionMenus = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.orderSessionMenuIds, namespace: "order")?.data as? NSMutableArray
+                                if orderSessionMenus != nil {
+                                    
+                                    orderSessionMenus?.addObject(menuId)
+                                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.orderSessionMenuIds, data: orderSessionMenus, namespace: "order")
+                                    
+                                    let orderSessionOrderObjs = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.orderSessionOrderObjs, namespace: "order")?.data as? NSMutableArray
+                                    
+                                    if orderSessionOrderObjs != nil {
+                                        orderSessionOrderObjs?.addObject(newOrder)
+                                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.orderSessionOrderObjs, data: orderSessionOrderObjs, namespace: "order")
+                                    }
+                                    else {
+                                        println("Order Session data missing! CAN NOT pair menus")
+                                    }
+                                    
+                                }
+                                else {
+                                    
+                                    let menus: NSMutableArray = NSMutableArray()
+                                    
+                                    menus.addObject(menuId)
+                                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.orderSessionMenuIds, data: menus, namespace: "order")
+                                    
+                                    let orders: NSMutableArray = NSMutableArray()
+                                    
+                                    orders.addObject(newOrder)
+                                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.orderSessionOrderObjs, data: orders, namespace: "order")
+                                }
+                                
+                                
+                                
+                                
+                                self.hud.hide(true)
+                                
+                                // Transfer to payment page
+                                let paymentVC: VCPayNowViewController = VCPayNowViewController()
+                                paymentVC.parentNav = self.parentNav
+                                paymentVC.foodDetailVC = self.foodDetailVC
+                                paymentVC.foodInfo = self.foodInfo!
+                                paymentVC.orderInfo = newOrder
+                                self.parentNav.showViewController(paymentVC, sender: self)
+                                
+                            }
+                            else {
+                                RKDropdownAlert.title(json["status"]["error_desc"].string!+"[AddOrder]", backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                                self.hud.hide(true)
+                            }
+                            
+                        }
+                        else {
+                            println("ERROR @ Request for [Add Order] : \(error?.localizedDescription)")
+                            RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                            self.hud.hide(true)
+                        }
+                    })
+                    
+                }
+                else {
+                    RKDropdownAlert.title(json["status"]["error_desc"].string!+"[EditCart]", backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    self.hud.hide(true)
+                }
+                
+                
+            }
+            else {
+                println("ERROR @ Request for [Edit Cart] : \(error?.localizedDescription)")
+                RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                self.hud.hide(true)
+            }
+            
+        })
+        
+        
+    }
+    
+    func viewTaped(tap: UITapGestureRecognizer) {
+        
+        self.mobile.resignFirstResponder()
+        self.verifyCode.resignFirstResponder()
     }
     
     // MARK: - RKDropdownAlert Delegate

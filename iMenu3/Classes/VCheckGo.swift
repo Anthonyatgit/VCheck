@@ -16,33 +16,43 @@ struct VCheckGo {
     
     enum Router: URLRequestConvertible {
         
+        // API Base URL
         #if DEBUG
             static let baseAPIURLString = "http://218.244.158.175/imenu_test/app_interface_vcheck/index.php"
         #else
             static let baseAPIURLString = "http://www.imenu.so/imenu_test/app_interface_vcheck/index.php"
         #endif
         
+        // Security Key
         static let consumerKey = "yEUwUg5gPOtlymh2vFW1chwoTYJomgjWikzNva16"
         
-        case AppSettings(String, DeviceType)                                // 01.基本-获取配置信息
-        case MemberLogin(String, String, LoginType, String)                 // 02.会员-登录
-        case MemberRegister(String, String, String)                         // 03.会员-注册
-        case ResetPassword(String, String, LoginType, String)               // 04.会员-密码重置
-        case LoginWithToken(String, String)                                 // 05.会员-记录登陆状态
-        case MemberLogout(String, String)                                   // 06.会员-登出
-        case ValidateMemberInfo(ValidateType, String)                       // 07.会员-校验会员信息
-        case QuickLogin(String, String)                                     // 08.快速登陆
-        case GetVerifyCode(String, String)                                  // 09.基本-获取验证码
-        case EditMemberEmail(String, String, String)                        // 10.会员-编辑个人信息-Email
-        case EditMemberNickname(String, String, String)                     // 10.会员-编辑个人信息-Nickname
-        case EditMemberPassword(String, String, String, String)             // 10.会员-编辑个人信息-Password
-        case GetMemberInfo(String, String)                                  // 12.会员-获取个人详情
-        case GetMyCollections(String, Int, Int, String)                     // 13.会员-获取我的收藏列表
-        case EditMyCollection(String, CollectionEditType, String, String)   // 14.会员-编辑我的收藏列表
-        case FeedBack(String, String, String)                               // 16.基本-提交反馈信息
-        case GetCityList()                                                  // 17.基本-获取地区列表
-        case GetProductList(Int, Int)                                       // 18.产品-获取产品列表
-        case GetProductDetail(Int)                                          // 19.产品-获取产品详细
+        // Route Method Defination
+        case AppSettings(String, DeviceType)                                        // 01.基本-获取配置信息
+        case MemberLogin(String, String, LoginType, String)                         // 02.会员-登录
+        case MemberRegister(String, String, String)                                 // 03.会员-注册
+        case ResetPassword(String, String, LoginType, String)                       // 04.会员-密码重置
+        case LoginWithToken(String, String)                                         // 05.会员-记录登陆状态
+        case MemberLogout(String, String)                                           // 06.会员-登出
+        case ValidateMemberInfo(ValidateType, String)                               // 07.会员-校验会员信息
+        case QuickLogin(String, String)                                             // 08.快速登陆
+        case GetVerifyCode(String, String)                                          // 09.基本-获取验证码
+        case EditMemberEmail(String, String, String)                                // 10.会员-编辑个人信息-Email
+        case EditMemberNickname(String, String, String)                             // 10.会员-编辑个人信息-Nickname
+        case EditMemberPassword(String, String, String, String)                     // 10.会员-编辑个人信息-Password
+        case GetMemberInfo(String, String)                                          // 12.会员-获取个人详情
+        case GetMyCollections(String, Int, Int, String)                             // 13.会员-获取我的收藏列表
+        case EditMyCollection(String, CollectionEditType, String, String)           // 14.会员-编辑我的收藏列表
+        case FeedBack(String, String, String)                                       // 16.基本-提交反馈信息
+        case GetCityList()                                                          // 17.基本-获取地区列表
+        case GetProductList(Int, Int)                                               // 18.产品-获取产品列表
+        case GetProductDetail(Int)                                                  // 19.产品-获取产品详细
+        case GetProductDetailWithMember(Int, String)                                // 19.产品-获取产品详情[用户模式]
+        case EditCart(String, EditCartType, String, String, String, String)         // 38.订单-编辑购物车信息
+        case ClearCart(String, String)                                              // 38.订单-清空购物车信息
+        case AddOrder(String, String)                                               // 39.订单-提交订单
+        case UpdatePay(String, VCAppLetor.PaymentCode, String, String)              // 40.订单-编辑结算信息
+        case GetPayData(String, String, String)                                     // 41.订单-获取支付数据
+        case AsyncPayment(String, String, String, String)                           // 42.订单-提交支付订单
         
         var URLRequest: NSURLRequest {
             
@@ -117,6 +127,10 @@ struct VCheckGo {
                 case .GetProductDetail(let productId):
                     let params = ["route":"\(RoutePath.GetProductDetail.rawValue)","token":"","jsonText":"{\"article_id\":\"\(productId)\"}"]
                     return ("/\(RoutePath.GetProductDetail.rawValue)", params)
+                //=========GetProductDetailWithMember==========
+                case .GetProductDetailWithMember(let productId, let memberId):
+                    let params = ["route":"\(RoutePath.GetProductDetail.rawValue)","token":"","jsonText":"{\"article_id\":\"\(productId)\",\"member_id\":\"\(memberId)\"}"]
+                    return ("/\(RoutePath.GetProductDetail.rawValue)", params)
                 //=========GetMyCollections==========
                 case .GetMyCollections(let memberId, let page, let count, let token):
                     let params = ["route":"\(RoutePath.GetMyCollection.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"pagination\":{\"page\":\"\(page)\",\"count\":\"\(count)\"}}"]
@@ -125,6 +139,29 @@ struct VCheckGo {
                 case .EditMyCollection(let memberId, let collectionEditType, let articleId, let token):
                     let params = ["route":"\(RoutePath.EditMyCollection.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"operator_type\":\"\(collectionEditType.rawValue)\",\"article_list\":{\"article_id\":\"\(articleId)\"}}"]
                     return ("/\(RoutePath.EditMyCollection.rawValue)", params)
+                //=========EditCart==================
+                case .EditCart(let memberId, let editCartType, let menuId, let count, let articleId, let token):
+                    let params = ["route":"\(RoutePath.EditCart.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"operator_type\":\"\(editCartType.rawValue)\",\"cart_info\":{\"menu_info\":{\"menu_id\":\"\(menuId)\",\"count\":\"\(count)\"},\"article_info\":{\"article_id\":\"\(articleId)\"}}}"]
+                    return ("/\(RoutePath.EditCart.rawValue)", params)
+                    //=========ClearCart==================
+                case .ClearCart(let memberId, let token):
+                    let params = ["route":"\(RoutePath.EditCart.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"operator_type\":\"\(EditCartType.clear.rawValue)\"}"]
+                    return ("/\(RoutePath.EditCart.rawValue)", params)
+                //=========AddOrder==================
+                case .AddOrder(let memberId, let token):
+                    let params = ["route":"\(RoutePath.AddOrder.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\"}"]
+                    return ("/\(RoutePath.AddOrder.rawValue)", params)
+                //=========UpdatePay=================
+                case .UpdatePay(let memberId, let paymentCode, let orderId, let token):
+                    let params = ["route":"\(RoutePath.UpdatePay.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"checkout_info\":{\"payment_code\":\"\(paymentCode.rawValue)\"},\"order_id\":\"\(orderId)\"}"]
+                    return ("/\(RoutePath.UpdatePay.rawValue)", params)
+                //=========GetPayData================
+                case .GetPayData(let memberId, let orderId, let token):
+                    let params = ["route":"\(RoutePath.GetPayData.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"order_id\":\"\(orderId)\"}"]
+                    return ("/\(RoutePath.GetPayData.rawValue)", params)
+                case .AsyncPayment(let memberId, let orderId, let paymentResult, let token):
+                    let params = ["route":"\(RoutePath.AsyncPayment.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"order_id\":\"\(orderId)\",\"payment_result\":\"\(paymentResult)\"}"]
+                    return ("/\(RoutePath.AsyncPayment.rawValue)", params)
                 //=========DEFAULT===================
                 default: return ("/",["consumer_key": Router.consumerKey])
                 }
@@ -165,11 +202,25 @@ struct VCheckGo {
         case clean = 3
     }
     
+    enum EditCartType: Int {
+        case edit = 1
+        case clear = 2
+    }
+    
+    enum PaymentCode: String {
+        case Ali = "alipay"
+        case Wechat = "weixin_pay"
+    }
+    
     // MARK: - InterfacePath 
     enum RoutePath: String {
+        
         case GetClientConfig = "base/client_config/getClientConfig"
-        case LoginWithToken = "member/member/loginWithToken"
         case GetVerifyCode = "base/tools/getVerifyCode"
+        case FeedBack = "base/feedback/submitFeedbackInfo"
+        case GetCityList = "base/region/getRegionList"
+        
+        case LoginWithToken = "member/member/loginWithToken"
         case ValidateMemberInfo = "member/member/validateMemberInfo"
         case MemberRegister = "member/member/register"
         case MemberLogin = "member/member/login"
@@ -180,11 +231,19 @@ struct VCheckGo {
         case QuickLogin = "member/member/quickLogin"
         case EditMyCollection = "member/collection/editCollectionProduct"
         case GetMyCollection = "member/collection/getCollectionProductList"
-        case FeedBack = "base/feedback/submitFeedbackInfo"
-        case GetCityList = "base/region/getRegionList"
+        
         case GetProductList = "product/product/getProductList"
         case GetProductDetail = "product/product/getProductDetail"
+        
+        case EditCart = "sale/order/editCart"
+        case AddOrder = "sale/order/addOrder"
+        case UpdatePay = "sale/order/checkout"
+        case GetPayData = "sale/order/generatePayData"
+        case AsyncPayment = "sale/order/submitPayOrder"
+        
     }
+    
+    
     
     enum ImageSize: Int {
         case Tiny = 1
@@ -231,23 +290,28 @@ class CityInfo: NSObject {
 
 class OrderInfo: NSObject {
     
-    let oid: String
-    let totalPrice: String
+    let id: String
+    let no: String
     
-    var title: String?
+    // Base
+    var totalPrice: String?
+    var originalTotalPrice: String?
+    var createDate: String?
+    var orderType: String?
+    var menuId: String?
+    var menuTitle: String?
+    var itemCount: String?
+    var couponInfo: NSMutableArray?
+    
+    // Extent
     var status: VCAppLetor.OrderStatus?
-    var price: String?
-    var amount: String?
-    
     var orderImageURL: String?
     
-    init(id: String, price: String) {
+    init(id: String, no: String) {
         
-        self.oid = id
-        self.totalPrice = price
+        self.id = id
+        self.no = no
     }
-    
-    
     
 }
 
@@ -271,7 +335,9 @@ class FoodInfo: NSObject {
     var unit: String?
     var remainingCount: String?
     var remainingCountUnit: String?
+    var outOfStock: String?
     var endDate: String?
+    var remainder: String?
     var returnable: String?
     var favoriteCount: String?
     var isCollected: String?
@@ -288,13 +354,17 @@ class FoodInfo: NSObject {
     var icon_thumb: String?
     var icon_source: String?
     
+    // MENU
+    var menuId: String?
+    var menuName: String?
+    
     // CONTENT
     var contentImages: NSMutableArray?
     var contentTitles: NSMutableArray?
     var contentDesc: NSMutableArray?
     var menuTitles: NSMutableArray?
     var menuContents: NSMutableArray?
-    var tips: String?
+    var tips: NSMutableArray?
     var slideImages: NSMutableArray?
     
     

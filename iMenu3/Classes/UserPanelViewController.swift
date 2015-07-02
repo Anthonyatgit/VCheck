@@ -50,11 +50,16 @@ class UserPanelViewController: UITableViewController, UITableViewDelegate, UITab
         self.tableView = userPanelTableView
         self.tableView.showsVerticalScrollIndicator = false
         
+        let tableBG: UIImageView = UIImageView(frame: self.tableView.frame)
+        tableBG.image = UIImage(named: "user_nep.png")
+        self.tableView.backgroundView = tableBG
+        
+        
         self.tableView.registerClass(UserPanelTableViewCell.self, forCellReuseIdentifier: kCellIdentifier)
         
         self.userInfoHeaderView = UserInfoHeaderView.newAutoLayoutView()
         self.userInfoHeaderView.userPanelViewController = self
-        self.userInfoHeaderView.frame = CGRectMake(0, 0, self.tableView.bounds.width, VCAppLetor.ConstValue.UserInfoHeaderViewHeight)
+        self.userInfoHeaderView.frame = CGRectMake(0, 0, self.view.width, self.view.width*0.8)
         self.tableView.tableHeaderView = self.userInfoHeaderView
         
         // For header view

@@ -372,7 +372,7 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
             }
             else {
                 println("ERROR @ Request for sending varify code : \(error?.localizedDescription)")
-                RKDropdownAlert.title(VCAppLetor.StringLine.VerifyCodeSendFail, backgroundColor: UIColor.nephritisColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime, delegate: self)
+                RKDropdownAlert.title(VCAppLetor.StringLine.VerifyCodeSendFail, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime, delegate: self)
             }
         })
         

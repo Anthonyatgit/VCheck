@@ -100,6 +100,11 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.scrollView.backgroundColor = UIColor.whiteColor()
         self.scrollView.showsVerticalScrollIndicator = false
         
+        // Rewrite back bar button
+        let backButton: UIBarButtonItem = UIBarButtonItem()
+        backButton.title = ""
+        self.navigationItem.backBarButtonItem = backButton
+        
         // Member Center Entrain
         self.shareRightTop.setImage(UIImage(named: VCAppLetor.IconName.ShareBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate), forState: .Normal)
         self.shareRightTop.addTarget(self, action: "shareFood", forControlEvents: .TouchUpInside)
@@ -109,11 +114,6 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         self.hud.mode = MBProgressHUDMode.Indeterminate
         
-        self.detailView.tag = 3
-        self.checkView.tag = 4
-        self.checkNowBg.tag = 5
-        self.photosView.tag = 6
-        
         
         self.getProductDetail()
         
@@ -121,6 +121,26 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
+        self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        self.hud.mode = MBProgressHUDMode.Indeterminate
+        
+        // Set detail frame
+        self.resetDetailFrame()
+        
+        // Check if member have order session
+        if self.isLogin() {
+            
+            self.updateFoodInfo()
+            
+            // If have order unpaid?
+            
+            
+        }
+        else {
+            
+            self.hud.hide(true)
+        }
         
         
         //        self.detailScrollView.mapView.viewWillAppear()
@@ -130,7 +150,6 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.detailSegmentControl.selectSegmentAtIndex(0)
         
     }
     
@@ -246,8 +265,17 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                         }
                         
                         // Info Part
-                        self.foodInfo.tips = json["data"]["article_info"]["article_tips"].string!
+                        let foodTips = json["data"]["article_info"]["article_tips_info"]["content"].arrayValue
                         
+                        self.foodInfo.tips = NSMutableArray()
+                        
+                        for tip in foodTips {
+                            
+                            self.foodInfo.tips?.addObject(tip.string!)
+                        }
+                        
+                        // Remainder
+                        self.foodInfo.remainder = json["data"]["article_info"]["menu_info"]["remainder_time"].string!
                         
                         // Views
                         self.setupFoodView()
@@ -259,7 +287,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                         self.setupConstraints()
                         
                         
-                        self.hud.hide(true)
+//                        self.hud.hide(true)
                         
                         self.scrollView.animation.makeAlpha(1.0).animate(0.4)
                         
@@ -283,6 +311,8 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         
         
     }
+    
+    
     
     func setupConstraints() {
         
@@ -412,10 +442,26 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.remainAmount.textColor = UIColor.lightGrayColor()
         self.scrollView.addSubview(self.remainAmount)
         
-        self.remainTime.text = "剩余 1 周以上"
+        
+        let remainder = ("\(self.foodInfo.remainder)" as NSString).floatValue
+        println("time: \(remainder)")
+        var timeTag = ""
+        if remainder/(3600*24) > 7 {
+            timeTag = "1周以上"
+        }
+        else if remainder/(3600*24) > 1 {
+            let days = floor(remainder/(3600*24))
+            timeTag = "\(days)天"
+        }
+        else {
+            timeTag = "少于24小时"
+        }
+        
+        self.remainTime.text = "剩余 \(timeTag)"
         self.remainTime.font = VCAppLetor.Font.SmallFont
         self.remainTime.textAlignment = .Left
         self.remainTime.textColor = UIColor.lightGrayColor()
+        self.remainTime.sizeToFit()
         self.scrollView.addSubview(self.remainTime)
         
         self.returnable.text = "可退款"
@@ -463,6 +509,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.scrollView.addSubview(self.segBG)
         
         self.segForeView.drawType = "segFore"
+        self.segForeView.alpha = 0.0
         self.segBG.addSubview(self.segForeView)
         
         // Detail segment control
@@ -481,7 +528,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.detailScrollView.segmentedControl = self.detailSegmentControl
         self.detailScrollView.foodInfo = self.foodInfo
         self.detailView.addSubview(self.detailScrollView)
-//        self.detailView.backgroundColor = UIColor.redColor().colorWithAlphaComponent(0.1)
+        //        self.detailView.backgroundColor = UIColor.redColor().colorWithAlphaComponent(0.1)
         self.scrollView.addSubview(self.detailView)
         
         
@@ -493,7 +540,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
     
     func setupDetailView() {
         
-//        self.detailScrollView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
+        //        self.detailScrollView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
         self.detailScrollView.pagingEnabled = true
         self.detailScrollView.scrollEnabled = false
         self.detailScrollView.showsHorizontalScrollIndicator = false
@@ -744,25 +791,35 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         addName.textAlignment = .Left
         addName.textColor = UIColor.blackColor().colorWithAlphaComponent(0.6)
         addName.font = VCAppLetor.Font.NormalFont
+        addName.sizeToFit()
         self.detailScrollView.addSubview(addName)
         
-        let addString: TYAttributedLabel = TYAttributedLabel()
-        addString.characterSpacing = 0
-        addString.linesSpacing = 2
-        addString.backgroundColor = UIColor.clearColor()
-        addString.text = self.foodInfo.address
-        addString.font = VCAppLetor.Font.NormalFont
-        addString.textColor = UIColor.grayColor()
-        addString.textAlignment = CTTextAlignment.TextAlignmentLeft
-        addString.setFrameWithOrign(CGPointMake(infoX+45, infoHeight-12), width: self.detailScrollView.width-50-50)
-        self.detailScrollView.addSubview(addString)
+//        let addString: TYAttributedLabel = TYAttributedLabel()
+//        addString.characterSpacing = 0
+//        addString.linesSpacing = 2
+//        addString.backgroundColor = UIColor.clearColor()
+//        addString.text = self.foodInfo.address
+//        addString.font = VCAppLetor.Font.NormalFont
+//        addString.textColor = UIColor.grayColor()
+//        addString.textAlignment = CTTextAlignment.TextAlignmentLeft
+//        addString.setFrameWithOrign(CGPointMake(infoX+45, infoHeight-12), width: self.detailScrollView.width-50-50)
+//        self.detailScrollView.addSubview(addString)
         
-        let addIcon: UIImageView = UIImageView(frame: CGRectMake(self.detailScrollView.width*3.0-26, infoHeight, 26, 26))
-        addIcon.tintColor = UIColor.lightGrayColor()
+        let address: UILabel = UILabel(frame: CGRectMake(infoX+45, infoHeight, self.detailScrollView.width-50-50, 20))
+        address.text = self.foodInfo.address
+        address.textAlignment = .Left
+        address.textColor = UIColor.grayColor()
+        address.numberOfLines = 2
+        address.font = VCAppLetor.Font.NormalFont
+        address.sizeToFit()
+        self.detailScrollView.addSubview(address)
+        
+        let addIcon: UIImageView = UIImageView(frame: CGRectMake(self.detailScrollView.width*3.0-26, infoHeight, 24, 24))
+        addIcon.tintColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.4)
         addIcon.image = UIImage(named: VCAppLetor.IconName.PlaceBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         self.detailScrollView.addSubview(addIcon)
         
-        infoHeight += addString.height + 14
+        infoHeight += address.height + 14
         let addUnderline: CustomDrawView = CustomDrawView(frame: CGRectMake(infoX, infoHeight, self.detailScrollView.width, 3.0))
         addUnderline.drawType = "GrayLine"
         addUnderline.lineWidth = 1.0
@@ -784,8 +841,8 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         telString.textAlignment = .Left
         self.detailScrollView.addSubview(telString)
         
-        let telIcon: UIImageView = UIImageView(frame: CGRectMake(self.detailScrollView.width*3.0-26, infoHeight, 26, 26))
-        telIcon.tintColor = UIColor.lightGrayColor()
+        let telIcon: UIImageView = UIImageView(frame: CGRectMake(self.detailScrollView.width*3.0-26, infoHeight, 24, 24))
+        telIcon.tintColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.4)
         telIcon.image = UIImage(named: VCAppLetor.IconName.telBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         self.detailScrollView.addSubview(telIcon)
         
@@ -809,13 +866,27 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.detailScrollView.addSubview(tipTitleUnderline)
         
         infoHeight += 5 + 10
-        let tipView: UIWebView = UIWebView(frame: CGRectMake(infoX, infoHeight, self.detailScrollView.width, 120))
-        tipView.loadHTMLString(self.foodInfo.tips!, baseURL: nil)
-        tipView.scalesPageToFit = true
-        tipView.sizeToFit()
-        self.detailScrollView.addSubview(tipView)
         
-        infoHeight += 120 + 10
+        let tipsBlock: TYAttributedLabel = TYAttributedLabel()
+        tipsBlock.linesSpacing = 4
+        tipsBlock.backgroundColor = UIColor.clearColor()
+        tipsBlock.font = VCAppLetor.Font.NormalFont
+        tipsBlock.textColor = UIColor.grayColor().colorWithAlphaComponent(0.8)
+        tipsBlock.textAlignment = CTTextAlignment.TextAlignmentLeft
+        
+        var tipString: String = ""
+        
+        for var i=0; i<self.foodInfo.tips!.count; i++ {
+            
+            tipString += "• \(self.foodInfo.tips!.objectAtIndex(i) as! String) \n"
+        }
+        
+        tipsBlock.text = tipString
+        tipsBlock.setFrameWithOrign(CGPointMake(infoX, infoHeight-12), width: self.detailScrollView.width-10)
+        self.detailScrollView.addSubview(tipsBlock)
+        
+        
+        infoHeight += tipsBlock.height + 10
         self.bottomLineInfo.frame = CGRectMake(infoX, infoHeight, self.detailScrollView.width, 3.0)
         self.bottomLineInfo.drawType = "GrayLine"
         self.bottomLineInfo.lineWidth = 1.0
@@ -880,7 +951,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         
         self.remainTime.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.remainAmount, withOffset: 10.0)
         self.remainTime.autoPinEdge(.Top, toEdge: .Top, ofView: self.remainAmount)
-        self.remainTime.autoSetDimensionsToSize(CGSizeMake(80.0, 14.0))
+//        self.remainTime.autoSetDimensionsToSize(CGSizeMake(80.0, 14.0))
         
         self.returnable.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.remainAmount, withOffset: 10.0)
         self.returnable.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
@@ -907,10 +978,10 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.segForeView.autoPinEdgeToSuperviewEdge(.Leading)
         self.segForeView.autoSetDimensionsToSize(CGSizeMake((self.view.width-40.0) / 3.0, 40.0))
         
-//        self.detailSegmentControl?.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-//        self.detailSegmentControl?.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-//        self.detailSegmentControl?.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.shareBtn, withOffset: 30.0)
-//        self.detailSegmentControl?.autoSetDimension(.Height, toSize: 40.0)
+        //self.detailSegmentControl?.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+        //self.detailSegmentControl?.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+        //self.detailSegmentControl?.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.shareBtn, withOffset: 30.0)
+        //self.detailSegmentControl?.autoSetDimension(.Height, toSize: 40.0)
         
         self.detailView.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.segBG)
         self.detailView.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.segBG, withOffset: 10.0)
@@ -923,6 +994,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         
         let orderCheckViewController: VCCheckNowViewController = VCCheckNowViewController()
         orderCheckViewController.parentNav = self.parentNav
+        orderCheckViewController.foodDetailVC = self
         orderCheckViewController.foodInfo = self.foodInfo
         self.parentNav?.showViewController(orderCheckViewController, sender: self)
     }
@@ -934,7 +1006,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         shareView.foodInfo = self.foodInfo
         self.view.addSubview(shareView)
         
-//        self.detailSegmentControl.selectSegmentAtIndex(self.detailSegmentControl.indexOfSelectedSegment)
+        //        self.detailSegmentControl.selectSegmentAtIndex(self.detailSegmentControl.indexOfSelectedSegment)
         
     }
     
@@ -966,11 +1038,13 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                             
                             self.likeBtn.titleStr.text = "\((self.foodInfo.favoriteCount! as NSString).integerValue + 1)"
                             self.likeBtn.icon.image = UIImage(named: VCAppLetor.IconName.FavoriteRed)
+                            self.foodInfo.favoriteCount = self.likeBtn.titleStr.text
                             self.foodInfo.isCollected = "1"
                         }
                         else {
-                            self.likeBtn.titleStr.text = "\(self.foodInfo.favoriteCount!)"
+                            self.likeBtn.titleStr.text = "\((self.foodInfo.favoriteCount! as NSString).integerValue - 1)"
                             self.likeBtn.icon.image = UIImage(named: VCAppLetor.IconName.FavoriteBlack)
+                            self.foodInfo.favoriteCount = self.likeBtn.titleStr.text
                             self.foodInfo.isCollected = "0"
                         }
                         
@@ -1068,12 +1142,13 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.detailScrollView.contentSize = CGSizeMake(self.detailScrollView.width*3, self.detailScrollView.height)
         
         self.segForeView.animation.animationCompletion = {
-            //self.segForeView.originX = segItemWidth * indexPage
+            
+            self.segForeView.alpha = 1.0
         }
         self.segForeView.animation.makeOrigin(segItemWidth * indexPage, 0).animate(0.2)
         self.segForeViewCopy.animation.makeOrigin(segItemWidth * indexPage, 0).animate(0.2)
         
-//        self.detailView.autoSetDimension(.Height, toSize: self.detailScrollView.height)
+        //        self.detailView.autoSetDimension(.Height, toSize: self.detailScrollView.height)
         
         self.scrollView.contentSize.height = self.detailView.originY + self.detailScrollView.height + 10.0
         self.detailScrollView.scrollRectToVisible(CGRectMake(self.detailScrollView.width * indexPage, 0, self.detailScrollView.width, 400), animated: true)
@@ -1081,6 +1156,22 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         if self.scrollView.contentOffset.y >= self.segBG.originY {
             self.scrollView.contentOffset.y = segBG.originY
         }
+    }
+    
+    func resetDetailFrame() {
+        
+        let segItemWidth: CGFloat = (self.view.width-40.0)/3.0
+        
+        var indexPage: CGFloat = 0.0
+        self.detailScrollView.frame = CGRectMake(0, 0, self.view.width - 40.0, self.bottomLineSpot.originY + 60.0)
+        
+        self.detailScrollView.contentSize = CGSizeMake(self.detailScrollView.width*3, self.detailScrollView.height)
+        
+        //        self.detailView.autoSetDimension(.Height, toSize: self.detailScrollView.height)
+        
+        self.scrollView.contentSize.height = self.detailView.originY + self.detailScrollView.height + 10.0
+        self.detailScrollView.scrollRectToVisible(CGRectMake(self.detailScrollView.width * indexPage, 0, self.detailScrollView.width, 400), animated: true)
+        
     }
     
     // MARK: - Member register delegate
@@ -1130,6 +1221,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                     CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
                     
                     
+                    self.updateFoodInfo()
                     
                 }
                 else {
@@ -1141,7 +1233,54 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
             }
         })
         
-        self.getProductDetail()
+        
+    }
+    
+    func updateFoodInfo() {
+        
+        let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+        
+        Alamofire.request(VCheckGo.Router.GetProductDetailWithMember(self.foodInfo.id, memberId)).validate().responseSwiftyJSON({
+            (_, _, JSON, error) -> Void in
+            
+            if error == nil {
+                
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    
+                    let json = JSON
+                    
+                    if json["status"]["succeed"].string! == "1" {
+                        
+                        
+                        // Collection
+                        self.foodInfo.favoriteCount = json["data"]["article_info"]["collection_info"]["collection_count"].string!
+                        self.foodInfo.isCollected = json["data"]["article_info"]["collection_info"]["is_collected"].string!
+                        
+                        self.likeBtn.titleStr.text = "\(self.foodInfo.favoriteCount!)"
+                        if self.foodInfo.isCollected != "0" {
+                            
+                            self.likeBtn.icon.image = UIImage(named: VCAppLetor.IconName.FavoriteRed)
+                        }
+                        else {
+                            self.likeBtn.icon.image = UIImage(named: VCAppLetor.IconName.FavoriteBlack)
+                        }
+                        
+                        self.hud.hide(true)
+                    }
+                    else {
+                        RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                        self.hud.hide(true)
+                    }
+                })
+            }
+            else {
+                
+                println("ERROR @ Request for Product Detail[Refresh] : \(error?.localizedDescription)")
+                RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                self.hud.hide(true)
+            }
+        })
+        
         
     }
     
@@ -1166,7 +1305,6 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                     let nicknameString = json["data"]["member_info"]["member_name"].string!
                     let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
                     
-                    
                     if let member = Member.findFirst(attribute: "mid", value: midString, contextType: BreezeContextType.Main) as? Member {
                         
                         BreezeStore.saveInMain({ (contextType) -> Void in
@@ -1179,16 +1317,6 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                             member.token = token
                             
                         })
-                        
-                        // update local data
-                        self.updateSettings(token, currentMid: mid)
-                        
-                        // setup cache & user panel interface
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
-                        
                     }
                     else { // Member login for the first time without register on the device
                         // Get member info and refresh userinterface
@@ -1205,17 +1333,19 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                             member.token = token
                             
                         })
-                        
-                        // update local data
-                        self.updateSettings(token, currentMid: mid)
-                        
-                        // setup cache & user panel interface
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
-                        
                     }
+                    
+                    // update local data
+                    self.updateSettings(token, currentMid: mid)
+                    
+                    // setup cache & user panel interface
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
+                    
+//                    self.updateFoodInfo()
+                    
                 }
                 else {
                     RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
@@ -1226,9 +1356,6 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
             }
         })
         
-        // ======= BUG TO BE FIX ===========
-        // ======= RE Rendering ======
-        self.getProductDetail()
         
     }
     
@@ -1249,64 +1376,44 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
             
             CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: tokenStr, namespace: "token")
             
-            let t = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
-            
-            println("After Login: token=" + t)
         }
         
         // update local data
         if let isLogin = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameIsLogin, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 isLogin.sid = "\(NSDate())"
                 isLogin.value = "1"
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update isLogin value @ loginWithToken : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: true, namespace: "member")
-                    }
             })
+            
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: true, namespace: "member")
         }
         
         if let cMid = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameCurrentMid, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 cMid.sid = "\(NSDate())"
                 cMid.value = currentMid
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update currentMid value @ loginWithToken : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: currentMid, namespace: "member")
-                    }
             })
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: currentMid, namespace: "member")
         }
         
         if let loginType = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameLoginType, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 loginType.sid = "\(NSDate())"
                 loginType.value = VCAppLetor.LoginType.PhoneReg
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update loginType value @ loginWithToken : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.PhoneReg, namespace: "member")
-                    }
             })
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.PhoneReg, namespace: "member")
         }
     }
     

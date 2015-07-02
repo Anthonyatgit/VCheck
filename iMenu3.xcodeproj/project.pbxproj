@@ -53,6 +53,8 @@
 		927B7C941B2962A700B55DB2 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C931B2962A700B55DB2 /* OpenGLES.framework */; };
 		927B7C961B2962C700B55DB2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C951B2962C700B55DB2 /* CoreGraphics.framework */; };
 		927B7C981B29641100B55DB2 /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 927B7C971B29641100B55DB2 /* mapapi.bundle */; };
+		927E310D1B43E690003455DF /* VCPaySuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927E310C1B43E690003455DF /* VCPaySuccessViewController.swift */; };
+		927E310F1B44C501003455DF /* user_nep.png in Resources */ = {isa = PBXBuildFile; fileRef = 927E310E1B44C501003455DF /* user_nep.png */; };
 		9280E4481B14444B00959798 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9280E4471B14444B00959798 /* Reachability.swift */; };
 		9282050B1AEDE1330067BB92 /* BreezeStore+Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928205021AEDE1330067BB92 /* BreezeStore+Defaults.swift */; };
 		9282050C1AEDE1330067BB92 /* BreezeStore+iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928205031AEDE1330067BB92 /* BreezeStore+iCloud.swift */; };
@@ -118,6 +120,8 @@
 		92D6DBE41B33C4D5003E80AE /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D6DBE31B33C4D5003E80AE /* FavoritesViewController.swift */; };
 		92D6DBE61B33C503003E80AE /* FavoritesViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D6DBE51B33C503003E80AE /* FavoritesViewCell.swift */; };
 		92D6DBE81B33E087003E80AE /* FoodItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D6DBE71B33E087003E80AE /* FoodItem.swift */; };
+		92D6EB2A1B413A69005DF3DB /* AlipaySDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 92D6EB281B413A69005DF3DB /* AlipaySDK.bundle */; };
+		92D6EB2D1B413A8F005DF3DB /* AlipaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92D6EB2C1B413A8F005DF3DB /* AlipaySDK.framework */; };
 		92E3586D1B1D455700D61119 /* brand.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92E3586C1B1D455700D61119 /* brand.jpg */; };
 		92E57FFE1B2A6C4E00E463A3 /* VCCityListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */; };
 		92E580001B2AD09200E463A3 /* BMKObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 92E57FFF1B2AD09200E463A3 /* BMKObject.mm */; };
@@ -242,6 +246,8 @@
 		927B7C931B2962A700B55DB2 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		927B7C951B2962C700B55DB2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		927B7C971B29641100B55DB2 /* mapapi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = mapapi.bundle; path = BMK/BaiduMapAPI.framework/Resources/mapapi.bundle; sourceTree = "<group>"; };
+		927E310C1B43E690003455DF /* VCPaySuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCPaySuccessViewController.swift; path = Classes/VCPaySuccessViewController.swift; sourceTree = "<group>"; };
+		927E310E1B44C501003455DF /* user_nep.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user_nep.png; sourceTree = "<group>"; };
 		9280E4471B14444B00959798 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		928205021AEDE1330067BB92 /* BreezeStore+Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BreezeStore+Defaults.swift"; sourceTree = "<group>"; };
 		928205031AEDE1330067BB92 /* BreezeStore+iCloud.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BreezeStore+iCloud.swift"; sourceTree = "<group>"; };
@@ -309,6 +315,8 @@
 		92D6DBE31B33C4D5003E80AE /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FavoritesViewController.swift; path = Classes/FavoritesViewController.swift; sourceTree = "<group>"; };
 		92D6DBE51B33C503003E80AE /* FavoritesViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FavoritesViewCell.swift; path = Classes/FavoritesViewCell.swift; sourceTree = "<group>"; };
 		92D6DBE71B33E087003E80AE /* FoodItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FoodItem.swift; sourceTree = "<group>"; };
+		92D6EB281B413A69005DF3DB /* AlipaySDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AlipaySDK.bundle; sourceTree = "<group>"; };
+		92D6EB2C1B413A8F005DF3DB /* AlipaySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlipaySDK.framework; path = iMenu3/AliSDK/AlipaySDK.framework; sourceTree = "<group>"; };
 		92E3586C1B1D455700D61119 /* brand.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = brand.jpg; sourceTree = "<group>"; };
 		92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCCityListViewController.swift; path = Classes/VCCityListViewController.swift; sourceTree = "<group>"; };
 		92E57FFF1B2AD09200E463A3 /* BMKObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BMKObject.mm; sourceTree = "<group>"; };
@@ -367,6 +375,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				92D6EB2D1B413A8F005DF3DB /* AlipaySDK.framework in Frameworks */,
 				92A9AD781B3C011B0025D29A /* libxml2.dylib in Frameworks */,
 				92D5C42A1B3076E400DAFB36 /* libsqlite3.dylib in Frameworks */,
 				92D5C4281B30765B00DAFB36 /* libz.dylib in Frameworks */,
@@ -411,6 +420,7 @@
 		05B8E7EB2168B867A50937F6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				92D6EB2C1B413A8F005DF3DB /* AlipaySDK.framework */,
 				92A9AD771B3C011B0025D29A /* libxml2.dylib */,
 				92D5C4291B3076E400DAFB36 /* libsqlite3.dylib */,
 				92D5C4271B30765B00DAFB36 /* libz.dylib */,
@@ -465,6 +475,7 @@
 		9227E2C11AE8DCCC008C6381 /* iMenu3 */ = {
 			isa = PBXGroup;
 			children = (
+				92D6EB271B413A69005DF3DB /* AliSDK */,
 				923C252A1B3F9B630060DBFC /* TYAttributedLabel */,
 				92457CE11B3020E5005B0E33 /* BMK */,
 				92457CDE1B302035005B0E33 /* XGSDK */,
@@ -699,6 +710,7 @@
 				92347F7F1B306AB100DF0A47 /* FoodDetailScrollView.swift */,
 				92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */,
 				9264F8EC1B2597CD00AF8640 /* VCPayNowViewController.swift */,
+				927E310C1B43E690003455DF /* VCPaySuccessViewController.swift */,
 				9284A13E1AF0AF2500E662B2 /* FoodCollectionsViewController.swift */,
 				9284A1401AF0AF5400E662B2 /* FoodCollectionsViewCell.swift */,
 			);
@@ -738,6 +750,14 @@
 				9214D7971B32B1B2007AC818 /* VCShareActionView.swift */,
 			);
 			name = VCCommon;
+			sourceTree = "<group>";
+		};
+		92D6EB271B413A69005DF3DB /* AliSDK */ = {
+			isa = PBXGroup;
+			children = (
+				92D6EB281B413A69005DF3DB /* AlipaySDK.bundle */,
+			);
+			path = AliSDK;
 			sourceTree = "<group>";
 		};
 		92E310271AEDD22E00771CAC /* model */ = {
@@ -850,6 +870,7 @@
 			isa = PBXGroup;
 			children = (
 				92FB21711B31114200877C07 /* bar_black.png */,
+				927E310E1B44C501003455DF /* user_nep.png */,
 			);
 			path = bg;
 			sourceTree = "<group>";
@@ -983,6 +1004,7 @@
 				92ACC2461B2ECEF100C824F2 /* LICENSE in Resources */,
 				9214D79D1B32CE78007AC818 /* wechat_color.png in Resources */,
 				9282050F1AEDE1330067BB92 /* Info.plist in Resources */,
+				927E310F1B44C501003455DF /* user_nep.png in Resources */,
 				9284A1311AF0AECD00E662B2 /* hungry.png in Resources */,
 				9284A1371AF0AECD00E662B2 /* mood5.jpg in Resources */,
 				92CFFB2F1AF8663400C9AA7D /* cards.png in Resources */,
@@ -1021,6 +1043,7 @@
 				9284A13A1AF0AECD00E662B2 /* mood8.jpg in Resources */,
 				9284A13B1AF0AECD00E662B2 /* playful.png in Resources */,
 				9284A1361AF0AECD00E662B2 /* mood4.jpg in Resources */,
+				92D6EB2A1B413A69005DF3DB /* AlipaySDK.bundle in Resources */,
 				92FB21841B31571800877C07 /* bulb_light.png in Resources */,
 				92CFFB341AF8663400C9AA7D /* shopping-bag.png in Resources */,
 				9227E2CF1AE8DCCC008C6381 /* Images.xcassets in Resources */,
@@ -1121,6 +1144,7 @@
 				9284A14B1AF1B98100E662B2 /* VCheckGo.swift in Sources */,
 				9284A13F1AF0AF2500E662B2 /* FoodCollectionsViewController.swift in Sources */,
 				92CFFB381AF8CCB600C9AA7D /* VCMemberLoginViewController.swift in Sources */,
+				927E310D1B43E690003455DF /* VCPaySuccessViewController.swift in Sources */,
 				92868A241B395BD600DB9B91 /* Functions.swift in Sources */,
 				92BD2E141B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m in Sources */,
 				9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */,
@@ -1319,12 +1343,14 @@
 					"$(PROJECT_DIR)/iMenu3/ShareSDK",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/UI",
 					"$(PROJECT_DIR)/iMenu3/BMK",
+					"$(PROJECT_DIR)/iMenu3/AliSDK",
 				);
 				GCC_INPUT_FILETYPE = automatic;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/usr/include/libxml2,
+					"$(SRCROOT)/iMenu3",
 				);
 				INFOPLIST_FILE = iMenu3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1358,12 +1384,14 @@
 					"$(PROJECT_DIR)/iMenu3/ShareSDK",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/UI",
 					"$(PROJECT_DIR)/iMenu3/BMK",
+					"$(PROJECT_DIR)/iMenu3/AliSDK",
 				);
 				GCC_INPUT_FILETYPE = automatic;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					/usr/include/libxml2,
+					"$(SRCROOT)/iMenu3",
 				);
 				INFOPLIST_FILE = iMenu3/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

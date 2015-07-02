@@ -55,19 +55,19 @@ class OrderListViewCell: UITableViewCell {
         self.status.font = VCAppLetor.Font.SmallFont
         self.addSubview(self.status)
         
-        self.title.text = self.orderInfo.title
+        self.title.text = ""
         self.title.textAlignment = .Left
         self.title.textColor = UIColor.blackColor().colorWithAlphaComponent(0.6)
         self.title.font = VCAppLetor.Font.BigFont
         self.addSubview(self.title)
         
-        self.price.text = VCAppLetor.StringLine.PricePU + "\(self.orderInfo.price)"
+        self.price.text = ""
         self.price.textAlignment = .Left
         self.price.textColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.6)
         self.price.font = VCAppLetor.Font.SmallFont
         self.addSubview(self.price)
         
-        self.amount.text = VCAppLetor.StringLine.AmountName + ": \(self.orderInfo.amount)"
+        self.amount.text = ""
         self.amount.textAlignment = .Left
         self.amount.textColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.6)
         self.amount.font = VCAppLetor.Font.SmallFont

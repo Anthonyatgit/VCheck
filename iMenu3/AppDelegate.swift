@@ -333,7 +333,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if url.scheme == "vcheck" {
             
-            println("out call: Scheme:\(url.scheme) : Query:\(url.query)")
+            println("out call: Scheme:\(url.scheme!) | LastPath: \(url.lastPathComponent!) | Query:\(url.query!.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding))")
+            
+            AlipaySDK.defaultService().processOrderWithPaymentResult(url, standbyCallback: {
+                (NSDictionary) -> Void in
+                
+                let dic = NSDictionary
+                
+            })
+            
             return true
         }
         else {
