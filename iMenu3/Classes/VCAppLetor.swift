@@ -115,6 +115,7 @@ struct VCAppLetor {
         static let MobileCannotChange: String = "手机号码绑定后不能修改[联系客服]"
         static let Logout: String = "退出登录"
         static let ServiceTel: String = "7×24客户服务"
+        static let FreeServiceCall: String = "4008 369 917"
         static let FeedBackTitle: String = "反馈意见"
         static let FeedBackPlaceholder: String = "请在这里写下对VCheck的感受，我们将不断进步，为你做的更好~"
         static let ContactInfo: String = "联系方式"
@@ -126,8 +127,9 @@ struct VCAppLetor {
         static let ServiceCityTitle: String = "选择服务的城市"
         static let ServiceCityNote: String = "我们正在努力为更多城市提供服务"
         static let CityName: String = "城市"
-        static let CityXian: String = "西安"
+        static let Locating: String = "定位"
         static let Cancle: String = "取消"
+        static let StoreLocation: String = "商家位置"
         
         static let Weibo: String = "新浪微博"
         static let Wechat: String = "微信好友"
@@ -140,17 +142,21 @@ struct VCAppLetor {
         
         static let MailboxTitle: String = "信息中心"
         static let MailboxEmpty: String = "暂无消息"
+        static let MyMail: String  = "我的消息"
+        static let InviteFriend: String = "邀请好友"
         
         static let OrderTitle: String = "我的订单"
         static let OrderEmpty: String = "你还没有任何订单"
         
         static let FavoritesTitle: String = "我喜欢的礼遇"
         static let FavoritesEmpty: String = "你还没有喜欢的礼遇"
+        static let FavOnSale: String = "售卖中"
+        static let FavOffSale: String = "已结束"
         
         
         static let FoodViewerTitle: String = "礼遇详情"
         static let ShareToGetCoupon: String = "分享获取丰富礼券"
-        static let CheckNow: String = "CHECK NOW"
+        static let CheckNow: String = "立即购买"
         static let SegmentTitles: [AnyObject] = ["亮点","菜单","须知"]
         
         static let CheckNowTitle: String = "填写订单"
@@ -168,8 +174,11 @@ struct VCAppLetor {
         static let LoginNow: String = "立即登录"
         static let OrderPriceName: String = "合计: "
         static let SubmitBtnTitle: String = "提交订单"
-        static let SubmitOrderInProgress: String = "正在提交您的订单.."
-        static let AsyncPaymentInProgress: String = "正在同步交易信息.."
+        static let SubmitOrderInProgress: String = "正在提交您的订单"
+        static let AsyncPaymentInProgress: String = "正在同步交易信息"
+        static let UserCanclePayment: String = "你取消了支付，如你的支付遇到问题请联系客服 [4008 369 917]"
+        static let PaymentNetworkError: String = "支付已取消，你的网络好像不给力，请重新支付"
+        static let PaymentFailed: String = "支付失败，请重新支付你的订单"
         
         static let PayOrderTitle: String = "确认订单"
         static let UseCouponName: String = "使用礼券"
@@ -205,6 +214,15 @@ struct VCAppLetor {
         static let tipsName: String = "温馨提示"
         static let wechatServiceName: String = "• 点击这里联系"
         static let wechatServiceTitle: String = "微信客服 •"
+        
+        static let LocationUserFail: String = "位置信息定位失败，稍后将重新定位"
+        static let YourCityNotInService: String = "您的城市目前还未开通服务"
+    }
+    
+    enum City: String {
+        
+        case Xian = "西安市"
+        case Shanghai = "上海市"
     }
     
     enum FoodInfo {
@@ -268,6 +286,8 @@ struct VCAppLetor {
         static let telBlack: String = "call_black"
         static let moreBlack: String = "more_black"
         static let backBlack: String = "back_black"
+        static let GiftBlack: String = "gift_black"
+        static let SettingsBlack: String = "settings_black"
         
         static let PlaceBlack: String = "place_black"
         static let MemberBlack: String = "member_black"
@@ -288,6 +308,7 @@ struct VCAppLetor {
         static let SMSRemainingSeconds: Int = 5 // 验证码倒计时总秒数
         static let PI: CGFloat = 3.14159265358979323846 // 圆周率
         static let TopAlertStayTime: Int = 3
+        static let TopAlertStayTimeLong: Int = 6
         static let LineGap: CGFloat = 10.0
         static let GrayLineWidth: CGFloat = 0.6
         static let ToplineWithNavBar: CGFloat = 80.0
@@ -297,7 +318,7 @@ struct VCAppLetor {
         static let UserIconCellHeight: CGFloat = 72.0
         static let UserPanelCellHeight: CGFloat = 50.0
         static let UserIconCellHeaderHeight: CGFloat = 20.0
-        static let UserPanelCellHeaderHeight: CGFloat = 1.0
+        static let UserPanelCellHeaderHeight: CGFloat = 5.0
         static let UserPanelCellIconWidth: CGFloat = 24.0
         static let ButtonCornerRadius: CGFloat = 3.0
         static let ButtonBorderWidth: CGFloat = 1.0
@@ -313,10 +334,15 @@ struct VCAppLetor {
         static let IconImageCornerRadius: CGFloat = 3.0
         static let FoodImageHeight: CGFloat = 230.0
         static let FoodItemCellHeight: CGFloat = 320.0
+        static let FavItemCellHeight: CGFloat = 120.0
         
         static let DefaultItemCountPerPage: Int = 5
+        static let DefaultListItemCountPerPage: Int = 10
         static let DefaultDateFormat: String = "yyyy-MM-dd HH:mm:ss"
-        static let DateWithoutTimeFormat: String = "yyyy.MM.dd"
+        static let DateWithoutTimeFormat: String = "yyyy-MM-dd"
+        
+        static let LocationServiceDistanceFilter: Double = 1000.0
+        static let DefaultCityCode: Int = 29
     }
     
     enum ShareSDK {
@@ -352,6 +378,12 @@ struct VCAppLetor {
         
         static let orderSessionMenuIds: String = "OrderSessionMenuIds"
         static let orderSessionOrderObjs: String = "OrderSessionOrderObjs"
+        
+        static let userDefaultPaymentType: String = "DefaultPaymentType"
+        
+        static let optSelectedCity: String = "SelectedCity"
+        static let LocLong: String = "LocLong"
+        static let LocLat: String = "LocLat"
     }
     
     // MARK: - LoginType
@@ -436,17 +468,41 @@ struct VCAppLetor {
         case info = 3
     }
     
-    enum OrderStatus: Int {
+    enum OrderType: Int {
         case waitForPay = 10
-        case done = 20
-        case close = 30
+        case paid = 20
+        case paidWithoutUsed = 21
+        case paidWithUsed = 22
+        case refund = 30
+        case refundInProgress = 31
+        case refunded = 32
+        case expired = 50
+        case waitForPayExpired = 51
+        case paidExpired = 52
+        case deleted = 70
+        case waitForPayDeleted = 71
+        case waitForPayExpiredDeleted = 72
+        case paidWithUsedDeleted = 73
+        case refundedDeleted = 74
         
         var description: String {
             get {
                 switch self {
                 case .waitForPay: return "等待支付"
-                case .done: return "交易完成"
-                case .close: return "交易关闭"
+                case .paid: return "已支付"
+                case .paidWithoutUsed: return "已支付未消费"
+                case .paidWithUsed: return "已支付已消费"
+                case .refund: return "申请退款"
+                case .refundInProgress: return "退款中"
+                case .refunded: return "已退款"
+                case .expired: return "已过期"
+                case .waitForPayExpired: return "待付款过期"
+                case .paidExpired: return "已付款过期"
+                case .deleted: return "已删除"
+                case .waitForPayDeleted: return "待付款删除"
+                case .waitForPayExpiredDeleted: return "待付款过期删除"
+                case .paidWithUsedDeleted: return "已支付已消费删除"
+                case .refundedDeleted: return "已退款删除"
                 default: return "等待状态"
                 }
             }

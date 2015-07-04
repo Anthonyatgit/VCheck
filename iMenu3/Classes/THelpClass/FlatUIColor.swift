@@ -89,6 +89,7 @@ public struct FlatUIColors {
     public static func concreteColor(alpha: CGFloat = 1.0) -> OSColor! { return FlatUIColors.colorFromHexCode(ColorCodes.concrete + alphaHEX(alpha)) }
     public static func asbestosColor(alpha: CGFloat = 1.0) -> OSColor! { return FlatUIColors.colorFromHexCode(ColorCodes.asbestos + alphaHEX(alpha)) }
     public static func exLightGrayColor(alpha: CGFloat = 1.0) -> OSColor! { return FlatUIColors.colorFromHexCode(ColorCodes.exLightGray + alphaHEX(alpha)) }
+    public static func darkBlackColor(alpha: CGFloat = 1.0) -> OSColor! { return FlatUIColors.colorFromHexCode(ColorCodes.darkBlack + alphaHEX(alpha)) }
     
     /**
     Contains hex color code strings for the Flat UI color palette.
@@ -115,6 +116,7 @@ public struct FlatUIColors {
         public static let silver = "BDC3C7"
         public static let concrete = "95A5A6"
         public static let asbestos = "7F8C8D"
+        public static let darkBlack = "333333"
         public static let darkGray = "666666"
         public static let exLightGray = "CCCCCC"
     }
@@ -228,6 +230,9 @@ extension UIColor {
         return FlatUIColors.exLightGrayColor(alpha: alpha)
     }
     
+    class func darkBlack(alpha: CGFloat = 1.0) -> UIColor {
+        return FlatUIColors.darkBlackColor(alpha: alpha)
+    }
 }
 
 

@@ -47,6 +47,8 @@ struct VCheckGo {
         case GetProductList(Int, Int)                                               // 18.产品-获取产品列表
         case GetProductDetail(Int)                                                  // 19.产品-获取产品详细
         case GetProductDetailWithMember(Int, String)                                // 19.产品-获取产品详情[用户模式]
+        case GetOrderList(String, Int, Int, String)                                 // 26.会员-获取订单列表
+        
         case EditCart(String, EditCartType, String, String, String, String)         // 38.订单-编辑购物车信息
         case ClearCart(String, String)                                              // 38.订单-清空购物车信息
         case AddOrder(String, String)                                               // 39.订单-提交订单
@@ -131,6 +133,10 @@ struct VCheckGo {
                 case .GetProductDetailWithMember(let productId, let memberId):
                     let params = ["route":"\(RoutePath.GetProductDetail.rawValue)","token":"","jsonText":"{\"article_id\":\"\(productId)\",\"member_id\":\"\(memberId)\"}"]
                     return ("/\(RoutePath.GetProductDetail.rawValue)", params)
+                //=========GetOrderList==============
+                case .GetOrderList(let memberId, let page, let count, let token):
+                    let params = ["route":"\(RoutePath.GetOrderList.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"pagination\":{\"page\":\"\(page)\",\"count\":\"\(count)\"}}"]
+                    return ("/\(RoutePath.GetOrderList.rawValue)", params)
                 //=========GetMyCollections==========
                 case .GetMyCollections(let memberId, let page, let count, let token):
                     let params = ["route":"\(RoutePath.GetMyCollection.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"pagination\":{\"page\":\"\(page)\",\"count\":\"\(count)\"}}"]
@@ -241,6 +247,8 @@ struct VCheckGo {
         case GetPayData = "sale/order/generatePayData"
         case AsyncPayment = "sale/order/submitPayOrder"
         
+        case GetOrderList = "sale/order/getOrderList"
+        
     }
     
     
@@ -270,6 +278,7 @@ struct VCheckGo {
     }
 }
 
+
 class CityInfo: NSObject {
     
     let city_id: String
@@ -294,17 +303,22 @@ class OrderInfo: NSObject {
     let no: String
     
     // Base
+    var title: String?
+    var pricePU: String?
+    var priceUnit: String?
     var totalPrice: String?
     var originalTotalPrice: String?
-    var createDate: String?
+    var createDate: NSDate?
     var orderType: String?
     var menuId: String?
     var menuTitle: String?
+    var menuUnit: String?
     var itemCount: String?
     var couponInfo: NSMutableArray?
     
     // Extent
-    var status: VCAppLetor.OrderStatus?
+    var status: VCAppLetor.OrderType?
+    var typeDescription: String?
     var orderImageURL: String?
     
     init(id: String, no: String) {
@@ -342,12 +356,15 @@ class FoodInfo: NSObject {
     var favoriteCount: String?
     var isCollected: String?
     
+    // VM
+    var memberIcon: String?
+    
     // STORE
     var storeId: String?
     var storeName: String?
     var address: String?
-    var longitude: String?
-    var latitude: String?
+    var longitude: CLLocationDegrees?
+    var latitude: CLLocationDegrees?
     var tel1: String?
     var tel2: String?
     var acp: String?
@@ -382,7 +399,76 @@ class FoodInfo: NSObject {
         return (self as FoodInfo).id
     }
     
+}
 
+class FavInfo: NSObject {
+    
+    let id: Int
+    
+    var title: String?
+    var addDate: NSDate?
+    
+    // FOOD
+    var desc: String?
+    var subTitle: String?
+    var foodImage: String?
+    var status: String?
+    var originalPrice: String?
+    var price: String?
+    var priceUnit: String?
+    var unit: String?
+    var remainingCount: String?
+    var remainingCountUnit: String?
+    var outOfStock: String?
+    var endDate: String?
+    var remainder: String?
+    var returnable: String?
+    var favoriteCount: String?
+    var isCollected: String?
+    
+    // VM
+    var memberIcon: String?
+    
+    // STORE
+    var storeId: String?
+    var storeName: String?
+    var address: String?
+    var longitude: CLLocationDegrees?
+    var latitude: CLLocationDegrees?
+    var tel1: String?
+    var tel2: String?
+    var acp: String?
+    var icon_thumb: String?
+    var icon_source: String?
+    
+    // MENU
+    var menuId: String?
+    var menuName: String?
+    
+    // CONTENT
+    var contentImages: NSMutableArray?
+    var contentTitles: NSMutableArray?
+    var contentDesc: NSMutableArray?
+    var menuTitles: NSMutableArray?
+    var menuContents: NSMutableArray?
+    var tips: NSMutableArray?
+    var slideImages: NSMutableArray?
+    
+    
+    init(id: Int) {
+        
+        self.id = id
+    }
+    
+    
+    override func isEqual(object: AnyObject?) -> Bool {
+        return (object as! FoodInfo).id == self.id
+    }
+    
+    override var hash: Int {
+        return (self as FavInfo).id
+    }
+    
 }
 
 final class Comment {

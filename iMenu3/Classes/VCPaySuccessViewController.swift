@@ -19,7 +19,7 @@ class VCPaySuccessViewController: VCBaseViewController, UIScrollViewDelegate {
     var orderInfo: OrderInfo!
     
     var parentNav: UINavigationController!
-    var foodDetailVC: FoodViewerViewController!
+    var foodDetailVC: VCBaseViewController!
     
     let scrollView: UIScrollView = UIScrollView()
     
@@ -127,13 +127,13 @@ class VCPaySuccessViewController: VCBaseViewController, UIScrollViewDelegate {
         self.orderNoUnderline.autoSetDimensionsToSize(CGSizeMake(self.view.width - 60.0, 3.0))
         self.orderNoUnderline.autoAlignAxisToSuperviewAxis(.Vertical)
         
-        self.orderInfoButton.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.spiritUnderline)
+        self.orderInfoButton.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.codeName)
         self.orderInfoButton.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.orderNoUnderline, withOffset: 40.0)
-        self.orderInfoButton.autoSetDimensionsToSize(CGSizeMake(self.view.width-60.0/2.0-20.0, 35.0))
+        self.orderInfoButton.autoSetDimensionsToSize(CGSizeMake((self.view.width-60.0)/2.0-20.0, 35.0))
         
         self.returnButton.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.spiritUnderline)
         self.returnButton.autoPinEdge(.Top, toEdge: .Top, ofView: self.orderInfoButton)
-        self.returnButton.autoSetDimensionsToSize(CGSizeMake(self.view.width-60.0/2.0-20.0, 35.0))
+        self.returnButton.autoSetDimensionsToSize(CGSizeMake((self.view.width-60.0)/2.0-20.0, 35.0))
         
         self.end.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.orderInfoButton, withOffset: 30.0)
         self.end.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.spiritUnderline)

@@ -8,20 +8,24 @@
 
 import UIKit
 import PureLayout
+import Alamofire
+import DKChainableAnimationKit
 
 class OrderListViewCell: UITableViewCell {
     
     var orderInfo: OrderInfo!
     
+    var imageCache: NSCache?
+    
     var parentNav: UINavigationController?
     
     let title: UILabel = UILabel.newAutoLayoutView()
-    let status: UILabel = UILabel.newAutoLayoutView()
+    let typeDescription: UILabel = UILabel.newAutoLayoutView()
     let price: UILabel = UILabel.newAutoLayoutView()
     let amount: UILabel = UILabel.newAutoLayoutView()
-    let checkButton: UIButton = UIButton.newAutoLayoutView()
+    let payButton: UIButton = UIButton.newAutoLayoutView()
     
-    let orderImageView: UIImageView = UIImageView.newAutoLayoutView()
+    let foodImageView: UIImageView = UIImageView.newAutoLayoutView()
     
     let cellBottomLine: CustomDrawView = CustomDrawView.newAutoLayoutView()
     
@@ -39,80 +43,86 @@ class OrderListViewCell: UITableViewCell {
     
     func setupViews() {
         
-        self.selectionStyle = UITableViewCellSelectionStyle.Gray
+        self.selectionStyle = UITableViewCellSelectionStyle.None
         self.backgroundColor = UIColor.whiteColor()
         
-        self.status.text = self.orderInfo.status!.description
-        self.status.textAlignment = .Left
+        self.addSubview(self.foodImageView)
         
-        if self.orderInfo.status!.rawValue == VCAppLetor.OrderStatus.waitForPay.rawValue {
-            self.status.textColor = UIColor.orangeColor()
+        let imageURL: String = self.orderInfo.orderImageURL!
+        
+        if let image = self.imageCache!.objectForKey(imageURL) as? UIImage {
+            self.foodImageView.image = image
         }
         else {
-            self.status.textColor = UIColor.lightGrayColor()
+            
+            self.foodImageView.image = nil
+            
+            Alamofire.request(.GET, imageURL).validate(contentType: ["image/*"]).responseImage() {
+                
+                (_, _, image, error) in
+                
+                if error == nil && image != nil {
+                    
+                    let foodImage: UIImage = Toucan.Resize.resizeImage(image!, size: CGSize(width: 120.0, height: 100.0), fitMode: Toucan.Resize.FitMode.Crop)
+                    
+                    self.imageCache!.setObject(foodImage, forKey: imageURL)
+                    
+                    self.foodImageView.image = foodImage
+                }
+            }
         }
         
-        self.status.font = VCAppLetor.Font.SmallFont
-        self.addSubview(self.status)
+        self.setOrderStatus()
         
-        self.title.text = ""
+        if self.orderInfo.status == VCAppLetor.OrderType.waitForPay {
+            
+            self.typeDescription.textColor = UIColor.orangeColor()
+        }
+        else {
+            self.typeDescription.textColor = UIColor.lightGrayColor()
+        }
+        self.typeDescription.text = self.orderInfo.typeDescription!
+        
+        self.typeDescription.textAlignment = .Left
+        self.typeDescription.font = VCAppLetor.Font.SmallFont
+        self.addSubview(self.typeDescription)
+        
+        self.title.text = self.orderInfo.title
         self.title.textAlignment = .Left
         self.title.textColor = UIColor.blackColor().colorWithAlphaComponent(0.6)
         self.title.font = VCAppLetor.Font.BigFont
         self.addSubview(self.title)
         
-        self.price.text = ""
+        self.price.text = VCAppLetor.StringLine.PricePU + round_price(self.orderInfo.pricePU!) + self.orderInfo.priceUnit!
         self.price.textAlignment = .Left
-        self.price.textColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.6)
+        self.price.textColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.8)
         self.price.font = VCAppLetor.Font.SmallFont
+        self.price.sizeToFit()
         self.addSubview(self.price)
         
-        self.amount.text = ""
+        let amountValue = round_price("\((self.orderInfo.totalPrice! as NSString).floatValue / (self.orderInfo.pricePU! as NSString).floatValue)")
+        self.amount.text = "\(VCAppLetor.StringLine.AmountName): \(amountValue)"
         self.amount.textAlignment = .Left
-        self.amount.textColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.6)
+        self.amount.textColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.8)
         self.amount.font = VCAppLetor.Font.SmallFont
+        self.amount.sizeToFit()
         self.addSubview(self.amount)
         
-        if self.orderInfo.status!.rawValue == VCAppLetor.OrderStatus.waitForPay.rawValue {
+        if self.orderInfo.status == VCAppLetor.OrderType.waitForPay {
             
-            self.checkButton.backgroundColor = UIColor.whiteColor()
-            self.checkButton.setTitle(VCAppLetor.StringLine.CheckNow, forState: UIControlState.Normal)
-            self.checkButton.setTitleColor(UIColor.pumpkinColor(), forState: UIControlState.Normal)
-            self.checkButton.layer.borderWidth = 1.0
-            self.checkButton.layer.borderColor = UIColor.pumpkinColor().CGColor
-            self.checkButton.addTarget(self, action: "payNowAction", forControlEvents: UIControlEvents.TouchUpInside)
-            self.addSubview(self.checkButton)
+            self.payButton.backgroundColor = UIColor.whiteColor()
+            self.payButton.setTitle(VCAppLetor.StringLine.PayNow, forState: UIControlState.Normal)
+            self.payButton.setTitleColor(UIColor.pumpkinColor(), forState: UIControlState.Normal)
+            self.payButton.titleLabel?.font = VCAppLetor.Font.SmallFont
+            self.payButton.layer.borderWidth = 1.0
+            self.payButton.layer.borderColor = UIColor.orangeColor().CGColor
+            self.addSubview(self.payButton)
         }
         
         self.cellBottomLine.drawType = "GrayLine"
-        self.cellBottomLine.lineWidth = 1.0
+        self.cellBottomLine.lineWidth = VCAppLetor.ConstValue.GrayLineWidth
         self.addSubview(self.cellBottomLine)
         
-        self.addSubview(self.orderImageView)
-        self.orderImageView.alpha = 0.2
-        
-        let imageURL: String = self.orderInfo.orderImageURL!
-        
-        let progressIndicatorView = UIProgressView(frame: CGRect(x: 10.0, y: 10.0, width: self.width-20.0, height: 4.0))
-        self.orderImageView.kf_setImageWithURL(NSURL(string: imageURL)!, placeholderImage: nil, optionsInfo: nil,
-            progressBlock: { (receivedSize, totalSize) -> () in
-                
-                progressIndicatorView.tintColor = UIColor.nephritisColor()
-                progressIndicatorView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.2)
-                self.addSubview(progressIndicatorView)
-                
-                progressIndicatorView.setProgress(Float(receivedSize) / Float(totalSize), animated: true)
-                
-            },
-            completionHandler: { (image, error, cacheType, imageURL) -> () in
-                
-                let foodImage: UIImage = Toucan.Resize.resizeImage(image!, size: CGSize(width: self.width - 20.0, height: 150.0), fitMode: Toucan.Resize.FitMode.Crop)
-                self.orderImageView.image = foodImage
-                
-                self.orderImageView.animation.makeAlpha(1.0).animate(0.2)
-                
-                progressIndicatorView.removeFromSuperview()
-        })
         
         self.setNeedsUpdateConstraints()
         
@@ -122,43 +132,39 @@ class OrderListViewCell: UITableViewCell {
         
         if !didSetupConstraints {
             
-            self.orderImageView.autoPinEdgeToSuperviewEdge(.Top, withInset: 10.0)
-            self.orderImageView.autoPinEdgeToSuperviewEdge(.Leading, withInset: 10.0)
-            self.orderImageView.autoSetDimensionsToSize(CGSizeMake(120.0, 100.0))
+            self.foodImageView.autoPinEdgeToSuperviewEdge(.Top, withInset: 10.0)
+            self.foodImageView.autoPinEdgeToSuperviewEdge(.Leading, withInset: 10.0)
+            self.foodImageView.autoSetDimensionsToSize(CGSizeMake(120.0, 100.0))
             
-            if self.orderInfo.status?.rawValue == VCAppLetor.OrderStatus.waitForPay.rawValue {
-                
-                self.status.autoPinEdge(.Top, toEdge: .Top, ofView: self.orderImageView)
+            if self.orderInfo.status == VCAppLetor.OrderType.waitForPay {
+                self.typeDescription.autoPinEdge(.Top, toEdge: .Top, ofView: self.foodImageView)
             }
             else {
-                self.status.autoPinEdge(.Top, toEdge: .Top, ofView: self.orderImageView, withOffset: 20.0)
+                self.typeDescription.autoPinEdge(.Top, toEdge: .Top, ofView: self.foodImageView, withOffset: 10.0)
             }
+            self.typeDescription.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.foodImageView, withOffset: 10.0)
+            self.typeDescription.autoSetDimensionsToSize(CGSizeMake(self.width-120-30, 18.0))
             
-            self.status.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.orderImageView, withOffset: 10.0)
-            self.status.autoSetDimensionsToSize(CGSizeMake(self.width/4.0, 20.0))
+            self.title.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.typeDescription)
+            self.title.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.typeDescription, withOffset: 6.0)
+            self.title.autoSetDimensionsToSize(CGSizeMake(self.width-120-30, 20.0))
             
+            self.price.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.typeDescription)
+            self.price.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.title, withOffset: 8.0)
+//            self.price.autoSetDimensionsToSize(CGSizeMake(self.width-120-30, 16.0))
             
-            self.title.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.status)
-            self.title.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.status, withOffset: 10.0)
-            self.title.autoSetDimensionsToSize(CGSizeMake(self.width/2.0, 26.0))
+            self.amount.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.price, withOffset: 8.0)
+            self.amount.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.title, withOffset: 8.0)
             
-            self.price.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.status)
-            self.price.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.title, withOffset: 10.0)
-            self.price.autoSetDimensionsToSize(CGSizeMake(self.width/6.0, 20.0))
-            
-            self.amount.autoPinEdge(.Top, toEdge: .Top, ofView: self.price)
-            self.amount.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.price)
-            self.amount.autoSetDimensionsToSize(CGSizeMake(self.width/6.0, 20.0))
-            
-            if self.orderInfo.status?.rawValue == VCAppLetor.OrderStatus.waitForPay.rawValue {
+            if self.orderInfo.status == VCAppLetor.OrderType.waitForPay {
                 
-                self.checkButton.autoSetDimensionsToSize(CGSizeMake(80.0, 28.0))
-                self.checkButton.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.status)
-                self.checkButton.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.price, withOffset: 10.0)
+                self.payButton.autoSetDimensionsToSize(CGSizeMake(80.0, 26.0))
+                self.payButton.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.typeDescription)
+                self.payButton.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.price, withOffset: 6.0)
             }
             
-            self.cellBottomLine.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.orderImageView)
-            self.cellBottomLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.orderImageView, withOffset: 10.0)
+            self.cellBottomLine.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodImageView)
+            self.cellBottomLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodImageView, withOffset: 10.0)
             self.cellBottomLine.autoSetDimensionsToSize(CGSizeMake(self.width-20.0, 3.0))
             
             didSetupConstraints = true
@@ -180,14 +186,40 @@ class OrderListViewCell: UITableViewCell {
     
     // MARK: - Functions
     
-    // Submit order action
-    func payNowAction() {
+    func setOrderStatus() {
         
-        let paymentVC: VCPayNowViewController = VCPayNowViewController()
-        paymentVC.parentNav = self.parentNav
-        paymentVC.orderInfo = self.orderInfo
-        self.parentNav!.showViewController(paymentVC, sender: self)
+        if self.orderInfo.orderType == "10" {
+            self.orderInfo.status = VCAppLetor.OrderType.waitForPay
+        } else if self.orderInfo.orderType == "20" {
+            self.orderInfo.status = VCAppLetor.OrderType.paid
+        } else if self.orderInfo.orderType == "21" {
+            self.orderInfo.status = VCAppLetor.OrderType.paidWithoutUsed
+        } else if self.orderInfo.orderType == "22" {
+            self.orderInfo.status = VCAppLetor.OrderType.paidWithUsed
+        } else if self.orderInfo.orderType == "30" {
+            self.orderInfo.status = VCAppLetor.OrderType.refund
+        } else if self.orderInfo.orderType == "31" {
+            self.orderInfo.status = VCAppLetor.OrderType.refundInProgress
+        } else if self.orderInfo.orderType == "32" {
+            self.orderInfo.status = VCAppLetor.OrderType.refunded
+        } else if self.orderInfo.orderType == "50" {
+            self.orderInfo.status = VCAppLetor.OrderType.expired
+        } else if self.orderInfo.orderType == "51" {
+            self.orderInfo.status = VCAppLetor.OrderType.waitForPayExpired
+        } else if self.orderInfo.orderType == "52" {
+            self.orderInfo.status = VCAppLetor.OrderType.paidExpired
+        } else if self.orderInfo.orderType == "70" {
+            self.orderInfo.status = VCAppLetor.OrderType.deleted
+        } else if self.orderInfo.orderType == "71" {
+            self.orderInfo.status = VCAppLetor.OrderType.waitForPayDeleted
+        } else if self.orderInfo.orderType == "72" {
+            self.orderInfo.status = VCAppLetor.OrderType.waitForPayExpiredDeleted
+        } else if self.orderInfo.orderType == "73" {
+            self.orderInfo.status = VCAppLetor.OrderType.paidWithUsedDeleted
+        } else if self.orderInfo.orderType == "74" {
+            self.orderInfo.status = VCAppLetor.OrderType.refundedDeleted
+        }
     }
     
-    
 }
+

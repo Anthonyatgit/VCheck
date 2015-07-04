@@ -102,7 +102,7 @@ class FoodListTableViewCell: UITableViewCell {
         self.contentView.addSubview(self.foodDate)
         
         self.foodBrandImageView.backgroundColor = UIColor.whiteColor()
-        let storeImageURL = self.foodInfo.icon_thumb!
+        let storeImageURL = self.foodInfo.memberIcon!
         
         self.contentView.addSubview(self.foodBrandImageView)
         

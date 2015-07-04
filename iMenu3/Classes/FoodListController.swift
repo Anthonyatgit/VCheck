@@ -12,7 +12,7 @@ import Alamofire
 import RKDropdownAlert
 import MBProgressHUD
 
-class FoodListController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, RKDropdownAlertDelegate, UIViewControllerTransitioningDelegate {
+class FoodListController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, RKDropdownAlertDelegate, UIViewControllerTransitioningDelegate, BMKLocationServiceDelegate, BMKGeoCodeSearchDelegate {
     
     var foodListItems: NSMutableArray = NSMutableArray()
     var cityList: NSMutableArray = NSMutableArray()
@@ -34,7 +34,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     var cityListAnimatedView: MGFashionMenuView!
     
     let cityButton: UIButton = UIButton(frame: CGRectMake(0.0, 0.0, 28.0, 28.0))
-    let selectedCityName: UIButton = UIButton(frame: CGRectMake(38.0, 0.0, 32.0, 32.0))
+    let selectedCityName: UIButton = UIButton(frame: CGRectMake(36.0, 0.0, 50.0, 28.0))
     let memberButton: UIButton = UIButton(frame: CGRectMake(6.0, 6.0, 26.0, 26.0))
     
     
@@ -47,6 +47,10 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     var cityNamesView: UIView!
     
     var tapGuesture: UITapGestureRecognizer!
+    
+    var locationService: BMKLocationService!
+    var locationSearcher: BMKGeoCodeSearch!
+    var cityCode: Int = 0
     
     // MARK: - LifetimeCycle
     
@@ -61,7 +65,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         // Prepare for interface
         self.title = VCAppLetor.StringLine.AppName
         
-        let cityView: UIView = UIView(frame: CGRectMake(6.0, 0.0, 74.0, 32.0))
+        let cityView: UIView = UIView(frame: CGRectMake(6.0, 0.0, 86.0, 32.0))
         cityView.backgroundColor = UIColor.clearColor()
         
         self.cityButton.setImage(UIImage(named: VCAppLetor.IconName.moreBlack)?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
@@ -70,7 +74,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         self.cityButton.addTarget(self, action: "willSwitchCity", forControlEvents: .TouchUpInside)
         cityView.addSubview(self.cityButton)
         
-        self.selectedCityName.setTitle(VCAppLetor.StringLine.CityXian, forState: .Normal)
+        self.selectedCityName.setTitle(VCAppLetor.StringLine.Locating, forState: .Normal)
         self.selectedCityName.titleLabel?.font = VCAppLetor.Font.BigFont
         self.selectedCityName.titleLabel?.textAlignment = .Left
         self.selectedCityName.titleLabel?.textColor = UIColor.whiteColor()
@@ -119,14 +123,18 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         // Init App Info -
         // Loading foodlist & init member info
+        self.getSavedCity()
         self.setupCityView()
         self.initAppInfo()
         
         self.initMemberStatus()
         
+        self.startLocationService()
+        
         self.view.setNeedsUpdateConstraints()
         
     }
+    
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -258,15 +266,16 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                                 product.unit = item["menu_info"]["menu_unit"]["menu_unit"].string!
                                 product.remainingCount = item["menu_info"]["stock"]["menu_count"].string!
                                 product.remainingCountUnit = item["menu_info"]["stock"]["menu_unit"].string!
+                                product.remainder = item["menu_info"]["remainder_time"].string!
                                 product.endDate = item["menu_info"]["end_date"].string!
                                 product.returnable = "1"
-                                product.favoriteCount = "17"
+                                product.memberIcon = item["member_info"]["icon_image"]["thumb"].string!
                                 
                                 product.storeId = item["store_info"]["store_id"].string!
                                 product.storeName = item["store_info"]["store_name"].string!
                                 product.address = item["store_info"]["address"].string!
-                                product.longitude = item["store_info"]["longitude_num"].string!
-                                product.latitude = item["store_info"]["latitude_num"].string!
+                                product.longitude = (item["store_info"]["longitude_num"].string! as NSString).doubleValue
+                                product.latitude = (item["store_info"]["latitude_num"].string! as NSString).doubleValue
                                 product.tel1 = item["store_info"]["tel_1"].string!
                                 product.tel2 = item["store_info"]["tel_2"].string!
                                 product.acp = item["store_info"]["per"].string!
@@ -308,23 +317,125 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         }
     }
     
+    // MARK: - Location Service & BMKLocationService Delegate
+    
+    func startLocationService() {
+        
+        BMKLocationService.setLocationDesiredAccuracy(kCLLocationAccuracyBest)
+        BMKLocationService.setLocationDistanceFilter(VCAppLetor.ConstValue.LocationServiceDistanceFilter)
+        
+        self.locationService = BMKLocationService()
+        self.locationService.delegate = self
+        
+        self.locationService.startUserLocationService()
+    }
+    
+    func didUpdateUserHeading(userLocation: BMKUserLocation!) {
+//        println("[LOCATION]: Heading - \(userLocation.heading)")
+    }
+    
+    func didUpdateBMKUserLocation(userLocation: BMKUserLocation!) {
+        
+        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.LocLong, data: userLocation.location.coordinate.longitude, namespace: "location")
+        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.LocLat, data: userLocation.location.coordinate.latitude, namespace: "location")
+        
+        self.locationSearcher = BMKGeoCodeSearch()
+        self.locationSearcher.delegate = self
+        
+        let pt: CLLocationCoordinate2D = CLLocationCoordinate2DMake(userLocation.location.coordinate.latitude, userLocation.location.coordinate.longitude)
+        let reverseGeoCodeSearchOption: BMKReverseGeoCodeOption = BMKReverseGeoCodeOption()
+        reverseGeoCodeSearchOption.reverseGeoPoint = pt
+        
+        self.locationSearcher.reverseGeoCode(reverseGeoCodeSearchOption)
+        
+    }
+    
+    func didFailToLocateUserWithError(error: NSError!) {
+        
+        RKDropdownAlert.title(VCAppLetor.StringLine.LocationUserFail, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+    }
+    
+    func onGetReverseGeoCodeResult(searcher: BMKGeoCodeSearch!, result: BMKReverseGeoCodeResult!, errorCode error: BMKSearchErrorCode) {
+        
+        if error.value == BMK_SEARCH_NO_ERROR.value {
+            
+            self.selectedCityName.setTitle(result.addressDetail.city!.stringByReplacingOccurrencesOfString("市", withString: ""), forState: .Normal)
+            
+            if result.addressDetail.city! == VCAppLetor.City.Xian.rawValue {
+                
+                // Load food available in Xi'an
+                self.cityCode = 29
+            }
+            else {
+                self.cityCode = 9999
+            }
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optSelectedCity, data: self.cityCode, namespace: "location")
+            
+            if let selectedCity = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optSelectedCity, contextType: BreezeContextType.Main) as? Settings { // Get current app version
+                
+                BreezeStore.saveInMain({ (contextType) -> Void in
+                    
+                    selectedCity.value = "\(self.cityCode)"
+                })
+            }
+            else { // App version DO NOT exist, create one with version "1.0"
+                
+                BreezeStore.saveInMain({ contextType -> Void in
+                    
+                    let versionToBeCreate: Settings = Settings.createInContextOfType(contextType) as! Settings
+                    
+                    versionToBeCreate.sid = "\(NSDate())"
+                    versionToBeCreate.name = VCAppLetor.SettingName.optSelectedCity
+                    versionToBeCreate.value = "\(self.cityCode)"
+                    versionToBeCreate.type = VCAppLetor.SettingType.AppConfig
+                    versionToBeCreate.data = ""
+                    
+                })
+            }
+            
+        }
+        else {
+            RKDropdownAlert.title(VCAppLetor.StringLine.LocationUserFail, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+        }
+    }
+    
+    
     
     // MARK: - Functions
+    
+    func getSavedCity() {
+        
+        if let selectedCity = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optSelectedCity, contextType: BreezeContextType.Main) as? Settings { // Get current app version
+            
+            if selectedCity.value != "29" {
+                RKDropdownAlert.title(VCAppLetor.StringLine.YourCityNotInService, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            }
+            
+            self.cityCode = VCAppLetor.ConstValue.DefaultCityCode
+        }
+        else {
+            self.cityCode = VCAppLetor.ConstValue.DefaultCityCode
+        }
+    }
     
     func setupCityView() {
         
         // Setup city list views
         self.cityListView = UIView(frame: CGRectMake(0, 64, self.view.width, self.view.height-64))
         self.cityListView.tag = 1
-        self.cityListView.backgroundColor = UIColor.darkGrayColor()
+        self.cityListView.backgroundColor = UIColor.darkBlack()
         
+        let bgImageView: UIImageView = UIImageView(frame: CGRectMake(0, 0, self.view.width, self.view.height-64))
+        bgImageView.image = UIImage(named: "user_nep.jpg")
+        self.cityListView.addSubview(bgImageView)
         
         self.tapGuesture = UITapGestureRecognizer(target: self, action: "cityViewDidTap:")
         self.tapGuesture.numberOfTapsRequired = 1
         self.tapGuesture.numberOfTouchesRequired = 1
         
         self.cityListView.addGestureRecognizer(self.tapGuesture)
-        self.cityListAnimatedView = MGFashionMenuView(menuView: self.cityListView, animationType: MGAnimationType.Wave)
+        self.cityListAnimatedView = MGFashionMenuView(menuView: self.cityListView, animationType: MGAnimationType.SoftBounce)
         
         self.view.addSubview(self.cityListAnimatedView)
     }
@@ -410,17 +521,16 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             self.showInternetUnreachable()
         }
         
-        
     }
     
     func loadFoodList() {
         
-        self.foodListItems.removeAllObjects()
+        // Copy to ensure the foodlist lost
+        let foodListCopy: NSMutableArray = NSMutableArray(array: self.foodListItems)
         
         // Request for product list
-        let regionId: Int = 29
         
-        Alamofire.request(VCheckGo.Router.GetProductList(regionId, self.currentPage)).validate().responseSwiftyJSON ({
+        Alamofire.request(VCheckGo.Router.GetProductList(self.cityCode, self.currentPage)).validate().responseSwiftyJSON ({
             (_, _, JSON, error) -> Void in
             
             if error == nil {
@@ -429,63 +539,79 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 
                 if json["status"]["succeed"].string! == "1" {
                     
-                    // Deal with paging
-                    if json["paginated"]["more"].string! == "1" {
-                        self.haveMore = true
-                    }
-                    else {
-                        self.haveMore = false
-                    }
                     
-                    // Deal with the current page listing
-                    
-                    let productList: Array = json["data"]["article_list"].arrayValue
-                    
-                    for item in productList {
-                        
-                        let product: FoodInfo = FoodInfo(id: (item["article_id"].string! as NSString).integerValue)
-                        
-                        product.title = item["title"].string!
-                        
-                        var dateFormatter = NSDateFormatter()
-                        dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
-                        product.addDate = dateFormatter.dateFromString(item["article_date"].string!)!
-                        
-                        product.desc = item["summary"].string!
-                        product.subTitle = item["sub_title"].string!
-                        product.foodImage = item["article_image"]["source"].string!
-                        product.status = item["menu_info"]["menu_status"]["menu_status_id"].string!
-                        product.originalPrice = item["menu_info"]["price"]["original_price"].string!
-                        product.price = item["menu_info"]["price"]["special_price"].string!
-                        product.priceUnit = item["menu_info"]["price"]["price_unit"].string!
-                        product.unit = item["menu_info"]["menu_unit"]["menu_unit"].string!
-                        product.remainingCount = item["menu_info"]["stock"]["menu_count"].string!
-                        product.remainingCountUnit = item["menu_info"]["stock"]["menu_unit"].string!
-                        product.outOfStock = item["menu_info"]["stock"]["out_of_stock_info"].string!
-                        product.endDate = item["menu_info"]["end_date"].string!
-                        product.returnable = "1"
-                        
-                        product.menuId = item["menu_info"]["menu_id"].string!
-                        product.menuName = item["menu_info"]["menu_name"].string!
-                        
-                        product.storeId = item["store_info"]["store_id"].string!
-                        product.storeName = item["store_info"]["store_name"].string!
-                        product.address = item["store_info"]["address"].string!
-                        product.longitude = item["store_info"]["longitude_num"].string!
-                        product.latitude = item["store_info"]["latitude_num"].string!
-                        product.tel1 = item["store_info"]["tel_1"].string!
-                        product.tel2 = item["store_info"]["tel_2"].string!
-                        product.acp = item["store_info"]["per"].string!
-                        product.icon_thumb = item["store_info"]["icon_image"]["thumb"].string!
-                        product.icon_source = item["store_info"]["icon_image"]["source"].string!
-                        
-                        
-                        
-                        
-                        self.foodListItems.addObject(product)
-                    }
                     
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        
+                        // Available City?
+                        if json["paginated"]["total"].string! == "0" {
+                            
+                            RKDropdownAlert.title(VCAppLetor.StringLine.YourCityNotInService, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                            self.hud.hide(true)
+                            self.tableView.stopRefreshAnimation()
+                            return
+                        }
+                        
+                        // Deal with paging
+                        if json["paginated"]["more"].string! == "1" {
+                            self.haveMore = true
+                        }
+                        else {
+                            self.haveMore = false
+                        }
+                        
+                        // Deal with the current page listing
+                        
+                        self.foodListItems.removeAllObjects()
+                        let productList: Array = json["data"]["article_list"].arrayValue
+                        
+                        for item in productList {
+                            
+                            let product: FoodInfo = FoodInfo(id: (item["article_id"].string! as NSString).integerValue)
+                            
+                            product.title = item["title"].string!
+                            
+                            var dateFormatter = NSDateFormatter()
+                            dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                            product.addDate = dateFormatter.dateFromString(item["article_date"].string!)!
+                            
+                            product.desc = item["summary"].string!
+                            product.subTitle = item["sub_title"].string!
+                            product.foodImage = item["article_image"]["source"].string!
+                            product.status = item["menu_info"]["menu_status"]["menu_status_id"].string!
+                            product.originalPrice = item["menu_info"]["price"]["original_price"].string!
+                            product.price = item["menu_info"]["price"]["special_price"].string!
+                            product.priceUnit = item["menu_info"]["price"]["price_unit"].string!
+                            product.unit = item["menu_info"]["menu_unit"]["menu_unit"].string!
+                            product.remainingCount = item["menu_info"]["stock"]["menu_count"].string!
+                            product.remainingCountUnit = item["menu_info"]["stock"]["menu_unit"].string!
+                            product.remainder = item["menu_info"]["remainder_time"].string!
+                            product.outOfStock = item["menu_info"]["stock"]["out_of_stock_info"].string!
+                            product.endDate = item["menu_info"]["end_date"].string!
+                            product.returnable = "1"
+                            
+                            product.memberIcon = item["member_info"]["icon_image"]["thumb"].string!
+                            
+                            product.menuId = item["menu_info"]["menu_id"].string!
+                            product.menuName = item["menu_info"]["menu_name"].string!
+                            
+                            product.storeId = item["store_info"]["store_id"].string!
+                            product.storeName = item["store_info"]["store_name"].string!
+                            product.address = item["store_info"]["address"].string!
+                            product.longitude = (item["store_info"]["longitude_num"].string! as NSString).doubleValue
+                            product.latitude = (item["store_info"]["latitude_num"].string! as NSString).doubleValue
+                            product.tel1 = item["store_info"]["tel_1"].string!
+                            product.tel2 = item["store_info"]["tel_2"].string!
+                            product.acp = item["store_info"]["per"].string!
+                            product.icon_thumb = item["store_info"]["icon_image"]["thumb"].string!
+                            product.icon_source = item["store_info"]["icon_image"]["source"].string!
+                            
+                            
+                            self.foodListItems.addObject(product)
+                        }
+                        
+                        
+                        
                         self.getCityList()
                     })
                     
@@ -494,10 +620,17 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                     RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                     self.hud.hide(true)
                     self.tableView.stopRefreshAnimation()
+                    
+                    
+                    // Restore FoodList
+                    self.foodListItems = foodListCopy
                 }
             }
             else {
                 println("ERROR @ Get Product List Request: \(error?.localizedDescription)")
+                
+                // Restore FoodList
+                self.foodListItems = foodListCopy
                 
                 // Restore interface
                 self.hud.hide(true)
@@ -611,14 +744,12 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                     
                     self.cityListView.addSubview(self.cityNamesView)
                     
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        
-                        self.isLoadingFood = false
-                        
-                        self.hud.hide(true)
-                        self.tableView.stopRefreshAnimation()
-                        self.tableView.reloadData()
-                    })
+                    self.isLoadingFood = false
+                    
+                    self.hud.hide(true)
+                    self.tableView.stopRefreshAnimation()
+                    
+                    self.tableView.reloadData()
                     
                 }
                 else {

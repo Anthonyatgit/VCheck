@@ -16,6 +16,7 @@
 		9214D79C1B32CE78007AC818 /* friends_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D7991B32CE78007AC818 /* friends_color.png */; };
 		9214D79D1B32CE78007AC818 /* wechat_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D79A1B32CE78007AC818 /* wechat_color.png */; };
 		9214D79E1B32CE78007AC818 /* weibo_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D79B1B32CE78007AC818 /* weibo_color.png */; };
+		922248A51B4628B200553BFA /* VCMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922248A41B4628B200553BFA /* VCMapViewController.swift */; };
 		9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */; };
 		922412951B200D560049A9B5 /* SMSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412931B200D560049A9B5 /* SMSegment.swift */; };
 		922412961B200D560049A9B5 /* SMSegmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412941B200D560049A9B5 /* SMSegmentView.swift */; };
@@ -54,7 +55,7 @@
 		927B7C961B2962C700B55DB2 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C951B2962C700B55DB2 /* CoreGraphics.framework */; };
 		927B7C981B29641100B55DB2 /* mapapi.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 927B7C971B29641100B55DB2 /* mapapi.bundle */; };
 		927E310D1B43E690003455DF /* VCPaySuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927E310C1B43E690003455DF /* VCPaySuccessViewController.swift */; };
-		927E310F1B44C501003455DF /* user_nep.png in Resources */ = {isa = PBXBuildFile; fileRef = 927E310E1B44C501003455DF /* user_nep.png */; };
+		927E31111B453472003455DF /* user_nep.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 927E31101B453472003455DF /* user_nep.jpg */; };
 		9280E4481B14444B00959798 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9280E4471B14444B00959798 /* Reachability.swift */; };
 		9282050B1AEDE1330067BB92 /* BreezeStore+Defaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928205021AEDE1330067BB92 /* BreezeStore+Defaults.swift */; };
 		9282050C1AEDE1330067BB92 /* BreezeStore+iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928205031AEDE1330067BB92 /* BreezeStore+iCloud.swift */; };
@@ -192,6 +193,7 @@
 		9214D7991B32CE78007AC818 /* friends_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends_color.png; sourceTree = "<group>"; };
 		9214D79A1B32CE78007AC818 /* wechat_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wechat_color.png; sourceTree = "<group>"; };
 		9214D79B1B32CE78007AC818 /* weibo_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = weibo_color.png; sourceTree = "<group>"; };
+		922248A41B4628B200553BFA /* VCMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCMapViewController.swift; path = Classes/VCMapViewController.swift; sourceTree = "<group>"; };
 		9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCBaseViewController.swift; path = Classes/VCBaseViewController.swift; sourceTree = "<group>"; };
 		922412931B200D560049A9B5 /* SMSegment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSegment.swift; sourceTree = "<group>"; };
 		922412941B200D560049A9B5 /* SMSegmentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSegmentView.swift; sourceTree = "<group>"; };
@@ -247,7 +249,7 @@
 		927B7C951B2962C700B55DB2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		927B7C971B29641100B55DB2 /* mapapi.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = mapapi.bundle; path = BMK/BaiduMapAPI.framework/Resources/mapapi.bundle; sourceTree = "<group>"; };
 		927E310C1B43E690003455DF /* VCPaySuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCPaySuccessViewController.swift; path = Classes/VCPaySuccessViewController.swift; sourceTree = "<group>"; };
-		927E310E1B44C501003455DF /* user_nep.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user_nep.png; sourceTree = "<group>"; };
+		927E31101B453472003455DF /* user_nep.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = user_nep.jpg; sourceTree = "<group>"; };
 		9280E4471B14444B00959798 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		928205021AEDE1330067BB92 /* BreezeStore+Defaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BreezeStore+Defaults.swift"; sourceTree = "<group>"; };
 		928205031AEDE1330067BB92 /* BreezeStore+iCloud.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "BreezeStore+iCloud.swift"; sourceTree = "<group>"; };
@@ -708,6 +710,7 @@
 				9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */,
 				928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */,
 				92347F7F1B306AB100DF0A47 /* FoodDetailScrollView.swift */,
+				922248A41B4628B200553BFA /* VCMapViewController.swift */,
 				92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */,
 				9264F8EC1B2597CD00AF8640 /* VCPayNowViewController.swift */,
 				927E310C1B43E690003455DF /* VCPaySuccessViewController.swift */,
@@ -870,7 +873,7 @@
 			isa = PBXGroup;
 			children = (
 				92FB21711B31114200877C07 /* bar_black.png */,
-				927E310E1B44C501003455DF /* user_nep.png */,
+				927E31101B453472003455DF /* user_nep.jpg */,
 			);
 			path = bg;
 			sourceTree = "<group>";
@@ -1004,7 +1007,6 @@
 				92ACC2461B2ECEF100C824F2 /* LICENSE in Resources */,
 				9214D79D1B32CE78007AC818 /* wechat_color.png in Resources */,
 				9282050F1AEDE1330067BB92 /* Info.plist in Resources */,
-				927E310F1B44C501003455DF /* user_nep.png in Resources */,
 				9284A1311AF0AECD00E662B2 /* hungry.png in Resources */,
 				9284A1371AF0AECD00E662B2 /* mood5.jpg in Resources */,
 				92CFFB2F1AF8663400C9AA7D /* cards.png in Resources */,
@@ -1043,6 +1045,7 @@
 				9284A13A1AF0AECD00E662B2 /* mood8.jpg in Resources */,
 				9284A13B1AF0AECD00E662B2 /* playful.png in Resources */,
 				9284A1361AF0AECD00E662B2 /* mood4.jpg in Resources */,
+				927E31111B453472003455DF /* user_nep.jpg in Resources */,
 				92D6EB2A1B413A69005DF3DB /* AlipaySDK.bundle in Resources */,
 				92FB21841B31571800877C07 /* bulb_light.png in Resources */,
 				92CFFB341AF8663400C9AA7D /* shopping-bag.png in Resources */,
@@ -1139,6 +1142,7 @@
 				928633751B0AE43B0040CBA2 /* UserPanelViewController.swift in Sources */,
 				923C253D1B3F9B630060DBFC /* NSMutableAttributedString+TY.m in Sources */,
 				92B0F0ED1B12FF2E009F368B /* StringExt.swift in Sources */,
+				922248A51B4628B200553BFA /* VCMapViewController.swift in Sources */,
 				922412951B200D560049A9B5 /* SMSegment.swift in Sources */,
 				9227E2EE1AE8E4AE008C6381 /* FoodListTableViewCell.swift in Sources */,
 				9284A14B1AF1B98100E662B2 /* VCheckGo.swift in Sources */,
@@ -1353,6 +1357,7 @@
 					"$(SRCROOT)/iMenu3",
 				);
 				INFOPLIST_FILE = iMenu3/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1363,7 +1368,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -D DEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "52cd0ccf-7925-4889-998e-10e63b37f22e";
+				PROVISIONING_PROFILE = "879e650a-352f-4c43-a22a-c7262818bd66";
 				SWIFT_OBJC_BRIDGING_HEADER = "iMenu3/iMenu3-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1394,6 +1399,7 @@
 					"$(SRCROOT)/iMenu3",
 				);
 				INFOPLIST_FILE = iMenu3/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1403,7 +1409,7 @@
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "52cd0ccf-7925-4889-998e-10e63b37f22e";
+				PROVISIONING_PROFILE = "879e650a-352f-4c43-a22a-c7262818bd66";
 				SWIFT_OBJC_BRIDGING_HEADER = "iMenu3/iMenu3-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				TARGETED_DEVICE_FAMILY = 1;

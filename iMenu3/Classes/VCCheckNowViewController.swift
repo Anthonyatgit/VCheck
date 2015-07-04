@@ -22,7 +22,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     var foodInfo: FoodInfo!
     
     var parentNav: UINavigationController!
-    var foodDetailVC: FoodViewerViewController!
+    var foodDetailVC: VCBaseViewController!
     
     let scrollView: UIScrollView = UIScrollView()
     
@@ -212,7 +212,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         
         self.totalPriceValue.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         self.totalPriceValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.totalPriceName)
-        self.totalPriceValue.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
+//        self.totalPriceValue.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
         
         self.totalPriceUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
         self.totalPriceUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
@@ -426,6 +426,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.totalPriceValue.textAlignment = .Left
         self.totalPriceValue.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.totalPriceValue.font = VCAppLetor.Font.NormalFont
+        self.totalPriceValue.sizeToFit()
         self.scrollView.addSubview(self.totalPriceValue)
         
         self.totalPriceUnderline.drawType = "GrayLine"
@@ -859,13 +860,23 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                                 let orderNo = json["data"]["order_info"]["order_no"].string!
                                 let newOrder: OrderInfo = OrderInfo(id: orderId, no: orderNo)
                                 
-                                newOrder.createDate = json["data"]["order_info"]["create_date"].string!
-                                newOrder.orderType = json["data"]["order_info"]["order_type"].string!
+                                newOrder.title = json["data"]["order_info"]["menu_info"]["menu_name"].string!
+                                newOrder.pricePU = json["data"]["order_info"]["menu_info"]["price"]["special_price"].string!
+                                newOrder.priceUnit = json["data"]["order_info"]["menu_info"]["price"]["price_unit"].string!
+                                
+                                var dateFormatter = NSDateFormatter()
+                                dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                                newOrder.createDate = dateFormatter.dateFromString(json["data"]["order_info"]["create_date"].string!)
+                                
                                 newOrder.totalPrice = json["data"]["order_info"]["total_price"]["special_price"].string!
                                 newOrder.originalTotalPrice = json["data"]["order_info"]["total_price"]["original_price"].string!
                                 newOrder.menuId = json["data"]["order_info"]["menu_info"]["menu_id"].string!
                                 newOrder.menuTitle = json["data"]["order_info"]["menu_info"]["menu_name"].string!
+                                newOrder.menuUnit = json["data"]["order_info"]["menu_info"]["menu_unit"]["menu_unit"].string!
                                 newOrder.itemCount = json["data"]["order_info"]["menu_info"]["count"].string!
+                                
+                                newOrder.orderType = json["data"]["order_info"]["order_type"].string!
+                                newOrder.typeDescription = json["data"]["order_info"]["order_type_description"].string!
                                 
                                 
                                 // Cache member order session, CAN NOT submit order with same menu until the order session complete (Deleted OR Paid)
@@ -900,15 +911,12 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                                 }
                                 
                                 
-                                
-                                
                                 self.hud.hide(true)
                                 
                                 // Transfer to payment page
                                 let paymentVC: VCPayNowViewController = VCPayNowViewController()
                                 paymentVC.parentNav = self.parentNav
                                 paymentVC.foodDetailVC = self.foodDetailVC
-                                paymentVC.foodInfo = self.foodInfo!
                                 paymentVC.orderInfo = newOrder
                                 self.parentNav.showViewController(paymentVC, sender: self)
                                 
@@ -1012,13 +1020,6 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                     let nicknameString = json["data"]["member_info"]["member_name"].string!
                     let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
                     
-                    // Listing Info
-                    //                    let orderCount = json["data"]["order_info"]["order_total_count"].string!
-                    // Collection Info
-                    //                    let collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
-                    // Coupon Info
-                    //                    let couponCount = json["data"]["coupon_info"]["coupon_total_count"].string!
-                    
                     // Get member info and refresh userinterface
                     BreezeStore.saveInMain({ (contextType) -> Void in
                         
@@ -1055,8 +1056,6 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                 println("ERROR @ Request for member info : \(error?.localizedDescription)")
             }
         })
-        
-        
     }
     
     
@@ -1080,13 +1079,6 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                     let nicknameString = json["data"]["member_info"]["member_name"].string!
                     let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
                     
-                    // Listing Info
-                    //                    let orderCount = json["data"]["order_info"]["order_total_count"].string!
-                    // Collection Info
-                    //                    let collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
-                    // Coupon Info
-                    //                    let couponCount = json["data"]["coupon_info"]["coupon_total_count"].string!
-                    
                     if let member = Member.findFirst(attribute: "mid", value: midString, contextType: BreezeContextType.Main) as? Member {
                         
                         BreezeStore.saveInMain({ (contextType) -> Void in
@@ -1099,17 +1091,6 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                             member.token = token
                             
                         })
-                        
-                        // update local data
-                        self.updateSettings(token, currentMid: mid)
-                        
-                        // setup cache & user panel interface
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
-                        
-                        self.resetOrderPageLayout()
                         
                     }
                     else { // Member login for the first time without register on the device
@@ -1127,18 +1108,18 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                             member.token = token
                             
                         })
-                        
-                        // update local data
-                        self.updateSettings(token, currentMid: mid)
-                        
-                        // setup cache & user panel interface
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
-                        
-                        self.resetOrderPageLayout()
                     }
+                    
+                    // update local data
+                    self.updateSettings(token, currentMid: mid)
+                    
+                    // setup cache & user panel interface
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
+                    
+                    self.resetOrderPageLayout()
                 }
                 else {
                     RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)

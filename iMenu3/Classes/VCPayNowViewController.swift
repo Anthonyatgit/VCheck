@@ -15,7 +15,6 @@ import MBProgressHUD
 
 class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDropdownAlertDelegate {
     
-    var foodInfo: FoodInfo!
     
     var orderInfo: OrderInfo!
     
@@ -32,7 +31,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
     }
     
     var parentNav: UINavigationController!
-    var foodDetailVC: FoodViewerViewController!
+    var foodDetailVC: VCBaseViewController!
     
     let scrollView: UIScrollView = UIScrollView()
     
@@ -338,7 +337,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.topTip.backgroundColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.2)
         self.scrollView.addSubview(self.topTip)
         
-        self.foodTitle.text = self.foodInfo.menuName!
+        self.foodTitle.text = self.orderInfo.title!
         self.foodTitle.font = VCAppLetor.Font.XLarge
         self.foodTitle.textAlignment = .Left
         self.foodTitle.textColor = UIColor.blackColor()
@@ -353,14 +352,14 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.priceName.font = VCAppLetor.Font.NormalFont
         self.scrollView.addSubview(self.priceName)
         
-        self.priceValue.text = round_price(self.foodInfo.price!)
+        self.priceValue.text = round_price(self.orderInfo.pricePU!)
         self.priceValue.textAlignment = .Right
         self.priceValue.textColor = VCAppLetor.Colors.Label
         self.priceValue.font = VCAppLetor.Font.NormalFont
         self.priceValue.sizeToFit()
         self.scrollView.addSubview(self.priceValue)
         
-        self.priceUnit.text = "\(self.foodInfo.priceUnit!)/\(self.foodInfo.unit!)"
+        self.priceUnit.text = "\(self.orderInfo.priceUnit!)/\(self.orderInfo.menuUnit!)"
         self.priceUnit.textAlignment = .Right
         self.priceUnit.textColor = VCAppLetor.Colors.Label
         self.priceUnit.font = VCAppLetor.Font.NormalFont
@@ -394,7 +393,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.totalPriceName.font = VCAppLetor.Font.NormalFont
         self.scrollView.addSubview(self.totalPriceName)
         
-        self.totalPriceValue.text = round_price(self.orderInfo.totalPrice!) + self.foodInfo.priceUnit!
+        self.totalPriceValue.text = round_price(self.orderInfo.totalPrice!) + self.orderInfo.priceUnit!
         self.totalPriceValue.textAlignment = .Right
         self.totalPriceValue.textColor = UIColor.orangeColor()
         self.totalPriceValue.font = VCAppLetor.Font.NormalFont
@@ -437,7 +436,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.finalTotalName.font = VCAppLetor.Font.NormalFont
         self.scrollView.addSubview(self.finalTotalName)
         
-        self.finalTotalValue.text = round_price(self.orderInfo.totalPrice!) + self.foodInfo.priceUnit!
+        self.finalTotalValue.text = round_price(self.orderInfo.totalPrice!) + self.orderInfo.priceUnit!
         self.finalTotalValue.textAlignment = .Right
         self.finalTotalValue.textColor = UIColor.orangeColor()
         self.finalTotalValue.font = VCAppLetor.Font.NormalFont
@@ -542,7 +541,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.payBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         self.payBtn.layer.borderWidth = 1.0
         self.payBtn.layer.borderColor = UIColor.whiteColor().CGColor
-        self.payBtn.addTarget(self, action: "showSuc", forControlEvents: UIControlEvents.TouchUpInside)
+        self.payBtn.addTarget(self, action: "payNowAction", forControlEvents: UIControlEvents.TouchUpInside)
         self.payBarView.addSubview(self.payBtn)
         
         self.orderPriceName.text = VCAppLetor.StringLine.FinalOrderTotal
@@ -552,7 +551,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.orderPriceName.sizeToFit()
         self.payBarView.addSubview(self.orderPriceName)
         
-        self.orderPriceValue.text = round_price(self.orderInfo.totalPrice!) + self.foodInfo.priceUnit!
+        self.orderPriceValue.text = round_price(self.orderInfo.totalPrice!) + self.orderInfo.priceUnit!
         self.orderPriceValue.textAlignment = .Center
         self.orderPriceValue.textColor = UIColor.orangeColor()
         self.orderPriceValue.font = VCAppLetor.Font.XLarge
@@ -634,16 +633,6 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
     }
     
-    func showSuc() {
-        
-        // Show success view
-        let paySuccessVC: VCPaySuccessViewController = VCPaySuccessViewController()
-        paySuccessVC.parentNav = self.parentNav
-        paySuccessVC.foodDetailVC = self.foodDetailVC
-        paySuccessVC.orderInfo = self.orderInfo
-        self.parentNav.showViewController(paySuccessVC, sender: self)
-    }
-    
     
     // Transfer to pay actions
     func payNowAction() {
@@ -707,6 +696,24 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
                                     RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                                 }
                             })
+                        }
+                        else if dic.valueForKey("resultStatus") as! String == "6001" {
+                            
+                            self.hud.hide(true)
+                            RKDropdownAlert.title(VCAppLetor.StringLine.UserCanclePayment, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTimeLong)
+                            
+                        }
+                        else if dic.valueForKey("resultStatus") as! String == "6002" {
+                            
+                            self.hud.hide(true)
+                            RKDropdownAlert.title(VCAppLetor.StringLine.PaymentNetworkError, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                            
+                        }
+                        else if dic.valueForKey("resultStatus") as! String == "4000" {
+                            
+                            self.hud.hide(true)
+                            RKDropdownAlert.title(VCAppLetor.StringLine.PaymentFailed, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                            
                         }
                     })
                 }

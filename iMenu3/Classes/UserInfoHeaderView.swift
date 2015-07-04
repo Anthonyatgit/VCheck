@@ -15,8 +15,11 @@ class UserInfoHeaderView: UIView {
     
     let disclosureIndicator: UIImageView = UIImageView.newAutoLayoutView()
     
-    var panelIcon: UIImageView = UIImageView.newAutoLayoutView()
-    var panelTitle: UILabel = UILabel.newAutoLayoutView()
+    let panelIcon: UIImageView = UIImageView()
+    let panelTitle: UILabel = UILabel()
+    
+    let mailBoxButton: UserIconButton = UserIconButton()
+    let inviteButton: UserIconButton = UserIconButton()
     
     var didSetupConstraints = false
     
@@ -25,27 +28,32 @@ class UserInfoHeaderView: UIView {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        self.setupViews()
     }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.setupViews()
     }
     
     func setupViews() {
         
-        self.contentMode = UIViewContentMode.ScaleAspectFit
+//        self.contentMode = UIViewContentMode.ScaleAspectFit
         self.backgroundColor = UIColor.clearColor()
         
-        self.panelIcon.layer.cornerRadius = VCAppLetor.ConstValue.ImageCornerRadius
-        self.panelIcon.alpha = 0.1
-        self.panelIcon.layer.cornerRadius = self.panelIcon.frame.size.width / 2.0
+        var oY: CGFloat = 0.0
+        
+        self.panelIcon.frame = CGRectMake(self.width/2.0-self.width/5.0/2.0, 30.0, self.width/5.0, self.width/5.0)
+        self.panelIcon.layer.cornerRadius = self.panelIcon.width / 2.0
+        self.panelIcon.layer.masksToBounds = true
+        self.panelIcon.layer.borderWidth = 1.0
+        self.panelIcon.layer.borderColor = UIColor.whiteColor().colorWithAlphaComponent(0.4).CGColor
         self.addSubview(self.panelIcon)
         
+        oY += 30.0 + self.width/5.0 + 10.0
+        self.panelTitle.frame = CGRectMake(20, oY, self.width-40.0, 20.0)
         self.panelTitle.font = VCAppLetor.Font.BigFont
-        self.panelTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+        self.panelTitle.textColor = UIColor.whiteColor().colorWithAlphaComponent(0.6)
+        self.panelTitle.textAlignment = .Center
         self.addSubview(self.panelTitle)
         
         let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
@@ -59,47 +67,113 @@ class UserInfoHeaderView: UIView {
                 
                 if error == nil && image != nil {
                     self.panelIcon.image = image
-                    self.panelIcon.alpha = 1.0
                 }
             }
             
         }
         else {
-            self.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)
+            
+            self.panelIcon.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
+            self.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
             self.panelTitle.text = VCAppLetor.StringLine.UserInfoWithoutSignin
         }
         
-        self.disclosureIndicator.image = UIImage(named: VCAppLetor.IconName.RightDisclosureIcon)
-        self.disclosureIndicator.alpha = 0.2
-        self.addSubview(self.disclosureIndicator)
+//        self.disclosureIndicator.image = UIImage(named: VCAppLetor.IconName.RightDisclosureIcon)
+//        self.disclosureIndicator.alpha = 0.2
+//        self.addSubview(self.disclosureIndicator)
         
-        self.setNeedsUpdateConstraints()
+        
+        oY += 20.0 + 30.0
+        self.mailBoxButton.frame = CGRectMake(self.width/2.0-130, oY, 110, 40.0)
+        self.mailBoxButton.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.8)
+        self.mailBoxButton.icon.image = UIImage(named: VCAppLetor.IconName.MailBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+        self.mailBoxButton.titleStr.text = VCAppLetor.StringLine.MyMail
+        self.mailBoxButton.titleStr.textColor = UIColor.whiteColor().colorWithAlphaComponent(0.8)
+        self.mailBoxButton.titleStr.font = VCAppLetor.Font.SmallFont
+        self.mailBoxButton.backgroundColor = UIColor.clearColor()
+        self.addSubview(self.mailBoxButton)
+        
+        self.inviteButton.frame = CGRectMake(self.width/2.0+20, oY, 110, 40.0)
+        self.inviteButton.tintColor = UIColor.blackColor().colorWithAlphaComponent(0.6)
+        self.inviteButton.icon.image = UIImage(named: VCAppLetor.IconName.GiftBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+        self.inviteButton.titleStr.text = VCAppLetor.StringLine.InviteFriend
+        self.inviteButton.titleStr.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+        self.inviteButton.titleStr.font = VCAppLetor.Font.SmallFont
+        self.inviteButton.backgroundColor = UIColor.whiteColor()
+        self.inviteButton.addTarget(self, action: "invite", forControlEvents: .TouchUpInside)
+        self.addSubview(self.inviteButton)
+        
+        
         
     }
     
-    override func updateConstraints() {
+    // MARK : - Functions
+    
+    
+    func invite() {
         
-        if !didSetupConstraints {
-            
-            
-            self.panelIcon.autoPinEdgeToSuperviewEdge(.Leading, withInset: 18.0)
-            self.panelIcon.autoAlignAxisToSuperviewAxis(ALAxis.Horizontal)
-            self.panelIcon.autoSetDimensionsToSize(CGSizeMake(48.0, 48.0))
-            
-            self.panelTitle.autoSetDimensionsToSize(CGSizeMake(160.0, 20.0))
-            self.panelTitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.panelIcon, withOffset: 14.0)
-            self.panelTitle.autoAlignAxisToSuperviewAxis(.Horizontal)
-            
-            self.disclosureIndicator.autoSetDimensionsToSize(CGSizeMake(28.0, 28.0))
-            self.disclosureIndicator.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self, withOffset: -8.0)
-            self.disclosureIndicator.autoAlignAxisToSuperviewAxis(.Horizontal)
-        }
-        
-        super.updateConstraints()
+        println("invite")
     }
-    
-    
     
     
     
 }
+
+// MARK: - IconButton
+// Button with icon@left & text@right
+class UserIconButton: UIButton {
+    
+    let icon: UIImageView = UIImageView.newAutoLayoutView()
+    let titleStr: UILabel = UILabel.newAutoLayoutView()
+    
+    var bgColor: UIColor?
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+    
+    var didSetConstraints = false
+    
+    func setupView() {
+        
+        self.layer.borderWidth = 2.0
+        self.layer.borderColor = UIColor.whiteColor().colorWithAlphaComponent(0.8).CGColor
+        self.backgroundColor = self.bgColor
+        
+        self.addSubview(self.icon)
+        
+        self.titleStr.textAlignment = .Center
+        self.titleStr.textColor = UIColor.blackColor()
+        self.titleStr.font = VCAppLetor.Font.SmallFont
+        self.addSubview(self.titleStr)
+        
+        self.setNeedsUpdateConstraints()
+    }
+    
+    override func updateConstraints() {
+        
+        
+        if !self.didSetConstraints {
+            
+            self.icon.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(8.0, 14.0, 10.0, 0.0), excludingEdge: .Trailing)
+            self.icon.autoMatchDimension(.Width, toDimension: .Height, ofView: self, withOffset: -20.0)
+            
+            self.titleStr.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.icon, withOffset: 6.0)
+            self.titleStr.autoAlignAxisToSuperviewAxis(.Horizontal)
+            self.titleStr.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 6.0)
+            self.titleStr.autoMatchDimension(.Height, toDimension: .Height, ofView: self.icon, withMultiplier: 0.8)
+            
+            self.didSetConstraints = true
+        }
+        
+        super.updateConstraints()
+        
+    }
+    
+}
+

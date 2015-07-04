@@ -8,10 +8,14 @@
 
 import UIKit
 import PureLayout
+import Alamofire
+import DKChainableAnimationKit
 
 class FavoritesViewCell: UITableViewCell {
     
-    var foodItem: FoodItem!
+    var favInfo: FoodInfo!
+    
+    var imageCache: NSCache?
     
     var parentNav: UINavigationController?
     
@@ -38,74 +42,74 @@ class FavoritesViewCell: UITableViewCell {
     
     func setupViews() {
         
-        self.selectionStyle = UITableViewCellSelectionStyle.Gray
+        self.selectionStyle = UITableViewCellSelectionStyle.None
         self.backgroundColor = UIColor.whiteColor()
         
-        
         self.addSubview(self.foodImageView)
-        self.foodImageView.alpha = 0.2
         
-        let imageURL: String = self.foodItem.foodImage
+        let imageURL: String = self.favInfo.foodImage!
         
-        let progressIndicatorView = UIProgressView(frame: CGRect(x: 10.0, y: 10.0, width: self.width-20.0, height: 4.0))
-        self.foodImageView.kf_setImageWithURL(NSURL(string: imageURL)!, placeholderImage: nil, optionsInfo: nil,
-            progressBlock: { (receivedSize, totalSize) -> () in
+        if let image = self.imageCache!.objectForKey(imageURL) as? UIImage {
+            self.foodImageView.image = image
+        }
+        else {
+            
+            self.foodImageView.image = nil
+            
+            Alamofire.request(.GET, imageURL).validate(contentType: ["image/*"]).responseImage() {
                 
-                progressIndicatorView.tintColor = UIColor.nephritisColor()
-                progressIndicatorView.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.2)
-                self.addSubview(progressIndicatorView)
+                (_, _, image, error) in
                 
-                progressIndicatorView.setProgress(Float(receivedSize) / Float(totalSize), animated: true)
-                
-            },
-            completionHandler: { (image, error, cacheType, imageURL) -> () in
-                
-                let foodImage: UIImage = Toucan.Resize.resizeImage(image!, size: CGSize(width: self.width - 20.0, height: 150.0), fitMode: Toucan.Resize.FitMode.Crop)
-                self.foodImageView.image = foodImage
-                
-                self.foodImageView.animation.makeAlpha(1.0).animate(0.2)
-                
-                progressIndicatorView.removeFromSuperview()
-        })
+                if error == nil && image != nil {
+                    
+                    let foodImage: UIImage = Toucan.Resize.resizeImage(image!, size: CGSize(width: 120.0, height: 100.0), fitMode: Toucan.Resize.FitMode.Crop)
+                    
+                    self.imageCache!.setObject(foodImage, forKey: imageURL)
+                    
+                    self.foodImageView.image = foodImage
+                }
+            }
+        }
 
-        if self.foodItem.status == "1" { // onSale
+        if self.favInfo.remainder != "0" { // onSale
             
             self.onSale.textColor = UIColor.orangeColor()
+            self.onSale.text = VCAppLetor.StringLine.FavOnSale
         }
         else { // not onSale
             self.onSale.textColor = UIColor.lightGrayColor()
+            self.onSale.text = VCAppLetor.StringLine.FavOffSale
         }
         
-        self.onSale.text = self.foodItem.status
         self.onSale.textAlignment = .Left
         self.onSale.font = VCAppLetor.Font.SmallFont
         self.addSubview(self.onSale)
         
-        self.title.text = self.foodItem.title
+        self.title.text = self.favInfo.subTitle!
         self.title.textAlignment = .Left
         self.title.textColor = UIColor.blackColor().colorWithAlphaComponent(0.6)
         self.title.font = VCAppLetor.Font.BigFont
         self.addSubview(self.title)
         
-        self.price.text = VCAppLetor.StringLine.PricePU + "\(self.foodItem.price)"
+        self.price.text = VCAppLetor.StringLine.PricePU + round_price(self.favInfo.price!) + self.favInfo.priceUnit!
         self.price.textAlignment = .Left
-        self.price.textColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.6)
+        self.price.textColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.8)
         self.price.font = VCAppLetor.Font.SmallFont
         self.addSubview(self.price)
         
-        if self.foodItem.status == "1" { // onSale
+        if self.favInfo.remainder != "0" { // onSale
             
             self.checkButton.backgroundColor = UIColor.whiteColor()
             self.checkButton.setTitle(VCAppLetor.StringLine.CheckNow, forState: UIControlState.Normal)
             self.checkButton.setTitleColor(UIColor.pumpkinColor(), forState: UIControlState.Normal)
+            self.checkButton.titleLabel?.font = VCAppLetor.Font.SmallFont
             self.checkButton.layer.borderWidth = 1.0
-            self.checkButton.layer.borderColor = UIColor.pumpkinColor().CGColor
-            self.checkButton.addTarget(self, action: "checkNowAction", forControlEvents: UIControlEvents.TouchUpInside)
+            self.checkButton.layer.borderColor = UIColor.orangeColor().CGColor
             self.addSubview(self.checkButton)
         }
         
         self.cellBottomLine.drawType = "GrayLine"
-        self.cellBottomLine.lineWidth = 1.0
+        self.cellBottomLine.lineWidth = VCAppLetor.ConstValue.GrayLineWidth
         self.addSubview(self.cellBottomLine)
         
         
@@ -121,29 +125,28 @@ class FavoritesViewCell: UITableViewCell {
             self.foodImageView.autoPinEdgeToSuperviewEdge(.Leading, withInset: 10.0)
             self.foodImageView.autoSetDimensionsToSize(CGSizeMake(120.0, 100.0))
             
-            if self.foodItem.status == "1" {
-                
+            if self.favInfo.remainder != "0" {
                 self.onSale.autoPinEdge(.Top, toEdge: .Top, ofView: self.foodImageView)
             }
             else {
-                self.onSale.autoPinEdge(.Top, toEdge: .Top, ofView: self.foodImageView, withOffset: 20.0)
+                self.onSale.autoPinEdge(.Top, toEdge: .Top, ofView: self.foodImageView, withOffset: 10.0)
             }
             self.onSale.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.foodImageView, withOffset: 10.0)
-            self.onSale.autoSetDimensionsToSize(CGSizeMake(self.width/4.0, 20.0))
+            self.onSale.autoSetDimensionsToSize(CGSizeMake(self.width-120-30, 18.0))
             
             self.title.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.onSale)
-            self.title.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.onSale, withOffset: 10.0)
-            self.title.autoSetDimensionsToSize(CGSizeMake(self.width/2.0, 26.0))
+            self.title.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.onSale, withOffset: 6.0)
+            self.title.autoSetDimensionsToSize(CGSizeMake(self.width-120-30, 20.0))
             
             self.price.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.onSale)
-            self.price.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.title, withOffset: 10.0)
-            self.price.autoSetDimensionsToSize(CGSizeMake(self.width/4.0, 20.0))
+            self.price.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.title, withOffset: 8.0)
+            self.price.autoSetDimensionsToSize(CGSizeMake(self.width-120-30, 16.0))
             
-            if self.foodItem.status == "1" {
+            if self.favInfo.remainder != "0" {
                 
-                self.checkButton.autoSetDimensionsToSize(CGSizeMake(80.0, 28.0))
+                self.checkButton.autoSetDimensionsToSize(CGSizeMake(80.0, 26.0))
                 self.checkButton.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.onSale)
-                self.checkButton.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.price, withOffset: 10.0)
+                self.checkButton.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.price, withOffset: 6.0)
             }
             
             self.cellBottomLine.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodImageView)
@@ -168,15 +171,6 @@ class FavoritesViewCell: UITableViewCell {
     }
     
     // MARK: - Functions
-    
-    // Submit order action
-    func checkNowAction() {
-        
-        let orderCheckViewController: VCCheckNowViewController = VCCheckNowViewController()
-        orderCheckViewController.parentNav = self.parentNav
-        orderCheckViewController.foodItem = self.foodItem
-        self.parentNav?.showViewController(orderCheckViewController, sender: self)
-    }
     
     
 }
