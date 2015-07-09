@@ -147,6 +147,13 @@ struct VCAppLetor {
         
         static let OrderTitle: String = "我的订单"
         static let OrderEmpty: String = "你还没有任何订单"
+        static let OrderDetail: String = "订单详情"
+        static let OrderInformation: String = "订单信息"
+        static let OrderNoName: String = "订单编号"
+        static let OrderMobile: String = "下单手机号"
+        static let OrderCreateDate: String = "下单时间"
+        static let OrderItemCount: String = "购买数量"
+        static let OrderRefund: String = "申请退款"
         
         static let FavoritesTitle: String = "我喜欢的礼遇"
         static let FavoritesEmpty: String = "你还没有喜欢的礼遇"
@@ -158,6 +165,8 @@ struct VCAppLetor {
         static let ShareToGetCoupon: String = "分享获取丰富礼券"
         static let CheckNow: String = "立即购买"
         static let SegmentTitles: [AnyObject] = ["亮点","菜单","须知"]
+        static let HaveOrderWaitForPay: String = "你已经预定了此商品，可以立即支付"
+        static let BackToPay: String = "此商品已经存在订单，请返回商品页面直接支付"
         
         static let CheckNowTitle: String = "填写订单"
         static let CheckNowTip: String = "请注意，该礼遇需要到店享用"
@@ -177,6 +186,7 @@ struct VCAppLetor {
         static let SubmitOrderInProgress: String = "正在提交您的订单"
         static let AsyncPaymentInProgress: String = "正在同步交易信息"
         static let UserCanclePayment: String = "你取消了支付，如你的支付遇到问题请联系客服 [4008 369 917]"
+        static let UserAuthFail: String = "你的身份认证失败，支付已取消，请重试"
         static let PaymentNetworkError: String = "支付已取消，你的网络好像不给力，请重新支付"
         static let PaymentFailed: String = "支付失败，请重新支付你的订单"
         
@@ -211,11 +221,13 @@ struct VCAppLetor {
         static let rateName: String = "好评率:"
         static let addressName: String = "地址:"
         static let contectTelName: String = "联系餐厅:"
+        static let preorderTel: String = "预约电话:"
         static let tipsName: String = "温馨提示"
+        static let tipsRule: String = "使用规则"
         static let wechatServiceName: String = "• 点击这里联系"
         static let wechatServiceTitle: String = "微信客服 •"
         
-        static let LocationUserFail: String = "位置信息定位失败，稍后将重新定位"
+        static let LocationUserFail: String = "获取位置信息失败"
         static let YourCityNotInService: String = "您的城市目前还未开通服务"
     }
     
@@ -226,32 +238,6 @@ struct VCAppLetor {
     }
     
     enum FoodInfo {
-        
-        static let photos: NSArray = [
-            "http://www.siyo.cc/t/mood1.jpg",
-            "http://www.siyo.cc/t/mood2.jpg",
-            "http://www.siyo.cc/t/mood3.jpg",
-            "http://www.siyo.cc/t/mood4.jpg",
-            "http://www.siyo.cc/t/mood5.jpg"
-        ]
-        
-        static let spot: [NSDictionary] = [
-            [
-                "image": "http://www.siyo.cc/t/mood1.jpg",
-                "title": "title1",
-                "desc": "description1"
-            ],
-            [
-                "image": "http://www.siyo.cc/t/mood2.jpg",
-                "title": "title2",
-                "desc": "description2"
-            ],
-            [
-                "image": "http://www.siyo.cc/t/mood3.jpg",
-                "title": "title3",
-                "desc": "description3"
-            ]
-        ]
         
     }
     
@@ -334,11 +320,13 @@ struct VCAppLetor {
         static let IconImageCornerRadius: CGFloat = 3.0
         static let FoodImageHeight: CGFloat = 230.0
         static let FoodItemCellHeight: CGFloat = 320.0
-        static let FavItemCellHeight: CGFloat = 120.0
+        static let FavItemCellHeight: CGFloat = 122.0
+        static let OrderItemCellHeight: CGFloat = 122.0
         
         static let DefaultItemCountPerPage: Int = 5
         static let DefaultListItemCountPerPage: Int = 10
         static let DefaultDateFormat: String = "yyyy-MM-dd HH:mm:ss"
+        static let DateFormatWithoutSeconds: String = "yyyy-MM-dd HH:mm"
         static let DateWithoutTimeFormat: String = "yyyy-MM-dd"
         
         static let LocationServiceDistanceFilter: Double = 1000.0
@@ -352,8 +340,8 @@ struct VCAppLetor {
         static let SinaAppSecret: String = "58bbc54bc29f5b9f78f095a432d4ed9e"
         static let SinaRedirectURL: String = "http://192.168.100.100"
         
-        static let WeChatAppKey: String = "wx76e86073a6e91077"
-        static let WeChatAppSecret: String = "f02a4fac3a25c49245e6b7317a7e8026"
+        static let WeChatAppKey: String = "wx79252ca0921c523d"
+        static let WeChatAppSecret: String = "18099057b2e02b22e8fed322eb74fda7"
     }
     
     enum BMK {
@@ -376,6 +364,8 @@ struct VCAppLetor {
         static let optTipForUpdate: String = "is_tips"
         static let optToken: String = "token"
         
+        static let optDeviceToken: String = "deviceToken"
+        
         static let orderSessionMenuIds: String = "OrderSessionMenuIds"
         static let orderSessionOrderObjs: String = "OrderSessionOrderObjs"
         
@@ -384,6 +374,10 @@ struct VCAppLetor {
         static let optSelectedCity: String = "SelectedCity"
         static let LocLong: String = "LocLong"
         static let LocLat: String = "LocLat"
+    }
+    
+    enum ObjectIns {
+        static let objPayVC: String = "PaymentVC"
     }
     
     // MARK: - LoginType
@@ -407,6 +401,8 @@ struct VCAppLetor {
     enum ErrorCode {
         
         static let MobileAlreadyExist: String = "2013"
+        
+        static let TokenError: String = "2002"
     }
     
     // MARK: - UserPanel
@@ -414,13 +410,13 @@ struct VCAppLetor {
         
         static let MyMenus: [String: [String]] = [
 //            "User"      : ["登陆/注册享丰富礼券"],
-            "Order"     : ["我的订单", "我喜欢的礼遇", "我的礼券", "分享赢取礼券"],
-            "Settings"  : ["反馈", "关于"]
+            "Order"     : ["我的订单", "我喜欢的礼遇", "我的礼券", "反馈", "关于"],
+//            "Settings"  : ["反馈", "关于"]
         ]
         static let MyIcons: [String: [String]] = [
 //            "user"      : ["account_circle_black"],
-            "order"     : ["ticket", "gift", "cards", "like"],
-            "settings"  : ["coffee", "image"]
+            "order"     : ["ticket", "gift", "cards", "coffee", "image"],
+//            "settings"  : ["coffee", "image"]
         ]
         static let MyInfos: [String: [String]] = [
             "账号安全": ["手机号", "密码"],

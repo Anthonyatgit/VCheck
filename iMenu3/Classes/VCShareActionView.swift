@@ -14,6 +14,7 @@ import RKDropdownAlert
 
 class VCShareActionView: UIView {
     
+    var isShow: Bool?
     
     var shareType: VCAppLetor.ShareType!
     
@@ -22,6 +23,7 @@ class VCShareActionView: UIView {
     var inviteItem: String?
     
     let blackBG: UIView = UIView.newAutoLayoutView()
+    var visualEffectView: UIVisualEffectView?
     
     let shareBox: UIView = UIView()
     
@@ -56,10 +58,19 @@ class VCShareActionView: UIView {
     
     func setupView() {
         
-        self.blackBG.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
-        self.addSubview(self.blackBG)
+        self.isShow = true
         
-        self.blackBG.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero)
+//        self.blackBG.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
+//        self.addSubview(self.blackBG)
+        
+        var blurEffect = UIBlurEffect(style: UIBlurEffectStyle.Dark)
+        self.visualEffectView = UIVisualEffectView(effect: blurEffect)
+        self.visualEffectView!.frame = self.frame
+        self.visualEffectView!.alpha = 0.1
+        
+        self.addSubview(self.visualEffectView!)
+        
+        self.visualEffectView!.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero)
         
         self.shareBox.backgroundColor = UIColor.whiteColor()
         self.shareBox.frame = CGRectMake(0, self.height, self.width, 200.0)
@@ -150,8 +161,8 @@ class VCShareActionView: UIView {
         self.shareBox.addGestureRecognizer(self.tapGuestureF)
         
         
-        self.shareBox.animation.makeY(self.height-200.0).animate(0.2)
-        self.blackBG.animation.makeAlpha(0.9).animate(0.2)
+        self.shareBox.animation.makeY(self.height-200.0).animate(0.3)
+        self.visualEffectView!.animation.makeAlpha(0.9).animate(0.3)
         
     }
     

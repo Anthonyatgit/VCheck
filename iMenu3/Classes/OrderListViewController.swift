@@ -11,8 +11,10 @@ import PureLayout
 import Alamofire
 import RKDropdownAlert
 import MBProgressHUD
+import SWTableViewCell
+import DKChainableAnimationKit
 
-class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, RKDropdownAlertDelegate, UIScrollViewDelegate {
+class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, RKDropdownAlertDelegate, UIScrollViewDelegate{
     
     var parentNav: UINavigationController?
     
@@ -114,30 +116,58 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
         cell.orderInfo = self.orderList[indexPath.row] as! OrderInfo
         cell.parentNav = self.parentNav
         cell.imageCache = self.imageCache
+        cell.index = indexPath.row
+        cell.parentVC = self
         cell.setupViews()
         
-        cell.payButton.tag = indexPath.row
-        cell.payButton.addTarget(self, action: "payNowAction:", forControlEvents: UIControlEvents.TouchUpInside)
+        cell.updateCellConstraints()
         
-        cell.setNeedsUpdateConstraints()
+        // Adjust Layout
+        if cell.orderInfo.orderType! != "10" {
+            
+            cell.typeDescription.animation.moveY(10).animate(0.01)
+            cell.foodTitle.animation.moveY(10).animate(0.01)
+            cell.price.animation.moveY(10).animate(0.01)
+            cell.amount.animation.moveY(10).animate(0.01)
+            cell.payButton.hidden = true
+        }
+        else {
+//            cell.typeDescription.animation.moveY(-10).animate(0.1)
+//            cell.foodTitle.animation.moveY(-10).animate(0.1)
+//            cell.price.animation.moveY(-10).animate(0.1)
+//            cell.amount.animation.moveY(-10).animate(0.1)
+            cell.payButton.hidden = false
+        }
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         
+        if (self.orderList.objectAtIndex(indexPath.row) as! OrderInfo).orderType == "10" { // WaitForPay
+            
+            return true
+        }
+        
+        return false
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return VCAppLetor.ConstValue.FavItemCellHeight
+        return VCAppLetor.ConstValue.OrderItemCellHeight
     }
     
     // Override to control push with item selection
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
+        if self.isLoadingOrder {
+            self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            return
+        }
         
-//        let foodViewerViewController: FoodViewerViewController = FoodViewerViewController()
-//        foodViewerViewController.foodInfo = self.orderList.objectAtIndex(indexPath.row) as! FoodInfo
-//        foodViewerViewController.parentNav = self.navigationController
-//        
-//        self.navigationController!.showViewController(foodViewerViewController, sender: self)
+        let orderDetailVC: OrderInfoViewController = OrderInfoViewController()
+        orderDetailVC.orderInfo = self.orderList.objectAtIndex(indexPath.row) as! OrderInfo
+        orderDetailVC.parentNav = self.parentNav
+        self.parentNav?.showViewController(orderDetailVC, sender: self)
         
     }
     
@@ -149,12 +179,12 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
             if(self.orderList.count > 0) {
                 
                 let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
-                var type = VCheckGo.CollectionEditType.remove
+                var type = VCheckGo.EditOrderType.delete
                 
-                let articleId = "\((self.orderList.objectAtIndex(indexPath.row) as! FoodInfo).id)"
+                let orderId = (self.orderList.objectAtIndex(indexPath.row) as! OrderInfo).id
                 let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
                 
-                Alamofire.request(VCheckGo.Router.EditMyCollection(memberId, type, articleId, token)).validate().responseSwiftyJSON({
+                Alamofire.request(VCheckGo.Router.EditOrder(memberId, orderId, type, token)).validate().responseSwiftyJSON({
                     (_, _, JSON, error) -> Void in
                     
                     if error == nil {
@@ -164,6 +194,7 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                         if json["status"]["succeed"].string! == "1" {
                             
                             self.tableView.beginUpdates()
+                            self.orderList.removeObjectAtIndex(indexPath.row)
                             self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
                             self.tableView.endUpdates()
                         }
@@ -174,7 +205,7 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                     }
                     else {
                         
-                        println("ERROR @ Request to edit collection")
+                        println("ERROR @ Request to edit order : \(error?.localizedDescription)")
                         RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                     }
                     
@@ -187,6 +218,7 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
             
         }
     }
+    
     
     // MARK: - UIScrollViewDelegate
     
@@ -229,8 +261,6 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                             
                             // Deal with the listing
                             
-                            self.orderList.removeAllObjects()
-                            
                             let orderList: Array = json["data"]["member_order_list"].arrayValue
                             let addedOrder: NSMutableArray = NSMutableArray()
                             
@@ -245,31 +275,34 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                                 order.totalPrice = item["order_info"]["total_price"]["special_price"].string!
                                 order.originalTotalPrice = item["order_info"]["total_price"]["original_price"].string!
                                 
+                                order.createByMobile = item["order_info"]["mobile"].string!
                                 var dateFormatter = NSDateFormatter()
                                 dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
-                                order.createDate = dateFormatter.dateFromString(item["order_info"]["create_Date"].string!)
+                                order.createDate = dateFormatter.dateFromString(item["order_info"]["create_date"].string!)
                                 
                                 order.menuId = item["order_info"]["menu_info"]["menu_id"].string!
                                 order.menuTitle = item["order_info"]["menu_info"]["menu_name"].string!
+                                order.menuUnit = item["order_info"]["menu_info"]["menu_unit"]["menu_unit"].string!
                                 order.itemCount = item["order_info"]["menu_info"]["count"].string!
                                 
                                 order.orderType = item["order_info"]["order_type"].string!
                                 order.typeDescription = item["order_info"]["order_type_description"].string!
                                 order.orderImageURL = item["article_info"]["article_image"]["source"].string!
+                                order.foodId = item["article_info"]["article_id"].string!
+                                
                                 
                                 addedOrder.addObject(order)
                                 
                             }
+                            
                             
                             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                 
                                 self.insertRowsAtBottom(addedOrder)
                                 self.isLoadingOrder = false
                                 
-                                if !self.haveMore {
-                                    
-                                }
                             })
+                            
                             
                         }
                         else {
@@ -277,7 +310,6 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                             RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                         }
                     }
-                    
                 }
                 else {
                     println("ERROR @ Loading nore favorites : \(error?.localizedDescription)")
@@ -312,16 +344,6 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
         
         self.hud.hide(true)
         
-    }
-    
-    func payNowAction(btn: UIButton) {
-        
-        // Transfer to payment page
-        let paymentVC: VCPayNowViewController = VCPayNowViewController()
-        paymentVC.parentNav = self.parentNav
-        paymentVC.foodDetailVC = self
-        paymentVC.orderInfo = self.orderList.objectAtIndex(btn.tag) as! OrderInfo
-        self.parentNav?.showViewController(paymentVC, sender: self)
     }
     
     
@@ -390,7 +412,6 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                         }
                         
                         // Deal with the current page listing
-                        
                         self.orderList.removeAllObjects()
                         
                         let orderList: Array = json["data"]["member_order_list"].arrayValue
@@ -409,6 +430,7 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                             var dateFormatter = NSDateFormatter()
                             dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
                             order.createDate = dateFormatter.dateFromString(item["order_info"]["create_date"].string!)
+                            order.createByMobile = item["order_info"]["mobile"].string!
                             
                             order.menuId = item["order_info"]["menu_info"]["menu_id"].string!
                             order.menuTitle = item["order_info"]["menu_info"]["menu_name"].string!
@@ -418,6 +440,8 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                             order.orderType = item["order_info"]["order_type"].string!
                             order.typeDescription = item["order_info"]["order_type_description"].string!
                             order.orderImageURL = item["article_info"]["article_image"]["source"].string!
+                            order.foodId = item["article_info"]["article_id"].string!
+                            
                             
                             self.orderList.addObject(order)
                             
@@ -462,16 +486,14 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
     func insertRowsAtBottom(newRows: NSMutableArray) {
         
         
-        self.tableView.beginUpdates()
-        
         for order in newRows {
             
+            self.tableView.beginUpdates()
             let currentOrderCount: Int = self.orderList.count
             self.orderList.addObject(order)
             self.tableView.insertRowsAtIndexPaths([NSIndexPath(forRow: currentOrderCount, inSection: 0)], withRowAnimation: UITableViewRowAnimation.Fade)
+            self.tableView.endUpdates()
         }
-        
-        self.tableView.endUpdates()
     }
     
     func showInternetUnreachable() {

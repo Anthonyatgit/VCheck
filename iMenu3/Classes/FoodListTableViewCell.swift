@@ -9,7 +9,6 @@
 import UIKit
 import QuartzCore
 import Alamofire
-import Kingfisher
 import DKChainableAnimationKit
 
 class FoodListTableViewCell: UITableViewCell {
@@ -57,7 +56,7 @@ class FoodListTableViewCell: UITableViewCell {
         let imageURL = self.foodInfo.foodImage!
         
         self.contentView.addSubview(self.foodImageView)
-        self.foodImageView.alpha = 0.2
+        self.foodImageView.alpha = 0.1
         
         if let image = self.imageCache!.objectForKey(imageURL) as? UIImage {
             self.foodImageView.image = image
@@ -81,7 +80,7 @@ class FoodListTableViewCell: UITableViewCell {
             }
         }
         
-        self.foodImageView.animation.makeAlpha(1.0).animate(0.4)
+        self.foodImageView.animation.makeAlpha(1.0).animate(1.0)
         
         self.foodDateBg.drawType = "DateTagLong"
         self.foodDateBg.alpha = 0.6
@@ -262,6 +261,7 @@ class FoodListTableViewCell: UITableViewCell {
             self.foodOriginPriceStricke.autoAlignAxis(.Horizontal, toSameAxisOfView: self.foodOriginPrice)
             self.foodOriginPriceStricke.autoMatchDimension(.Width, toDimension: .Width, ofView: self.foodOriginPrice)
             self.foodOriginPriceStricke.autoSetDimension(.Height, toSize: 2.0)
+            
             
             didSetupConstraints = true
         }

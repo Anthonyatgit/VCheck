@@ -11,7 +11,6 @@
 		9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */; };
 		920940A81B37036C006686C7 /* OrderListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920940A71B37036C006686C7 /* OrderListViewController.swift */; };
 		920940AA1B370390006686C7 /* OrderListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920940A91B370390006686C7 /* OrderListViewCell.swift */; };
-		920940AC1B370D8E006686C7 /* OrderInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920940AB1B370D8E006686C7 /* OrderInfoViewController.swift */; };
 		9214D7981B32B1B3007AC818 /* VCShareActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9214D7971B32B1B2007AC818 /* VCShareActionView.swift */; };
 		9214D79C1B32CE78007AC818 /* friends_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D7991B32CE78007AC818 /* friends_color.png */; };
 		9214D79D1B32CE78007AC818 /* wechat_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D79A1B32CE78007AC818 /* wechat_color.png */; };
@@ -39,6 +38,8 @@
 		923C25431B3F9B630060DBFC /* TYTextContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C25371B3F9B630060DBFC /* TYTextContainer.m */; };
 		923C25441B3F9B630060DBFC /* TYTextStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C25391B3F9B630060DBFC /* TYTextStorage.m */; };
 		923C25451B3F9B630060DBFC /* TYViewStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C253C1B3F9B630060DBFC /* TYViewStorage.m */; };
+		924546DC1B4CADFA00790846 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0611B00362A003A6D76 /* libWeChatSDK.a */; };
+		924546DE1B4D7A6B00790846 /* VCAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924546DD1B4D7A6B00790846 /* VCAppViewController.swift */; };
 		92457CD81B2FD2EC005B0E33 /* VCAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92457CD71B2FD2EC005B0E33 /* VCAboutViewController.swift */; };
 		92457CDA1B300949005B0E33 /* VCMailBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92457CD91B300949005B0E33 /* VCMailBoxViewController.swift */; };
 		9259050B1B098EEE00F343D4 /* UserInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */; };
@@ -49,6 +50,7 @@
 		927779DC1B0B0304002A50EB /* CTMemCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D91B0B0304002A50EB /* CTMemCache.swift */; };
 		927779DD1B0B0304002A50EB /* FlatUIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779DA1B0B0304002A50EB /* FlatUIColor.swift */; };
 		927779DE1B0B0304002A50EB /* JSSAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779DB1B0B0304002A50EB /* JSSAlertView.swift */; };
+		92795DE51B4A469C00E9A83F /* OrderInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92795DE41B4A469C00E9A83F /* OrderInfoViewController.swift */; };
 		927B7C901B29607D00B55DB2 /* BaiduMapAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C8F1B29607D00B55DB2 /* BaiduMapAPI.framework */; };
 		927B7C921B29629100B55DB2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C911B29629100B55DB2 /* CoreLocation.framework */; };
 		927B7C941B2962A700B55DB2 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C931B2962A700B55DB2 /* OpenGLES.framework */; };
@@ -90,6 +92,7 @@
 		928633801B0AE6070040CBA2 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9286337F1B0AE6070040CBA2 /* Settings.swift */; };
 		92868A241B395BD600DB9B91 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92868A231B395BD600DB9B91 /* Functions.swift */; };
 		928B2FBA1B2150AF001FA746 /* FoodViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */; };
+		9291DE1C1B4B6B2000FD5CC8 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9291DE1B1B4B6B2000FD5CC8 /* libsqlite3.0.dylib */; };
 		9293BBC91B018ECC0034F3C5 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */; };
 		929DCAC21B0578800050B63F /* VCTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929DCAC11B0578800050B63F /* VCTermsViewController.swift */; };
 		929DCAC41B0588B90050B63F /* RegSetPassViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */; };
@@ -137,7 +140,6 @@
 		92F3B06F1B00362A003A6D76 /* ShareSDKCoreService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0591B00362A003A6D76 /* ShareSDKCoreService.framework */; };
 		92F3B0701B00362A003A6D76 /* libWeiboSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B05D1B00362A003A6D76 /* libWeiboSDK.a */; };
 		92F3B0711B00362A003A6D76 /* WeiboSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 92F3B05E1B00362A003A6D76 /* WeiboSDK.bundle */; };
-		92F3B0721B00362A003A6D76 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0611B00362A003A6D76 /* libWeChatSDK.a */; };
 		92F3B0731B00362A003A6D76 /* ShareSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0641B00362A003A6D76 /* ShareSDK.framework */; };
 		92F3B0741B00362A003A6D76 /* ShareSDKFlatShareViewUI.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 92F3B0661B00362A003A6D76 /* ShareSDKFlatShareViewUI.bundle */; };
 		92F3B0751B00362A003A6D76 /* ShareSDKFlatShareViewUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0671B00362A003A6D76 /* ShareSDKFlatShareViewUI.framework */; };
@@ -188,7 +190,6 @@
 		9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareSDKContentController.m; sourceTree = "<group>"; };
 		920940A71B37036C006686C7 /* OrderListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrderListViewController.swift; path = Classes/OrderListViewController.swift; sourceTree = "<group>"; };
 		920940A91B370390006686C7 /* OrderListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrderListViewCell.swift; path = Classes/OrderListViewCell.swift; sourceTree = "<group>"; };
-		920940AB1B370D8E006686C7 /* OrderInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrderInfoViewController.swift; path = Classes/OrderInfoViewController.swift; sourceTree = "<group>"; };
 		9214D7971B32B1B2007AC818 /* VCShareActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCShareActionView.swift; path = Classes/VCShareActionView.swift; sourceTree = "<group>"; };
 		9214D7991B32CE78007AC818 /* friends_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends_color.png; sourceTree = "<group>"; };
 		9214D79A1B32CE78007AC818 /* wechat_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wechat_color.png; sourceTree = "<group>"; };
@@ -229,6 +230,7 @@
 		923C253A1B3F9B630060DBFC /* TYTextStorageProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYTextStorageProtocol.h; sourceTree = "<group>"; };
 		923C253B1B3F9B630060DBFC /* TYViewStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYViewStorage.h; sourceTree = "<group>"; };
 		923C253C1B3F9B630060DBFC /* TYViewStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TYViewStorage.m; sourceTree = "<group>"; };
+		924546DD1B4D7A6B00790846 /* VCAppViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCAppViewController.swift; path = Classes/VCAppViewController.swift; sourceTree = "<group>"; };
 		92457CD71B2FD2EC005B0E33 /* VCAboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCAboutViewController.swift; path = Classes/VCAboutViewController.swift; sourceTree = "<group>"; };
 		92457CD91B300949005B0E33 /* VCMailBoxViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCMailBoxViewController.swift; path = Classes/VCMailBoxViewController.swift; sourceTree = "<group>"; };
 		92457CDC1B302031005B0E33 /* XGPush.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = XGPush.h; path = XGSDK/XGPush.h; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 		927779D91B0B0304002A50EB /* CTMemCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTMemCache.swift; sourceTree = "<group>"; };
 		927779DA1B0B0304002A50EB /* FlatUIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlatUIColor.swift; sourceTree = "<group>"; };
 		927779DB1B0B0304002A50EB /* JSSAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSSAlertView.swift; sourceTree = "<group>"; };
+		92795DE41B4A469C00E9A83F /* OrderInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrderInfoViewController.swift; path = Classes/OrderInfoViewController.swift; sourceTree = "<group>"; };
 		927B7C8F1B29607D00B55DB2 /* BaiduMapAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI.framework; path = iMenu3/BMK/BaiduMapAPI.framework; sourceTree = "<group>"; };
 		927B7C911B29629100B55DB2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		927B7C931B2962A700B55DB2 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -284,6 +287,7 @@
 		9286337F1B0AE6070040CBA2 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		92868A231B395BD600DB9B91 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodViewerViewController.swift; path = Classes/FoodViewerViewController.swift; sourceTree = "<group>"; };
+		9291DE1B1B4B6B2000FD5CC8 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegisterViewController.swift; path = Classes/RegisterViewController.swift; sourceTree = "<group>"; };
 		929DCAC11B0578800050B63F /* VCTermsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCTermsViewController.swift; path = Classes/VCTermsViewController.swift; sourceTree = "<group>"; };
 		929DCAC31B0588B80050B63F /* RegSetPassViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegSetPassViewController.swift; path = Classes/RegSetPassViewController.swift; sourceTree = "<group>"; };
@@ -377,6 +381,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				924546DC1B4CADFA00790846 /* libWeChatSDK.a in Frameworks */,
+				9291DE1C1B4B6B2000FD5CC8 /* libsqlite3.0.dylib in Frameworks */,
 				92D6EB2D1B413A8F005DF3DB /* AlipaySDK.framework in Frameworks */,
 				92A9AD781B3C011B0025D29A /* libxml2.dylib in Frameworks */,
 				92D5C42A1B3076E400DAFB36 /* libsqlite3.dylib in Frameworks */,
@@ -399,7 +405,6 @@
 				92F3B0761B00362A003A6D76 /* ShareSDKShareActionSheet.framework in Frameworks */,
 				92F3B0751B00362A003A6D76 /* ShareSDKFlatShareViewUI.framework in Frameworks */,
 				92F3B06C1B00362A003A6D76 /* AGCommon.framework in Frameworks */,
-				92F3B0721B00362A003A6D76 /* libWeChatSDK.a in Frameworks */,
 				92F3B0691B00362A003A6D76 /* SinaWeiboConnection.framework in Frameworks */,
 				92F3B0701B00362A003A6D76 /* libWeiboSDK.a in Frameworks */,
 				92F3B06B1B00362A003A6D76 /* WeChatConnection.framework in Frameworks */,
@@ -422,6 +427,7 @@
 		05B8E7EB2168B867A50937F6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9291DE1B1B4B6B2000FD5CC8 /* libsqlite3.0.dylib */,
 				92D6EB2C1B413A8F005DF3DB /* AlipaySDK.framework */,
 				92A9AD771B3C011B0025D29A /* libxml2.dylib */,
 				92D5C4291B3076E400DAFB36 /* libsqlite3.dylib */,
@@ -731,7 +737,7 @@
 				92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */,
 				920940A71B37036C006686C7 /* OrderListViewController.swift */,
 				920940A91B370390006686C7 /* OrderListViewCell.swift */,
-				920940AB1B370D8E006686C7 /* OrderInfoViewController.swift */,
+				92795DE41B4A469C00E9A83F /* OrderInfoViewController.swift */,
 				92D6DBE31B33C4D5003E80AE /* FavoritesViewController.swift */,
 				92D6DBE51B33C503003E80AE /* FavoritesViewCell.swift */,
 				92BD2E171B2827EF0053408B /* FeedbackViewController.swift */,
@@ -748,6 +754,7 @@
 				9284A14A1AF1B98100E662B2 /* VCheckGo.swift */,
 				9284A1441AF0CFCF00E662B2 /* VCAppLetor.swift */,
 				9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */,
+				924546DD1B4D7A6B00790846 /* VCAppViewController.swift */,
 				92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */,
 				9271B6E61B30396A00BC0F29 /* CustomDrawView.swift */,
 				9214D7971B32B1B2007AC818 /* VCShareActionView.swift */,
@@ -1145,6 +1152,7 @@
 				922248A51B4628B200553BFA /* VCMapViewController.swift in Sources */,
 				922412951B200D560049A9B5 /* SMSegment.swift in Sources */,
 				9227E2EE1AE8E4AE008C6381 /* FoodListTableViewCell.swift in Sources */,
+				924546DE1B4D7A6B00790846 /* VCAppViewController.swift in Sources */,
 				9284A14B1AF1B98100E662B2 /* VCheckGo.swift in Sources */,
 				9284A13F1AF0AF2500E662B2 /* FoodCollectionsViewController.swift in Sources */,
 				92CFFB381AF8CCB600C9AA7D /* VCMemberLoginViewController.swift in Sources */,
@@ -1163,6 +1171,7 @@
 				9227E2C51AE8DCCC008C6381 /* AppDelegate.swift in Sources */,
 				928633801B0AE6070040CBA2 /* Settings.swift in Sources */,
 				92FA19471AFCCA8400D33538 /* FindMyPasscodeViewController.swift in Sources */,
+				92795DE51B4A469C00E9A83F /* OrderInfoViewController.swift in Sources */,
 				9284A1451AF0CFCF00E662B2 /* VCAppLetor.swift in Sources */,
 				923C25441B3F9B630060DBFC /* TYTextStorage.m in Sources */,
 				923C25401B3F9B630060DBFC /* TYImageStorage.m in Sources */,
@@ -1199,7 +1208,6 @@
 				928B2FBA1B2150AF001FA746 /* FoodViewerViewController.swift in Sources */,
 				92D6DBE41B33C4D5003E80AE /* FavoritesViewController.swift in Sources */,
 				92BD603C1B05DE8900649DDF /* UserInfoViewController.swift in Sources */,
-				920940AC1B370D8E006686C7 /* OrderInfoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1338,6 +1346,7 @@
 			baseConfigurationReference = 0C40656762C7729B9DD514C9 /* Pods.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Bin Wang (QF86KF3QJ6)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bin Wang (QF86KF3QJ6)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1348,6 +1357,8 @@
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/UI",
 					"$(PROJECT_DIR)/iMenu3/BMK",
 					"$(PROJECT_DIR)/iMenu3/AliSDK",
+					"$(PROJECT_DIR)/iMenu3/ShareSDK/Extend/WeChatSDK",
+					"$(PROJECT_DIR)/iMenu3/ShareSDK/Extend/SinaWeiboSDK",
 				);
 				GCC_INPUT_FILETYPE = automatic;
 				HEADER_SEARCH_PATHS = (
@@ -1380,8 +1391,9 @@
 			baseConfigurationReference = F1602DDA1EBACDED044ADFD3 /* Pods.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Bin Wang (QF86KF3QJ6)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Bin Wang (QF86KF3QJ6)";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Siyo Technology Co,. Ltd.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Siyo Technology Co,. Ltd.";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/Connection",
@@ -1390,6 +1402,8 @@
 					"$(PROJECT_DIR)/iMenu3/ShareSDK/UI",
 					"$(PROJECT_DIR)/iMenu3/BMK",
 					"$(PROJECT_DIR)/iMenu3/AliSDK",
+					"$(PROJECT_DIR)/iMenu3/ShareSDK/Extend/WeChatSDK",
+					"$(PROJECT_DIR)/iMenu3/ShareSDK/Extend/SinaWeiboSDK",
 				);
 				GCC_INPUT_FILETYPE = automatic;
 				HEADER_SEARCH_PATHS = (

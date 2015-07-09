@@ -46,7 +46,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
         
         self.settings.setImage(UIImage(named: VCAppLetor.IconName.SettingsBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate), forState: .Normal)
         self.settings.tintColor = UIColor.whiteColor()
-//        self.settings.addTarget(self, action: "showMailBox", forControlEvents: .TouchUpInside)
+        //        self.settings.addTarget(self, action: "showMailBox", forControlEvents: .TouchUpInside)
         self.settings.backgroundColor = UIColor.clearColor()
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: self.settings)
         
@@ -83,6 +83,10 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
         
         self.tableView.backgroundView = tbBGView
         
+        let noMoreView: CustomDrawView = CustomDrawView(frame: CGRectMake(0, 0, self.view.width, 60.0))
+        noMoreView.drawType = "noMore"
+        noMoreView.backgroundColor = UIColor.clearColor()
+        self.tableView.tableFooterView = noMoreView
         
         // For header view
         self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
@@ -203,16 +207,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                 self.presentLoginPanel() // Present user login interface
             }
         }
-        else if (indexPath.section == 0 && indexPath.row == 3) { // Share
-            if (isLogined()) {
-                
-                // Get Share Code
-            }
-            else {
-                self.presentLoginPanel() // Present user login interface
-            }
-        }
-        else if (indexPath.section == 1 && indexPath.row == 0) { // Feedback
+        else if (indexPath.section == 0 && indexPath.row == 3) { // Feedback
             if (isLogined()) {
                 
                 // Display Feedback editor
@@ -225,7 +220,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                 self.presentLoginPanel() // Present user login interface
             }
         }
-        else if (indexPath.section == 1 && indexPath.row == 1) { // About
+        else if (indexPath.section == 0 && indexPath.row == 4) { // About
             // Display App Info
             let aboutVC: VCAboutViewController = VCAboutViewController()
             self.parentNav?.showViewController(aboutVC, sender: self)
@@ -339,6 +334,11 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
         
     }
     
+    func getMemberInfo() {
+        
+    }
+    
+    
     // IF the current user is Login to the app
     func isLogined() -> Bool {
         
@@ -381,56 +381,39 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
         // update local data
         if let isLogin = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameIsLogin, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 isLogin.sid = "\(NSDate())"
                 isLogin.value = "1"
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update isLogin value @ loginWithToken : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: true, namespace: "member")
-                    }
-            })
+                })
+            
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: true, namespace: "member")
         }
         
         if let cMid = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameCurrentMid, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 cMid.sid = "\(NSDate())"
                 cMid.value = currentMid
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update currentMid value @ loginWithToken : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: currentMid, namespace: "member")
-                    }
-            })
+                })
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: currentMid, namespace: "member")
         }
         
         if let loginType = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameLoginType, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 loginType.sid = "\(NSDate())"
                 loginType.value = VCAppLetor.LoginType.PhoneReg
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update loginType value @ loginWithToken : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.PhoneReg, namespace: "member")
-                    }
-            })
+                })
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.PhoneReg, namespace: "member")
         }
     }
     
@@ -513,6 +496,11 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                             self.userInfoHeaderView.panelIcon.layer.cornerRadius = self.userInfoHeaderView.panelIcon.width/2.0
                         }
                     }
+                    
+                    // Push user device token
+                    let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "token")?.data as! String
+                    pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
+                    
                 }
                 else {
                     RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
@@ -554,6 +542,10 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                     // Coupon Info
                     //let couponCount = json["data"]["coupon_info"]["coupon_total_count"].string!
                     
+                    
+                    // update local data
+                    self.updateSettings(token, currentMid: mid)
+                    
                     if let member = Member.findFirst(attribute: "mid", value: midString, contextType: BreezeContextType.Main) as? Member {
                         
                         BreezeStore.saveInMain({ (contextType) -> Void in
@@ -582,10 +574,12 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                             member.token = token
                             
                         })
+                        
+                        // Push user device token
+                        let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "token")?.data as! String
+                        pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                     }
                     
-                    // update local data
-                    self.updateSettings(token, currentMid: mid)
                     
                     // setup cache & user panel interface
                     CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
@@ -634,52 +628,18 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
             CTMemCache.sharedInstance.cleanNamespace("member")
             CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: "0", namespace: "token")
             
-            let t = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
-            println("After Logout: member_id=\(mid), token=" + t)
             
             // Refresh user panel interface
-            self.userInfoHeaderView.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)
+            self.userInfoHeaderView.panelIcon.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
+            self.userInfoHeaderView.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
             self.userInfoHeaderView.panelTitle.text = VCAppLetor.StringLine.UserInfoWithoutSignin
             
         } else {
             println("ERROR @ Can not find token in the local data")
         }
         
-        
-        
-        
     }
     
-    
-    
-    
-    
-}
-
-
-
-class UserPanelSectionFooterView: UITableViewHeaderFooterView {
-    
-    required init(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        self.setupViews()
-    }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setupViews()
-    }
-    
-    override init(reuseIdentifier: String?) {
-        super.init(reuseIdentifier: reuseIdentifier)
-        self.setupViews()
-    }
-    
-    func setupViews() {
-        
-        //        self.contentView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
-        
-    }
 }
 
 

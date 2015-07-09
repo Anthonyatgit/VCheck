@@ -44,8 +44,9 @@ class UserPanelTableViewCell: UITableViewCell {
         self.contentView.addSubview(self.panelTitle)
         
         self.countLabel.text = ""
-        self.countLabel.font = VCAppLetor.Font.BigFont
+        self.countLabel.font = VCAppLetor.Font.NormalFont
         self.countLabel.textColor = UIColor.lightGrayColor()
+        self.countLabel.sizeToFit()
         self.contentView.addSubview(self.countLabel)
         
         self.contentView.setNeedsUpdateConstraints()
@@ -54,11 +55,6 @@ class UserPanelTableViewCell: UITableViewCell {
     override func updateConstraints() {
         
         if !didSetupConstraints {
-            
-//            UIView.autoSetPriority(1000) {
-//                self.panelIcon.autoSetContentCompressionResistancePriorityForAxis(.Horizontal)
-//                self.panelTitle.autoSetContentCompressionResistancePriorityForAxis(.Horizontal)
-//            }
             
             self.panelIcon.autoPinEdgeToSuperviewEdge(.Leading, withInset: 18.0)
             self.panelIcon.autoAlignAxisToSuperviewAxis(.Horizontal)
@@ -69,7 +65,6 @@ class UserPanelTableViewCell: UITableViewCell {
             self.panelTitle.autoAlignAxisToSuperviewAxis(.Horizontal)
             
             self.countLabel.autoPinEdgeToSuperviewEdge(.Trailing)
-            self.countLabel.autoSetDimensionsToSize(CGSizeMake(20.0, 20.0))
             self.countLabel.autoAlignAxisToSuperviewAxis(.Horizontal)
             
             didSetupConstraints = true

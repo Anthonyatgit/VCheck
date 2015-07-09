@@ -13,6 +13,9 @@ import Alamofire
 
 class UserInfoHeaderView: UIView {
     
+    
+    let reachability = Reachability.reachabilityForInternetConnection()
+    
     let disclosureIndicator: UIImageView = UIImageView.newAutoLayoutView()
     
     let panelIcon: UIImageView = UIImageView()
@@ -60,14 +63,23 @@ class UserInfoHeaderView: UIView {
         
         if (token != "0"){
             
-            self.panelTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
-            let icon = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Icon, namespace: "member")?.data as! String
-            Alamofire.request(.GET, icon).validate().responseImage() {
-                (_, _, image, error) in
+            if self.reachability.isReachable() {
                 
-                if error == nil && image != nil {
-                    self.panelIcon.image = image
+                self.panelTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
+                let icon = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Icon, namespace: "member")?.data as! String
+                Alamofire.request(.GET, icon).validate().responseImage() {
+                    (_, _, image, error) in
+                    
+                    if error == nil && image != nil {
+                        self.panelIcon.image = image
+                    }
                 }
+            }
+            else {
+                
+                self.panelIcon.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
+                self.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+                self.panelTitle.text = VCAppLetor.StringLine.UserInfoWithoutSignin
             }
             
         }

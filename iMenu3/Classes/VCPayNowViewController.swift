@@ -13,7 +13,7 @@ import RKDropdownAlert
 import MBProgressHUD
 
 
-class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDropdownAlertDelegate {
+class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDropdownAlertDelegate, WXApiDelegate {
     
     
     var orderInfo: OrderInfo!
@@ -22,10 +22,12 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         willSet(type) {
             
             if type == VCAppLetor.PaymentCode.AliPay {
-                self.activeCircle.originY = self.alipayActive.originY
+                self.activeCircleAlipay.hidden = false
+                self.activeCircleWechat.hidden = true
             }
             else if type == VCAppLetor.PaymentCode.WechatPay {
-                self.activeCircle.originY = self.wechatActive.originY
+                self.activeCircleAlipay.hidden = true
+                self.activeCircleWechat.hidden = false
             }
         }
     }
@@ -85,9 +87,10 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
     let wechatUnderline: CustomDrawView = CustomDrawView.newAutoLayoutView()
     let wechatBtn: UIButton = UIButton.newAutoLayoutView()
     
-    let activeCircle: CustomDrawView = CustomDrawView.newAutoLayoutView()
+    let activeCircleAlipay: CustomDrawView = CustomDrawView.newAutoLayoutView()
+    let activeCircleWechat: CustomDrawView = CustomDrawView.newAutoLayoutView()
     
-    let cityButton: UIButton = UIButton(frame: CGRectMake(-20.0, 0.0, 42.0, 42.0))
+    let cityButton: UIButton = UIButton(frame: CGRectMake(-20.0, 0.0, 62.0, 42.0))
     
     var hud: MBProgressHUD!
     
@@ -111,7 +114,9 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
         self.scrollView.frame = self.view.bounds
         self.scrollView.frame.size.height = self.view.bounds.height - VCAppLetor.ConstValue.CheckNowBarHeight
-        self.scrollView.contentMode = UIViewContentMode.Top
+        
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.delegate = self
         self.scrollView.backgroundColor = UIColor.whiteColor()
         
         
@@ -140,8 +145,6 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
         self.scrollView.contentSize = self.scrollView.frame.size
         self.scrollView.contentSize.height = self.scrollView.height - VCAppLetor.ConstValue.CheckNowBarHeight
-        self.scrollView.showsVerticalScrollIndicator = false
-        self.scrollView.delegate = self
     }
     
     override func updateViewConstraints() {
@@ -166,11 +169,11 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
         self.priceUnit.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         self.priceUnit.autoPinEdge(.Top, toEdge: .Top, ofView: self.priceName)
-//        self.priceUnit.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
+        //self.priceUnit.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
         
         self.priceValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.priceUnit)
         self.priceValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.priceName)
-//        self.priceValue.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
+        //self.priceValue.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
         
         self.priceUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.priceName, withOffset: 10.0)
         self.priceUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.priceName)
@@ -183,7 +186,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
         self.amountValue.autoAlignAxis(.Horizontal, toSameAxisOfView: self.amountName)
         self.amountValue.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-//        self.amountValue.autoSetDimensionsToSize(CGSizeMake(30.0, 14.0))
+        //self.amountValue.autoSetDimensionsToSize(CGSizeMake(30.0, 14.0))
         
         self.amountUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
         self.amountUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.amountName, withOffset: 10.0)
@@ -196,7 +199,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
         self.totalPriceValue.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         self.totalPriceValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.totalPriceName)
-//        self.totalPriceValue.autoSetDimensionsToSize(CGSizeMake(80.0, 20.0))
+        //self.totalPriceValue.autoSetDimensionsToSize(CGSizeMake(80.0, 20.0))
         
         self.totalPriceUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
         self.totalPriceUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
@@ -211,7 +214,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.couponArraw.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         self.couponArraw.autoPinEdge(.Top, toEdge: .Top, ofView: self.couponName, withOffset: -4.0)
         
-//        self.couponStat.autoSetDimensionsToSize(CGSizeMake(140.0, 20.0))
+        //self.couponStat.autoSetDimensionsToSize(CGSizeMake(140.0, 20.0))
         self.couponStat.autoPinEdge(.Top, toEdge: .Top, ofView: self.couponName)
         self.couponStat.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.couponArraw, withOffset: -6.0)
         
@@ -231,7 +234,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
         self.finalTotalValue.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         self.finalTotalValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.finalTotalName)
-//        self.finalTotalValue.autoSetDimensionsToSize(CGSizeMake(80.0, 20.0))
+        //self.finalTotalValue.autoSetDimensionsToSize(CGSizeMake(80.0, 20.0))
         
         self.finalTotalUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
         self.finalTotalUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
@@ -256,20 +259,20 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.alipayIcon.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.choosePayTypeUnderline, withOffset: 12.0)
         
         self.alipayTitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.alipayIcon, withOffset: 10.0)
-//        self.alipayTitle.autoSetDimensionsToSize(CGSizeMake(132.0, 20.0))
+        //self.alipayTitle.autoSetDimensionsToSize(CGSizeMake(132.0, 20.0))
         self.alipayTitle.autoPinEdge(.Top, toEdge: .Top, ofView: self.alipayIcon, withOffset: 0.0)
         
         self.alipaySubtitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.wechatIcon, withOffset: 10.0)
-//        self.alipaySubtitle.autoSetDimensionsToSize(CGSizeMake(self.view.width - 120, 20.0))
+        //self.alipaySubtitle.autoSetDimensionsToSize(CGSizeMake(self.view.width - 120, 20.0))
         self.alipaySubtitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.alipayTitle, withOffset: 1.0)
         
         self.alipayActive.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         self.alipayActive.autoAlignAxis(.Horizontal, toSameAxisOfView: self.alipayIcon)
         self.alipayActive.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
         
-        self.activeCircle.autoPinEdge(.Top, toEdge: .Top, ofView: self.alipayActive)
-        self.activeCircle.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.alipayActive)
-        self.activeCircle.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
+        self.activeCircleAlipay.autoPinEdge(.Top, toEdge: .Top, ofView: self.alipayActive)
+        self.activeCircleAlipay.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.alipayActive)
+        self.activeCircleAlipay.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
         
         self.alipayUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
         self.alipayUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
@@ -286,16 +289,20 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.wechatIcon.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.alipayUnderline, withOffset: 12.0)
         
         self.wechatTitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.wechatIcon, withOffset: 10.0)
-//        self.wechatTitle.autoSetDimensionsToSize(CGSizeMake(132.0, 20.0))
+        //self.wechatTitle.autoSetDimensionsToSize(CGSizeMake(132.0, 20.0))
         self.wechatTitle.autoPinEdge(.Top, toEdge: .Top, ofView: self.wechatIcon, withOffset: 0.0)
         
         self.wechatSubtitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.wechatIcon, withOffset: 10.0)
-//        self.wechatSubtitle.autoSetDimensionsToSize(CGSizeMake(self.view.width - 120, 20.0))
+        //self.wechatSubtitle.autoSetDimensionsToSize(CGSizeMake(self.view.width - 120, 20.0))
         self.wechatSubtitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.wechatTitle, withOffset: 1.0)
         
         self.wechatActive.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         self.wechatActive.autoAlignAxis(.Horizontal, toSameAxisOfView: self.wechatIcon)
         self.wechatActive.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
+        
+        self.activeCircleWechat.autoPinEdge(.Top, toEdge: .Top, ofView: self.wechatActive)
+        self.activeCircleWechat.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.wechatActive)
+        self.activeCircleWechat.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
         
         self.wechatUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
         self.wechatUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
@@ -320,7 +327,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
         self.orderPriceValue.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.payBtn)
         self.orderPriceValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.payBtn, withOffset: -30.0)
-//        self.orderPriceValue.autoSetDimensionsToSize(CGSizeMake(54.0, 22.0))
+        //self.orderPriceValue.autoSetDimensionsToSize(CGSizeMake(54.0, 22.0))
         
         self.orderPriceName.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.orderPriceValue, withOffset: 0.0)
         self.orderPriceName.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.payBtn)
@@ -525,18 +532,23 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.wechatBtn.addTarget(self, action: "setPayType:", forControlEvents: .TouchUpInside)
         self.scrollView.addSubview(self.wechatBtn)
         
-        self.activeCircle.drawType = "SelectedCircle"
-        self.scrollView.addSubview(self.activeCircle)
+        self.activeCircleAlipay.drawType = "SelectedCircle"
+        self.activeCircleAlipay.hidden = false
+        self.scrollView.addSubview(self.activeCircleAlipay)
+        
+        self.activeCircleWechat.drawType = "SelectedCircle"
+        self.activeCircleWechat.hidden = true
+        self.scrollView.addSubview(self.activeCircleWechat)
         
         self.view.addSubview(self.scrollView)
     }
     
     func setupPayBar() {
         
-        self.payBg.backgroundColor = UIColor.pumpkinColor()
+        self.payBg.backgroundColor = UIColor.nephritisColor()
         self.payBarView.addSubview(self.payBg)
         
-        self.payBtn.backgroundColor = UIColor.pumpkinColor()
+        self.payBtn.backgroundColor = UIColor.nephritisColor()
         self.payBtn.setTitle(VCAppLetor.StringLine.PayNow, forState: UIControlState.Normal)
         self.payBtn.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
         self.payBtn.layer.borderWidth = 1.0
@@ -653,69 +665,82 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
                     
                     let orderString: String = json["data"]["payment_order_param"].string!
                     
-                    AlipaySDK.defaultService().payOrder(orderString, fromScheme: VCAppLetor.StringLine.AppScheme, callback: {
-                        (resultDic) -> Void in
+                    //========== ALIPAY PAYGATE ================
+                    if self.paymentCode == VCAppLetor.PaymentCode.AliPay {
                         
-                        self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                        self.hud.mode = MBProgressHUDMode.Determinate
-                        self.hud.labelText = VCAppLetor.StringLine.AsyncPaymentInProgress
                         
-                        let dic = resultDic as NSDictionary
+                        CTMemCache.sharedInstance.set(VCAppLetor.ObjectIns.objPayVC, data: self, namespace: "object")
                         
-                        if dic.valueForKey("resultStatus") as! String == "9000" {
+                        AlipaySDK.defaultService().payOrder(orderString, fromScheme: VCAppLetor.StringLine.AppScheme, callback: {
+                            (resultDic) -> Void in
                             
-                            let resultString = (dic.valueForKey("result") as! String).stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+                            self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                            self.hud.mode = MBProgressHUDMode.Determinate
+                            self.hud.labelText = VCAppLetor.StringLine.AsyncPaymentInProgress
                             
-                            Alamofire.request(VCheckGo.Router.AsyncPayment(memberId, self.orderInfo.id, resultString!, token)).validate().responseSwiftyJSON({
-                                (_, _, JSON, error) -> Void in
+                            let dic = resultDic as NSDictionary
+                            
+                            if dic.valueForKey("resultStatus") as! String == "9000" {
                                 
-                                if error == nil {
+                                let resultString = (dic.valueForKey("result") as! String).stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+                                
+                                Alamofire.request(VCheckGo.Router.AsyncPayment(memberId, self.orderInfo.id, resultString!, token)).validate().responseSwiftyJSON({
+                                    (_, _, JSON, error) -> Void in
                                     
-                                    let json = JSON
-                                    
-                                    if json["status"]["succeed"].string! == "1" {
+                                    if error == nil {
                                         
-                                        self.hud.hide(true)
+                                        let json = JSON
                                         
-                                        // Show success view
-                                        let paySuccessVC: VCPaySuccessViewController = VCPaySuccessViewController()
-                                        paySuccessVC.parentNav = self.parentNav
-                                        paySuccessVC.foodDetailVC = self.foodDetailVC
-                                        paySuccessVC.orderInfo = self.orderInfo
-                                        self.parentNav.showViewController(paySuccessVC, sender: self)
-                                        
+                                        if json["status"]["succeed"].string! == "1" {
+                                            
+                                            self.hud.hide(true)
+                                            
+                                            // Show success view
+                                            let paySuccessVC: VCPaySuccessViewController = VCPaySuccessViewController()
+                                            paySuccessVC.parentNav = self.parentNav
+                                            paySuccessVC.foodDetailVC = self.foodDetailVC
+                                            paySuccessVC.orderInfo = self.orderInfo
+                                            self.parentNav.showViewController(paySuccessVC, sender: self)
+                                            
+                                        }
+                                        else {
+                                            self.hud.hide(true)
+                                            RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                                        }
                                     }
                                     else {
                                         self.hud.hide(true)
-                                        RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                                        println("ERROR @ Request for async payment result : \(error?.localizedDescription)")
+                                        RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                                     }
-                                }
-                                else {
-                                    self.hud.hide(true)
-                                    println("ERROR @ Request for async payment result : \(error?.localizedDescription)")
-                                    RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
-                                }
-                            })
-                        }
-                        else if dic.valueForKey("resultStatus") as! String == "6001" {
-                            
-                            self.hud.hide(true)
-                            RKDropdownAlert.title(VCAppLetor.StringLine.UserCanclePayment, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTimeLong)
-                            
-                        }
-                        else if dic.valueForKey("resultStatus") as! String == "6002" {
-                            
-                            self.hud.hide(true)
-                            RKDropdownAlert.title(VCAppLetor.StringLine.PaymentNetworkError, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
-                            
-                        }
-                        else if dic.valueForKey("resultStatus") as! String == "4000" {
-                            
-                            self.hud.hide(true)
-                            RKDropdownAlert.title(VCAppLetor.StringLine.PaymentFailed, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
-                            
-                        }
-                    })
+                                })
+                            }
+                            else if dic.valueForKey("resultStatus") as! String == "6001" {
+                                
+                                self.hud.hide(true)
+                                RKDropdownAlert.title(VCAppLetor.StringLine.UserCanclePayment, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTimeLong)
+                                
+                            }
+                            else if dic.valueForKey("resultStatus") as! String == "6002" {
+                                
+                                self.hud.hide(true)
+                                RKDropdownAlert.title(VCAppLetor.StringLine.PaymentNetworkError, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                                
+                            }
+                            else if dic.valueForKey("resultStatus") as! String == "4000" {
+                                
+                                self.hud.hide(true)
+                                RKDropdownAlert.title(VCAppLetor.StringLine.PaymentFailed, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                                
+                            }
+                        })
+                    }
+                    //========== WeChat PAYGATE ================
+                    else if self.paymentCode == VCAppLetor.PaymentCode.WechatPay {
+                        
+                        self.sendWXPay(orderString)
+                        
+                    }
                 }
                 else {
                     
@@ -731,6 +756,125 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
     }
     
+    
+    func sendWXPay(orderString: String) {
+        
+        var error: NSError?
+        
+        CTMemCache.sharedInstance.set(VCAppLetor.ObjectIns.objPayVC, data: self, namespace: "object")
+        
+        if orderString != "" {
+            
+            var dict: NSMutableDictionary = NSMutableDictionary()
+            
+            let data: NSData = orderString.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!
+            
+            dict = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableLeaves, error: &error) as! NSMutableDictionary
+            
+            //println("orderString: \(orderString) \n dict: \(dict)")
+            
+            if !dict.isEqual(nil) {
+                
+                var stamp: String = dict.objectForKey("timestamp") as! String
+                
+                // Call Wechat Pay
+                let req: PayReq = PayReq()
+                req.openID          = dict.objectForKey("appid") as! String
+                req.partnerId       = dict.objectForKey("partnerid") as! String
+                req.prepayId        = dict.objectForKey("prepayid") as! String
+                req.nonceStr        = dict.objectForKey("noncestr") as! String
+                req.timeStamp       = UInt32((stamp as NSString).intValue)
+                req.package         = dict.objectForKey("package") as! String
+                req.sign            = dict.objectForKey("paySign") as! String
+                
+                WXApi.safeSendReq(req)
+                
+            }
+            else {
+                
+                println("ERROR @ JSON Object return by server is nil")
+            }
+        }
+        else {
+            println("ERROR @ sending synchronousRequest for preorder")
+        }
+        
+    }
+    
+    func onResp(resp: BaseResp!) {
+        
+        println("errCode: \(resp.errCode)")
+        
+        self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        self.hud.mode = MBProgressHUDMode.Determinate
+        self.hud.labelText = VCAppLetor.StringLine.AsyncPaymentInProgress
+        
+        let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+        let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+        
+        if resp.isKindOfClass(PayResp.classForCoder()) {
+            
+            if (resp.errCode == WXSuccess.value) {
+                
+                // Payment Result
+                let resultString = "\(resp.errCode)"
+                
+                Alamofire.request(VCheckGo.Router.AsyncPayment(memberId, self.orderInfo.id, resultString, token)).validate().responseSwiftyJSON({
+                    (_, _, JSON, error) -> Void in
+                    
+                    if error == nil {
+                        
+                        let json = JSON
+                        
+                        if json["status"]["succeed"].string! == "1" {
+                            
+                            self.hud.hide(true)
+                            
+                            // Show success view
+                            let paySuccessVC: VCPaySuccessViewController = VCPaySuccessViewController()
+                            paySuccessVC.parentNav = self.parentNav
+                            paySuccessVC.foodDetailVC = self.foodDetailVC
+                            paySuccessVC.orderInfo = self.orderInfo
+                            self.parentNav.showViewController(paySuccessVC, sender: self)
+                            
+                        }
+                        else {
+                            self.hud.hide(true)
+                            RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                        }
+                    }
+                    else {
+                        self.hud.hide(true)
+                        println("ERROR @ Request for async payment result[PaySuccess] : \(error?.localizedDescription)")
+                        RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    }
+                })
+                
+                
+            }
+            else if resp.errCode == WXErrCodeUserCancel.value {
+                
+                self.hud.hide(true)
+                RKDropdownAlert.title(VCAppLetor.StringLine.UserCanclePayment, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTimeLong)
+            }
+            else if resp.errCode == WXErrCodeAuthDeny.value {
+                
+                self.hud.hide(true)
+                RKDropdownAlert.title(VCAppLetor.StringLine.UserAuthFail, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTimeLong)
+            }
+            else {
+                
+                self.hud.hide(true)
+                RKDropdownAlert.title(VCAppLetor.StringLine.PaymentFailed, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTimeLong)
+            }
+        }
+        
+    }
+    
+    
+    
+    
+    
     // MARK: - RKDropdownAlert Delegate
     func dropdownAlertWasTapped(alert: RKDropdownAlert!) -> Bool {
         return true
@@ -741,7 +885,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         return true
     }
     
-
+    
 }
 
 

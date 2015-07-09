@@ -10,16 +10,19 @@ import UIKit
 import CoreData
 import Alamofire
 import SCLAlertView
-
+import DKChainableAnimationKit
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
     
     var window: UIWindow?
     
     var _mapManager: BMKMapManager?
     
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+        
         // Override point for customization after application launch.
         UINavigationBar.appearance().barStyle = UIBarStyle.Black
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
@@ -54,6 +57,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Connect WeChat
         ShareSDK.connectWeChatWithAppId(VCAppLetor.ShareSDK.WeChatAppKey, appSecret: VCAppLetor.ShareSDK.WeChatAppSecret, wechatCls: WXApi.classForCoder())
         ShareSDK.connectWeChatSessionWithAppId(VCAppLetor.ShareSDK.WeChatAppKey, appSecret: VCAppLetor.ShareSDK.WeChatAppSecret, wechatCls: WXApi.classForCoder())
+        
+        // Wechat Pay
+        let we = WXApi.registerApp(VCAppLetor.ShareSDK.WeChatAppKey, withDescription: "VCheck beta")
+        
+        if we {
+            println("Register WXApi Success")
+        }
+        else {
+            println("Register WXApi failed")
+        }
         
         // Connect SMS
         //ShareSDK.connectSMS()
@@ -129,6 +142,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //self.saveContext()
     }
     
+    // MARK: - Functions
+    
     
     // MARK: - XGPush
     
@@ -169,11 +184,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        XGSetting.getInstance().Channel = "VCheck"
 //        XGSetting.getInstance().GameServer = "VCheck"
         
+//        let deviceTokenString: String = NSString(data: deviceToken, encoding: NSUTF8StringEncoding) as! String
+        let deviceTokenString: String = deviceToken.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.allZeros)
+        println("device token: \(deviceTokenString)")
+        
         let deviceTokenStr: String = XGPush.registerDevice(deviceToken, successCallback: { () -> Void in
             println("[XGPush]Register success for deviceToken")
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optDeviceToken, data: deviceTokenString, namespace: "token")
+            
         }) { () -> Void in
             println("[XGPush]Register failed for deviceToken")
         }
+        
+        
+        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optDeviceToken, data: deviceTokenStr, namespace: "token")
     }
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
@@ -330,6 +355,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
         
         println("url: \(url)")
+        
+        let paymentVC = CTMemCache.sharedInstance.get(VCAppLetor.ObjectIns.objPayVC, namespace: "object")?.data as! VCPayNowViewController
+        
+        WXApi.handleOpenURL(url, delegate: paymentVC)
         
         if url.scheme == "vcheck" {
             

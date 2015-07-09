@@ -206,7 +206,7 @@ class VCPaySuccessViewController: VCBaseViewController, UIScrollViewDelegate {
         self.codeValue.text = self.orderInfo.no
         self.codeValue.textAlignment = .Right
         self.codeValue.textColor = VCAppLetor.Colors.Light
-        self.codeValue.font = VCAppLetor.Font.XXLarge
+        self.codeValue.font = VCAppLetor.Font.XLarge
         self.codeValue.sizeToFit()
         self.scrollView.addSubview(self.codeValue)
         

@@ -350,7 +350,6 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
             
             if memberId != "0" && token != "0" {
                 
-                println("Before Logout: member_id=\(memberId), token=\(token)")
                 
                 Alamofire.request(VCheckGo.Router.MemberLogout(token, memberId)).validate().responseSwiftyJSON({
                     (_, _, JSON, error) -> Void in
@@ -378,7 +377,17 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
                             
                         }
                         else {
+                            
                             self.hud.hide(true)
+                            
+                            // If token error, logout anyway
+                            if json["status"]["error_code"].string! == VCAppLetor.ErrorCode.TokenError {
+                                
+                                self.delegate?.memberDidLogoutSuccess(memberId)
+                                self.parentNav?.popViewControllerAnimated(true)
+                            }
+                            
+                            
                             RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                         }
                     }

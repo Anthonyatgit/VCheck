@@ -15,6 +15,7 @@
 //#import <TencentOpenAPI/QQApiInterface.h>
 //#import <TencentOpenAPI/TencentOAuth.h>
 #import "WXApi.h"
+#import "WXApiObject.h"
 //#import "WeiboApi.h"
 #import "WeiboSDK.h"
 
@@ -44,5 +45,6 @@
 // Alipay
 #import <AlipaySDK/AlipaySDK.h>
 
+// Wechat Pay
 
 #endif

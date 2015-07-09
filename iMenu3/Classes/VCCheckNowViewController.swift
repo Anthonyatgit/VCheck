@@ -174,11 +174,11 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         
         self.priceUnit.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         self.priceUnit.autoPinEdge(.Top, toEdge: .Top, ofView: self.priceName)
-//        self.priceUnit.autoSetDimensionsToSize(CGSizeMake(40.0, 20.0))
+        //        self.priceUnit.autoSetDimensionsToSize(CGSizeMake(40.0, 20.0))
         
         self.priceValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.priceUnit)
         self.priceValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.priceName)
-//        self.priceValue.autoSetDimensionsToSize(CGSizeMake(120.0, 20.0))
+        //        self.priceValue.autoSetDimensionsToSize(CGSizeMake(120.0, 20.0))
         
         self.priceUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.priceName, withOffset: 10.0)
         self.priceUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.priceName)
@@ -212,7 +212,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         
         self.totalPriceValue.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         self.totalPriceValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.totalPriceName)
-//        self.totalPriceValue.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
+        //        self.totalPriceValue.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
         
         self.totalPriceUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
         self.totalPriceUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
@@ -285,7 +285,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         
         self.orderPriceValue.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.submitBtn)
         self.orderPriceValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.submitBtn, withOffset: -20.0)
-//        self.orderPriceValue.autoSetDimensionsToSize(CGSizeMake(164.0, 22.0))
+        //        self.orderPriceValue.autoSetDimensionsToSize(CGSizeMake(164.0, 22.0))
         
         self.orderPriceName.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.submitBtn)
         self.orderPriceName.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.orderPriceValue, withOffset: -10.0)
@@ -541,32 +541,32 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             
             self.sendOrderingAuthCode(mobile)
             
-//            Alamofire.request(VCheckGo.Router.ValidateMemberInfo(VCheckGo.ValidateType.Mobile, mobile)).validate().responseSwiftyJSON({
-//                (_, _, JSON, error) -> Void in
-//                
-//                let json = JSON
-//                
-//                if (error == nil) {
-//                    
-//                    if json["status"]["succeed"].string == "0" && json["status"]["error_code"].string == VCAppLetor.ErrorCode.MobileAlreadyExist {
-//                        self.sendRegAuthCode(mobile)
-//                    }
-//                    else {
-//                        self.mobileShaker?.shakeWithDuration(VCAppLetor.ConstValue.TextFieldShakeTime, completion: { () -> Void in
-//                            RKDropdownAlert.title(VCAppLetor.StringLine.MobileNotExist, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime, delegate: self)
-//                        })
-//                    }
-//                    
-//                    
-//                }
-//                else {
-//                    println("ERROR @ Validate member info request : \(error?.localizedDescription)")
-//                }
-//                
-//                self.mobile.resignFirstResponder()
-//                hud.hide(true)
-//                
-//            })
+            //            Alamofire.request(VCheckGo.Router.ValidateMemberInfo(VCheckGo.ValidateType.Mobile, mobile)).validate().responseSwiftyJSON({
+            //                (_, _, JSON, error) -> Void in
+            //
+            //                let json = JSON
+            //
+            //                if (error == nil) {
+            //
+            //                    if json["status"]["succeed"].string == "0" && json["status"]["error_code"].string == VCAppLetor.ErrorCode.MobileAlreadyExist {
+            //                        self.sendRegAuthCode(mobile)
+            //                    }
+            //                    else {
+            //                        self.mobileShaker?.shakeWithDuration(VCAppLetor.ConstValue.TextFieldShakeTime, completion: { () -> Void in
+            //                            RKDropdownAlert.title(VCAppLetor.StringLine.MobileNotExist, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime, delegate: self)
+            //                        })
+            //                    }
+            //
+            //
+            //                }
+            //                else {
+            //                    println("ERROR @ Validate member info request : \(error?.localizedDescription)")
+            //                }
+            //
+            //                self.mobile.resignFirstResponder()
+            //                hud.hide(true)
+            //
+            //            })
             
             
         }
@@ -684,7 +684,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         userLoginController.modalTransitionStyle = .CoverVertical
         userLoginController.popoverPresentationController?.delegate = self
         userLoginController.delegate = self
-//        userLoginController.userPanelController = self
+        //        userLoginController.userPanelController = self
         presentViewController(userLoginController, animated: true, completion: nil)
     }
     
@@ -713,56 +713,39 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         // update local data
         if let isLogin = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameIsLogin, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 isLogin.sid = "\(NSDate())"
                 isLogin.value = "1"
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update isLogin value @ loginWithToken : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: true, namespace: "member")
-                    }
             })
+            
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: true, namespace: "member")
         }
         
         if let cMid = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameCurrentMid, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 cMid.sid = "\(NSDate())"
                 cMid.value = currentMid
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update currentMid value @ loginWithToken : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: currentMid, namespace: "member")
-                    }
             })
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: currentMid, namespace: "member")
         }
         
         if let loginType = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameLoginType, contextType: BreezeContextType.Main) as? Settings {
             
-            BreezeStore.saveInBackground({ contextType -> Void in
+            BreezeStore.saveInMain({ contextType -> Void in
                 
                 loginType.sid = "\(NSDate())"
                 loginType.value = VCAppLetor.LoginType.PhoneReg
                 
-                }, completion: { error -> Void in
-                    
-                    if (error != nil) {
-                        println("ERROR @ update loginType value @ loginWithToken : \(error?.localizedDescription)")
-                    }
-                    else {
-                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.PhoneReg, namespace: "member")
-                    }
             })
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.PhoneReg, namespace: "member")
         }
     }
     
@@ -783,10 +766,6 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             }
             else {
                 
-                self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                self.hud.mode = MBProgressHUDMode.Determinate
-                self.hud.labelText = VCAppLetor.StringLine.SubmitOrderInProgress
-                
                 let mobileText = self.mobile.text
                 let code = (CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.SaltCode, namespace: "member")?.data as! String + VCAppLetor.StringLine.SaltKey).md5
                 
@@ -799,8 +778,9 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                         
                         if json["status"]["succeed"] == "1" {
                             
-                            self.memberDidSigninSuccess(json["data"]["member_id"].string!, token: json["data"]["token"].string!)
-                            self.submitOrder()
+                            
+                            self.quickLogin(json["data"]["member_id"].string!, token: json["data"]["token"].string!)
+                            
                         }
                         else {
                             RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
@@ -816,17 +796,17 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         }
         else {
             
-            self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-            self.hud.mode = MBProgressHUDMode.Indeterminate
-            self.hud.labelText = VCAppLetor.StringLine.SubmitOrderInProgress
-            
-            self.submitOrder()
+            self.checkOrderInfo()
             
         }
         
     }
     
     func submitOrder() {
+        
+        self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        self.hud.mode = MBProgressHUDMode.Indeterminate
+        self.hud.labelText = VCAppLetor.StringLine.SubmitOrderInProgress
         
         // Update cart
         
@@ -879,36 +859,36 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                                 newOrder.typeDescription = json["data"]["order_info"]["order_type_description"].string!
                                 
                                 
-                                // Cache member order session, CAN NOT submit order with same menu until the order session complete (Deleted OR Paid)
-                                let orderSessionMenus = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.orderSessionMenuIds, namespace: "order")?.data as? NSMutableArray
-                                if orderSessionMenus != nil {
-                                    
-                                    orderSessionMenus?.addObject(menuId)
-                                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.orderSessionMenuIds, data: orderSessionMenus, namespace: "order")
-                                    
-                                    let orderSessionOrderObjs = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.orderSessionOrderObjs, namespace: "order")?.data as? NSMutableArray
-                                    
-                                    if orderSessionOrderObjs != nil {
-                                        orderSessionOrderObjs?.addObject(newOrder)
-                                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.orderSessionOrderObjs, data: orderSessionOrderObjs, namespace: "order")
-                                    }
-                                    else {
-                                        println("Order Session data missing! CAN NOT pair menus")
-                                    }
-                                    
-                                }
-                                else {
-                                    
-                                    let menus: NSMutableArray = NSMutableArray()
-                                    
-                                    menus.addObject(menuId)
-                                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.orderSessionMenuIds, data: menus, namespace: "order")
-                                    
-                                    let orders: NSMutableArray = NSMutableArray()
-                                    
-                                    orders.addObject(newOrder)
-                                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.orderSessionOrderObjs, data: orders, namespace: "order")
-                                }
+                                //                                // Cache member order session, CAN NOT submit order with same menu until the order session complete (Deleted OR Paid)
+                                //                                let orderSessionMenus = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.orderSessionMenuIds, namespace: "order")?.data as? NSMutableArray
+                                //                                if orderSessionMenus != nil {
+                                //
+                                //                                    orderSessionMenus?.addObject(menuId)
+                                //                                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.orderSessionMenuIds, data: orderSessionMenus, namespace: "order")
+                                //
+                                //                                    let orderSessionOrderObjs = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.orderSessionOrderObjs, namespace: "order")?.data as? NSMutableArray
+                                //
+                                //                                    if orderSessionOrderObjs != nil {
+                                //                                        orderSessionOrderObjs?.addObject(newOrder)
+                                //                                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.orderSessionOrderObjs, data: orderSessionOrderObjs, namespace: "order")
+                                //                                    }
+                                //                                    else {
+                                //                                        println("Order Session data missing! CAN NOT pair menus")
+                                //                                    }
+                                //
+                                //                                }
+                                //                                else {
+                                //
+                                //                                    let menus: NSMutableArray = NSMutableArray()
+                                //
+                                //                                    menus.addObject(menuId)
+                                //                                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.orderSessionMenuIds, data: menus, namespace: "order")
+                                //
+                                //                                    let orders: NSMutableArray = NSMutableArray()
+                                //
+                                //                                    orders.addObject(newOrder)
+                                //                                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.orderSessionOrderObjs, data: orders, namespace: "order")
+                                //                                }
                                 
                                 
                                 self.hud.hide(true)
@@ -986,11 +966,14 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     // MARK: - UITextField Delegate
     
     func textFieldDidBeginEditing(textField: UITextField) {
-        IHKeyboardAvoiding.setAvoidingView(self.view)
+        IHKeyboardAvoiding.setAvoidingView(self.mobile)
+        IHKeyboardAvoiding.setAvoidingView(self.verifyCode)
+        IHKeyboardAvoiding.setAvoidingView(self.submitView)
+        
     }
     
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-//        IHKeyboardAvoiding.setAvoidingView(self.view)
+        //        IHKeyboardAvoiding.setAvoidingView(self.view)
         return true
     }
     
@@ -1044,6 +1027,8 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                     CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
                     CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
                     
+                    let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "token")?.data as! String
+                    pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                     
                     self.resetOrderPageLayout()
                     
@@ -1063,72 +1048,222 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     
     func memberDidSigninSuccess(mid: String, token: String) {
         
+        self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        self.hud.mode = MBProgressHUDMode.Indeterminate
+        
         // Get member info which just finish Signing In
         Alamofire.request(VCheckGo.Router.GetMemberInfo(token, mid)).validate().responseSwiftyJSON ({
+            (_, _, JSON, error) -> Void in
+            
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                
+                if error == nil {
+                    
+                    let json = JSON
+                    
+                    if json["status"]["succeed"].string == "1" {
+                        
+                        let midString = json["data"]["member_info"]["member_id"].string!
+                        let emailString = json["data"]["member_info"]["email"].string!
+                        let mobileString = json["data"]["member_info"]["mobile"].string!
+                        let nicknameString = json["data"]["member_info"]["member_name"].string!
+                        let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
+                        
+                        
+                        // update local data
+                        self.updateSettings(token, currentMid: mid)
+                        
+                        if let member = Member.findFirst(attribute: "mid", value: midString, contextType: BreezeContextType.Main) as? Member {
+                            
+                            BreezeStore.saveInMain({ (contextType) -> Void in
+                                
+                                member.email = emailString
+                                member.phone = mobileString
+                                member.nickname = nicknameString
+                                member.iconURL = iconString
+                                member.lastLog = NSDate()
+                                member.token = token
+                                
+                            })
+                            
+                        }
+                        else { // Member login for the first time without register on the device
+                            // Get member info and refresh userinterface
+                            BreezeStore.saveInMain({ (contextType) -> Void in
+                                
+                                let member = Member.createInContextOfType(contextType) as! Member
+                                
+                                member.mid = midString
+                                member.email = emailString
+                                member.phone = mobileString
+                                member.nickname = nicknameString
+                                member.iconURL = iconString
+                                member.lastLog = NSDate()
+                                member.token = token
+                                
+                            })
+                            
+                            let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "token")?.data as! String
+                            pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
+                        }
+                        
+                        // setup cache & user panel interface
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
+                        
+                        self.resetOrderPageLayout()
+                        self.checkOrderInfo()
+                    }
+                    else {
+                        self.hud.hide(true)
+                        RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    }
+                }
+                else {
+                    self.hud.hide(true)
+                    println("ERROR @ Request for member info : \(error?.localizedDescription)")
+                }
+            })
+        })
+    }
+    
+    
+    func quickLogin(mid: String, token: String) {
+        
+        self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        self.hud.mode = MBProgressHUDMode.Indeterminate
+        
+        // Get member info which just finish Signing In
+        Alamofire.request(VCheckGo.Router.GetMemberInfo(token, mid)).validate().responseSwiftyJSON ({
+            (_, _, JSON, error) -> Void in
+            
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                
+                if error == nil {
+                    
+                    let json = JSON
+                    
+                    if json["status"]["succeed"].string == "1" {
+                        
+                        let midString = json["data"]["member_info"]["member_id"].string!
+                        let emailString = json["data"]["member_info"]["email"].string!
+                        let mobileString = json["data"]["member_info"]["mobile"].string!
+                        let nicknameString = json["data"]["member_info"]["member_name"].string!
+                        let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
+                        
+                        
+                        // update local data
+                        self.updateSettings(token, currentMid: mid)
+                        
+                        if let member = Member.findFirst(attribute: "mid", value: midString, contextType: BreezeContextType.Main) as? Member {
+                            
+                            BreezeStore.saveInMain({ (contextType) -> Void in
+                                
+                                member.email = emailString
+                                member.phone = mobileString
+                                member.nickname = nicknameString
+                                member.iconURL = iconString
+                                member.lastLog = NSDate()
+                                member.token = token
+                                
+                            })
+                            
+                        }
+                        else { // Member login for the first time without register on the device
+                            // Get member info and refresh userinterface
+                            BreezeStore.saveInMain({ (contextType) -> Void in
+                                
+                                let member = Member.createInContextOfType(contextType) as! Member
+                                
+                                member.mid = midString
+                                member.email = emailString
+                                member.phone = mobileString
+                                member.nickname = nicknameString
+                                member.iconURL = iconString
+                                member.lastLog = NSDate()
+                                member.token = token
+                                
+                            })
+                            
+                            let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "token")?.data as! String
+                            pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
+                        }
+                        
+                        // setup cache & user panel interface
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
+                        
+                        self.resetOrderPageLayout()
+                        self.checkOrderInfo()
+                    }
+                    else {
+                        self.hud.hide(true)
+                        RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    }
+                }
+                else {
+                    self.hud.hide(true)
+                    println("ERROR @ Request for member info : \(error?.localizedDescription)")
+                }
+            })
+        })
+    }
+    
+    func checkOrderInfo() {
+        
+        let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+        
+        Alamofire.request(VCheckGo.Router.GetProductDetailWithMember(self.foodInfo.id, memberId)).validate().responseSwiftyJSON({
             (_, _, JSON, error) -> Void in
             
             if error == nil {
                 
                 let json = JSON
                 
-                if json["status"]["succeed"].string == "1" {
+                if json["status"]["succeed"].string! == "1" {
                     
-                    let midString = json["data"]["member_info"]["member_id"].string!
-                    let emailString = json["data"]["member_info"]["email"].string!
-                    let mobileString = json["data"]["member_info"]["mobile"].string!
-                    let nicknameString = json["data"]["member_info"]["member_name"].string!
-                    let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
                     
-                    if let member = Member.findFirst(attribute: "mid", value: midString, contextType: BreezeContextType.Main) as? Member {
+                    // Unpaid order exist?
+                    let foodOrder = json["data"]["article_info"]["order_info"]
+                    
+                    if foodOrder != "" {
                         
-                        BreezeStore.saveInMain({ (contextType) -> Void in
-                            
-                            member.email = emailString
-                            member.phone = mobileString
-                            member.nickname = nicknameString
-                            member.iconURL = iconString
-                            member.lastLog = NSDate()
-                            member.token = token
-                            
-                        })
+                        RKDropdownAlert.title(VCAppLetor.StringLine.BackToPay, backgroundColor: UIColor.nephritisColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTimeLong)
                         
+                        self.foodInfo.orderExist = json["data"]["article_info"]["order_info"]["order_id"].string!
+                        
+                        self.submitBtn.removeTarget(self, action: "checkNowAction", forControlEvents: .TouchUpInside)
+                        self.submitBtn.addTarget(self, action: "backToPay", forControlEvents: .TouchUpInside)
                     }
-                    else { // Member login for the first time without register on the device
-                        // Get member info and refresh userinterface
-                        BreezeStore.saveInMain({ (contextType) -> Void in
-                            
-                            let member = Member.createInContextOfType(contextType) as! Member
-                            
-                            member.mid = midString
-                            member.email = emailString
-                            member.phone = mobileString
-                            member.nickname = nicknameString
-                            member.iconURL = iconString
-                            member.lastLog = NSDate()
-                            member.token = token
-                            
-                        })
+                    else {
+                        self.foodInfo.orderExist = "0"
+                        self.submitOrder()
                     }
                     
-                    // update local data
-                    self.updateSettings(token, currentMid: mid)
-                    
-                    // setup cache & user panel interface
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
-                    
-                    self.resetOrderPageLayout()
+                    MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
                 }
                 else {
-                    RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
                 }
             }
             else {
-                println("ERROR @ Request for member info : \(error?.localizedDescription)")
+                
+                println("ERROR @ Request for Product Detail[CheckNow] : \(error?.localizedDescription)")
+                RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                MBProgressHUD.hideAllHUDsForView(self.view, animated: true)
             }
         })
+        
+    }
+    
+    func backToPay() {
+        
+        RKDropdownAlert.title(VCAppLetor.StringLine.BackToPay, backgroundColor: UIColor.nephritisColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTimeLong)
     }
     
     
@@ -1166,5 +1301,10 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     }
     
 }
+
+
+
+
+
 
 

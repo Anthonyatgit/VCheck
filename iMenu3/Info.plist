@@ -35,7 +35,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>wx76e86073a6e91077</string>
+				<string>vcheck</string>
 			</array>
 		</dict>
 		<dict>
@@ -43,7 +43,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>vcheck</string>
+				<string>wx79252ca0921c523d</string>
 			</array>
 		</dict>
 	</array>

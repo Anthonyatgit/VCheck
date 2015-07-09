@@ -35,6 +35,7 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
         
         // Prepare for interface
         self.title = VCAppLetor.StringLine.FavoritesTitle
+        self.view.backgroundColor = UIColor.whiteColor()
         
         // Rewrite back bar button
         let backButton: UIBarButtonItem = UIBarButtonItem()
@@ -48,6 +49,7 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
         self.tableView.separatorColor = UIColor.clearColor()
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        self.tableView.alpha = 0.1
         
         self.view.addSubview(self.tableView)
         
@@ -135,9 +137,9 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
         
         let foodViewerViewController: FoodViewerViewController = FoodViewerViewController()
         foodViewerViewController.foodInfo = self.favoritesList.objectAtIndex(indexPath.row) as! FoodInfo
-        foodViewerViewController.parentNav = self.navigationController
+        foodViewerViewController.parentNav = self.parentNav
         
-        self.navigationController!.showViewController(foodViewerViewController, sender: self)
+        self.parentNav!.showViewController(foodViewerViewController, sender: self)
         
     }
     
@@ -178,7 +180,7 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
                     }
                     else {
                         
-                        println("ERROR @ Request to edit collection")
+                        println("ERROR @ Request to edit collection : \(error?.localizedDescription)")
                         RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                     }
                     
@@ -466,6 +468,7 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
                         self.hud.hide(true)
                         self.tableView.stopRefreshAnimation()
                         self.tableView.reloadData()
+                        self.tableView.animation.makeAlpha(1.0).animate(0.2)
                     })
                     
                 }

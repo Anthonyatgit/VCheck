@@ -146,9 +146,9 @@ class CustomDrawView: UIView {
             
             CGContextSetLineWidth(context, 1.0)
             CGContextSetStrokeColorWithColor(context, UIColor.clearColor().CGColor)
-            CGContextMoveToPoint(context, 81.0, 0.0)
+            CGContextMoveToPoint(context, 81.0, -1.0)
             CGContextAddLineToPoint(context, 75.0, 14.0)
-            CGContextAddLineToPoint(context, 81.0, 28.0)
+            CGContextAddLineToPoint(context, 81.0, 29.0)
             CGContextClosePath(context)
             CGContextSetBlendMode(context, kCGBlendModeClear)
             CGContextFillPath(context)

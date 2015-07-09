@@ -20,7 +20,7 @@ struct VCheckGo {
         #if DEBUG
             static let baseAPIURLString = "http://218.244.158.175/imenu_test/app_interface_vcheck/index.php"
         #else
-            static let baseAPIURLString = "http://www.imenu.so/imenu_test/app_interface_vcheck/index.php"
+            static let baseAPIURLString = "http://218.244.158.175/imenu_test/app_interface_vcheck/index.php"
         #endif
         
         // Security Key
@@ -47,8 +47,11 @@ struct VCheckGo {
         case GetProductList(Int, Int)                                               // 18.产品-获取产品列表
         case GetProductDetail(Int)                                                  // 19.产品-获取产品详细
         case GetProductDetailWithMember(Int, String)                                // 19.产品-获取产品详情[用户模式]
+        case GetIndexImage(String)                                                  // 20.基本-获取封面首页
+        case PushDeviceToken(String, String, PushDeviceType, String)                // 24.基本-提交推送设备信息
         case GetOrderList(String, Int, Int, String)                                 // 26.会员-获取订单列表
-        
+        case GetOrderDetail(String, String, String)                                 // 27.会员-获取订单详情
+        case EditOrder(String, String, EditOrderType, String)                       // 28.会员-编辑订单状态
         case EditCart(String, EditCartType, String, String, String, String)         // 38.订单-编辑购物车信息
         case ClearCart(String, String)                                              // 38.订单-清空购物车信息
         case AddOrder(String, String)                                               // 39.订单-提交订单
@@ -133,10 +136,26 @@ struct VCheckGo {
                 case .GetProductDetailWithMember(let productId, let memberId):
                     let params = ["route":"\(RoutePath.GetProductDetail.rawValue)","token":"","jsonText":"{\"article_id\":\"\(productId)\",\"member_id\":\"\(memberId)\"}"]
                     return ("/\(RoutePath.GetProductDetail.rawValue)", params)
+                //=========GetIndexImage=============
+                case .GetIndexImage(let type):
+                    let params = ["route":"\(RoutePath.GetIndexPage.rawValue)","token":"","device_type":"\(DeviceType.iPhone.rawValue)","jsonText":"{\"image_type\":\"\(type)\"}"]
+                    return ("/\(RoutePath.GetIndexPage.rawValue)", params)
+                //=========PushDeviceToken===========
+                case .PushDeviceToken(let memberId, let deviceToken, let pushDeviceType, let token):
+                    let params = ["route":"\(RoutePath.PushDeviceToken.rawValue)","token":"\(token)","device_type":"\(DeviceType.iPhone.rawValue)","jsonText":"{\"member_id\":\"\(memberId)\",\"device_token\":\"\(deviceToken)\",\"operator_type\":\"\(pushDeviceType.rawValue)\"}"]
+                    return ("/\(RoutePath.PushDeviceToken.rawValue)", params)
                 //=========GetOrderList==============
                 case .GetOrderList(let memberId, let page, let count, let token):
                     let params = ["route":"\(RoutePath.GetOrderList.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"pagination\":{\"page\":\"\(page)\",\"count\":\"\(count)\"}}"]
                     return ("/\(RoutePath.GetOrderList.rawValue)", params)
+                //=========GetOrderDetail============
+                case .GetOrderDetail(let memberId, let orderId, let token):
+                    let params = ["route":"\(RoutePath.GetOrderDetail.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"order_id\":\"\(orderId)\"}"]
+                    return ("/\(RoutePath.GetOrderDetail.rawValue)", params)
+                //=========EditOrder=================
+                case .EditOrder(let memberId, let orderId, let editType, let token):
+                    let params = ["route":"\(RoutePath.EditOrder.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"order_id\":\"\(orderId)\",\"operator_type\":\"\(editType.rawValue)\"}"]
+                    return ("/\(RoutePath.EditOrder.rawValue)", params)
                 //=========GetMyCollections==========
                 case .GetMyCollections(let memberId, let page, let count, let token):
                     let params = ["route":"\(RoutePath.GetMyCollection.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"pagination\":{\"page\":\"\(page)\",\"count\":\"\(count)\"}}"]
@@ -213,6 +232,16 @@ struct VCheckGo {
         case clear = 2
     }
     
+    enum EditOrderType: Int {
+        case delete = 1
+    }
+    
+    enum PushDeviceType: Int {
+        case add = 1
+        case delete = 2
+        case clear = 3
+    }
+    
     enum PaymentCode: String {
         case Ali = "alipay"
         case Wechat = "weixin_pay"
@@ -225,6 +254,8 @@ struct VCheckGo {
         case GetVerifyCode = "base/tools/getVerifyCode"
         case FeedBack = "base/feedback/submitFeedbackInfo"
         case GetCityList = "base/region/getRegionList"
+        case GetIndexPage = "base/info/getIndexImage"
+        case PushDeviceToken = "device/push/editPushDevice"
         
         case LoginWithToken = "member/member/loginWithToken"
         case ValidateMemberInfo = "member/member/validateMemberInfo"
@@ -248,6 +279,8 @@ struct VCheckGo {
         case AsyncPayment = "sale/order/submitPayOrder"
         
         case GetOrderList = "sale/order/getOrderList"
+        case EditOrder = "sale/order/editOrder"
+        case GetOrderDetail = "sale/order/getOrderDetail"
         
     }
     
@@ -308,6 +341,7 @@ class OrderInfo: NSObject {
     var priceUnit: String?
     var totalPrice: String?
     var originalTotalPrice: String?
+    var createByMobile: String?
     var createDate: NSDate?
     var orderType: String?
     var menuId: String?
@@ -320,6 +354,7 @@ class OrderInfo: NSObject {
     var status: VCAppLetor.OrderType?
     var typeDescription: String?
     var orderImageURL: String?
+    var foodId: String?
     
     init(id: String, no: String) {
         
@@ -384,6 +419,8 @@ class FoodInfo: NSObject {
     var tips: NSMutableArray?
     var slideImages: NSMutableArray?
     
+    // ORDER
+    var orderExist: String?
     
     init(id: Int) {
     
