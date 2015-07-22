@@ -145,6 +145,8 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
+        println("view: \(self.view.bounds): scroll: \(self.scrollView.frame) | \(self.scrollView.contentSize)")
+        
         self.scrollView.contentSize = self.scrollView.frame.size
         self.scrollView.contentSize.height = self.scrollView.height - VCAppLetor.ConstValue.CheckNowBarHeight
         self.scrollView.showsVerticalScrollIndicator = false
@@ -321,7 +323,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.orderPriceValue.text = round_price(self.foodInfo.price!) + "\(self.foodInfo.priceUnit!)"
         self.orderPriceValue.textAlignment = .Right
         self.orderPriceValue.textColor = UIColor.orangeColor()
-        self.orderPriceValue.font = VCAppLetor.Font.XLarge
+        self.orderPriceValue.font = VCAppLetor.Font.Light
         self.orderPriceValue.sizeToFit()
         self.submitView.addSubview(self.orderPriceValue)
         
@@ -364,7 +366,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.priceValue.text = round_price(self.foodInfo.price!)
         self.priceValue.textAlignment = .Right
         self.priceValue.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
-        self.priceValue.font = VCAppLetor.Font.NormalFont
+        self.priceValue.font = VCAppLetor.Font.LightSmall
         self.priceValue.sizeToFit()
         self.scrollView.addSubview(self.priceValue)
         
@@ -425,7 +427,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.totalPriceValue.text = round_price(self.priceValue.text!) + "\(self.foodInfo.priceUnit!)"
         self.totalPriceValue.textAlignment = .Left
         self.totalPriceValue.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
-        self.totalPriceValue.font = VCAppLetor.Font.NormalFont
+        self.totalPriceValue.font = VCAppLetor.Font.LightSmall
         self.totalPriceValue.sizeToFit()
         self.scrollView.addSubview(self.totalPriceValue)
         
@@ -500,7 +502,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             self.mobileNumber.text = phoneNumber
             self.mobileNumber.textAlignment = .Right
             self.mobileNumber.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
-            self.mobileNumber.font = VCAppLetor.Font.NormalFont
+            self.mobileNumber.font = VCAppLetor.Font.LightSmall
             self.scrollView.addSubview(self.mobileNumber)
             
             self.mobileUnderline.drawType = "GrayLine"
@@ -1027,7 +1029,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                     CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
                     CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
                     
-                    let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "token")?.data as! String
+                    let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
                     pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                     
                     self.resetOrderPageLayout()
@@ -1103,9 +1105,11 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                                 
                             })
                             
-                            let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "token")?.data as! String
-                            pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                         }
+                        
+                        
+                        let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
+                        pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                         
                         // setup cache & user panel interface
                         CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")

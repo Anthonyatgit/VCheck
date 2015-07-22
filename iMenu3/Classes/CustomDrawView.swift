@@ -93,6 +93,22 @@ class CustomDrawView: UIView {
             CGContextAddLineToPoint(context, self.bounds.width, 1.0)
             CGContextStrokePath(context)
         }
+        else if (self.drawType == "RedLine") {
+            
+            CGContextSetLineWidth(context, self.lineWidth!)
+            CGContextSetStrokeColorWithColor(context, UIColor.alizarinColor().colorWithAlphaComponent(0.6).CGColor)
+            CGContextMoveToPoint(context, 0.0, 1.0)
+            CGContextAddLineToPoint(context, self.bounds.width, 1.0)
+            CGContextStrokePath(context)
+        }
+        else if (self.drawType == "GreenLine") {
+            
+            CGContextSetLineWidth(context, self.lineWidth!)
+            CGContextSetStrokeColorWithColor(context, UIColor.nephritisColor().colorWithAlphaComponent(0.6).CGColor)
+            CGContextMoveToPoint(context, 0.0, 1.0)
+            CGContextAddLineToPoint(context, self.bounds.width, 1.0)
+            CGContextStrokePath(context)
+        }
         else if (self.drawType == "GrayLineSpot") {
             
             CGContextSetLineWidth(context, self.lineWidth!)
@@ -141,18 +157,17 @@ class CustomDrawView: UIView {
             CGContextSetLineWidth(context, 28.0)
             CGContextSetStrokeColorWithColor(context, UIColor.blackColor().CGColor)
             CGContextMoveToPoint(context, 0.0, 14.0)
-            CGContextAddLineToPoint(context, 80.0, 14.0)
+            CGContextAddLineToPoint(context, 78.0, 14.0)
             CGContextStrokePath(context)
             
             CGContextSetLineWidth(context, 1.0)
             CGContextSetStrokeColorWithColor(context, UIColor.clearColor().CGColor)
-            CGContextMoveToPoint(context, 81.0, -1.0)
-            CGContextAddLineToPoint(context, 75.0, 14.0)
-            CGContextAddLineToPoint(context, 81.0, 29.0)
+            CGContextMoveToPoint(context, 78.0, -1.0)
+            CGContextAddLineToPoint(context, 73.0, 14.0)
+            CGContextAddLineToPoint(context, 78.0, 29.0)
             CGContextClosePath(context)
             CGContextSetBlendMode(context, kCGBlendModeClear)
             CGContextFillPath(context)
-            
             
         }
         else if (self.drawType == "DateTag") {
@@ -165,9 +180,9 @@ class CustomDrawView: UIView {
             
             CGContextSetLineWidth(context, 1.0)
             CGContextSetStrokeColorWithColor(context, UIColor.clearColor().CGColor)
-            CGContextMoveToPoint(context, 75.0, 0.0)
+            CGContextMoveToPoint(context, 74.0, 01.0)
             CGContextAddLineToPoint(context, 69.0, 14.0)
-            CGContextAddLineToPoint(context, 75.0, 28.0)
+            CGContextAddLineToPoint(context, 74.0, 29.0)
             CGContextClosePath(context)
             CGContextSetBlendMode(context, kCGBlendModeClear)
             CGContextFillPath(context)
@@ -175,7 +190,7 @@ class CustomDrawView: UIView {
         else if (self.drawType == "noMore") {
             
             CGContextSetLineWidth(context, 1.0)
-            CGContextSetStrokeColorWithColor(context, UIColor.blackColor().colorWithAlphaComponent(0.2).CGColor)
+            CGContextSetStrokeColorWithColor(context, UIColor.blackColor().colorWithAlphaComponent(0.1).CGColor)
             CGContextMoveToPoint(context, self.width / 2.0 - 70.0, self.height / 2.0)
             CGContextAddLineToPoint(context, self.width / 2.0 + 70.0, self.height / 2.0)
             CGContextStrokePath(context)
@@ -184,11 +199,11 @@ class CustomDrawView: UIView {
             noMore.text = VCAppLetor.StringLine.NoMore
             noMore.textAlignment = .Center
             noMore.textColor = UIColor.blackColor().colorWithAlphaComponent(0.4)
-            noMore.font = VCAppLetor.Font.NormalFont
+            noMore.font = VCAppLetor.Font.UltraLightSmall
             noMore.backgroundColor = UIColor.whiteColor()
             self.addSubview(noMore)
             
-            noMore.autoSetDimensionsToSize(CGSizeMake(100.0, 20.0))
+            noMore.autoSetDimensionsToSize(CGSizeMake(60.0, 14.0))
             noMore.autoCenterInSuperview()
             
         }
@@ -239,6 +254,14 @@ class CustomDrawView: UIView {
             CGContextSetLineWidth(context, 1)
             CGContextSetStrokeColorWithColor(context, UIColor.exLightGrayColor().CGColor)
             CGContextAddArc(context, 13, 13, 9, 0, CGFloat(2*VCAppLetor.ConstValue.PI), 0)
+            CGContextStrokePath(context)
+            
+        }
+        else if (self.drawType == "circle") {
+            
+            CGContextSetLineWidth(context, 6)
+            CGContextSetStrokeColorWithColor(context, UIColor.silverColor().colorWithAlphaComponent(0.8).CGColor)
+            CGContextAddArc(context, self.width/2, self.width/2, self.width/2-10, 0, CGFloat(2*VCAppLetor.ConstValue.PI), 0)
             CGContextStrokePath(context)
             
         }
@@ -346,7 +369,7 @@ class CustomDrawView: UIView {
             label.text = "MENU"
             label.textAlignment = .Center
             label.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
-            label.font = VCAppLetor.Font.boldLarge
+            label.font = VCAppLetor.Font.UltraLight
             self.addSubview(label)
         }
         else if self.drawType == "wechatService" {

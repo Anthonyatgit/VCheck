@@ -41,6 +41,7 @@ func pushDeviceToken(deviceToken: String, type: VCheckGo.PushDeviceType) {
             if json["status"]["succeed"].string! == "1" {
                 
                 // Push Done!
+                println("push device token done!")
             }
             else {
                 println("push device token error: " + json["status"]["error_desc"].string!)

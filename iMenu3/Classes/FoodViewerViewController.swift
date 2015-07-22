@@ -83,6 +83,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
     let bottomLineInfo: CustomDrawView = CustomDrawView()
     
     var shareView: VCShareActionView?
+    var galleryView: VCGalleryView?
     
     var didSetupConstraints = false
     
@@ -158,6 +159,10 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         }
         
         self.isInitLoad = false
+        
+        if CTMemCache.sharedInstance.exists("Product", namespace: "outcall") {
+            CTMemCache.sharedInstance.cleanNamespace("outcall")
+        }
         
     }
     
@@ -298,6 +303,23 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                         else {
                             self.setupCheckView()
                             self.setupCheckViewConstraints()
+                            
+                            if self.foodInfo.remainingCount! == "0" {
+                                
+                                self.checkNowBg.backgroundColor = UIColor.lightGrayColor()
+                                self.checkNow.backgroundColor = UIColor.lightGrayColor()
+                                self.checkNow.setTitle(self.foodInfo.outOfStock!, forState: .Normal)
+                                self.checkNow.removeTarget(self, action: "checkNowAction", forControlEvents: .TouchUpInside)
+                            }
+                            
+                            if self.foodInfo.remainder! == "0" {
+                                
+                                self.checkNowBg.backgroundColor = UIColor.lightGrayColor()
+                                self.checkNow.backgroundColor = UIColor.lightGrayColor()
+                                self.checkNow.setTitle(VCAppLetor.StringLine.isClose, forState: .Normal)
+                                self.checkNow.removeTarget(self, action: "checkNowAction", forControlEvents: .TouchUpInside)
+                            }
+                            
                         }
                         
                         
@@ -353,7 +375,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.price.text = round_price(self.foodInfo.price!)
         self.price.textAlignment = .Center
         self.price.textColor = UIColor.orangeColor()
-        self.price.font = VCAppLetor.Font.XXLarge
+        self.price.font = VCAppLetor.Font.XXLight
         self.checkView.addSubview(self.price)
         
         self.foodUnit.text = "\(self.foodInfo.priceUnit!)/\(self.foodInfo.unit!)"
@@ -365,7 +387,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.originPrice.text = "\(round_price(self.foodInfo.originalPrice!))\(self.foodInfo.priceUnit!)"
         self.originPrice.textAlignment = .Center
         self.originPrice.textColor = UIColor.grayColor()
-        self.originPrice.font = VCAppLetor.Font.SmallFont
+        self.originPrice.font = VCAppLetor.Font.LightXSmall
         self.checkView.addSubview(self.originPrice)
         
         self.originPriceStricke.drawType = "GrayLine"
@@ -432,7 +454,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.price.text = round_price(self.foodInfo.price!)
         self.price.textAlignment = .Center
         self.price.textColor = UIColor.orangeColor()
-        self.price.font = VCAppLetor.Font.XXLarge
+        self.price.font = VCAppLetor.Font.XXLight
         self.payView.addSubview(self.price)
         
         self.foodUnit.text = "\(self.foodInfo.priceUnit!)/\(self.foodInfo.unit!)"
@@ -444,7 +466,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.originPrice.text = "\(round_price(self.foodInfo.originalPrice!))\(self.foodInfo.priceUnit!)"
         self.originPrice.textAlignment = .Center
         self.originPrice.textColor = UIColor.grayColor()
-        self.originPrice.font = VCAppLetor.Font.SmallFont
+        self.originPrice.font = VCAppLetor.Font.LightXSmall
         self.payView.addSubview(self.originPrice)
         
         self.originPriceStricke.drawType = "GrayLine"
@@ -508,6 +530,28 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         })
     }
     
+    func photosDidTaped(gesture: UITapGestureRecognizer) {
+        
+        self.galleryView?.removeFromSuperview()
+        
+        self.galleryView = VCGalleryView(frame: self.view.frame)
+        self.galleryView?.photos = self.photos
+        self.galleryView?.setupView()
+        self.view.addSubview(self.galleryView!)
+        
+    }
+    
+    func topPhotoDidTaped(btn: UIButton) {
+        
+        self.galleryView?.removeFromSuperview()
+        
+        self.galleryView = VCGalleryView(frame: self.view.frame)
+        self.galleryView?.photos = self.photos
+        self.galleryView?.setupView()
+        self.view.addSubview(self.galleryView!)
+        
+    }
+    
     func setupFoodView() {
         
         // Food photos
@@ -521,6 +565,11 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.photoViewer?.timeInterval = 60
         self.photosView.addSubview(self.photoViewer!)
         self.scrollView.addSubview(self.photosView)
+        
+        var tapGuesturePhotos: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "photosDidTaped:")
+        tapGuesturePhotos.numberOfTapsRequired = 1
+        tapGuesturePhotos.numberOfTouchesRequired = 1
+        self.photoViewer!.addGestureRecognizer(tapGuesturePhotos)
         
         // Date Tag
         self.dateTagBg.drawType = "DateTagLong"
@@ -549,14 +598,35 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.scrollView.addSubview(self.foodTitle)
         
         // Remainings
-        self.remainAmount.text = "剩余 \(self.foodInfo.remainingCount!) \(self.foodInfo.remainingCountUnit!)"
+        
+        var displayAmount: String = ""
+        self.remainAmount.textColor = UIColor.lightGrayColor()
+        
+        if self.foodInfo.remainingCount! == "0" {
+            displayAmount = self.foodInfo.outOfStock!
+        }
+        else {
+            displayAmount = "剩余 \(self.foodInfo.remainingCount!)\(self.foodInfo.remainingCountUnit!)"
+            if (self.foodInfo.remainingCount! as NSString).integerValue <= VCAppLetor.ConstValue.StockAlertPoint {
+                
+                self.remainAmount.textColor = UIColor.orangeColor()
+            }
+        }
+        
+        if self.foodInfo.remainder == "0" {
+            displayAmount = VCAppLetor.StringLine.isClose
+        }
+        
+        
+        self.remainAmount.text = displayAmount
         self.remainAmount.font = VCAppLetor.Font.SmallFont
         self.remainAmount.textAlignment = .Left
-        self.remainAmount.textColor = UIColor.lightGrayColor()
         self.scrollView.addSubview(self.remainAmount)
         
         
         let remainder = ("\(self.foodInfo.remainder!)" as NSString).floatValue
+        
+        self.remainTime.textColor = UIColor.lightGrayColor()
         
         var timeTag = ""
         if remainder/(3600*24) > 7 {
@@ -568,12 +638,12 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         }
         else {
             timeTag = "少于24小时"
+            self.remainTime.textColor = UIColor.alizarinColor()
         }
         
         self.remainTime.text = "剩余 \(timeTag)"
         self.remainTime.font = VCAppLetor.Font.SmallFont
         self.remainTime.textAlignment = .Left
-        self.remainTime.textColor = UIColor.lightGrayColor()
         self.remainTime.sizeToFit()
         self.scrollView.addSubview(self.remainTime)
         
@@ -654,7 +724,6 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
     
     func setupDetailView() {
         
-        //        self.detailScrollView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
         self.detailScrollView.pagingEnabled = true
         self.detailScrollView.scrollEnabled = false
         self.detailScrollView.showsHorizontalScrollIndicator = false
@@ -766,6 +835,14 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         }
         
         self.detailScrollView.addSubview(menuTopImage)
+        
+        let topBtn: UIButton = UIButton(frame: CGRectMake(self.detailScrollView.width, 15, self.detailScrollView.width, VCAppLetor.ConstValue.FoodImageHeight-30.0))
+        topBtn.backgroundColor = UIColor.clearColor()
+        topBtn.setTitle("", forState: .Normal)
+        topBtn.layer.borderWidth = 0
+        topBtn.addTarget(self, action: "topPhotoDidTaped:", forControlEvents: .TouchUpInside)
+        self.detailScrollView.addSubview(topBtn)
+        
         
         let photoLabelBG: UIView = UIView(frame: CGRectMake(self.detailScrollView.width*2.0-60.0, VCAppLetor.ConstValue.FoodImageHeight-30.0-20.0, 50.0, 21.0))
         photoLabelBG.backgroundColor = UIColor.blackColor()
@@ -1213,6 +1290,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.shareView?.removeFromSuperview()
         
         self.shareView = VCShareActionView(frame: self.view.frame)
+        self.shareView!.shareType = VCAppLetor.ShareToType.food
         self.shareView!.foodInfo = self.foodInfo
         self.view.addSubview(self.shareView!)
         
@@ -1292,13 +1370,19 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
     // if member sign in
     func isLogin() -> Bool {
         
-        let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
-        
-        if token == "0" {
+        if let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as? String {
+            
+            if token != "0" {
+                return true
+            }
+            else {
+                return false
+            }
+        }
+        else {
             return false
         }
         
-        return true
     }
     
     // MARK: - UIPopoverPresentationControllerDelegate
@@ -1446,6 +1530,10 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                     CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
                     CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
                     
+                    
+                    let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
+                    pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
+                    
                 }
                 else {
                     RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
@@ -1491,6 +1579,22 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                         self.foodInfo.orderExist = "0"
                         self.setupCheckView()
                         self.setupCheckViewConstraints()
+                        
+                        if self.foodInfo.remainingCount! == "0" {
+                            
+                            self.checkNowBg.backgroundColor = UIColor.lightGrayColor()
+                            self.checkNow.backgroundColor = UIColor.lightGrayColor()
+                            self.checkNow.setTitle(self.foodInfo.outOfStock!, forState: .Normal)
+                            self.checkNow.removeTarget(self, action: "checkNowAction", forControlEvents: .TouchUpInside)
+                        }
+                        
+                        if self.foodInfo.remainder! == "0" {
+                            
+                            self.checkNowBg.backgroundColor = UIColor.lightGrayColor()
+                            self.checkNow.backgroundColor = UIColor.lightGrayColor()
+                            self.checkNow.setTitle(VCAppLetor.StringLine.isClose, forState: .Normal)
+                            self.checkNow.removeTarget(self, action: "checkNowAction", forControlEvents: .TouchUpInside)
+                        }
                     }
                     
                     
@@ -1579,10 +1683,10 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                             
                         })
                         
-                        let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "token")?.data as! String
-                        pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                     }
                     
+                    let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
+                    pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                     
                     
                     // setup cache & user panel interface
@@ -1691,7 +1795,7 @@ class IconButton: UIButton {
         
         self.titleStr.textAlignment = .Center
         self.titleStr.textColor = UIColor.blackColor()
-        self.titleStr.font = VCAppLetor.Font.SmallFont
+        self.titleStr.font = VCAppLetor.Font.LightXSmall
         self.addSubview(self.titleStr)
         
         self.setNeedsUpdateConstraints()

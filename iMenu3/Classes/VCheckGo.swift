@@ -58,6 +58,11 @@ struct VCheckGo {
         case UpdatePay(String, VCAppLetor.PaymentCode, String, String)              // 40.订单-编辑结算信息
         case GetPayData(String, String, String)                                     // 41.订单-获取支付数据
         case AsyncPayment(String, String, String, String)                           // 42.订单-提交支付订单
+        case GetRefundReasons()                                                     // 43.订单-获得退款申请原因列表
+        case SubmitRefund(String, String, Int, String)                              // 44.订单-提交退款申请
+        case GetRefundInfo(String, String, String)                                  // 45.订单-获取退款详情信息
+        
+        
         
         var URLRequest: NSURLRequest {
             
@@ -105,11 +110,11 @@ struct VCheckGo {
                 case .EditMemberEmail(let memberId, let email, let token):
                     let params = ["route":"\(RoutePath.EditMemberInfo.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"email\":\"\(email)\"}"]
                     return ("/\(RoutePath.EditMemberInfo.rawValue)", params)
-                    //=========EditMemberNickname===========
+                //=========EditMemberNickname===========
                 case .EditMemberNickname(let memberId, let nickname, let token):
                     let params = ["route":"\(RoutePath.EditMemberInfo.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"member_name\":\"\(nickname)\"}"]
                     return ("/\(RoutePath.EditMemberInfo.rawValue)", params)
-                    //=========EditMemberPassword===========
+                //=========EditMemberPassword===========
                 case .EditMemberPassword(let memberId, let currentPass, let newPass, let token):
                     let params = ["route":"\(RoutePath.EditMemberInfo.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"old_password\":\"\(currentPass)\",\"password\":\"\(newPass)\"}"]
                     return ("/\(RoutePath.EditMemberInfo.rawValue)", params)
@@ -184,9 +189,22 @@ struct VCheckGo {
                 case .GetPayData(let memberId, let orderId, let token):
                     let params = ["route":"\(RoutePath.GetPayData.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"order_id\":\"\(orderId)\"}"]
                     return ("/\(RoutePath.GetPayData.rawValue)", params)
+                //=========AsyncPayment==============
                 case .AsyncPayment(let memberId, let orderId, let paymentResult, let token):
                     let params = ["route":"\(RoutePath.AsyncPayment.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"order_id\":\"\(orderId)\",\"payment_result\":\"\(paymentResult)\"}"]
                     return ("/\(RoutePath.AsyncPayment.rawValue)", params)
+                //=========GetRefundReasons==========
+                case .GetRefundReasons():
+                    let params = ["route":"\(RoutePath.GetRefundReasons.rawValue)","token":"","jsonText":""]
+                    return ("/\(RoutePath.GetRefundReasons.rawValue)", params)
+                //=========SubmitRefund==============
+                case .SubmitRefund(let memberId, let orderId, let refundId, let token):
+                    let params = ["route":"\(RoutePath.SubmitRefund.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"order_id\":\"\(orderId)\",\"return_reason_id\":\"\(refundId)\"}"]
+                    return ("/\(RoutePath.SubmitRefund.rawValue)", params)
+                //=========GetRefundInfo==============
+                case .GetRefundInfo(let memberId, let orderId, let token):
+                    let params = ["route":"\(RoutePath.GetRefundInfo.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"order_id\":\"\(orderId)\"}"]
+                    return ("/\(RoutePath.GetRefundInfo.rawValue)", params)
                 //=========DEFAULT===================
                 default: return ("/",["consumer_key": Router.consumerKey])
                 }
@@ -200,6 +218,48 @@ struct VCheckGo {
             let encoding = Alamofire.ParameterEncoding.URL
             
             return encoding.encode(URLRequest, parameters: parameters).0
+        }
+        
+    }
+    
+    enum ImageRouter: URLRequestConvertible {
+        
+        // API Base URL
+        #if DEBUG
+        static let baseAPIURLString = "http://218.244.158.175/imenu_test/app_interface_vcheck/index.php"
+        #else
+        static let baseAPIURLString = "http://218.244.158.175/imenu_test/app_interface_vcheck/index.php"
+        #endif
+        
+        // Security Key
+        static let consumerKey = "yEUwUg5gPOtlymh2vFW1chwoTYJomgjWikzNva16"
+        
+        case EditMemberIcon(String, UIImage, String)
+        
+        
+        var URLRequest: NSURLRequest {
+            
+            let (path: String, route: String, tokenStr: String, jsonText: String, params: [String: String], image: UIImage) = {
+                
+                switch self {
+                    
+                //=========EditMemberIcon===========
+                case .EditMemberIcon(let memberId, let icon, let token):
+                    let params = ["route":"\(RoutePath.EditMemberIcon.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\"}"]
+                    return ("/\(RoutePath.EditMemberIcon.rawValue)", "\(RoutePath.EditMemberIcon.rawValue)", token, "{\"member_id\":\"\(memberId)\"}", params, icon)
+                //=========DEFAULT===================
+                default: return ("/","","","",["":""],UIImage.new())
+                }
+            }()
+            
+            let URL = NSURL(string: Router.baseAPIURLString)
+            let URLRequest = NSMutableURLRequest(URL: URL!.URLByAppendingPathComponent(path))
+            URLRequest.HTTPMethod = "POST"
+            
+            let encoding = Alamofire.ParameterEncoding.URL
+            
+            return encoding.encodeImage(URLRequest, route: route, jsonText: jsonText, token: tokenStr, parameters: params, image: image).0
+            
         }
         
     }
@@ -263,6 +323,7 @@ struct VCheckGo {
         case MemberLogin = "member/member/login"
         case GetMemberInfo = "member/member/getMemberDetail"
         case MemberLogout = "member/member/logout"
+        case EditMemberIcon = "member/member/editMemberIcon"
         case ResetPassword = "member/member/resetPassword"
         case EditMemberInfo = "member/member/editMemberInfo"
         case QuickLogin = "member/member/quickLogin"
@@ -281,6 +342,10 @@ struct VCheckGo {
         case GetOrderList = "sale/order/getOrderList"
         case EditOrder = "sale/order/editOrder"
         case GetOrderDetail = "sale/order/getOrderDetail"
+        
+        case GetRefundReasons = "base/return/getReturnReasonList"
+        case SubmitRefund = "sale/return/submitReturn"
+        case GetRefundInfo = "sale/return/getReturnDetail"
         
     }
     

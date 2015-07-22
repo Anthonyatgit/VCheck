@@ -58,9 +58,10 @@ class VCBaseViewController: UIViewController {
         else if !self.reachability.isReachable() {
             internetStat = "NO Internet"
             bgColor = UIColor.alizarinColor()
+            RKDropdownAlert.title(internetStat, backgroundColor: bgColor, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
         }
         
-        RKDropdownAlert.title(internetStat, backgroundColor: bgColor, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+        //RKDropdownAlert.title(internetStat, backgroundColor: bgColor, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
     }
     
     

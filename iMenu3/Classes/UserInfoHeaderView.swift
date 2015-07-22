@@ -59,21 +59,65 @@ class UserInfoHeaderView: UIView {
         self.panelTitle.textAlignment = .Center
         self.addSubview(self.panelTitle)
         
-        let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+        var token: String = "0"
         
-        if (token != "0"){
+        if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optToken, namespace: "token") {
             
-            if self.reachability.isReachable() {
+            token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+        }
+        
+        if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optMemberIcon, namespace: "member") {
+            
+            self.panelIcon.image = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberIcon, namespace: "member")?.data as? UIImage
+            self.panelTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
+        }
+        else {
+            if (token != "0"){
                 
-                self.panelTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
-                let icon = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Icon, namespace: "member")?.data as! String
-                Alamofire.request(.GET, icon).validate().responseImage() {
-                    (_, _, image, error) in
+                if self.reachability.isReachable() {
                     
-                    if error == nil && image != nil {
-                        self.panelIcon.image = image
+                    self.panelTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
+                    let icon = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Icon, namespace: "member")?.data as! String
+                    Alamofire.request(.GET, icon).validate().responseImage() {
+                        (_, _, image, error) in
+                        
+                        if error == nil && image != nil {
+                            self.panelIcon.image = image
+                        }
                     }
                 }
+                else {
+                    
+                    self.panelTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
+                    
+                    let midString = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+                    
+                    // Read avatar icon from local cache file
+                    if var avatarDirectoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
+                        
+                        var err: NSError?
+                        
+                        avatarDirectoryURL = avatarDirectoryURL.URLByAppendingPathComponent("/avatar/\(midString)")
+                        
+                        
+                        let avatarIconFile = NSFileManager.defaultManager().contentsAtPath(avatarDirectoryURL.path!)
+                        
+                        if avatarIconFile != nil {
+                            
+                            let avatarIconImage = UIImage(data: avatarIconFile!)
+                            
+                            let avatarIcon = Toucan.Resize.resizeImage(avatarIconImage!, size: CGSizeMake(self.width/5.0, self.width/5.0), fitMode: Toucan.Resize.FitMode.Crop)
+                            
+                            self.panelIcon.image = avatarIcon
+                        }
+                        else {
+                            self.panelIcon.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
+                            self.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+                        }
+                    }
+                    
+                }
+                
             }
             else {
                 
@@ -81,14 +125,9 @@ class UserInfoHeaderView: UIView {
                 self.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
                 self.panelTitle.text = VCAppLetor.StringLine.UserInfoWithoutSignin
             }
-            
         }
-        else {
-            
-            self.panelIcon.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
-            self.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-            self.panelTitle.text = VCAppLetor.StringLine.UserInfoWithoutSignin
-        }
+        
+        
         
 //        self.disclosureIndicator.image = UIImage(named: VCAppLetor.IconName.RightDisclosureIcon)
 //        self.disclosureIndicator.alpha = 0.2
@@ -96,7 +135,7 @@ class UserInfoHeaderView: UIView {
         
         
         oY += 20.0 + 30.0
-        self.mailBoxButton.frame = CGRectMake(self.width/2.0-130, oY, 110, 40.0)
+        self.mailBoxButton.frame = CGRectMake(self.width/2.0-130, oY, 110, 38.0)
         self.mailBoxButton.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.8)
         self.mailBoxButton.icon.image = UIImage(named: VCAppLetor.IconName.MailBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         self.mailBoxButton.titleStr.text = VCAppLetor.StringLine.MyMail
@@ -105,7 +144,7 @@ class UserInfoHeaderView: UIView {
         self.mailBoxButton.backgroundColor = UIColor.clearColor()
         self.addSubview(self.mailBoxButton)
         
-        self.inviteButton.frame = CGRectMake(self.width/2.0+20, oY, 110, 40.0)
+        self.inviteButton.frame = CGRectMake(self.width/2.0+20, oY, 110, 38.0)
         self.inviteButton.tintColor = UIColor.blackColor().colorWithAlphaComponent(0.6)
         self.inviteButton.icon.image = UIImage(named: VCAppLetor.IconName.GiftBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         self.inviteButton.titleStr.text = VCAppLetor.StringLine.InviteFriend
@@ -124,7 +163,16 @@ class UserInfoHeaderView: UIView {
     
     func invite() {
         
-        println("invite")
+        if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optToken, namespace: "token") {
+            
+            let inviteVC: VCInviteViewController = VCInviteViewController()
+            inviteVC.parentNav = self.userPanelViewController?.parentNav
+            self.userPanelViewController?.parentNav?.showViewController(inviteVC, sender: self)
+        }
+        else {
+            self.userPanelViewController?.presentLoginPanel()
+        }
+        
     }
     
     
@@ -172,13 +220,13 @@ class UserIconButton: UIButton {
         
         if !self.didSetConstraints {
             
-            self.icon.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(8.0, 14.0, 10.0, 0.0), excludingEdge: .Trailing)
-            self.icon.autoMatchDimension(.Width, toDimension: .Height, ofView: self, withOffset: -20.0)
+            self.icon.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(6.0, 12.0, 6.0, 0.0), excludingEdge: .Trailing)
+            self.icon.autoMatchDimension(.Width, toDimension: .Height, ofView: self, withOffset: -12.0)
             
             self.titleStr.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.icon, withOffset: 6.0)
             self.titleStr.autoAlignAxisToSuperviewAxis(.Horizontal)
             self.titleStr.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 6.0)
-            self.titleStr.autoMatchDimension(.Height, toDimension: .Height, ofView: self.icon, withMultiplier: 0.8)
+            self.titleStr.autoMatchDimension(.Height, toDimension: .Height, ofView: self.icon, withMultiplier: 1.0)
             
             self.didSetConstraints = true
         }

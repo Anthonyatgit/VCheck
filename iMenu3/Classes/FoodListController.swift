@@ -33,7 +33,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     var cityListView: UIView!
     var cityListAnimatedView: MGFashionMenuView!
     
-    let cityButton: UIButton = UIButton(frame: CGRectMake(0.0, 0.0, 28.0, 28.0))
+    //    let cityButton: UIButton = UIButton(frame: CGRectMake(0.0, 0.0, 28.0, 28.0))
+    var cityButton: HamburgerButton! = nil
     let selectedCityName: UIButton = UIButton(frame: CGRectMake(30.0, 0.0, 50.0, 28.0))
     let memberButton: UIButton = UIButton(frame: CGRectMake(6.0, 6.0, 26.0, 26.0))
     
@@ -54,6 +55,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     
     var isRefreshAction: Bool = false
     
+    var didMemberInit: Bool = false
+    
     // MARK: - LifetimeCycle
     
     override func viewDidLayoutSubviews() {
@@ -70,10 +73,13 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         let cityView: UIView = UIView(frame: CGRectMake(6.0, 0.0, 86.0, 32.0))
         cityView.backgroundColor = UIColor.clearColor()
         
-        self.cityButton.setImage(UIImage(named: VCAppLetor.IconName.moreBlack)?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
-        self.cityButton.layer.cornerRadius = self.cityButton.width / 2.0
-        self.cityButton.backgroundColor = UIColor.clearColor()
+        self.cityButton = HamburgerButton(frame: CGRectMake(0, 0, 60, 60))
         self.cityButton.addTarget(self, action: "willSwitchCity", forControlEvents: .TouchUpInside)
+        
+        let newTransform: CGAffineTransform = CGAffineTransformScale(self.cityButton.transform, 0.52, 0.52)
+        self.cityButton.transform = newTransform
+        self.cityButton.center = CGPointMake(14, 16)
+        
         cityView.addSubview(self.cityButton)
         
         self.selectedCityName.setTitle(VCAppLetor.StringLine.Locating, forState: .Normal)
@@ -141,6 +147,9 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         
+        // Cache Navigation Controller Instance
+        CTMemCache.sharedInstance.set(VCAppLetor.ObjectIns.objNavigation, data: self.navigationController, namespace: "object")
+        
     }
     
     override func updateViewConstraints() {
@@ -185,6 +194,13 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         cell.setNeedsUpdateConstraints()
         
+        let delayInSeconds: UInt64 = 1
+        let popTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSeconds * NSEC_PER_SEC))
+        dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
+            
+            
+        }
+        
         return cell
         
     }
@@ -216,6 +232,14 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             return
         }
         
+        if !self.reachability.isReachable() {
+            
+            self.tableView.stopRefreshAnimation()
+            
+            return
+            
+        }
+        
         if (scrollView.contentOffset.y + self.view.height > scrollView.contentSize.height * 0.8) && self.haveMore != nil && self.haveMore! {
             
             self.isLoadingFood = true
@@ -224,7 +248,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             
             let currentPageNum: Int = ("\(ceil(CGFloat(self.foodListItems.count / VCAppLetor.ConstValue.DefaultItemCountPerPage)))" as NSString).integerValue
             let nextPageNum: Int = currentPageNum + 1
-            Alamofire.request(VCheckGo.Router.GetProductList(29, nextPageNum)).validate().responseSwiftyJSON({
+            Alamofire.request(VCheckGo.Router.GetProductList(self.cityCode, nextPageNum)).validate().responseSwiftyJSON({
                 (_, _, JSON, error) -> Void in
                 
                 if error == nil {
@@ -310,7 +334,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                     
                 }
                 else {
-                    println("ERROR @ Loading nore food : \(error?.localizedDescription)")
+                    println("ERROR @ Loading more food : \(error?.localizedDescription)")
                     self.isLoadingFood = false
                     
                     RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
@@ -335,7 +359,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     }
     
     func didUpdateUserHeading(userLocation: BMKUserLocation!) {
-//        println("[LOCATION]: Heading - \(userLocation.heading)")
+        //        println("[LOCATION]: Heading - \(userLocation.heading)")
     }
     
     func didUpdateBMKUserLocation(userLocation: BMKUserLocation!) {
@@ -446,6 +470,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     
     func willSwitchCity() {
         
+        self.cityButton.showsMenu = !self.cityButton.showsMenu
         
         if (!self.cityListAnimatedView.isShown) {
             self.cityListAnimatedView.show()
@@ -458,9 +483,14 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     
     func userPanel() {
         
-        let memberPanel: UserPanelViewController = UserPanelViewController()
-        memberPanel.parentNav = self.navigationController
-        self.navigationController?.showViewController(memberPanel, sender: self)
+        if self.didMemberInit {
+            
+            let memberPanel: UserPanelViewController = UserPanelViewController()
+            memberPanel.parentNav = self.navigationController
+            self.navigationController?.showViewController(memberPanel, sender: self)
+        }
+        
+        
     }
     
     func initAppInfo() {
@@ -472,7 +502,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         if self.isRefreshAction {
             
-           self.hud.alpha = 0
+            self.hud.alpha = 0
         }
         
         
@@ -512,6 +542,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                         
                         // Available City?
                         if json["paginated"]["total"].string! == "0" {
+                            
+                            self.cityCode = 29
                             
                             RKDropdownAlert.title(VCAppLetor.StringLine.YourCityNotInService, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                             self.hud.hide(true)
@@ -720,6 +752,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                     
                     self.tableView.reloadData()
                     
+                    self.showOutCall()
+                    
                 }
                 else {
                     RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
@@ -740,9 +774,98 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         })
     }
     
+    func showOutCall() {
+        
+        
+        if CTMemCache.sharedInstance.exists("Product", namespace: "outcall") {
+            
+            let query = CTMemCache.sharedInstance.get("Product", namespace: "outcall")?.data as! String
+            
+            let queryStringArr = query.componentsSeparatedByString("=")
+            let productId = (queryStringArr[1] as NSString).integerValue
+            
+            Alamofire.request(VCheckGo.Router.GetProductDetail(productId)).validate().responseSwiftyJSON({
+                (_, _, JSON, error) -> Void in
+                
+                if error == nil {
+                    
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        
+                        let json = JSON
+                        
+                        if json["status"]["succeed"].string! == "1" {
+                            
+                            let product: FoodInfo = FoodInfo(id: (json["data"]["article_info"]["article_id"].string! as NSString).integerValue)
+                            
+                            product.title = json["data"]["article_info"]["title"].string!
+                            
+                            var dateFormatter = NSDateFormatter()
+                            dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                            product.addDate = dateFormatter.dateFromString(json["data"]["article_info"]["article_date"].string!)!
+                            
+                            product.desc = json["data"]["article_info"]["summary"].string!
+                            product.subTitle = json["data"]["article_info"]["sub_title"].string!
+                            product.status = json["data"]["article_info"]["menu_info"]["menu_status"]["menu_status_id"].string!
+                            product.originalPrice = json["data"]["article_info"]["menu_info"]["price"]["original_price"].string!
+                            product.price = json["data"]["article_info"]["menu_info"]["price"]["special_price"].string!
+                            product.priceUnit = json["data"]["article_info"]["menu_info"]["price"]["price_unit"].string!
+                            product.unit = json["data"]["article_info"]["menu_info"]["menu_unit"]["menu_unit"].string!
+                            product.remainingCount = json["data"]["article_info"]["menu_info"]["stock"]["menu_count"].string!
+                            product.remainingCountUnit = json["data"]["article_info"]["menu_info"]["stock"]["menu_unit"].string!
+                            product.remainder = json["data"]["article_info"]["menu_info"]["remainder_time"].string!
+                            product.outOfStock = json["data"]["article_info"]["menu_info"]["stock"]["out_of_stock_info"].string!
+                            product.endDate = json["data"]["article_info"]["menu_info"]["end_date"].string!
+                            product.returnable = "1"
+                            
+                            product.memberIcon = json["data"]["article_info"]["member_info"]["icon_image"]["thumb"].string!
+                            
+                            product.menuId = json["data"]["article_info"]["menu_info"]["menu_id"].string!
+                            product.menuName = json["data"]["article_info"]["menu_info"]["menu_name"].string!
+                            
+                            product.storeId = json["data"]["article_info"]["store_info"]["store_id"].string!
+                            product.storeName = json["data"]["article_info"]["store_info"]["store_name"].string!
+                            product.address = json["data"]["article_info"]["store_info"]["address"].string!
+                            product.longitude = (json["data"]["article_info"]["store_info"]["longitude_num"].string! as NSString).doubleValue
+                            product.latitude = (json["data"]["article_info"]["store_info"]["latitude_num"].string! as NSString).doubleValue
+                            product.tel1 = json["data"]["article_info"]["store_info"]["tel_1"].string!
+                            product.tel2 = json["data"]["article_info"]["store_info"]["tel_2"].string!
+                            product.acp = json["data"]["article_info"]["store_info"]["per"].string!
+                            product.icon_thumb = json["data"]["article_info"]["store_info"]["icon_image"]["thumb"].string!
+                            product.icon_source = json["data"]["article_info"]["store_info"]["icon_image"]["source"].string!
+                            
+                            
+                            //====== Show Product VC
+                            let foodViewerViewController: FoodViewerViewController = FoodViewerViewController()
+                            foodViewerViewController.foodInfo = product
+                            foodViewerViewController.parentNav = self.navigationController
+                            
+                            self.navigationController!.showViewController(foodViewerViewController, sender: self)
+                            
+                        }
+                        else {
+                            RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                        }
+                    })
+                }
+                else {
+                    
+                    println("ERROR @ Request for Product Info with outcall : \(error?.localizedDescription)")
+                    RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                }
+            })
+            
+            
+        }
+        else {
+            //println("no query")
+        }
+    }
+    
     func cityViewDidTap(gesture: UITapGestureRecognizer) {
         
         self.cityListAnimatedView.hide()
+        
+        self.cityButton.showsMenu = !self.cityButton.showsMenu
     }
     
     func didCityTap(cityName: UIButton) {
@@ -750,6 +873,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         println("cityid: \(cityName.tag)")
         self.cityListAnimatedView.hide()
         
+        self.cityButton.showsMenu = !self.cityButton.showsMenu
         
         self.cityCode = cityName.tag
         self.currentPage = 1
@@ -856,6 +980,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                         
                         self.loadMemberInfo(cMid)
                         
+                        self.getPayProcess()
+                        
                     }
                     else { // Login fail
                         
@@ -867,7 +993,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                     
                     self.hud.hide(true)
                     self.tableView.stopRefreshAnimation()
-                    self.tableView.reloadData()
+                    
+                    self.didMemberInit = true
                     
                 }
                 else {
@@ -885,6 +1012,214 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             
             // Clean up local cache with member status to ensure true
             self.cleanLocalMemberStatus()
+        }
+    }
+    
+    func getPayProcess() {
+        
+        let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+        let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+        
+        if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.payWechatTag, namespace: "pay") {
+            
+            let succeed = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.payWechatTag, namespace: "pay")?.data as! Bool
+            
+            CTMemCache.sharedInstance.cleanNamespace("pay")
+            
+            if succeed {
+                
+                var oId: String = ""
+                
+                if let orderId = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.payOrderId, contextType: BreezeContextType.Main) as? Settings {
+                    
+                    oId = orderId.value
+                    orderId.deleteInContextOfType(BreezeContextType.Main)
+                }
+                
+                Alamofire.request(VCheckGo.Router.GetOrderDetail(memberId, oId, token)).validate().responseSwiftyJSON({
+                    (_, _, JSON, error) -> Void in
+                    
+                    if error == nil {
+                        
+                        let json = JSON
+                        
+                        if json["status"]["succeed"].string! == "1" {
+                            
+                            let order: OrderInfo = OrderInfo(id: json["data"]["member_order_info"]["order_info"]["order_id"].string!, no: json["data"]["member_order_info"]["order_info"]["order_no"].string!)
+                            
+                            
+                            order.title = json["data"]["member_order_info"]["order_info"]["menu_info"]["menu_name"].string!
+                            order.pricePU = json["data"]["member_order_info"]["order_info"]["menu_info"]["price"]["special_price"].string!
+                            order.priceUnit = json["data"]["member_order_info"]["order_info"]["menu_info"]["price"]["price_unit"].string!
+                            order.totalPrice = json["data"]["member_order_info"]["order_info"]["total_price"]["special_price"].string!
+                            order.originalTotalPrice = json["data"]["member_order_info"]["order_info"]["total_price"]["original_price"].string!
+                            
+                            var dateFormatter = NSDateFormatter()
+                            dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                            order.createDate = dateFormatter.dateFromString(json["data"]["member_order_info"]["order_info"]["create_date"].string!)
+                            order.createByMobile = json["data"]["member_order_info"]["order_info"]["mobile"].string!
+                            
+                            order.menuId = json["data"]["member_order_info"]["order_info"]["menu_info"]["menu_id"].string!
+                            order.menuTitle = json["data"]["member_order_info"]["order_info"]["menu_info"]["menu_name"].string!
+                            order.menuUnit = json["data"]["member_order_info"]["order_info"]["menu_info"]["menu_unit"]["menu_unit"].string!
+                            order.itemCount = json["data"]["member_order_info"]["order_info"]["menu_info"]["count"].string!
+                            
+                            order.orderType = json["data"]["member_order_info"]["order_info"]["order_type"].string!
+                            order.typeDescription = json["data"]["member_order_info"]["order_info"]["order_type_description"].string!
+                            order.orderImageURL = json["data"]["member_order_info"]["article_info"]["article_image"]["source"].string!
+                            order.foodId = json["data"]["member_order_info"]["article_info"]["article_id"].string!
+                            
+                            
+                            // Show success view
+                            let paySuccessVC: VCPaySuccessViewController = VCPaySuccessViewController()
+                            paySuccessVC.parentNav = self.navigationController!
+                            paySuccessVC.foodDetailVC = self
+                            paySuccessVC.orderInfo = order
+                            self.navigationController!.showViewController(paySuccessVC, sender: self)
+                            
+                        }
+                        else {
+                            let err = json["status"]["error_desc"].string!
+                            println("@ SERVER: \(err)")
+                        }
+                        
+                    }
+                    else {
+                        
+                        println("ERROR @ Request for order detail for wechat pay resp : \(error?.localizedDescription)")
+                    }
+                    
+                })
+            }
+            else {
+                
+                CTMemCache.sharedInstance.cleanNamespace("pay")
+                
+                RKDropdownAlert.title(VCAppLetor.StringLine.UnFinishOrder, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            }
+        }
+        
+        
+        if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.payAlipayTag, namespace: "pay") {
+            
+            
+            let succeed = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.payAlipayTag, namespace: "pay")?.data as! Bool
+            
+            if succeed {
+                
+                
+                var oId: String = ""
+                
+                if let orderId = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.payOrderId, contextType: BreezeContextType.Main) as? Settings {
+                    
+                    oId = orderId.value
+                    orderId.deleteInContextOfType(BreezeContextType.Main)
+                }
+                
+                Alamofire.request(VCheckGo.Router.GetOrderDetail(memberId, oId, token)).validate().responseSwiftyJSON({
+                    (_, _, JSON, error) -> Void in
+                    
+                    if error == nil {
+                        
+                        let json = JSON
+                        
+                        if json["status"]["succeed"].string! == "1" {
+                            
+                            let order: OrderInfo = OrderInfo(id: json["data"]["member_order_info"]["order_info"]["order_id"].string!, no: json["data"]["member_order_info"]["order_info"]["order_no"].string!)
+                            
+                            
+                            order.title = json["data"]["member_order_info"]["order_info"]["menu_info"]["menu_name"].string!
+                            order.pricePU = json["data"]["member_order_info"]["order_info"]["menu_info"]["price"]["special_price"].string!
+                            order.priceUnit = json["data"]["member_order_info"]["order_info"]["menu_info"]["price"]["price_unit"].string!
+                            order.totalPrice = json["data"]["member_order_info"]["order_info"]["total_price"]["special_price"].string!
+                            order.originalTotalPrice = json["data"]["member_order_info"]["order_info"]["total_price"]["original_price"].string!
+                            
+                            var dateFormatter = NSDateFormatter()
+                            dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                            order.createDate = dateFormatter.dateFromString(json["data"]["member_order_info"]["order_info"]["create_date"].string!)
+                            order.createByMobile = json["data"]["member_order_info"]["order_info"]["mobile"].string!
+                            
+                            order.menuId = json["data"]["member_order_info"]["order_info"]["menu_info"]["menu_id"].string!
+                            order.menuTitle = json["data"]["member_order_info"]["order_info"]["menu_info"]["menu_name"].string!
+                            order.menuUnit = json["data"]["member_order_info"]["order_info"]["menu_info"]["menu_unit"]["menu_unit"].string!
+                            order.itemCount = json["data"]["member_order_info"]["order_info"]["menu_info"]["count"].string!
+                            
+                            order.orderType = json["data"]["member_order_info"]["order_info"]["order_type"].string!
+                            order.typeDescription = json["data"]["member_order_info"]["order_info"]["order_type_description"].string!
+                            order.orderImageURL = json["data"]["member_order_info"]["article_info"]["article_image"]["source"].string!
+                            order.foodId = json["data"]["member_order_info"]["article_info"]["article_id"].string!
+                            
+                            
+                            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                
+                                let resultString = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.payAlipayResultString, namespace: "pay")?.data as! String
+                                
+                                CTMemCache.sharedInstance.cleanNamespace("pay")
+                                
+                                // Async Alipay
+                                Alamofire.request(VCheckGo.Router.AsyncPayment(memberId, oId, resultString, token)).validate().responseSwiftyJSON({
+                                    (_, _, JSON, error) -> Void in
+                                    
+                                    if error == nil {
+                                        
+                                        let json = JSON
+                                        
+                                        if json["status"]["succeed"].string! == "1" {
+                                            
+                                            // Show success view
+                                            let paySuccessVC: VCPaySuccessViewController = VCPaySuccessViewController()
+                                            paySuccessVC.parentNav = self.navigationController!
+                                            paySuccessVC.foodDetailVC = self
+                                            paySuccessVC.orderInfo = order
+                                            self.navigationController!.showViewController(paySuccessVC, sender: self)
+                                            
+                                        }
+                                        else {
+                                            RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                                        }
+                                    }
+                                    else {
+                                        println("ERROR @ Request for async payment result : \(error?.localizedDescription)")
+                                    }
+                                })
+                                
+                            })
+                            
+                        }
+                        else {
+                            let err = json["status"]["error_desc"].string!
+                            println("@ SERVER: \(err)")
+                        }
+                        
+                    }
+                    else {
+                        
+                        println("ERROR @ Request for order detail for alipay resp : \(error?.localizedDescription)")
+                    }
+                    
+                })
+                
+            }
+            else {
+                
+                let payStatus = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.payAlipayResultStatus, namespace: "pay")?.data as! String
+                
+                CTMemCache.sharedInstance.cleanNamespace("pay")
+                
+                if payStatus == "6001" {
+                    
+                    RKDropdownAlert.title(VCAppLetor.StringLine.UserCanclePayment, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTimeLong)
+                }
+                else if payStatus == "6002" {
+                    
+                    RKDropdownAlert.title(VCAppLetor.StringLine.PaymentNetworkError, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                }
+                else if payStatus == "4000" {
+                    
+                    RKDropdownAlert.title(VCAppLetor.StringLine.PaymentFailed, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                }
+                
+            }
         }
     }
     
@@ -950,6 +1285,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     func cleanLocalMemberStatus() {
         
         CTMemCache.sharedInstance.cleanNamespace("member")
+        CTMemCache.sharedInstance.cleanNamespace("token")
         
         // ========== ISLOGIN ===========
         if let isLogin = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameIsLogin, contextType: BreezeContextType.Main) as? Settings {
@@ -961,7 +1297,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 
             })
             
-            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: false, namespace: "member")
+            //            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: false, namespace: "member")
         }
         else { // App version DO NOT exist, create one with empty
             
@@ -977,7 +1313,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 
             })
             
-            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: false, namespace: "member")
+            //            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: false, namespace: "member")
         }
         // ====== LOGINTYPE ========
         if let loginType = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optNameLoginType, contextType: BreezeContextType.Main) as? Settings {
@@ -989,7 +1325,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 
             })
             
-            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.None, namespace: "member")
+            //            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.None, namespace: "member")
         }
         else { // App version DO NOT exist, create one with empty
             
@@ -1005,7 +1341,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 
             })
             
-            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.None, namespace: "member")
+            //            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.None, namespace: "member")
         }
         
         // ======== CURRENT MID ============
@@ -1018,7 +1354,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 
             })
             
-            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: "0", namespace: "member")
+            //            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: "0", namespace: "member")
         }
         else { // App version DO NOT exist, create one with empty
             
@@ -1034,8 +1370,11 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 
             })
             
-            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: "0", namespace: "member")
+            //            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: "0", namespace: "member")
         }
+        
+        self.didMemberInit = true
+        
     }
     
     // Bar button with icon
@@ -1148,6 +1487,9 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         if reachability.isReachable() {
             
+            let bgView: UIView = UIView(frame: CGRectMake(0, 0, self.view.width, self.view.height))
+            bgView.backgroundColor = UIColor.whiteColor()
+            self.tableView.backgroundView = bgView
         }
         else {
             self.showInternetUnreachable()

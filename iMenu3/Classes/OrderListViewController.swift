@@ -30,6 +30,8 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
     
     var hud: MBProgressHUD!
     
+    var shouldReload: Bool = false
+    
     // MARK: - Controller Life-time
     
     override func viewDidLoad() {
@@ -37,6 +39,7 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
         
         // Prepare for interface
         self.title = VCAppLetor.StringLine.OrderTitle
+        self.view.backgroundColor = UIColor.whiteColor()
         
         // Rewrite back bar button
         let backButton: UIBarButtonItem = UIBarButtonItem()
@@ -50,6 +53,7 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
         self.tableView.separatorColor = UIColor.clearColor()
         self.tableView.delegate = self
         self.tableView.dataSource = self
+        self.tableView.alpha = 0
         
         self.view.addSubview(self.tableView)
         
@@ -76,6 +80,10 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
+        if self.shouldReload {
+            self.tableView.triggerPullToRefresh()
+        }
         
     }
     
@@ -125,17 +133,11 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
         // Adjust Layout
         if cell.orderInfo.orderType! != "10" {
             
-            cell.typeDescription.animation.moveY(10).animate(0.01)
-            cell.foodTitle.animation.moveY(10).animate(0.01)
-            cell.price.animation.moveY(10).animate(0.01)
-            cell.amount.animation.moveY(10).animate(0.01)
+            
             cell.payButton.hidden = true
         }
         else {
-//            cell.typeDescription.animation.moveY(-10).animate(0.1)
-//            cell.foodTitle.animation.moveY(-10).animate(0.1)
-//            cell.price.animation.moveY(-10).animate(0.1)
-//            cell.amount.animation.moveY(-10).animate(0.1)
+            
             cell.payButton.hidden = false
         }
         
@@ -144,7 +146,11 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
     
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         
-        if (self.orderList.objectAtIndex(indexPath.row) as! OrderInfo).orderType == "10" { // WaitForPay
+        if (self.orderList.objectAtIndex(indexPath.row) as! OrderInfo).orderType == "10" ||
+        (self.orderList.objectAtIndex(indexPath.row) as! OrderInfo).orderType == "22" ||
+        (self.orderList.objectAtIndex(indexPath.row) as! OrderInfo).orderType == "32" ||
+        (self.orderList.objectAtIndex(indexPath.row) as! OrderInfo).orderType == "51"
+        { // WaitForPay
             
             return true
         }
@@ -167,6 +173,7 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
         let orderDetailVC: OrderInfoViewController = OrderInfoViewController()
         orderDetailVC.orderInfo = self.orderList.objectAtIndex(indexPath.row) as! OrderInfo
         orderDetailVC.parentNav = self.parentNav
+        orderDetailVC.orderListVC = self
         self.parentNav?.showViewController(orderDetailVC, sender: self)
         
     }
@@ -452,6 +459,8 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                         self.hud.hide(true)
                         self.tableView.stopRefreshAnimation()
                         self.tableView.reloadData()
+                        
+                        self.tableView.animation.makeAlpha(1.0).animate(0.4)
                     })
                     
                 }

@@ -13,7 +13,7 @@ import RKDropdownAlert
 import MBProgressHUD
 import DKChainableAnimationKit
 
-class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate {
+class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, OrderRefundDelegate {
     
     var foodInfo: FoodInfo!
     var orderInfo: OrderInfo!
@@ -81,6 +81,7 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate {
     
     var hud: MBProgressHUD!
     
+    var orderListVC: OrderListViewController?
     
     // MARK: - LifetimeCycle
     
@@ -137,9 +138,7 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate {
             else {
                 self.scrollView.contentSize.height = self.orderAmountUnderline.originY + 40.0
             }
-            
         }
-        
     }
     
     override func updateViewConstraints() {
@@ -451,6 +450,7 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate {
             
             self.refundBtn.setTitle(VCAppLetor.StringLine.OrderRefund, forState: .Normal)
             self.refundBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+            self.refundBtn.layer.cornerRadius = VCAppLetor.ConstValue.ButtonCornerRadius
             self.refundBtn.addTarget(self, action: "refundAction:", forControlEvents: .TouchUpInside)
             self.refundBtn.backgroundColor = UIColor.nephritisColor()
             self.scrollView.addSubview(self.refundBtn)
@@ -461,6 +461,10 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate {
         
         if self.orderInfo.orderType == "10" {
             self.setupPayBar()
+        }
+        
+        if self.orderInfo.orderType == "31" || self.orderInfo.orderType == "32" {
+            self.setupRefundView()
         }
         
     }
@@ -504,6 +508,133 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate {
         topBorder.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0), excludingEdge: .Bottom)
         
         self.view.addSubview(self.payBarView)
+    }
+    
+    func setupRefundView() {
+        
+        let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+        let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+        
+        Alamofire.request(VCheckGo.Router.GetRefundInfo(memberId, self.orderInfo.id, token)).validate().responseSwiftyJSON ({
+            (_, _, JSON, error) -> Void in
+            
+            if error == nil {
+                
+                let json = JSON
+                
+                if json["status"]["succeed"].string! == "1" {
+                    
+                    let refundView: UIView = UIView.newAutoLayoutView()
+                    refundView.backgroundColor = UIColor.cloudsColor(alpha: 0.4)
+                    self.view.addSubview(refundView)
+                    
+                    let refundStatus: UILabel = UILabel.newAutoLayoutView()
+                    refundStatus.font = VCAppLetor.Font.XLarge
+                    refundStatus.textAlignment = .Left
+                    refundStatus.sizeToFit()
+                    refundView.addSubview(refundStatus)
+                    
+                    let refundingDate: UILabel = UILabel.newAutoLayoutView()
+                    
+                    var dateFormatter = NSDateFormatter()
+                    dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                    
+                    let date: NSDate = dateFormatter.dateFromString(json["data"]["return_info"]["date_added"].string!)!
+                    
+                    var addDateFormatter = NSDateFormatter()
+                    addDateFormatter.dateFormat = VCAppLetor.ConstValue.DateFormatWithoutSeconds
+                    
+                    refundingDate.text = VCAppLetor.StringLine.RefundingDateName + addDateFormatter.stringFromDate(date)
+                    refundingDate.textAlignment = .Left
+                    refundingDate.textColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.6)
+                    refundingDate.font = VCAppLetor.Font.SmallFont
+                    refundingDate.sizeToFit()
+                    refundView.addSubview(refundingDate)
+                    
+                    let refundTips: UILabel = UILabel.newAutoLayoutView()
+                    refundTips.textAlignment = .Right
+                    refundTips.textColor = UIColor.lightGrayColor()
+                    refundTips.font = VCAppLetor.Font.SmallFont
+                    refundTips.sizeToFit()
+                    refundView.addSubview(refundTips)
+                    
+                    if self.orderInfo.orderType == "31" {
+                        
+                        refundStatus.text = VCAppLetor.StringLine.RefundInProgress
+                        refundStatus.textColor = UIColor.alizarinColor()
+                        
+                        refundTips.text = VCAppLetor.StringLine.RefundingTip
+                    }
+                    else if self.orderInfo.orderType == "32" {
+                        
+                        refundStatus.text = VCAppLetor.StringLine.RefundFinish
+                        refundStatus.textColor = UIColor.nephritisColor()
+                        
+                        refundTips.text = VCAppLetor.StringLine.RefundedTip
+                    }
+                    
+                    let refundActionText: UILabel = UILabel.newAutoLayoutView()
+                    refundActionText.text = json["data"]["return_info"]["return_action_description"].string!
+                    refundActionText.textAlignment = .Right
+                    refundActionText.textColor = VCAppLetor.Colors.Content
+                    refundActionText.font = VCAppLetor.Font.SmallFont
+                    refundActionText.sizeToFit()
+                    refundView.addSubview(refundActionText)
+                    
+                    refundView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0), excludingEdge: .Top)
+                    refundView.autoSetDimension(.Height, toSize: VCAppLetor.ConstValue.CheckNowBarHeight)
+                    
+                    refundStatus.autoPinEdgeToSuperviewEdge(.Leading, withInset: 20.0)
+                    refundStatus.autoPinEdgeToSuperviewEdge(.Top, withInset: 12.0)
+                    
+                    refundingDate.autoPinEdge(.Top, toEdge: .Bottom, ofView: refundStatus, withOffset: 10.0)
+                    refundingDate.autoPinEdge(.Leading, toEdge: .Leading, ofView: refundStatus)
+                    
+                    refundActionText.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 20.0)
+                    refundActionText.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: refundStatus)
+                    
+                    refundTips.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: refundActionText)
+                    refundTips.autoPinEdge(.Top, toEdge: .Bottom, ofView: refundActionText, withOffset: 10.0)
+                    
+                    
+                    
+                    let topBorder: CustomDrawView = CustomDrawView.newAutoLayoutView()
+                    
+                    if self.orderInfo.orderType == "31" {
+                        
+                        topBorder.drawType = "RedLine"
+                    }
+                    else if self.orderInfo.orderType == "32" {
+                        
+                        
+                        topBorder.drawType = "GreenLine"
+                    }
+                    topBorder.lineWidth = 1.0
+                    refundView.addSubview(topBorder)
+                    
+                    topBorder.autoSetDimension(.Height, toSize: 1.0)
+                    topBorder.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0), excludingEdge: .Bottom)
+                    
+                    self.view.addSubview(refundView)
+                    
+                    self.refundBtn.removeFromSuperview()
+                    
+                    self.scrollView.height -= VCAppLetor.ConstValue.CheckNowBarHeight
+                    
+                }
+                else {
+                    
+                    RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                }
+                
+            }
+            else {
+                
+                println("ERROR @ Get Refund info : \(error?.localizedDescription)")
+            }
+            
+        })
+        
     }
     
     func updateOrderViewConstraints() {
@@ -706,9 +837,24 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate {
     
     func refundAction(btn: UIButton) {
         
+        let refundVC: OrderRefundViewController = OrderRefundViewController()
+        refundVC.orderInfo = self.orderInfo
+        refundVC.parentNav = self.parentNav
+        refundVC.delegate = self
+        self.parentNav?.showViewController(refundVC, sender: self)
         
         
+    }
+    
+    // MARK: - OrderRefundDelegate
+    func didSubmitRefundSuccess() {
         
+        RKDropdownAlert.title(VCAppLetor.StringLine.RefundSucceed, backgroundColor: UIColor.nephritisColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+        
+        self.orderInfo.orderType = "31"
+        self.orderListVC?.shouldReload = true
+        
+        self.setupRefundView()
     }
     
     

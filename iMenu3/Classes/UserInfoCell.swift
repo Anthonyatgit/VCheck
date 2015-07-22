@@ -13,6 +13,7 @@ class UserInfoCell: UITableViewCell {
     
     var title: UILabel = UILabel.newAutoLayoutView()
     var subTitle: UILabel = UILabel.newAutoLayoutView()
+    var avatar: UIImageView = UIImageView.newAutoLayoutView()
     
     var didSetupConstraints = false
     
@@ -45,6 +46,11 @@ class UserInfoCell: UITableViewCell {
         self.subTitle.textColor = UIColor.grayColor().colorWithAlphaComponent(0.6)
         self.addSubview(self.subTitle)
         
+        self.avatar.layer.cornerRadius = 22.5
+        self.avatar.layer.masksToBounds = true
+        self.avatar.hidden = true
+        self.addSubview(self.avatar)
+        
         self.setNeedsUpdateConstraints()
         
     }
@@ -55,12 +61,15 @@ class UserInfoCell: UITableViewCell {
             
             self.title.autoSetDimensionsToSize(CGSizeMake(100.0, 20.0))
             self.title.autoPinEdgeToSuperviewEdge(.Leading, withInset: 18.0)
-            self.title.autoAlignAxisToSuperviewAxis(ALAxis.Horizontal)
-            
+            self.title.autoAlignAxisToSuperviewAxis(.Horizontal)
             
             self.subTitle.autoSetDimensionsToSize(CGSizeMake(140.0, 20.0))
-            self.subTitle.autoPinEdgeToSuperviewEdge(ALEdge.Trailing, withInset: 32.0)
-            self.subTitle.autoAlignAxisToSuperviewAxis(ALAxis.Horizontal)
+            self.subTitle.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 32.0)
+            self.subTitle.autoAlignAxisToSuperviewAxis(.Horizontal)
+            
+            self.avatar.autoSetDimensionsToSize(CGSizeMake(45, 45))
+            self.avatar.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 42.0)
+            self.avatar.autoAlignAxisToSuperviewAxis(.Horizontal)
             
             didSetupConstraints = true
         }

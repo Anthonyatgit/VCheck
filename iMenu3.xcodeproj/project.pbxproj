@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0BE02F5CD93607CAD28B61E4 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E1B9F71B7F8A3007EFAD6E6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		920212091B58E0510047AF5C /* VCInviteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920212081B58E0510047AF5C /* VCInviteViewController.swift */; };
+		9202120B1B58E9720047AF5C /* HamburgerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9202120A1B58E9720047AF5C /* HamburgerButton.swift */; };
 		9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */; };
 		920940A81B37036C006686C7 /* OrderListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920940A71B37036C006686C7 /* OrderListViewController.swift */; };
 		920940AA1B370390006686C7 /* OrderListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920940A91B370390006686C7 /* OrderListViewCell.swift */; };
@@ -15,6 +17,10 @@
 		9214D79C1B32CE78007AC818 /* friends_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D7991B32CE78007AC818 /* friends_color.png */; };
 		9214D79D1B32CE78007AC818 /* wechat_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D79A1B32CE78007AC818 /* wechat_color.png */; };
 		9214D79E1B32CE78007AC818 /* weibo_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D79B1B32CE78007AC818 /* weibo_color.png */; };
+		92163E7E1B5C7D4F003B3A43 /* FBShimmeringLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 92163E7B1B5C7D4F003B3A43 /* FBShimmeringLayer.m */; };
+		92163E7F1B5C7D4F003B3A43 /* FBShimmeringView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92163E7D1B5C7D4F003B3A43 /* FBShimmeringView.m */; };
+		92163E811B5CA73B003B3A43 /* OrderRefundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92163E801B5CA73B003B3A43 /* OrderRefundViewController.swift */; };
+		92163E851B5CD860003B3A43 /* ZFCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 92163E841B5CD860003B3A43 /* ZFCheckbox.m */; };
 		922248A51B4628B200553BFA /* VCMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922248A41B4628B200553BFA /* VCMapViewController.swift */; };
 		9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */; };
 		922412951B200D560049A9B5 /* SMSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 922412931B200D560049A9B5 /* SMSegment.swift */; };
@@ -107,6 +113,7 @@
 		92BD603C1B05DE8900649DDF /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */; };
 		92BD603E1B05DEDF00649DDF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */; };
 		92BDB6931B267D3F00D1EEEA /* wx_logo_64.png in Resources */ = {isa = PBXBuildFile; fileRef = 92BDB6921B267D3F00D1EEEA /* wx_logo_64.png */; };
+		92CBE1101B5F42ED00656E6C /* VCGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CBE10F1B5F42ED00656E6C /* VCGalleryView.swift */; };
 		92CFFB251AF774F700C9AA7D /* UserPanelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CFFB241AF774F700C9AA7D /* UserPanelTableViewCell.swift */; };
 		92CFFB2F1AF8663400C9AA7D /* cards.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CFFB271AF8663300C9AA7D /* cards.png */; };
 		92CFFB301AF8663400C9AA7D /* coffee.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CFFB281AF8663300C9AA7D /* coffee.png */; };
@@ -131,6 +138,15 @@
 		92E580001B2AD09200E463A3 /* BMKObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 92E57FFF1B2AD09200E463A3 /* BMKObject.mm */; };
 		92E962E21AF2017400030226 /* Toucan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E962E11AF2017400030226 /* Toucan.swift */; };
 		92EAF9371B218F8900B5EEA8 /* VCCheckNowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */; };
+		92F121A41B5773410036A3A9 /* UIImage+UzysExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F121941B5773410036A3A9 /* UIImage+UzysExtension.m */; };
+		92F121A51B5773410036A3A9 /* UzysAppearanceConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F121961B5773410036A3A9 /* UzysAppearanceConfig.m */; };
+		92F121A61B5773410036A3A9 /* UzysAssetPickerController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 92F121971B5773410036A3A9 /* UzysAssetPickerController.bundle */; };
+		92F121A71B5773410036A3A9 /* UzysAssetsPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F121991B5773410036A3A9 /* UzysAssetsPickerController.m */; };
+		92F121A81B5773410036A3A9 /* UzysAssetsPickerController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 92F1219A1B5773410036A3A9 /* UzysAssetsPickerController.xib */; };
+		92F121A91B5773410036A3A9 /* UzysAssetsViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F1219D1B5773410036A3A9 /* UzysAssetsViewCell.m */; };
+		92F121AA1B5773410036A3A9 /* UzysGroupPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F1219F1B5773410036A3A9 /* UzysGroupPickerView.m */; };
+		92F121AB1B5773410036A3A9 /* UzysGroupViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F121A11B5773410036A3A9 /* UzysGroupViewCell.m */; };
+		92F121AC1B5773410036A3A9 /* UzysWrapperPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F121A31B5773410036A3A9 /* UzysWrapperPickerController.m */; };
 		92F3B0691B00362A003A6D76 /* SinaWeiboConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0511B00362A003A6D76 /* SinaWeiboConnection.framework */; };
 		92F3B06A1B00362A003A6D76 /* SMSConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0521B00362A003A6D76 /* SMSConnection.framework */; };
 		92F3B06B1B00362A003A6D76 /* WeChatConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0531B00362A003A6D76 /* WeChatConnection.framework */; };
@@ -186,6 +202,8 @@
 /* Begin PBXFileReference section */
 		0C40656762C7729B9DD514C9 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		1E1B9F71B7F8A3007EFAD6E6 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		920212081B58E0510047AF5C /* VCInviteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCInviteViewController.swift; path = Classes/VCInviteViewController.swift; sourceTree = "<group>"; };
+		9202120A1B58E9720047AF5C /* HamburgerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HamburgerButton.swift; path = Classes/HamburgerButton.swift; sourceTree = "<group>"; };
 		9203E68A1B00637300407F66 /* ShareSDKContentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShareSDKContentController.h; sourceTree = "<group>"; };
 		9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareSDKContentController.m; sourceTree = "<group>"; };
 		920940A71B37036C006686C7 /* OrderListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrderListViewController.swift; path = Classes/OrderListViewController.swift; sourceTree = "<group>"; };
@@ -194,6 +212,15 @@
 		9214D7991B32CE78007AC818 /* friends_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends_color.png; sourceTree = "<group>"; };
 		9214D79A1B32CE78007AC818 /* wechat_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wechat_color.png; sourceTree = "<group>"; };
 		9214D79B1B32CE78007AC818 /* weibo_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = weibo_color.png; sourceTree = "<group>"; };
+		92163E781B5C7D4F003B3A43 /* FBShimmering-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FBShimmering-Prefix.pch"; sourceTree = "<group>"; };
+		92163E791B5C7D4F003B3A43 /* FBShimmering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmering.h; sourceTree = "<group>"; };
+		92163E7A1B5C7D4F003B3A43 /* FBShimmeringLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmeringLayer.h; sourceTree = "<group>"; };
+		92163E7B1B5C7D4F003B3A43 /* FBShimmeringLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBShimmeringLayer.m; sourceTree = "<group>"; };
+		92163E7C1B5C7D4F003B3A43 /* FBShimmeringView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FBShimmeringView.h; sourceTree = "<group>"; };
+		92163E7D1B5C7D4F003B3A43 /* FBShimmeringView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FBShimmeringView.m; sourceTree = "<group>"; };
+		92163E801B5CA73B003B3A43 /* OrderRefundViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrderRefundViewController.swift; path = Classes/OrderRefundViewController.swift; sourceTree = "<group>"; };
+		92163E831B5CD860003B3A43 /* ZFCheckbox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZFCheckbox.h; sourceTree = "<group>"; };
+		92163E841B5CD860003B3A43 /* ZFCheckbox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZFCheckbox.m; sourceTree = "<group>"; };
 		922248A41B4628B200553BFA /* VCMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCMapViewController.swift; path = Classes/VCMapViewController.swift; sourceTree = "<group>"; };
 		9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCBaseViewController.swift; path = Classes/VCBaseViewController.swift; sourceTree = "<group>"; };
 		922412931B200D560049A9B5 /* SMSegment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SMSegment.swift; sourceTree = "<group>"; };
@@ -305,6 +332,7 @@
 		92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoViewController.swift; path = Classes/UserInfoViewController.swift; sourceTree = "<group>"; };
 		92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoCell.swift; path = Classes/UserInfoCell.swift; sourceTree = "<group>"; };
 		92BDB6921B267D3F00D1EEEA /* wx_logo_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wx_logo_64.png; sourceTree = "<group>"; };
+		92CBE10F1B5F42ED00656E6C /* VCGalleryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCGalleryView.swift; path = Classes/VCGalleryView.swift; sourceTree = "<group>"; };
 		92CFFB241AF774F700C9AA7D /* UserPanelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserPanelTableViewCell.swift; path = Classes/UserPanelTableViewCell.swift; sourceTree = "<group>"; };
 		92CFFB271AF8663300C9AA7D /* cards.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cards.png; sourceTree = "<group>"; };
 		92CFFB281AF8663300C9AA7D /* coffee.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = coffee.png; sourceTree = "<group>"; };
@@ -328,6 +356,23 @@
 		92E57FFF1B2AD09200E463A3 /* BMKObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BMKObject.mm; sourceTree = "<group>"; };
 		92E962E11AF2017400030226 /* Toucan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Toucan.swift; path = Classes/Toucan.swift; sourceTree = "<group>"; };
 		92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCCheckNowViewController.swift; path = Classes/VCCheckNowViewController.swift; sourceTree = "<group>"; };
+		92F121931B5773410036A3A9 /* UIImage+UzysExtension.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+UzysExtension.h"; sourceTree = "<group>"; };
+		92F121941B5773410036A3A9 /* UIImage+UzysExtension.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+UzysExtension.m"; sourceTree = "<group>"; };
+		92F121951B5773410036A3A9 /* UzysAppearanceConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysAppearanceConfig.h; sourceTree = "<group>"; };
+		92F121961B5773410036A3A9 /* UzysAppearanceConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysAppearanceConfig.m; sourceTree = "<group>"; };
+		92F121971B5773410036A3A9 /* UzysAssetPickerController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = UzysAssetPickerController.bundle; sourceTree = "<group>"; };
+		92F121981B5773410036A3A9 /* UzysAssetsPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysAssetsPickerController.h; sourceTree = "<group>"; };
+		92F121991B5773410036A3A9 /* UzysAssetsPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysAssetsPickerController.m; sourceTree = "<group>"; };
+		92F1219A1B5773410036A3A9 /* UzysAssetsPickerController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = UzysAssetsPickerController.xib; sourceTree = "<group>"; };
+		92F1219B1B5773410036A3A9 /* UzysAssetsPickerController_Configuration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysAssetsPickerController_Configuration.h; sourceTree = "<group>"; };
+		92F1219C1B5773410036A3A9 /* UzysAssetsViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysAssetsViewCell.h; sourceTree = "<group>"; };
+		92F1219D1B5773410036A3A9 /* UzysAssetsViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysAssetsViewCell.m; sourceTree = "<group>"; };
+		92F1219E1B5773410036A3A9 /* UzysGroupPickerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysGroupPickerView.h; sourceTree = "<group>"; };
+		92F1219F1B5773410036A3A9 /* UzysGroupPickerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysGroupPickerView.m; sourceTree = "<group>"; };
+		92F121A01B5773410036A3A9 /* UzysGroupViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysGroupViewCell.h; sourceTree = "<group>"; };
+		92F121A11B5773410036A3A9 /* UzysGroupViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysGroupViewCell.m; sourceTree = "<group>"; };
+		92F121A21B5773410036A3A9 /* UzysWrapperPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysWrapperPickerController.h; sourceTree = "<group>"; };
+		92F121A31B5773410036A3A9 /* UzysWrapperPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysWrapperPickerController.m; sourceTree = "<group>"; };
 		92F3B0511B00362A003A6D76 /* SinaWeiboConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SinaWeiboConnection.framework; sourceTree = "<group>"; };
 		92F3B0521B00362A003A6D76 /* SMSConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SMSConnection.framework; sourceTree = "<group>"; };
 		92F3B0531B00362A003A6D76 /* WeChatConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WeChatConnection.framework; sourceTree = "<group>"; };
@@ -451,6 +496,28 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		92163E771B5C7D4F003B3A43 /* FBShimmering */ = {
+			isa = PBXGroup;
+			children = (
+				92163E781B5C7D4F003B3A43 /* FBShimmering-Prefix.pch */,
+				92163E791B5C7D4F003B3A43 /* FBShimmering.h */,
+				92163E7A1B5C7D4F003B3A43 /* FBShimmeringLayer.h */,
+				92163E7B1B5C7D4F003B3A43 /* FBShimmeringLayer.m */,
+				92163E7C1B5C7D4F003B3A43 /* FBShimmeringView.h */,
+				92163E7D1B5C7D4F003B3A43 /* FBShimmeringView.m */,
+			);
+			path = FBShimmering;
+			sourceTree = "<group>";
+		};
+		92163E821B5CD860003B3A43 /* ZFCheckbox */ = {
+			isa = PBXGroup;
+			children = (
+				92163E831B5CD860003B3A43 /* ZFCheckbox.h */,
+				92163E841B5CD860003B3A43 /* ZFCheckbox.m */,
+			);
+			path = ZFCheckbox;
+			sourceTree = "<group>";
+		};
 		922412921B200D560049A9B5 /* SMSegmentView */ = {
 			isa = PBXGroup;
 			children = (
@@ -483,6 +550,9 @@
 		9227E2C11AE8DCCC008C6381 /* iMenu3 */ = {
 			isa = PBXGroup;
 			children = (
+				92163E821B5CD860003B3A43 /* ZFCheckbox */,
+				92163E771B5C7D4F003B3A43 /* FBShimmering */,
+				92F121921B5773410036A3A9 /* UzysAssetsVC */,
 				92D6EB271B413A69005DF3DB /* AliSDK */,
 				923C252A1B3F9B630060DBFC /* TYAttributedLabel */,
 				92457CE11B3020E5005B0E33 /* BMK */,
@@ -738,8 +808,10 @@
 				920940A71B37036C006686C7 /* OrderListViewController.swift */,
 				920940A91B370390006686C7 /* OrderListViewCell.swift */,
 				92795DE41B4A469C00E9A83F /* OrderInfoViewController.swift */,
+				92163E801B5CA73B003B3A43 /* OrderRefundViewController.swift */,
 				92D6DBE31B33C4D5003E80AE /* FavoritesViewController.swift */,
 				92D6DBE51B33C503003E80AE /* FavoritesViewCell.swift */,
+				920212081B58E0510047AF5C /* VCInviteViewController.swift */,
 				92BD2E171B2827EF0053408B /* FeedbackViewController.swift */,
 				92457CD71B2FD2EC005B0E33 /* VCAboutViewController.swift */,
 				92457CD91B300949005B0E33 /* VCMailBoxViewController.swift */,
@@ -758,6 +830,8 @@
 				92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */,
 				9271B6E61B30396A00BC0F29 /* CustomDrawView.swift */,
 				9214D7971B32B1B2007AC818 /* VCShareActionView.swift */,
+				92CBE10F1B5F42ED00656E6C /* VCGalleryView.swift */,
+				9202120A1B58E9720047AF5C /* HamburgerButton.swift */,
 			);
 			name = VCCommon;
 			sourceTree = "<group>";
@@ -780,6 +854,30 @@
 			);
 			name = model;
 			path = Classes/model;
+			sourceTree = "<group>";
+		};
+		92F121921B5773410036A3A9 /* UzysAssetsVC */ = {
+			isa = PBXGroup;
+			children = (
+				92F121931B5773410036A3A9 /* UIImage+UzysExtension.h */,
+				92F121941B5773410036A3A9 /* UIImage+UzysExtension.m */,
+				92F121951B5773410036A3A9 /* UzysAppearanceConfig.h */,
+				92F121961B5773410036A3A9 /* UzysAppearanceConfig.m */,
+				92F121971B5773410036A3A9 /* UzysAssetPickerController.bundle */,
+				92F121981B5773410036A3A9 /* UzysAssetsPickerController.h */,
+				92F121991B5773410036A3A9 /* UzysAssetsPickerController.m */,
+				92F1219A1B5773410036A3A9 /* UzysAssetsPickerController.xib */,
+				92F1219B1B5773410036A3A9 /* UzysAssetsPickerController_Configuration.h */,
+				92F1219C1B5773410036A3A9 /* UzysAssetsViewCell.h */,
+				92F1219D1B5773410036A3A9 /* UzysAssetsViewCell.m */,
+				92F1219E1B5773410036A3A9 /* UzysGroupPickerView.h */,
+				92F1219F1B5773410036A3A9 /* UzysGroupPickerView.m */,
+				92F121A01B5773410036A3A9 /* UzysGroupViewCell.h */,
+				92F121A11B5773410036A3A9 /* UzysGroupViewCell.m */,
+				92F121A21B5773410036A3A9 /* UzysWrapperPickerController.h */,
+				92F121A31B5773410036A3A9 /* UzysWrapperPickerController.m */,
+			);
+			path = UzysAssetsVC;
 			sourceTree = "<group>";
 		};
 		92F3B04F1B003629003A6D76 /* ShareSDK */ = {
@@ -1044,6 +1142,7 @@
 				9284A13C1AF0AECD00E662B2 /* relax.png in Resources */,
 				92FB21911B31572200877C07 /* wechat.png in Resources */,
 				9284A1341AF0AECD00E662B2 /* mood2.jpg in Resources */,
+				92F121A61B5773410036A3A9 /* UzysAssetPickerController.bundle in Resources */,
 				92F51C8D1AEDE7D300FDD50C /* hagaki.jpg in Resources */,
 				9284A1321AF0AECD00E662B2 /* loved.png in Resources */,
 				92CFFB321AF8663400C9AA7D /* image.png in Resources */,
@@ -1056,6 +1155,7 @@
 				92D6EB2A1B413A69005DF3DB /* AlipaySDK.bundle in Resources */,
 				92FB21841B31571800877C07 /* bulb_light.png in Resources */,
 				92CFFB341AF8663400C9AA7D /* shopping-bag.png in Resources */,
+				92F121A81B5773410036A3A9 /* UzysAssetsPickerController.xib in Resources */,
 				9227E2CF1AE8DCCC008C6381 /* Images.xcassets in Resources */,
 				9284A1301AF0AECD00E662B2 /* happy.png in Resources */,
 				92BDB6931B267D3F00D1EEEA /* wx_logo_64.png in Resources */,
@@ -1135,10 +1235,13 @@
 			files = (
 				927779DD1B0B0304002A50EB /* FlatUIColor.swift in Sources */,
 				923C25421B3F9B630060DBFC /* TYTextContainer+Extended.m in Sources */,
+				9202120B1B58E9720047AF5C /* HamburgerButton.swift in Sources */,
 				927779DE1B0B0304002A50EB /* JSSAlertView.swift in Sources */,
 				9280E4481B14444B00959798 /* Reachability.swift in Sources */,
 				92ACC2471B2ECEF100C824F2 /* MGFashionMenuView.m in Sources */,
+				92163E851B5CD860003B3A43 /* ZFCheckbox.m in Sources */,
 				9267443F1B1855C60075EDB5 /* EditUserInfoViewController.swift in Sources */,
+				92163E7E1B5C7D4F003B3A43 /* FBShimmeringLayer.m in Sources */,
 				923C253E1B3F9B630060DBFC /* TYAttributedLabel.m in Sources */,
 				923C253F1B3F9B630060DBFC /* TYDrawStorage.m in Sources */,
 				92BD603E1B05DEDF00649DDF /* UserInfoCell.swift in Sources */,
@@ -1150,8 +1253,10 @@
 				923C253D1B3F9B630060DBFC /* NSMutableAttributedString+TY.m in Sources */,
 				92B0F0ED1B12FF2E009F368B /* StringExt.swift in Sources */,
 				922248A51B4628B200553BFA /* VCMapViewController.swift in Sources */,
+				92F121AA1B5773410036A3A9 /* UzysGroupPickerView.m in Sources */,
 				922412951B200D560049A9B5 /* SMSegment.swift in Sources */,
 				9227E2EE1AE8E4AE008C6381 /* FoodListTableViewCell.swift in Sources */,
+				92F121A71B5773410036A3A9 /* UzysAssetsPickerController.m in Sources */,
 				924546DE1B4D7A6B00790846 /* VCAppViewController.swift in Sources */,
 				9284A14B1AF1B98100E662B2 /* VCheckGo.swift in Sources */,
 				9284A13F1AF0AF2500E662B2 /* FoodCollectionsViewController.swift in Sources */,
@@ -1161,8 +1266,10 @@
 				92BD2E141B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m in Sources */,
 				9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */,
 				923C25411B3F9B630060DBFC /* TYLinkTextStorage.m in Sources */,
+				92CBE1101B5F42ED00656E6C /* VCGalleryView.swift in Sources */,
 				92EAF9371B218F8900B5EEA8 /* VCCheckNowViewController.swift in Sources */,
 				92347F801B306AB100DF0A47 /* FoodDetailScrollView.swift in Sources */,
+				92163E811B5CA73B003B3A43 /* OrderRefundViewController.swift in Sources */,
 				92E580001B2AD09200E463A3 /* BMKObject.mm in Sources */,
 				9293BBC91B018ECC0034F3C5 /* RegisterViewController.swift in Sources */,
 				927779DC1B0B0304002A50EB /* CTMemCache.swift in Sources */,
@@ -1171,6 +1278,7 @@
 				9227E2C51AE8DCCC008C6381 /* AppDelegate.swift in Sources */,
 				928633801B0AE6070040CBA2 /* Settings.swift in Sources */,
 				92FA19471AFCCA8400D33538 /* FindMyPasscodeViewController.swift in Sources */,
+				92F121A41B5773410036A3A9 /* UIImage+UzysExtension.m in Sources */,
 				92795DE51B4A469C00E9A83F /* OrderInfoViewController.swift in Sources */,
 				9284A1451AF0CFCF00E662B2 /* VCAppLetor.swift in Sources */,
 				923C25441B3F9B630060DBFC /* TYTextStorage.m in Sources */,
@@ -1184,10 +1292,13 @@
 				92D6DBE61B33C503003E80AE /* FavoritesViewCell.swift in Sources */,
 				9284A1411AF0AF5400E662B2 /* FoodCollectionsViewCell.swift in Sources */,
 				928205101AEDE1330067BB92 /* NSManagedObject+Creating.swift in Sources */,
+				920212091B58E0510047AF5C /* VCInviteViewController.swift in Sources */,
 				923C25451B3F9B630060DBFC /* TYViewStorage.m in Sources */,
 				9282050B1AEDE1330067BB92 /* BreezeStore+Defaults.swift in Sources */,
 				92B10EC51B00993C00E0674F /* Member.swift in Sources */,
+				92F121A51B5773410036A3A9 /* UzysAppearanceConfig.m in Sources */,
 				9271B6E71B30396A00BC0F29 /* CustomDrawView.swift in Sources */,
+				92F121AB1B5773410036A3A9 /* UzysGroupViewCell.m in Sources */,
 				9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */,
 				9264F8ED1B2597CD00AF8640 /* VCPayNowViewController.swift in Sources */,
 				923C25431B3F9B630060DBFC /* TYTextContainer.m in Sources */,
@@ -1196,11 +1307,13 @@
 				9282050C1AEDE1330067BB92 /* BreezeStore+iCloud.swift in Sources */,
 				92457CDA1B300949005B0E33 /* VCMailBoxViewController.swift in Sources */,
 				920940A81B37036C006686C7 /* OrderListViewController.swift in Sources */,
+				92F121AC1B5773410036A3A9 /* UzysWrapperPickerController.m in Sources */,
 				92FA19491AFCD6CE00D33538 /* SMSCodeViewController.swift in Sources */,
 				928205121AEDE1330067BB92 /* NSManagedObject+Finding.swift in Sources */,
 				929DCAC21B0578800050B63F /* VCTermsViewController.swift in Sources */,
 				9259050B1B098EEE00F343D4 /* UserInfoHeaderView.swift in Sources */,
 				92D6DBE81B33E087003E80AE /* FoodItem.swift in Sources */,
+				92F121A91B5773410036A3A9 /* UzysAssetsViewCell.m in Sources */,
 				92FB21741B311F4000877C07 /* MailBoxCell.swift in Sources */,
 				920940AA1B370390006686C7 /* OrderListViewCell.swift in Sources */,
 				92CFFB251AF774F700C9AA7D /* UserPanelTableViewCell.swift in Sources */,
@@ -1208,6 +1321,7 @@
 				928B2FBA1B2150AF001FA746 /* FoodViewerViewController.swift in Sources */,
 				92D6DBE41B33C4D5003E80AE /* FavoritesViewController.swift in Sources */,
 				92BD603C1B05DE8900649DDF /* UserInfoViewController.swift in Sources */,
+				92163E7F1B5C7D4F003B3A43 /* FBShimmeringView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

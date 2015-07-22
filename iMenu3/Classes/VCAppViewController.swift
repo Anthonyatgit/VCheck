@@ -51,9 +51,6 @@ class VCAppViewController: VCBaseViewController {
                                 
                             }
                         })
-                        
-                        NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "removeIndexImage", userInfo: nil, repeats: false)
-                        
                     }
                 }
                 else {
@@ -62,9 +59,13 @@ class VCAppViewController: VCBaseViewController {
             }
             else {
                 println("ERROR @ Request for indexImage url : \(error?.localizedDescription)")
+                
             }
             
         })
+        
+        
+        NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "removeIndexImage", userInfo: nil, repeats: false)
         
         
     }

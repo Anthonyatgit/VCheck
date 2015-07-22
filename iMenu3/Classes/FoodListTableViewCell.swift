@@ -19,6 +19,7 @@ class FoodListTableViewCell: UITableViewCell {
     
     let foodImageView: UIImageView = UIImageView.newAutoLayoutView()
     let foodBrandImageView: UIImageView = UIImageView.newAutoLayoutView()
+    let shimmerView: FBShimmeringView = FBShimmeringView.newAutoLayoutView()
     let foodDate: UILabel = UILabel.newAutoLayoutView()
     let foodDateBg: CustomDrawView = CustomDrawView.newAutoLayoutView()
     let foodDateBg2: CustomDrawView = CustomDrawView.newAutoLayoutView()
@@ -56,7 +57,7 @@ class FoodListTableViewCell: UITableViewCell {
         let imageURL = self.foodInfo.foodImage!
         
         self.contentView.addSubview(self.foodImageView)
-        self.foodImageView.alpha = 0.1
+//        self.foodImageView.alpha = 0.1
         
         if let image = self.imageCache!.objectForKey(imageURL) as? UIImage {
             self.foodImageView.image = image
@@ -80,27 +81,36 @@ class FoodListTableViewCell: UITableViewCell {
             }
         }
         
-        self.foodImageView.animation.makeAlpha(1.0).animate(1.0)
+//        self.foodImageView.animation.makeAlpha(1.0).animate(1.0)
         
         self.foodDateBg.drawType = "DateTagLong"
-        self.foodDateBg.alpha = 0.6
+        self.foodDateBg.alpha = 0.4
         self.contentView.addSubview(self.foodDateBg)
         
         self.foodDateBg2.drawType = "DateTag"
-        self.foodDateBg2.alpha = 0.6
+        self.foodDateBg2.alpha = 0.8
         self.contentView.addSubview(self.foodDateBg2)
+        
+//        self.shimmerView.shimmering = true
+//        self.shimmerView.shimmeringOpacity = 1.0
+//        self.shimmerView.shimmeringPauseDuration = 3.0
+//        self.shimmerView.shimmeringSpeed = 100
+//        self.foodDateBg2.addSubview(self.shimmerView)
         
         
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = VCAppLetor.ConstValue.DateWithoutTimeFormat
         
         self.foodDate.text = dateFormatter.stringFromDate(self.foodInfo.addDate!)
-        self.foodDate.font = VCAppLetor.Font.SmallFont
+        self.foodDate.font = VCAppLetor.Font.UltraLightSmall
         self.foodDate.textAlignment = .Left
         self.foodDate.textColor = UIColor.whiteColor()
-        self.contentView.addSubview(self.foodDate)
+        self.foodDateBg2.addSubview(self.foodDate)
+        
         
         self.foodBrandImageView.backgroundColor = UIColor.whiteColor()
+        self.foodBrandImageView.layer.cornerRadius = 25.0
+        self.foodBrandImageView.layer.masksToBounds = true
         let storeImageURL = self.foodInfo.memberIcon!
         
         self.contentView.addSubview(self.foodBrandImageView)
@@ -111,6 +121,37 @@ class FoodListTableViewCell: UITableViewCell {
         else {
             
             self.foodBrandImageView.image = nil
+            
+//            
+//            let destination: (NSURL, NSHTTPURLResponse) -> (NSURL) = {
+//                (temporaryURL, response) in
+//                
+//                if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
+//                    return directoryURL.URLByAppendingPathComponent("\(self.photoInfo!.id).\(response.suggestedFilename)")
+//                }
+//                
+//                return temporaryURL
+//                
+//            }
+//            
+//            let progressIndicatorView = UIProgressView(frame: CGRect(x: 0.0, y: 69.0, width: self.view.bounds.width, height: 10.0))
+//            progressIndicatorView.tintColor = UIColor.nephritisColor()
+//            progressIndicatorView.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
+//            self.view.addSubview(progressIndicatorView)
+//            
+//            Alamofire.download(.GET, imageURL, destination).progress {
+//                (_, totalBytesRead, totalBytesExpectedToRead) in
+//                
+//                dispatch_async(dispatch_get_main_queue()) {
+//                    
+//                    progressIndicatorView.setProgress(Float(totalBytesRead) / Float(totalBytesExpectedToRead), animated: true)
+//                    
+//                    if totalBytesRead == totalBytesExpectedToRead {
+//                        progressIndicatorView.removeFromSuperview()
+//                    }
+//                }
+//            }
+            
             
             Alamofire.request(.GET, storeImageURL).validate(contentType: ["image/*"]).responseImage() {
                 
@@ -128,7 +169,7 @@ class FoodListTableViewCell: UITableViewCell {
         }
         
         self.foodBrandImageView.layer.borderWidth = 1.0
-        self.foodBrandImageView.layer.borderColor = UIColor.lightGrayColor().CGColor
+        self.foodBrandImageView.layer.borderColor = UIColor.blackColor().colorWithAlphaComponent(0.6).CGColor
         
         self.foodTitle.text = self.foodInfo.title
         self.foodTitle.font = VCAppLetor.Font.XLarge
@@ -162,7 +203,7 @@ class FoodListTableViewCell: UITableViewCell {
 //        self.foodDesc.lineBreakMode = NSLineBreakMode.ByTruncatingTail
 //        self.contentView.addSubview(self.foodDesc)
         
-        self.foodPrice.font = VCAppLetor.Font.XLarge
+        self.foodPrice.font = VCAppLetor.Font.Light
         self.foodPrice.text = round_price(self.foodInfo.price!)
         self.foodPrice.textAlignment = .Right
         self.foodPrice.textColor = UIColor.pumpkinColor()
@@ -174,7 +215,7 @@ class FoodListTableViewCell: UITableViewCell {
         self.foodUnit.textColor = UIColor.pumpkinColor()
         self.contentView.addSubview(self.foodUnit)
         
-        self.foodOriginPrice.font = VCAppLetor.Font.SmallFont
+        self.foodOriginPrice.font = VCAppLetor.Font.LightXSmall
         self.foodOriginPrice.text = round_price(self.foodInfo.originalPrice!) + self.foodInfo.priceUnit!
         self.foodOriginPrice.textAlignment = .Center
         self.foodOriginPrice.textColor = UIColor.lightGrayColor()
@@ -185,10 +226,29 @@ class FoodListTableViewCell: UITableViewCell {
         self.foodOriginPriceStricke.lineWidth = 1.0
         self.contentView.addSubview(self.foodOriginPriceStricke)
         
-        self.foodRemainAmount.font = VCAppLetor.Font.SmallFont
-        self.foodRemainAmount.text = "剩余 \(self.foodInfo.remainingCount!)\(self.foodInfo.remainingCountUnit!)"
-        self.foodRemainAmount.textAlignment = .Left
+        var displayAmount: String = ""
         self.foodRemainAmount.textColor = UIColor.lightGrayColor()
+        
+        if self.foodInfo.remainingCount! == "0" {
+            displayAmount = self.foodInfo.outOfStock!
+        }
+        else {
+            displayAmount = "剩余 \(self.foodInfo.remainingCount!) \(self.foodInfo.remainingCountUnit!)"
+            if (self.foodInfo.remainingCount! as NSString).integerValue <= VCAppLetor.ConstValue.StockAlertPoint {
+                
+                self.foodRemainAmount.textColor = UIColor.orangeColor()
+            }
+        }
+        
+        if self.foodInfo.remainder == "0" {
+            displayAmount = VCAppLetor.StringLine.isClose
+        }
+        
+        
+        self.foodRemainAmount.font = VCAppLetor.Font.SmallFont
+        self.foodRemainAmount.text = displayAmount
+        self.foodRemainAmount.textAlignment = .Left
+        self.foodRemainAmount.sizeToFit()
         self.contentView.addSubview(self.foodRemainAmount)
         
         self.foodSeparator.drawType = "DoubleLine"
@@ -214,13 +274,17 @@ class FoodListTableViewCell: UITableViewCell {
             self.foodDateBg2.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodImageView)
             self.foodDateBg2.autoSetDimensionsToSize(CGSizeMake(80.0, 28.0))
             
-            self.foodDate.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodDateBg, withOffset: 4.0)
-            self.foodDate.autoAlignAxis(.Horizontal, toSameAxisOfView: self.foodDateBg)
+            self.foodDate.autoPinEdgeToSuperviewEdge(.Leading, withInset: 4.0)
+            self.foodDate.autoAlignAxisToSuperviewAxis(.Horizontal)
             self.foodDate.autoSetDimensionsToSize(CGSizeMake(68.0, 14.0))
+            
+//            self.shimmerView.autoPinEdgeToSuperviewEdge(.Leading, withInset: 4.0)
+//            self.shimmerView.autoAlignAxisToSuperviewAxis(.Horizontal)
+//            self.shimmerView.autoSetDimensionsToSize(CGSizeMake(68.0, 14.0))
             
             self.foodBrandImageView.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.foodImageView, withOffset: 10.0)
             self.foodBrandImageView.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodImageView, withOffset: -10.0)
-            self.foodBrandImageView.autoSetDimensionsToSize(CGSizeMake(40.0, 40.0))
+            self.foodBrandImageView.autoSetDimensionsToSize(CGSizeMake(50.0, 50.0))
             
             self.foodTitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodImageView, withOffset: 20.0)
             self.foodTitle.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodImageView, withOffset: 10.0)
@@ -243,7 +307,6 @@ class FoodListTableViewCell: UITableViewCell {
             
             self.foodRemainAmount.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
             self.foodRemainAmount.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.foodSeparator, withOffset: -10.0)
-            self.foodRemainAmount.autoSetDimensionsToSize(CGSizeMake(60.0, 20.0))
             
             self.foodUnit.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
             self.foodUnit.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.foodRemainAmount)
@@ -261,7 +324,6 @@ class FoodListTableViewCell: UITableViewCell {
             self.foodOriginPriceStricke.autoAlignAxis(.Horizontal, toSameAxisOfView: self.foodOriginPrice)
             self.foodOriginPriceStricke.autoMatchDimension(.Width, toDimension: .Width, ofView: self.foodOriginPrice)
             self.foodOriginPriceStricke.autoSetDimension(.Height, toSize: 2.0)
-            
             
             didSetupConstraints = true
         }

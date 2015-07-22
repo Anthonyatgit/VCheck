@@ -83,6 +83,22 @@ class OrderListViewCell: UITableViewCell {
             
             self.typeDescription.textColor = UIColor.orangeColor()
         }
+        else if self.orderInfo.orderType! == "31" {
+            
+            self.typeDescription.textColor = UIColor.sunflowerColor()
+        }
+        else if self.orderInfo.orderType! == "32" {
+            
+            self.typeDescription.textColor = UIColor.nephritisColor()
+        }
+        else if self.orderInfo.orderType! == "21" {
+            
+            self.typeDescription.textColor = UIColor.belizeHoleColor()
+        }
+        else if self.orderInfo.orderType! == "22" {
+            
+            self.typeDescription.textColor = UIColor.wetAsphaltColor()
+        }
         else {
             self.typeDescription.textColor = UIColor.lightGrayColor()
         }

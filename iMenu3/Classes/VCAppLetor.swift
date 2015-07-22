@@ -32,6 +32,16 @@ struct VCAppLetor {
 //        static let XXXLarge: UIFont = UIFont(name: "HelveticaNeue", size: 28.0)!
         static let XXXLarge: UIFont = UIFont.boldSystemFontOfSize(28.0)
         static let boldLarge: UIFont = UIFont.boldSystemFontOfSize(18.0)
+        
+        
+        static let LightNormal: UIFont = UIFont(name: "HelveticaNeue-Light", size: 18.0)!
+        static let XXLight: UIFont = UIFont(name: "HelveticaNeue-Light", size: 22.0)!
+        static let UltraLight: UIFont = UIFont(name: "HelveticaNeue-UltraLight", size: 18.0)!
+        static let UltraLightSmall: UIFont = UIFont(name: "HelveticaNeue-UltraLight", size: 12.0)!
+        static let Light: UIFont = UIFont(name: "HelveticaNeue-Light", size: 18.0)!
+        static let LightSmall: UIFont = UIFont(name: "HelveticaNeue-Light", size: 14.0)!
+        static let LightXSmall: UIFont = UIFont(name: "HelveticaNeue-Light", size: 12.0)!
+        static let XXXXUltraLight: UIFont = UIFont(name: "HelveticaNeue-UltraLight", size: 48.0)!
     }
     
     // MARK: - StringLing
@@ -39,7 +49,7 @@ struct VCAppLetor {
     enum StringLine {
         
         // MEMBER LOGIN
-        static let AppName: String = "VCheck"
+        static let AppName: String = "TASTE-ME"
         static let AppScheme: String = "vcheck"
         static let SaltKey: String = "siyo_vcheck"
         static let isLoading: String = "努力加载中.."
@@ -114,7 +124,7 @@ struct VCAppLetor {
         static let EditPasswordSuccess: String = "密码修改成功"
         static let MobileCannotChange: String = "手机号码绑定后不能修改[联系客服]"
         static let Logout: String = "退出登录"
-        static let ServiceTel: String = "7×24客户服务"
+        static let ServiceTel: String = "联系客户服务"
         static let FreeServiceCall: String = "4008 369 917"
         static let FeedBackTitle: String = "反馈意见"
         static let FeedBackPlaceholder: String = "请在这里写下对VCheck的感受，我们将不断进步，为你做的更好~"
@@ -122,7 +132,7 @@ struct VCAppLetor {
         static let ContactPlaceHolder: String = "邮箱，微信，QQ，手机皆可"
         static let FeedbackTextEmpty: String = "给我们写点什么吧"
         static let FeedbackSucceed: String = "我们已经收悉你的反馈信息，我们会努力为你做的更好~"
-        static let NoMore: String = "• VCHECK •"
+        static let NoMore: String = "・TASTE・"
         
         static let ServiceCityTitle: String = "选择服务的城市"
         static let ServiceCityNote: String = "我们正在努力为更多城市提供服务"
@@ -135,10 +145,14 @@ struct VCAppLetor {
         static let Wechat: String = "微信好友"
         static let Friends: String = "朋友圈"
         
-        static let DefaultShareContent: String = "好友来自VCheck的美食分享，快去看看"
+        static let DefaultShareContent: String = "好友来自知味App的美食分享，快去看看"
         static let ShareSucceed: String = "分享成功"
         static let ShareFailed: String = "分享失败"
         static let ShareCancledByUser: String = "用户取消了分享"
+        static let ShareTips: String = "邀请越多好友，获得越多金券奖励!"
+        static let Rewards1: String = "当好友使用你的邀请码注册，可获得50元礼券"
+        static let Rewards2: String = "当好友完成首单消费，你还可以获得50元礼券"
+        
         
         static let MailboxTitle: String = "信息中心"
         static let MailboxEmpty: String = "暂无消息"
@@ -154,6 +168,16 @@ struct VCAppLetor {
         static let OrderCreateDate: String = "下单时间"
         static let OrderItemCount: String = "购买数量"
         static let OrderRefund: String = "申请退款"
+        static let RefundReason: String = "退款原因"
+        static let RefundTips: String = "选一项帮助我们快速为您退款"
+        static let SubmitRefund: String = "提交申请"
+        static let RefundSucceed: String = "申请退款成功,您的款项将在2个工作日内退回"
+        static let RefundInProgress: String = "退款处理中"
+        static let RefundFinish: String = "退款成功"
+        static let RefundingTip: String = "预计2个工作日内完成"
+        static let RefundingDateName: String = "申请: "
+        static let RefundedDateName: String = "退款时间: "
+        static let RefundedTip: String = "您的款项已经退回"
         
         static let FavoritesTitle: String = "我喜欢的礼遇"
         static let FavoritesEmpty: String = "你还没有喜欢的礼遇"
@@ -162,11 +186,12 @@ struct VCAppLetor {
         
         
         static let FoodViewerTitle: String = "礼遇详情"
-        static let ShareToGetCoupon: String = "分享获取丰富礼券"
+        static let ShareToGetCoupon: String = "分享获取礼券"
         static let CheckNow: String = "立即购买"
         static let SegmentTitles: [AnyObject] = ["亮点","菜单","须知"]
         static let HaveOrderWaitForPay: String = "你已经预定了此商品，可以立即支付"
         static let BackToPay: String = "此商品已经存在订单，请返回商品页面直接支付"
+        static let isClose: String = "已结束"
         
         static let CheckNowTitle: String = "填写订单"
         static let CheckNowTip: String = "请注意，该礼遇需要到店享用"
@@ -185,6 +210,7 @@ struct VCAppLetor {
         static let SubmitBtnTitle: String = "提交订单"
         static let SubmitOrderInProgress: String = "正在提交您的订单"
         static let AsyncPaymentInProgress: String = "正在同步交易信息"
+        static let PaymentSucceed: String = "支付已经完成"
         static let UserCanclePayment: String = "你取消了支付，如你的支付遇到问题请联系客服 [4008 369 917]"
         static let UserAuthFail: String = "你的身份认证失败，支付已取消，请重试"
         static let PaymentNetworkError: String = "支付已取消，你的网络好像不给力，请重新支付"
@@ -203,11 +229,12 @@ struct VCAppLetor {
         static let PayNow: String = "立即支付"
         
         static let PaymentDoneTitle: String = "购买成功"
-        static let PaymentSuccessString: String = "购买成功，感谢客官的惠顾"
+        static let PaymentSuccessString: String = "购买成功，感谢您的惠顾"
         static let OrderProductName: String = "礼遇名称:"
         static let OrderNumber: String = "订单号码:"
         static let CheckOrderTitle: String = "查看我的订单"
         static let BackToGo: String = "继续浏览"
+        static let UnFinishOrder: String = "你有未完成的订单，可以在我的订单中查看"
         
         static let AboutTitle: String = "关于我们"
         static let AppSubtitle: String = "• 精 选 限 量 美 食 •"
@@ -229,6 +256,10 @@ struct VCAppLetor {
         
         static let LocationUserFail: String = "获取位置信息失败"
         static let YourCityNotInService: String = "您的城市目前还未开通服务"
+        
+        static let OneImageOnly: String = "你只能选择一张图片作为头像"
+        static let AvatarUploadError: String = "头像上传失败"
+        
     }
     
     enum City: String {
@@ -322,6 +353,7 @@ struct VCAppLetor {
         static let FoodItemCellHeight: CGFloat = 320.0
         static let FavItemCellHeight: CGFloat = 122.0
         static let OrderItemCellHeight: CGFloat = 122.0
+        static let StockAlertPoint: Int = 5
         
         static let DefaultItemCountPerPage: Int = 5
         static let DefaultListItemCountPerPage: Int = 10
@@ -364,7 +396,19 @@ struct VCAppLetor {
         static let optTipForUpdate: String = "is_tips"
         static let optToken: String = "token"
         
+        static let optShareTag: String = "share_tag"
+        
+        static let payWechatTag: String = "pay_wechat"
+        
+        static let payOrderId: String = "pay_orderid"
+        
+        static let payAlipayTag: String = "pay_alipay"
+        static let payAlipayResultString: String = "pay_alipay_resultstring"
+        static let payAlipayResultStatus: String = "pay_alipay_resultstatus"
+        
         static let optDeviceToken: String = "deviceToken"
+        
+        static let optMemberIcon: String = "member_icon"
         
         static let orderSessionMenuIds: String = "OrderSessionMenuIds"
         static let orderSessionOrderObjs: String = "OrderSessionOrderObjs"
@@ -378,6 +422,12 @@ struct VCAppLetor {
     
     enum ObjectIns {
         static let objPayVC: String = "PaymentVC"
+        static let objNavigation: String = "Navigation"
+    }
+    
+    enum ShareTag {
+        static let shareWechat: String = "ShareWechat"
+        static let shareWeibo: String = "ShareWeibo"
     }
     
     // MARK: - LoginType
@@ -421,10 +471,11 @@ struct VCAppLetor {
         static let MyInfos: [String: [String]] = [
             "账号安全": ["手机号", "密码"],
             "社交网络": ["新浪微博", "微信"],
-            "个人资料": ["邮箱", "昵称"]
+            "个人资料": ["头像", "邮箱", "昵称"]
         ]
         
         static let PersonalInfo: String = "个人信息"
+        static let Avatar: String = "头像"
         static let Email: String = "邮箱"
         static let Nickname: String = "昵称"
         static let AccountSecurity: String = "账号安全"
@@ -446,11 +497,6 @@ struct VCAppLetor {
         static let SaltCode: String = "salt_code"
     }
     
-    enum ShareType: String {
-        
-        case Food = "Food"
-        case Invite = "Invite"
-    }
     
     enum EditType: String {
         case Email = "Email"
@@ -462,6 +508,11 @@ struct VCAppLetor {
         case spot = 1
         case menu = 2
         case info = 3
+    }
+    
+    enum ShareToType: Int {
+        case food = 1
+        case invite = 2
     }
     
     enum OrderType: Int {

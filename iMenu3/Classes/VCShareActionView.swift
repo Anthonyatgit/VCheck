@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Alamofire
 import QuartzCore
 import PureLayout
 import DKChainableAnimationKit
@@ -14,9 +15,10 @@ import RKDropdownAlert
 
 class VCShareActionView: UIView {
     
+    
     var isShow: Bool?
     
-    var shareType: VCAppLetor.ShareType!
+    var shareType: VCAppLetor.ShareToType!
     
     var foodItem: FoodItem?
     var foodInfo: FoodInfo?
@@ -157,12 +159,12 @@ class VCShareActionView: UIView {
         self.tapGuestureF.numberOfTapsRequired = 1
         self.tapGuestureF.numberOfTouchesRequired = 1
         
-        self.blackBG.addGestureRecognizer(self.tapGuestureBG)
+        self.visualEffectView!.addGestureRecognizer(self.tapGuestureBG)
         self.shareBox.addGestureRecognizer(self.tapGuestureF)
         
         
         self.shareBox.animation.makeY(self.height-200.0).animate(0.3)
-        self.visualEffectView!.animation.makeAlpha(0.9).animate(0.3)
+        self.visualEffectView!.animation.makeAlpha(0.8).animate(0.3)
         
     }
     
@@ -177,58 +179,119 @@ class VCShareActionView: UIView {
     
     func shareContent(typeButton: UIButton) {
         
-        
-        //        var shareContent: ISSContent = ShareSDK.content("分享文字", defaultContent: "默认分享内容，没内容时显示", image: nil, title: "提示", url: "返回链接", description: "这是一条测试内容", mediaType: SSPublishContentMediaTypeNews)
-        //
-        //        var shareList: NSArray = ShareSDKContentController.getCustomShareList()
-        //
-        //        let container: ISSContainer = ShareSDK.container()
-        //        container.setIPhoneContainerWithViewController(self)
-        //
-        //        ShareSDK.showShareActionSheet(nil,
-        //            shareList: nil,
-        //            content: shareContent,
-        //            statusBarTips: true,
-        //            authOptions: nil,
-        //            shareOptions: nil,
-        //            result: { (type: ShareType, state:SSResponseState, statusInfo: ISSPlatformShareInfo!, error: ICMErrorInfo!, end: Bool) in
-        //
-        //        })
-        
         var type: ShareType!
+        
+        var typeString: String = ""
         
         switch typeButton.tag {
             
         case 1:
             type = ShareTypeSinaWeibo
+            typeString = "Weibo"
+            CTMemCache.sharedInstance.set(VCAppLetor.ShareTag.shareWeibo, data: true, namespace: "share")
         case 2:
             type = ShareTypeWeixiSession
+            typeString = "Wechat"
+            CTMemCache.sharedInstance.set(VCAppLetor.ShareTag.shareWechat, data: true, namespace: "share")
         case 3:
             type = ShareTypeWeixiTimeline
+            typeString = "Wechat"
+            CTMemCache.sharedInstance.set(VCAppLetor.ShareTag.shareWechat, data: true, namespace: "share")
         default:
             type = nil
+            typeString = ""
         }
         
-        
-        let shareContent: ISSContent = ShareSDK.content(self.foodItem?.title, defaultContent: VCAppLetor.StringLine.DefaultShareContent, image: nil, title: "VCheck-美食", url: VCAppLetor.StringLine.AppWebsiteURL, description: "测试v0.0.1", mediaType: SSPublishContentMediaTypeNews)
-        
-        ShareSDK.shareContent(shareContent, type: type, authOptions: nil, shareOptions: nil, statusBarTips: false) {
-            (type, state, statusInfo, error, end) -> Void in
+        if let shareTag = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optShareTag, contextType: BreezeContextType.Main) as? Settings {
             
-            if state.value == SSPublishContentStateSuccess.value {
+            BreezeStore.saveInMain({ contextType -> Void in
                 
-                RKDropdownAlert.title(VCAppLetor.StringLine.ShareSucceed, backgroundColor: UIColor.nephritisColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
-                
-            }
-            else if state.value == SSPublishContentStateCancel.value {
-                
-                RKDropdownAlert.title(VCAppLetor.StringLine.ShareCancledByUser, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
-            }
-            else if state.value == SSPublishContentStateFail.value {
-                
-                RKDropdownAlert.title(VCAppLetor.StringLine.ShareFailed, message: "\(error.errorCode()) | \(error.errorDescription())", backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
-            }
+                shareTag.sid = "\(NSDate())"
+                shareTag.value = typeString
+            })
         }
+        else { // App version DO NOT exist, create one with empty
+            
+            BreezeStore.saveInMain({ contextType -> Void in
+                
+                let shareTagToBeCreate: Settings = Settings.createInContextOfType(contextType) as! Settings
+                
+                shareTagToBeCreate.sid = "\(NSDate())"
+                shareTagToBeCreate.name = VCAppLetor.SettingName.optShareTag
+                shareTagToBeCreate.value = typeString
+                shareTagToBeCreate.type = VCAppLetor.SettingType.AppConfig
+                shareTagToBeCreate.data = ""
+                
+            })
+            
+        }
+        
+        
+        if self.shareType == VCAppLetor.ShareToType.food {
+            
+            Alamofire.request(.GET, self.foodInfo!.foodImage!).validate(contentType: ["image/*"]).responseImage() {
+                
+                (_, _, image, error) in
+                
+                if error == nil && image != nil {
+                    
+                    let foodImage: UIImage = Toucan.Resize.resizeImage(image!, size: CGSize(width: 400, height: 400), fitMode: Toucan.Resize.FitMode.Crop)
+                    
+                    let png = ShareSDK.pngImageWithImage(foodImage)
+                    
+                    let shareContent: ISSContent = ShareSDK.content(self.foodItem?.title, defaultContent: VCAppLetor.StringLine.DefaultShareContent, image: png, title: "知味-精品美食", url: VCAppLetor.StringLine.AppWebsiteURL, description: "Description", mediaType: SSPublishContentMediaTypeNews)
+                    
+                    ShareSDK.shareContent(shareContent, type: type, authOptions: nil, shareOptions: nil, statusBarTips: false) {
+                        (type, state, statusInfo, error, end) -> Void in
+                        
+                        if state.value == SSPublishContentStateSuccess.value {
+                            
+                            RKDropdownAlert.title(VCAppLetor.StringLine.ShareSucceed, backgroundColor: UIColor.nephritisColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                            
+                        }
+                        else if state.value == SSPublishContentStateCancel.value {
+                            
+                            RKDropdownAlert.title(VCAppLetor.StringLine.ShareCancledByUser, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                        }
+                        else if state.value == SSPublishContentStateFail.value {
+                            
+                            RKDropdownAlert.title(VCAppLetor.StringLine.ShareFailed, message: "\(error.errorCode()) | \(error.errorDescription())", backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                        }
+                        
+                        self.removeFromSuperview()
+                    }
+                }
+            }
+            
+            
+            
+        }
+        else if self.shareType == VCAppLetor.ShareToType.invite {
+            
+            let shareContent: ISSContent = ShareSDK.content("好友邀请使用", defaultContent: VCAppLetor.StringLine.DefaultShareContent, image: nil, title: "知味-精品美食", url: VCAppLetor.StringLine.AppWebsiteURL, description: "测试v0.0.1", mediaType: SSPublishContentMediaTypeNews)
+            
+            ShareSDK.shareContent(shareContent, type: type, authOptions: nil, shareOptions: nil, statusBarTips: false) {
+                (type, state, statusInfo, error, end) -> Void in
+                
+                if state.value == SSPublishContentStateSuccess.value {
+                    
+                    RKDropdownAlert.title(VCAppLetor.StringLine.ShareSucceed, backgroundColor: UIColor.nephritisColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    
+                }
+                else if state.value == SSPublishContentStateCancel.value {
+                    
+                    RKDropdownAlert.title(VCAppLetor.StringLine.ShareCancledByUser, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                }
+                else if state.value == SSPublishContentStateFail.value {
+                    
+                    RKDropdownAlert.title(VCAppLetor.StringLine.ShareFailed, message: "\(error.errorCode()) | \(error.errorDescription())", backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                }
+                
+                self.removeFromSuperview()
+            }
+            
+        }
+        
         
         
     }

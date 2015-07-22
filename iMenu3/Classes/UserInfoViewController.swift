@@ -35,15 +35,15 @@ class UserInfoSectionHeaderView: UITableViewHeaderFooterView {
     
     func setupViews() {
         
-        //        self.contentView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
+        //self.contentView.backgroundColor = UIColor.greenColor().colorWithAlphaComponent(0.1)
         
     }
 }
 
-class UserInfoViewController: UITableViewController, UITableViewDelegate, UITableViewDataSource, EditUserInfoDelegate {
+class UserInfoViewController: UITableViewController, UITableViewDelegate, UITableViewDataSource, EditUserInfoDelegate, UzysAssetsPickerControllerDelegate, UIAlertViewDelegate {
     
     // Interface datasource
-    var userInfoDataSource: [String: [String]]!
+    var userInfoDataSource: NSMutableArray = NSMutableArray()
     
     var delegate: MemberLogoutDelegate?
     var parentNav: UINavigationController?
@@ -59,7 +59,13 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         
         self.title = VCAppLetor.StringLine.UserInfoSettings
         
-        self.userInfoDataSource = VCAppLetor.UserPanel.MyInfos
+        var mInfo: NSMutableArray = ["头像", "邮箱", "昵称"]
+        var securityInfo: NSMutableArray = ["手机号", "密码"]
+        var authInfo: NSMutableArray = ["新浪微博", "微信"]
+        
+        self.userInfoDataSource.addObject(mInfo)
+        self.userInfoDataSource.addObject(securityInfo)
+        self.userInfoDataSource.addObject(authInfo)
         
         // Config tableView Style
         let userInfoTableView: UITableView = UITableView(frame: self.tableView.bounds, style: UITableViewStyle.Grouped)
@@ -92,19 +98,72 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.userInfoDataSource.values.array[section].count
+        //return self.userInfoDataSource.values.array[section].count
+        return self.userInfoDataSource[section].count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell: UserInfoCell = tableView.dequeueReusableCellWithIdentifier("UserInfoCell", forIndexPath: indexPath) as! UserInfoCell
         cell.backgroundColor = UIColor.whiteColor()
         
-        
-        if (indexPath.section == 0 && indexPath.row == 0) { // Email
+        if (indexPath.section == 0 && indexPath.row == 0) { // Avatar
+            cell.title.text = VCAppLetor.UserPanel.Avatar
+            cell.subTitle.hidden = true
+            cell.avatar.hidden = false
+            
+            if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optMemberIcon, namespace: "member") {
+                
+                cell.avatar.image = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberIcon, namespace: "member")?.data as? UIImage
+            }
+            else {
+                if self.reachability.isReachable() {
+                    
+                    let icon = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Icon, namespace: "member")?.data as! String
+                    Alamofire.request(.GET, icon).validate().responseImage() {
+                        (_, _, image, error) in
+                        
+                        if error == nil && image != nil {
+                            cell.avatar.image = image
+                        }
+                    }
+                }
+                else {
+                    
+                    let midString = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+                    
+                    // Read avatar icon from local cache file
+                    if var avatarDirectoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
+                        
+                        var err: NSError?
+                        
+                        avatarDirectoryURL = avatarDirectoryURL.URLByAppendingPathComponent("/avatar/\(midString)")
+                        
+                        
+                        let avatarIconFile = NSFileManager.defaultManager().contentsAtPath(avatarDirectoryURL.path!)
+                        
+                        if avatarIconFile != nil {
+                            
+                            let avatarIconImage = UIImage(data: avatarIconFile!)
+                            
+                            let avatarIcon = Toucan.Resize.resizeImage(avatarIconImage!, size: CGSizeMake(40, 40), fitMode: Toucan.Resize.FitMode.Crop)
+                            
+                            cell.avatar.image = avatarIcon
+                        }
+                        else {
+                            cell.avatar.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
+                            cell.avatar.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+                        }
+                    }
+                    
+                }
+            }
+            
+        }
+        else if (indexPath.section == 0 && indexPath.row == 1) { // Email
             cell.title.text = VCAppLetor.UserPanel.Email
             cell.subTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Email, namespace: "member")?.data as? String ?? VCAppLetor.StringLine.NotSetYet
         }
-        else if (indexPath.section == 0 && indexPath.row == 1) { // Nickname
+        else if (indexPath.section == 0 && indexPath.row == 2) { // Nickname
             cell.title.text = VCAppLetor.UserPanel.Nickname
             cell.subTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String ?? VCAppLetor.StringLine.NotSetYet
         }
@@ -140,21 +199,43 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
     
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return VCAppLetor.ConstValue.UserPanelCellHeight
+        
+        if indexPath.section == 0 && indexPath.row == 0 {
+            return VCAppLetor.ConstValue.UserPanelCellHeight+20
+        }
+        else {
+            return VCAppLetor.ConstValue.UserPanelCellHeight
+        }
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         
-        let selected = self.userInfoDataSource.values.array[indexPath.section][indexPath.row]
+        let selected: AnyObject! = self.userInfoDataSource[indexPath.section][indexPath.row]
         
         let editMemberInfoViewController: EditUserInfoViewController = EditUserInfoViewController()
         editMemberInfoViewController.parentNav = self.parentNav
         editMemberInfoViewController.delegate = self
         
-        if (indexPath.section == 0 && indexPath.row == 0) { // Email
+        if (indexPath.section == 0 && indexPath.row == 0) { // Avatar
             
+            let UConfig: UzysAppearanceConfig = UzysAppearanceConfig()
+            UConfig.finishSelectionButtonColor = UIColor.nephritisColor()
+            UConfig.cellSpacing = 1.0
+            UConfig.assetsCountInALine = 3
+            UzysAssetsPickerController.setUpAppearanceConfig(UConfig)
+            
+            let picker: UzysAssetsPickerController = UzysAssetsPickerController()
+            picker.delegate = self
+            picker.maximumNumberOfSelectionPhoto = 1
+            
+            self.presentViewController(picker, animated: true, completion: { () -> Void in
+                
+            })
+            return
+        }
+        else if (indexPath.section == 0 && indexPath.row == 1) { // Nickname
             editMemberInfoViewController.editType = VCAppLetor.EditType.Email
         }
         else if (indexPath.section == 0 && indexPath.row == 1) { // Nickname
@@ -244,6 +325,154 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         else {
             return 1.0
         }
+    }
+    
+    // MARK: - UzysAssetsPickerController Delegate
+    
+    func uzysAssetsPickerController(picker: UzysAssetsPickerController!, didFinishPickingAssets assets: [AnyObject]!) {
+        
+        if (assets[0].valueForProperty("ALAssetPropertyType")).isEqualToString("ALAssetTypePhoto") {
+            
+            let assetsArr = assets as NSArray
+            
+            assetsArr.enumerateObjectsUsingBlock({ (obj, idx, stop) -> Void in
+                
+                let representation: ALAsset = obj as! ALAsset
+                
+//                let img: UIImage = UIImage(CGImage: representation.defaultRepresentation().fullResolutionImage() as! CGImage)!
+                let img: UIImage = UIImage(CGImage: representation.defaultRepresentation().fullResolutionImage().takeUnretainedValue() as CGImage)!
+                
+                let iconResizedImage = Toucan.Resize.resizeImage(img, size: CGSizeMake(200, 200), fitMode: Toucan.Resize.FitMode.Crop)
+                
+                // Uploading image to server
+                let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+                let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+                
+                let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                hud.mode = MBProgressHUDMode.Indeterminate
+                
+                
+                let dic: NSDictionary = NSDictionary(object: memberId, forKey: "member_id")
+                
+                if self.reachability.isReachable() {
+                    
+                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserInfoCell).avatar.image = iconResizedImage
+                    
+                    let result: NSDictionary = self.uploadIcon(dic, route: "member/member/editMemberIcon", token: token, image: iconResizedImage)
+                    
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        
+                        if !result.isEqualToDictionary(NSDictionary.new() as [NSObject : AnyObject]) {
+                            
+                            if (result.valueForKey("status") as! NSDictionary).valueForKey("succeed") as! String == "1" {
+                                
+                                hud.hide(true)
+                                println("upload successful")
+                                
+                                
+                                
+                                CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberIcon, data: iconResizedImage, namespace: "member")
+                            }
+                            else {
+                                let errStr = (result.valueForKey("status") as! NSDictionary).valueForKey("error_desc") as! String
+                                println("\(errStr)")
+                                hud.hide(true)
+                            }
+                        }
+                    })
+                }
+                else {
+                    
+                    hud.hide(true)
+                    RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                }
+                
+                
+            })
+            
+        }
+    }
+    
+    func uzysAssetsPickerControllerDidCancel(picker: UzysAssetsPickerController!) {
+        
+        
+    }
+    
+    func uzysAssetsPickerControllerDidExceedMaximumNumberOfSelection(picker: UzysAssetsPickerController!) {
+        
+        let alert: UIAlertView = UIAlertView(title: "", message: VCAppLetor.StringLine.OneImageOnly, delegate: self, cancelButtonTitle: VCAppLetor.StringLine.Done)
+        
+        alert.show()
+    }
+    
+    func uploadIcon(data: NSDictionary, route: String, token: String, image: UIImage) -> NSDictionary {
+        
+        let s_boundary: String = "AaB03x"
+        
+        let jsonData: NSData = NSJSONSerialization.dataWithJSONObject(data, options: NSJSONWritingOptions.PrettyPrinted, error: nil)!
+        //let jsonText: String = "\(NSString(data: jsonData, encoding: NSUTF8StringEncoding))"
+        
+        let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+        let jsonText: String = "{\"member_id\":\"\(memberId)\"}"
+        
+        let baseURL: String = VCheckGo.Router.baseAPIURLString
+        
+        let request: NSMutableURLRequest = NSMutableURLRequest(URL: NSURL(string: baseURL)!, cachePolicy:NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData, timeoutInterval: 10)
+        
+        let MPboundary: String = "--\(s_boundary)"
+        let endMPboundary: String = "\(MPboundary)--"
+        
+        let imageData: NSData = UIImageJPEGRepresentation(image, 1.0)
+        
+        let body: NSMutableString = NSMutableString()
+        
+        body.appendFormat("%@\r\n", MPboundary)
+        body.appendFormat("Content-Disposition: form-data; name=\"%@\"\r\n\r\n", "route")
+        body.appendFormat("%@\r\n", route)
+        
+        body.appendFormat("%@\r\n", MPboundary)
+        body.appendFormat("Content-Disposition: form-data; name=\"%@\"\r\n\r\n", "token")
+        body.appendFormat("%@\r\n", token)
+        
+        body.appendFormat("%@\r\n", MPboundary)
+        body.appendFormat("Content-Disposition: form-data; name=\"%@\"\r\n\r\n", "jsonText")
+        body.appendFormat("%@\r\n", jsonText)
+        
+        body.appendFormat("%@\r\n", MPboundary)
+        body.appendFormat("Content-Disposition: form-data; name=\"image\"; filename=\"boris.jpg\"\r\n")
+        body.appendFormat("Content-Type: image/jpeg\r\n\r\n")
+        
+        let end: String = "\r\n\(endMPboundary)"
+        
+        let myRequestData: NSMutableData = NSMutableData()
+        
+        myRequestData.appendData(body.dataUsingEncoding(NSUTF8StringEncoding)!)
+        //myRequestData.appendData(("Content-Type: application/octet-stream\r\n\r\n").dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!)
+        myRequestData.appendData(imageData)
+        
+        myRequestData.appendData(end.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: true)!)
+        
+        
+        
+        request.setValue("multipart/form-data; boundary=\(s_boundary)", forHTTPHeaderField: "Content-Type")
+        request.setValue("\(myRequestData.length)", forHTTPHeaderField: "Content-Length")
+        request.HTTPBody = myRequestData
+        request.HTTPMethod = "POST"
+        
+        
+        let returnData: NSData = NSURLConnection.sendSynchronousRequest(request, returningResponse: nil, error: nil)!
+        
+        if !returnData.isEqual(nil) {
+            
+            let respText = NSString(data: returnData, encoding: NSUTF8StringEncoding)
+            
+            let jsonObject: NSDictionary = NSJSONSerialization.JSONObjectWithData(returnData, options: NSJSONReadingOptions.AllowFragments, error: nil) as! NSDictionary
+            
+            return jsonObject
+        }
+        
+        return NSDictionary.new()
+        
     }
     
     

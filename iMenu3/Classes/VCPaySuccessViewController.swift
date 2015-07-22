@@ -235,11 +235,21 @@ class VCPaySuccessViewController: VCBaseViewController, UIScrollViewDelegate {
         
     }
     
-    
     func checkMyOrder() {
         
-        // Show order page
+        self.orderInfo.orderType = "21"
         
+        // Show order page
+        self.parentNav.popToRootViewControllerAnimated(true)
+        
+        let memberPanel: UserPanelViewController = UserPanelViewController()
+        memberPanel.parentNav = self.parentNav
+        self.parentNav.showViewController(memberPanel, sender: nil)
+        
+        let orderDetailVC: OrderInfoViewController = OrderInfoViewController()
+        orderDetailVC.orderInfo = self.orderInfo
+        orderDetailVC.parentNav = self.parentNav
+        self.parentNav.showViewController(orderDetailVC, sender: nil)
     }
     
     

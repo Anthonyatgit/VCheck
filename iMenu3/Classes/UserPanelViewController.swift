@@ -65,7 +65,9 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
         
         self.tableView.registerClass(UserPanelTableViewCell.self, forCellReuseIdentifier: kCellIdentifier)
         
-        self.userInfoHeaderView = UserInfoHeaderView(frame: CGRectMake(0, 0, self.view.width, self.view.width*0.6))
+        let headerViewHeight = 30+self.view.width/5.0+140
+        
+        self.userInfoHeaderView = UserInfoHeaderView(frame: CGRectMake(0, 0, self.view.width, headerViewHeight))
         self.userInfoHeaderView.userPanelViewController = self
         self.userInfoHeaderView.setupViews()
         self.userInfoHeaderView.mailBoxButton.addTarget(self, action: "showMailBox", forControlEvents: .TouchUpInside)
@@ -77,16 +79,29 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
         let tbBGView: UIView = UIView(frame: CGRectMake(0, 0, self.view.width, self.view.height-62))
         tbBGView.backgroundColor = UIColor.clearColor()
         
-        self.bView = UIView(frame: CGRectMake(0, self.view.width*0.6, self.view.width, 800))
+        self.bView = UIView(frame: CGRectMake(0, headerViewHeight, self.view.width, 800))
         self.bView.backgroundColor = UIColor.whiteColor()
         tbBGView.addSubview(self.bView)
         
         self.tableView.backgroundView = tbBGView
         
-        let noMoreView: CustomDrawView = CustomDrawView(frame: CGRectMake(0, 0, self.view.width, 60.0))
+        let userpanelFooterView: UIView = UIView(frame: CGRectMake(0, 0, self.view.width, 120))
+        
+        let serviceBtn: UIButton = UIButton(frame: CGRectMake(30, 20, self.view.width - 60, 40))
+        serviceBtn.setTitle(VCAppLetor.StringLine.ServiceTel, forState: .Normal)
+        serviceBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        serviceBtn.titleLabel?.font = VCAppLetor.Font.BigFont
+        serviceBtn.backgroundColor = UIColor.turquoiseColor()
+        serviceBtn.layer.cornerRadius = VCAppLetor.ConstValue.ButtonCornerRadius
+        serviceBtn.addTarget(self, action: "freeServiceCall", forControlEvents: .TouchUpInside)
+        userpanelFooterView.addSubview(serviceBtn)
+        
+        let noMoreView: CustomDrawView = CustomDrawView(frame: CGRectMake(0, 60, self.view.width, 60.0))
         noMoreView.drawType = "noMore"
         noMoreView.backgroundColor = UIColor.clearColor()
-        self.tableView.tableFooterView = noMoreView
+        userpanelFooterView.addSubview(noMoreView)
+        
+        self.tableView.tableFooterView = userpanelFooterView
         
         // For header view
         self.tableView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
@@ -98,6 +113,16 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
         
         self.view.setNeedsUpdateConstraints()
         
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optMemberIcon, namespace: "member") {
+            
+            self.userInfoHeaderView.panelIcon.image = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberIcon, namespace: "member")?.data as? UIImage
+            self.userInfoHeaderView.panelTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -126,7 +151,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
     
     func scrollViewDidScroll(scrollView: UIScrollView) {
         
-        self.bView.originY = self.view.width*0.6 - scrollView.contentOffset.y
+        self.bView.originY = 30+self.view.width/5.0+140 - scrollView.contentOffset.y
         
     }
     
@@ -310,7 +335,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
     
     func showUserInfo(tapGesture: UITapGestureRecognizer) {
         
-        if (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String != "0") {
+        if (CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optToken, namespace: "token")) {
             
             let userInfoViewController: UserInfoViewController = UserInfoViewController()
             userInfoViewController.parentNav = self.parentNav
@@ -323,13 +348,31 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
         }
     }
     
+    func loadUserData() {
+        
+        if self.isLogined() {
+            
+            let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+            let mid = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+            
+            self.memberDidSigninSuccess(mid, token: token)
+        }
+    }
+    
     func showMailBox() {
         
-        let mailBoxVC: VCMailBoxViewController = VCMailBoxViewController()
-        mailBoxVC.modalPresentationStyle = .Popover
-        mailBoxVC.modalTransitionStyle = .CoverVertical
-        mailBoxVC.popoverPresentationController?.delegate = self
-        presentViewController(mailBoxVC, animated: true, completion: nil)
+        if self.isLogined() {
+            
+            let mailBoxVC: VCMailBoxViewController = VCMailBoxViewController()
+            mailBoxVC.modalPresentationStyle = .Popover
+            mailBoxVC.modalTransitionStyle = .CoverVertical
+            mailBoxVC.popoverPresentationController?.delegate = self
+            presentViewController(mailBoxVC, animated: true, completion: nil)
+        }
+        else {
+            self.presentLoginPanel()
+        }
+        
         
         
     }
@@ -342,7 +385,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
     // IF the current user is Login to the app
     func isLogined() -> Bool {
         
-        return CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String != "0"
+        return CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optToken, namespace: "token")
     }
     
     func presentLoginPanel() {
@@ -386,7 +429,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                 isLogin.sid = "\(NSDate())"
                 isLogin.value = "1"
                 
-                })
+            })
             
             
             CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameIsLogin, data: true, namespace: "member")
@@ -399,7 +442,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                 cMid.sid = "\(NSDate())"
                 cMid.value = currentMid
                 
-                })
+            })
             
             CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameCurrentMid, data: currentMid, namespace: "member")
         }
@@ -411,10 +454,15 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                 loginType.sid = "\(NSDate())"
                 loginType.value = VCAppLetor.LoginType.PhoneReg
                 
-                })
+            })
             
             CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optNameLoginType, data: VCAppLetor.LoginType.PhoneReg, namespace: "member")
         }
+    }
+    
+    func freeServiceCall() {
+        
+        UIApplication.sharedApplication().openURL(NSURL(string: "telprompt://4008369917")!)
     }
     
     // MARK: - UIPopoverPresentationControllerDelegate
@@ -484,9 +532,9 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                     
                     self.userInfoHeaderView.panelTitle.text = nicknameString
                     
-                    //                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = orderCount
-                    //                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 1, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = collectionCount
-                    //                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 2, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = couponCount
+                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = "0"
+                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 1, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = "0"
+                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 2, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = "0"
                     
                     Alamofire.request(.GET, iconString).validate().responseImage() {
                         (_, _, image, error) in
@@ -498,7 +546,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                     }
                     
                     // Push user device token
-                    let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "token")?.data as! String
+                    let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
                     pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                     
                 }
@@ -533,14 +581,14 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                     let emailString = json["data"]["member_info"]["email"].string!
                     let mobileString = json["data"]["member_info"]["mobile"].string!
                     let nicknameString = json["data"]["member_info"]["member_name"].string!
-                    let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
+                    let iconString = json["data"]["member_info"]["icon_image"]["source"].string!
                     
-                    // Listing Info
-                    //let orderCount = json["data"]["order_info"]["order_total_count"].string!
-                    // Collection Info
-                    //let collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
-                    // Coupon Info
-                    //let couponCount = json["data"]["coupon_info"]["coupon_total_count"].string!
+                    //                    // Listing Info
+                    //                    let orderCount = json["data"]["order_info"]["order_total_count"].string!
+                    //                    // Collection Info
+                    //                    let collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
+                    //                    // Coupon Info
+                    //                    let couponCount = json["data"]["coupon_info"]["coupon_total_count"].string!
                     
                     
                     // update local data
@@ -575,10 +623,11 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                             
                         })
                         
-                        // Push user device token
-                        let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "token")?.data as! String
-                        pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                     }
+                    
+                    // Push user device token
+                    let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
+                    pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                     
                     
                     // setup cache & user panel interface
@@ -587,18 +636,57 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                     CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
                     CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
                     
-                    self.userInfoHeaderView.panelTitle.text = nicknameString
-                    //(self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = orderCount
-                    //(self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 1, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = collectionCount
-                    //(self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 2, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = couponCount
                     
+                    //                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = orderCount
+                    //                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 1, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = collectionCount
+                    //                    (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 2, inSection: 0)) as! UserPanelTableViewCell).countLabel.text = couponCount
+                    
+                    
+                    self.userInfoHeaderView.panelTitle.text = nicknameString
+                    // If local file do not exist, download and save in local directory
                     Alamofire.request(.GET, iconString).validate().responseImage() {
                         (_, _, image, error) in
                         
                         if error == nil && image != nil {
                             self.userInfoHeaderView.panelIcon.image = image
+                            
+                            //Cache avatar image to path
+                            let destination: (NSURL, NSHTTPURLResponse) -> (NSURL) = {
+                                (temporaryURL, response) in
+                                
+                                if let directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
+                                    
+                                    let dURL = directoryURL.URLByAppendingPathComponent("avatar/\(midString)")
+                                    return dURL
+                                }
+                                
+                                return temporaryURL
+                            }
+                            
+                            let docDir = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL
+                            let dirToCreate = docDir?.URLByAppendingPathComponent("avatar")
+                            
+                            var err: NSError?
+                            
+                            if !NSFileManager.defaultManager().fileExistsAtPath(dirToCreate!.path!) {
+                                NSFileManager.defaultManager().createDirectoryAtURL(dirToCreate!, withIntermediateDirectories: false, attributes: nil, error: &err)
+                            }
+                            
+                            if err == nil {
+                                
+                                Alamofire.download(.GET, iconString, destination).progress {
+                                    (_, totalBytesRead, totalBytesExpectedToRead) in
+                                    
+                                    // Any activity in progress
+                                }
+                            }
+                            else {
+                                println("\(err?.localizedDescription)")
+                            }
+                            
                         }
                     }
+                    
                 }
                 else {
                     RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
@@ -626,8 +714,11 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
             })
             
             CTMemCache.sharedInstance.cleanNamespace("member")
-            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optToken, data: "0", namespace: "token")
+            CTMemCache.sharedInstance.cleanNamespace("token")
             
+            // Push user device token
+            let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
+            pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.delete)
             
             // Refresh user panel interface
             self.userInfoHeaderView.panelIcon.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)

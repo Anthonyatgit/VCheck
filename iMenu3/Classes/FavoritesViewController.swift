@@ -49,7 +49,7 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
         self.tableView.separatorColor = UIColor.clearColor()
         self.tableView.delegate = self
         self.tableView.dataSource = self
-        self.tableView.alpha = 0.1
+        self.tableView.alpha = 0
         
         self.view.addSubview(self.tableView)
         
@@ -171,7 +171,7 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
                             self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
                             self.tableView.endUpdates()
                             
-//                            self.tableView.reloadData()
+                            //                            self.tableView.reloadData()
                         }
                         else {
                             RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
@@ -427,7 +427,7 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
                             fav.addDate = dateFormatter.dateFromString(item["article_date"].string!)!
                             
                             // summary missing in the api ...
-//                            fav.desc = item["summary"].string!
+                            //                            fav.desc = item["summary"].string!
                             fav.subTitle = item["sub_title"].string!
                             fav.foodImage = item["article_image"]["source"].string!
                             fav.status = item["menu_info"]["menu_status"]["menu_status_id"].string!
@@ -468,7 +468,7 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
                         self.hud.hide(true)
                         self.tableView.stopRefreshAnimation()
                         self.tableView.reloadData()
-                        self.tableView.animation.makeAlpha(1.0).animate(0.2)
+                        self.tableView.animation.makeAlpha(1.0).animate(0.4)
                     })
                     
                 }

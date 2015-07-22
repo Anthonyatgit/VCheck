@@ -45,6 +45,13 @@
 // Alipay
 #import <AlipaySDK/AlipaySDK.h>
 
-// Wechat Pay
+// AssetsPicker
+#import "UzysAssetsPickerController.h"
+
+// Shimmer
+#import "FBShimmeringView.h"
+
+//ZFCheckbox
+#import "ZFCheckbox.h"
 
 #endif

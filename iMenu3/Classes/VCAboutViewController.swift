@@ -45,7 +45,7 @@ class VCAboutViewController: VCBaseViewController {
         self.appIcon.text = VCAppLetor.StringLine.AppName
         self.appIcon.textAlignment = .Center
         self.appIcon.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
-        self.appIcon.font = VCAppLetor.Font.XXXLarge
+        self.appIcon.font = VCAppLetor.Font.XXXXUltraLight
         self.view.addSubview(self.appIcon)
         
         if let version = Settings.findFirst(attribute: "name", value: "version_app", contextType: BreezeContextType.Main) as? Settings { // Get current app version

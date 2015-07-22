@@ -90,7 +90,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
     let activeCircleAlipay: CustomDrawView = CustomDrawView.newAutoLayoutView()
     let activeCircleWechat: CustomDrawView = CustomDrawView.newAutoLayoutView()
     
-    let cityButton: UIButton = UIButton(frame: CGRectMake(-20.0, 0.0, 62.0, 42.0))
+    let backButton: UIButton = UIButton(frame: CGRectMake(-20.0, 0.0, 42.0, 42.0))
     
     var hud: MBProgressHUD!
     
@@ -105,10 +105,10 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         let backView: UIView = UIView(frame: CGRectMake(0.0, 0.0, 42.0, 42.0))
         backView.backgroundColor = UIColor.clearColor()
         
-        self.cityButton.setImage(UIImage(named: VCAppLetor.IconName.backBlack)?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
-        self.cityButton.backgroundColor = UIColor.clearColor()
-        self.cityButton.addTarget(self, action: "canclePay", forControlEvents: .TouchUpInside)
-        backView.addSubview(self.cityButton)
+        self.backButton.setImage(UIImage(named: VCAppLetor.IconName.backBlack)?.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
+        self.backButton.backgroundColor = UIColor.clearColor()
+        self.backButton.addTarget(self, action: "canclePay", forControlEvents: .TouchUpInside)
+        backView.addSubview(self.backButton)
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backView)
         
@@ -362,7 +362,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.priceValue.text = round_price(self.orderInfo.pricePU!)
         self.priceValue.textAlignment = .Right
         self.priceValue.textColor = VCAppLetor.Colors.Label
-        self.priceValue.font = VCAppLetor.Font.NormalFont
+        self.priceValue.font = VCAppLetor.Font.LightSmall
         self.priceValue.sizeToFit()
         self.scrollView.addSubview(self.priceValue)
         
@@ -386,7 +386,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.amountValue.text = self.orderInfo.itemCount!
         self.amountValue.textAlignment = .Right
         self.amountValue.textColor = VCAppLetor.Colors.Label
-        self.amountValue.font = VCAppLetor.Font.NormalFont
+        self.amountValue.font = VCAppLetor.Font.LightSmall
         self.amountValue.sizeToFit()
         self.scrollView.addSubview(self.amountValue)
         
@@ -403,7 +403,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.totalPriceValue.text = round_price(self.orderInfo.totalPrice!) + self.orderInfo.priceUnit!
         self.totalPriceValue.textAlignment = .Right
         self.totalPriceValue.textColor = UIColor.orangeColor()
-        self.totalPriceValue.font = VCAppLetor.Font.NormalFont
+        self.totalPriceValue.font = VCAppLetor.Font.LightSmall
         self.totalPriceValue.sizeToFit()
         self.scrollView.addSubview(self.totalPriceValue)
         
@@ -446,7 +446,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.finalTotalValue.text = round_price(self.orderInfo.totalPrice!) + self.orderInfo.priceUnit!
         self.finalTotalValue.textAlignment = .Right
         self.finalTotalValue.textColor = UIColor.orangeColor()
-        self.finalTotalValue.font = VCAppLetor.Font.NormalFont
+        self.finalTotalValue.font = VCAppLetor.Font.LightSmall
         self.finalTotalValue.sizeToFit()
         self.scrollView.addSubview(self.finalTotalValue)
         
@@ -566,7 +566,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.orderPriceValue.text = round_price(self.orderInfo.totalPrice!) + self.orderInfo.priceUnit!
         self.orderPriceValue.textAlignment = .Center
         self.orderPriceValue.textColor = UIColor.orangeColor()
-        self.orderPriceValue.font = VCAppLetor.Font.XLarge
+        self.orderPriceValue.font = VCAppLetor.Font.Light
         self.orderPriceValue.sizeToFit()
         self.payBarView.addSubview(self.orderPriceValue)
         
@@ -669,6 +669,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
                     if self.paymentCode == VCAppLetor.PaymentCode.AliPay {
                         
                         
+                        self.saveForCache()
                         CTMemCache.sharedInstance.set(VCAppLetor.ObjectIns.objPayVC, data: self, namespace: "object")
                         
                         AlipaySDK.defaultService().payOrder(orderString, fromScheme: VCAppLetor.StringLine.AppScheme, callback: {
@@ -735,7 +736,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
                             }
                         })
                     }
-                    //========== WeChat PAYGATE ================
+                        //========== WeChat PAYGATE ================
                     else if self.paymentCode == VCAppLetor.PaymentCode.WechatPay {
                         
                         self.sendWXPay(orderString)
@@ -762,6 +763,10 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         var error: NSError?
         
         CTMemCache.sharedInstance.set(VCAppLetor.ObjectIns.objPayVC, data: self, namespace: "object")
+        
+        // Save Cahce order data
+        self.saveForCache()
+        
         
         if orderString != "" {
             
@@ -868,10 +873,42 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
                 RKDropdownAlert.title(VCAppLetor.StringLine.PaymentFailed, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTimeLong)
             }
         }
+        else if resp.isKindOfClass(SendMessageToWXResp.classForCoder()) {
+            
+            // Response from share to WeChat callback
+            
+            
+        }
         
     }
     
-    
+    func saveForCache() {
+        
+        if let orderId = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.payOrderId, contextType: BreezeContextType.Main) as? Settings {
+            
+            BreezeStore.saveInMain({ (contextType) -> Void in
+                
+                orderId.sid = "\(NSDate())"
+                orderId.value = self.orderInfo.id
+                
+            })
+        }
+        else {
+            
+            BreezeStore.saveInMain({ contextType -> Void in
+                
+                let orderIdToBeCreate: Settings = Settings.createInContextOfType(contextType) as! Settings
+                
+                orderIdToBeCreate.sid = "\(NSDate())"
+                orderIdToBeCreate.name = VCAppLetor.SettingName.payOrderId
+                orderIdToBeCreate.value = self.orderInfo.id
+                orderIdToBeCreate.type = VCAppLetor.SettingType.AppConfig
+                orderIdToBeCreate.data = ""
+                
+            })
+        }
+        
+    }
     
     
     

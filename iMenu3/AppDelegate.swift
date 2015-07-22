@@ -11,6 +11,8 @@ import CoreData
 import Alamofire
 import SCLAlertView
 import DKChainableAnimationKit
+import MBProgressHUD
+import RKDropdownAlert
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
@@ -27,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         UINavigationBar.appearance().barStyle = UIBarStyle.Black
         UINavigationBar.appearance().tintColor = UIColor.whiteColor()
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: VCAppLetor.Font.UltraLight]
         
         UINavigationBar.appearance().backgroundColor = UIColor.clearColor()
         UINavigationBar.appearance().setBackgroundImage(UIImage(named: "bar_black.png"), forBarMetrics: UIBarMetrics.Default)
@@ -188,10 +191,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         let deviceTokenString: String = deviceToken.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.allZeros)
         println("device token: \(deviceTokenString)")
         
+        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optDeviceToken, data: deviceTokenString, namespace: "DeviceToken")
+        
         let deviceTokenStr: String = XGPush.registerDevice(deviceToken, successCallback: { () -> Void in
             println("[XGPush]Register success for deviceToken")
             
-            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optDeviceToken, data: deviceTokenString, namespace: "token")
             
         }) { () -> Void in
             println("[XGPush]Register failed for deviceToken")
@@ -341,41 +345,265 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
     func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
         
         println("url[handle]: \(url)")
-        if url.scheme == "vcheck" {
-            
-            println("handle call: Scheme:\(url.scheme) : Query:\(url.query)")
-            
-            return true
-        }
-        else {
-            return ShareSDK.handleOpenURL(url, wxDelegate: self)
-        }
+        return ShareSDK.handleOpenURL(url, wxDelegate: self)
+        
     }
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
         
-        println("url: \(url)")
+        println("sourceApp: \(sourceApplication)")
         
-        let paymentVC = CTMemCache.sharedInstance.get(VCAppLetor.ObjectIns.objPayVC, namespace: "object")?.data as! VCPayNowViewController
+        println("URL: Scheme:\(url))")
         
-        WXApi.handleOpenURL(url, delegate: paymentVC)
-        
-        if url.scheme == "vcheck" {
+        if sourceApplication == "com.apple.mobilesafari" {
             
-            println("out call: Scheme:\(url.scheme!) | LastPath: \(url.lastPathComponent!) | Query:\(url.query!.stringByReplacingPercentEscapesUsingEncoding(NSUTF8StringEncoding))")
+            if ((url.query!.componentsSeparatedByString("&").count > 1)) {
+                
+                let queryStringArr = url.query!.componentsSeparatedByString("&")
+                
+                let contentStringArr = queryStringArr[1].componentsSeparatedByString("=")
+                
+                let productId = (contentStringArr[1] as NSString).integerValue
+                
+                Alamofire.request(VCheckGo.Router.GetProductDetail(productId)).validate().responseSwiftyJSON({
+                    (_, _, JSON, error) -> Void in
+                    
+                    if error == nil {
+                        
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            
+                            let json = JSON
+                            
+                            if json["status"]["succeed"].string! == "1" {
+                                
+                                let product: FoodInfo = FoodInfo(id: (json["data"]["article_info"]["article_id"].string! as NSString).integerValue)
+                                
+                                product.title = json["data"]["article_info"]["title"].string!
+                                
+                                var dateFormatter = NSDateFormatter()
+                                dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                                product.addDate = dateFormatter.dateFromString(json["data"]["article_info"]["article_date"].string!)!
+                                
+                                product.desc = json["data"]["article_info"]["summary"].string!
+                                product.subTitle = json["data"]["article_info"]["sub_title"].string!
+                                product.status = json["data"]["article_info"]["menu_info"]["menu_status"]["menu_status_id"].string!
+                                product.originalPrice = json["data"]["article_info"]["menu_info"]["price"]["original_price"].string!
+                                product.price = json["data"]["article_info"]["menu_info"]["price"]["special_price"].string!
+                                product.priceUnit = json["data"]["article_info"]["menu_info"]["price"]["price_unit"].string!
+                                product.unit = json["data"]["article_info"]["menu_info"]["menu_unit"]["menu_unit"].string!
+                                product.remainingCount = json["data"]["article_info"]["menu_info"]["stock"]["menu_count"].string!
+                                product.remainingCountUnit = json["data"]["article_info"]["menu_info"]["stock"]["menu_unit"].string!
+                                product.remainder = json["data"]["article_info"]["menu_info"]["remainder_time"].string!
+                                product.outOfStock = json["data"]["article_info"]["menu_info"]["stock"]["out_of_stock_info"].string!
+                                product.endDate = json["data"]["article_info"]["menu_info"]["end_date"].string!
+                                product.returnable = "1"
+                                
+                                product.memberIcon = json["data"]["article_info"]["member_info"]["icon_image"]["thumb"].string!
+                                
+                                product.menuId = json["data"]["article_info"]["menu_info"]["menu_id"].string!
+                                product.menuName = json["data"]["article_info"]["menu_info"]["menu_name"].string!
+                                
+                                product.storeId = json["data"]["article_info"]["store_info"]["store_id"].string!
+                                product.storeName = json["data"]["article_info"]["store_info"]["store_name"].string!
+                                product.address = json["data"]["article_info"]["store_info"]["address"].string!
+                                product.longitude = (json["data"]["article_info"]["store_info"]["longitude_num"].string! as NSString).doubleValue
+                                product.latitude = (json["data"]["article_info"]["store_info"]["latitude_num"].string! as NSString).doubleValue
+                                product.tel1 = json["data"]["article_info"]["store_info"]["tel_1"].string!
+                                product.tel2 = json["data"]["article_info"]["store_info"]["tel_2"].string!
+                                product.acp = json["data"]["article_info"]["store_info"]["per"].string!
+                                product.icon_thumb = json["data"]["article_info"]["store_info"]["icon_image"]["thumb"].string!
+                                product.icon_source = json["data"]["article_info"]["store_info"]["icon_image"]["source"].string!
+                                
+                                
+                                //====== Show Product VC
+                                
+                                if CTMemCache.sharedInstance.exists(VCAppLetor.ObjectIns.objNavigation, namespace: "object") {
+                                    
+                                    let parentNav = CTMemCache.sharedInstance.get(VCAppLetor.ObjectIns.objNavigation, namespace: "object")?.data as! UINavigationController
+                                    
+                                    
+                                    let foodViewerViewController: FoodViewerViewController = FoodViewerViewController()
+                                    foodViewerViewController.foodInfo = product
+                                    foodViewerViewController.parentNav = parentNav
+                                    
+                                    parentNav.showViewController(foodViewerViewController, sender: self)
+                                    
+                                }
+                                else {
+                                    
+                                    CTMemCache.sharedInstance.set("Product", data: url.query!, namespace: "outcall")
+                                }
+                            }
+                            else {
+                                RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                            }
+                        })
+                    }
+                    else {
+                        
+                        println("ERROR @ Request for Product Info with outcall : \(error?.localizedDescription)")
+                        RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    }
+                })
+                
+            }
+            else {
+                
+                // route=home
+                
+                
+                
+            }
+            
+            return true
+            
+        }
+        else if sourceApplication == "com.alipay.iphoneclient" {
+            
             
             AlipaySDK.defaultService().processOrderWithPaymentResult(url, standbyCallback: {
-                (NSDictionary) -> Void in
+                (Dictionary) -> Void in
                 
-                let dic = NSDictionary
+                
+                let dic = Dictionary as NSDictionary
+                
+                if dic.valueForKey("resultStatus") as! String == "9000" {
+                    
+                    let resultString = (dic.valueForKey("result") as! String).stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)
+                    
+                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.payAlipayTag, data: true, namespace: "pay")
+                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.payAlipayResultString, data: resultString, namespace: "pay")
+                    
+                }
+                else if dic.valueForKey("resultStatus") as! String == "6001" {
+                    
+                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.payAlipayTag, data: false, namespace: "pay")
+                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.payAlipayResultStatus, data: "6001", namespace: "pay")
+                    
+                }
+                else if dic.valueForKey("resultStatus") as! String == "6002" {
+                    
+                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.payAlipayTag, data: false, namespace: "pay")
+                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.payAlipayResultStatus, data: "6002", namespace: "pay")
+                    
+                }
+                else if dic.valueForKey("resultStatus") as! String == "4000" {
+                    
+                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.payAlipayTag, data: false, namespace: "pay")
+                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.payAlipayResultStatus, data: "4000", namespace: "pay")
+                    
+                }
                 
             })
             
             return true
         }
-        else {
-            return ShareSDK.handleOpenURL(url, sourceApplication: sourceApplication, annotation: annotation, wxDelegate: self)
+        else if sourceApplication == "com.tencent.xin" {
+            
+            if CTMemCache.sharedInstance.exists(VCAppLetor.ShareTag.shareWechat, namespace: "share") {
+                
+                CTMemCache.sharedInstance.cleanNamespace("share")
+                return ShareSDK.handleOpenURL(url, sourceApplication: sourceApplication, annotation: annotation, wxDelegate: self)
+                
+            }
+            else {
+                
+                if let shareTag = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optShareTag, contextType: BreezeContextType.Main) as? Settings {
+                    
+                    //RKDropdownAlert.title(shareTag.value, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    
+                    if shareTag.value == "Wechat" {
+                        
+                        BreezeStore.saveInMain({ contextType -> Void in
+                            
+                            shareTag.sid = "\(NSDate())"
+                            shareTag.value = ""
+                        })
+                        
+                        
+                        return ShareSDK.handleOpenURL(url, sourceApplication: sourceApplication, annotation: annotation, wxDelegate: self)
+                        
+                    }
+                    else {
+                        
+                        if CTMemCache.sharedInstance.exists(VCAppLetor.ObjectIns.objPayVC, namespace: "object") {
+                            
+                            let paymentVC = CTMemCache.sharedInstance.get(VCAppLetor.ObjectIns.objPayVC, namespace: "object")?.data as! VCPayNowViewController
+                            
+                            WXApi.handleOpenURL(url, delegate: paymentVC)
+                            
+                            return true
+                        }
+                        else {
+                            
+                            WXApi.handleOpenURL(url, delegate: self)
+                            return true
+                        }
+                    }
+                }
+                else { //
+                    
+                    //RKDropdownAlert.title("pay", backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    
+                    if CTMemCache.sharedInstance.exists(VCAppLetor.ObjectIns.objPayVC, namespace: "object") {
+                        
+                        let paymentVC = CTMemCache.sharedInstance.get(VCAppLetor.ObjectIns.objPayVC, namespace: "object")?.data as! VCPayNowViewController
+                        
+                        WXApi.handleOpenURL(url, delegate: paymentVC)
+                        
+                        return true
+                    }
+                    else {
+                        
+                        WXApi.handleOpenURL(url, delegate: self)
+                        return true
+                    }
+                }
+            }
         }
+        else {
+            
+            return ShareSDK.handleOpenURL(url, sourceApplication: sourceApplication, annotation: annotation, wxDelegate: self)
+            
+        }
+        
+        
+    }
+    
+    // MARK: - Wechat Pay
+    
+    func onResp(resp: BaseResp!) {
+        
+        
+        
+        if resp.isKindOfClass(PayResp.classForCoder()) {
+            
+            if (resp.errCode == WXSuccess.value) {
+                
+                let resultString = "\(resp.errCode)"
+                
+                CTMemCache.sharedInstance.set(VCAppLetor.SettingName.payWechatTag, data: true, namespace: "pay")
+                
+            }
+            else if resp.errCode == WXErrCodeUserCancel.value {
+                
+                CTMemCache.sharedInstance.set(VCAppLetor.SettingName.payWechatTag, data: false, namespace: "pay")
+            }
+            else if resp.errCode == WXErrCodeAuthDeny.value {
+                
+                CTMemCache.sharedInstance.set(VCAppLetor.SettingName.payWechatTag, data: false, namespace: "pay")
+            }
+            else {
+                
+                CTMemCache.sharedInstance.set(VCAppLetor.SettingName.payWechatTag, data: false, namespace: "pay")
+            }
+        }
+        else if resp.isKindOfClass(SendMessageToWXResp.classForCoder()) {
+            
+            // Response from share to WeChat callback
+            
+        }
+        
     }
     
     // MARK: - Core Data stack
