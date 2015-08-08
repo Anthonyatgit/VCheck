@@ -63,9 +63,6 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
     
     
     // MARK: - Lifecycle
-    override func loadView() {
-        self.view = UIView.new()
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,9 +71,16 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: VCAppLetor.StringLine.Next, style: .Done, target: self, action: "phoneRegAction")
         
         self.title = VCAppLetor.StringLine.RegPageTitle
-        self.view.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.6)
+        self.automaticallyAdjustsScrollViewInsets = false
+        self.view.backgroundColor = UIColor.whiteColor()
         
+        self.scrollView.frame = self.view.bounds
+        self.scrollView.height = self.view.height - 62.0
+        self.scrollView.originY = 62.0
+        self.scrollView.contentMode = UIViewContentMode.Top
         self.scrollView.backgroundColor = UIColor.whiteColor()
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.delegate = self
         
         self.tapGesture = UITapGestureRecognizer(target: self, action: "viewDidTap:")
         self.tapGesture.numberOfTouchesRequired = 1
@@ -155,7 +159,7 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
         self.terms.textAlignment = .Center
         self.terms.font = VCAppLetor.Font.SmallFont
         self.terms.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
-        self.terms.backgroundColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.1)
+        self.terms.backgroundColor = UIColor.cloudsColor(alpha: 0.2)
         self.scrollView.addSubview(terms)
         
         self.termsUnderline.drawType = "Line"
@@ -170,15 +174,16 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
         
         self.view.setNeedsUpdateConstraints()
         
-        
+        self.registerForKeyboardNotifications()
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         
+        IHKeyboardAvoiding.setAvoidingView(self.view, withTriggerView: self.inventCode)
+        IHKeyboardAvoiding.setPaddingForCurrentAvoidingView(60)
+        IHKeyboardAvoiding.setBuffer(60)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShowNotification:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHideNotification:", name: UIKeyboardWillHideNotification, object: nil)
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -210,20 +215,20 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
         
         self.authCode.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.phoneNumber)
         self.authCode.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.senDAuthCodeButton)
-        self.authCode.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.phoneNumber, withOffset: VCAppLetor.ConstValue.LineGap)
+        self.authCode.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.phoneUnderLine, withOffset: VCAppLetor.ConstValue.LineGap)
         self.authCode.autoMatchDimension(.Height, toDimension: .Height, ofView: self.phoneNumber)
         
-        self.codeUnderLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.authCode)
+        self.codeUnderLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.authCode, withOffset: 3.0)
         self.codeUnderLine.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.authCode, withOffset: -10.0)
         self.codeUnderLine.autoMatchDimension(.Width, toDimension: .Width, ofView: self.authCode, withOffset: 10.0)
         self.codeUnderLine.autoSetDimension(.Height, toSize: 3.0)
         
-        self.inventCode.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.authCode, withOffset: VCAppLetor.ConstValue.LineGap)
+        self.inventCode.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.codeUnderLine, withOffset: VCAppLetor.ConstValue.LineGap)
         self.inventCode.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.authCode)
         self.inventCode.autoMatchDimension(.Width, toDimension: .Width, ofView: self.authCode)
         self.inventCode.autoMatchDimension(.Height, toDimension: .Height, ofView: self.authCode)
         
-        self.invUnderLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.inventCode)
+        self.invUnderLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.inventCode, withOffset: 3.0)
         self.invUnderLine.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.inventCode, withOffset: -10.0)
         self.invUnderLine.autoMatchDimension(.Width, toDimension: .Width, ofView: self.inventCode, withOffset: 10.0)
         self.invUnderLine.autoSetDimension(.Height, toSize: 3.0)
@@ -232,10 +237,9 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
         self.noInventYet.autoSetDimension(.Height, toSize: 20.0)
         self.noInventYet.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.phoneNumber)
         
-        self.terms.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.noInventYet, withOffset: self.view.height - 340.0)
+        self.terms.autoPinEdgeToSuperviewEdge(.Top, withInset: self.scrollView.height - 40.0)
         self.terms.autoSetDimensionsToSize(CGSizeMake(300.0, 30.0))
         self.terms.autoAlignAxisToSuperviewAxis(.Vertical)
-        
         
         self.termsUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.terms, withOffset: -9.0)
         self.termsUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: terms, withOffset: -18.0)
@@ -251,12 +255,7 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.scrollView.frame = CGRectMake(0, 62.0, self.view.width, self.view.height-62.0)
         self.scrollView.contentSize = self.scrollView.frame.size
-        self.scrollView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0)
-        self.scrollView.contentOffset = CGPointMake(0, 0)
-        self.scrollView.showsVerticalScrollIndicator = false
-        self.scrollView.delegate = self
         
     }
     
@@ -267,6 +266,12 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
     
     
     // MARK: - Functions
+    
+    func registerForKeyboardNotifications() {
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShowNotification:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillHideNotification:", name: UIKeyboardWillHideNotification, object: nil)
+    }
     
     func checkMobile() {
         // Check mobile phone number
@@ -451,20 +456,10 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
     func keyboardWillShowNotification(notification: NSNotification) {
         
         let userInfo = notification.userInfo!
-        
         let keyboardFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-        let animationOptions = UIViewAnimationOptions(UInt((userInfo[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).integerValue << 16))
-        let animationDuration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! Double
         
-        UIView.animateWithDuration(animationDuration,
-            delay: 0,
-            options: animationOptions,
-            animations: {
-                
-            },
-            completion: { complated in
-                self.view.addGestureRecognizer(self.tapGesture)
-        })
+        self.view.addGestureRecognizer(self.tapGesture)
+        
     }
     
     func keyboardWillHideNotification(notification: NSNotification) {
@@ -477,10 +472,11 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
     // MARK: - UITextFieldDelegate
     
     func textFieldDidBeginEditing(textField: UITextField) {
-        IHKeyboardAvoiding.setAvoidingView(self.scrollView)
+        
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
+        
         textField.resignFirstResponder()
         
         if textField.tag == 1 {

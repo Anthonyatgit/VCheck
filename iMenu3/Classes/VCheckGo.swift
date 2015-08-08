@@ -32,13 +32,14 @@ struct VCheckGo {
         case MemberRegister(String, String, String)                                 // 03.会员-注册
         case ResetPassword(String, String, LoginType, String)                       // 04.会员-密码重置
         case LoginWithToken(String, String)                                         // 05.会员-记录登陆状态
-        case MemberLogout(String, String)                                           // 06.会员-登出
+        case MemberLogout(String, String, String)                                   // 06.会员-登出
         case ValidateMemberInfo(ValidateType, String)                               // 07.会员-校验会员信息
         case QuickLogin(String, String)                                             // 08.快速登陆
         case GetVerifyCode(String, String)                                          // 09.基本-获取验证码
         case EditMemberEmail(String, String, String)                                // 10.会员-编辑个人信息-Email
         case EditMemberNickname(String, String, String)                             // 10.会员-编辑个人信息-Nickname
         case EditMemberPassword(String, String, String, String)                     // 10.会员-编辑个人信息-Password
+        case EditMemberNotification(String, String, String, String, String, String) // 10.会员-编辑个人信息-Password
         case GetMemberInfo(String, String)                                          // 12.会员-获取个人详情
         case GetMyCollections(String, Int, Int, String)                             // 13.会员-获取我的收藏列表
         case EditMyCollection(String, CollectionEditType, String, String)           // 14.会员-编辑我的收藏列表
@@ -48,14 +49,18 @@ struct VCheckGo {
         case GetProductDetail(Int)                                                  // 19.产品-获取产品详细
         case GetProductDetailWithMember(Int, String)                                // 19.产品-获取产品详情[用户模式]
         case GetIndexImage(String)                                                  // 20.基本-获取封面首页
+        case LoginWithWechat(NSDictionary)                                          // 21.第三方-微信登陆
+        case RegWithWechat(NSDictionary, String, String)                            // 22.第三方-微信注册
         case PushDeviceToken(String, String, PushDeviceType, String)                // 24.基本-提交推送设备信息
         case GetOrderList(String, Int, Int, String)                                 // 26.会员-获取订单列表
         case GetOrderDetail(String, String, String)                                 // 27.会员-获取订单详情
         case EditOrder(String, String, EditOrderType, String)                       // 28.会员-编辑订单状态
+        case GetMyVouchers(String, Int, Int, String)                                // 29.会员-获取优惠券
+        case VoucherExchange(String, String, String)                                // 30.会员-兑换优惠券
         case EditCart(String, EditCartType, String, String, String, String)         // 38.订单-编辑购物车信息
         case ClearCart(String, String)                                              // 38.订单-清空购物车信息
         case AddOrder(String, String)                                               // 39.订单-提交订单
-        case UpdatePay(String, VCAppLetor.PaymentCode, String, String)              // 40.订单-编辑结算信息
+        case UpdatePay(String, VCAppLetor.PaymentCode, String, String, String)      // 40.订单-编辑结算信息
         case GetPayData(String, String, String)                                     // 41.订单-获取支付数据
         case AsyncPayment(String, String, String, String)                           // 42.订单-提交支付订单
         case GetRefundReasons()                                                     // 43.订单-获得退款申请原因列表
@@ -118,9 +123,13 @@ struct VCheckGo {
                 case .EditMemberPassword(let memberId, let currentPass, let newPass, let token):
                     let params = ["route":"\(RoutePath.EditMemberInfo.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"old_password\":\"\(currentPass)\",\"password\":\"\(newPass)\"}"]
                     return ("/\(RoutePath.EditMemberInfo.rawValue)", params)
+                    //=========EditNotificationOptions======
+                case .EditMemberNotification(let memberId, let pushEnable, let order, let refund, let voucher, let token):
+                    let params = ["route":"\(RoutePath.EditMemberInfo.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"push_info\":{\"push_switch\":\"\(pushEnable)\",\"consume_msg\":\"\(order)\",\"refund_msg\":\"\(refund)\",\"voucher_msg\":\"\(voucher)\"}}"]
+                    return ("/\(RoutePath.EditMemberInfo.rawValue)", params)
                 //=========MemberLogout==============
-                case .MemberLogout(let token, let memberId):
-                    let params = ["route":"\(RoutePath.MemberLogout.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\"}"]
+                case .MemberLogout(let token, let memberId, let deviceToken):
+                    let params = ["route":"\(RoutePath.MemberLogout.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"device_token\":\"\(deviceToken)\"}"]
                     return ("/\(RoutePath.MemberLogout.rawValue)", params)
                 //=========FeedBack==================
                 case .FeedBack(let memberId, let token, let feedbackInfo):
@@ -145,6 +154,34 @@ struct VCheckGo {
                 case .GetIndexImage(let type):
                     let params = ["route":"\(RoutePath.GetIndexPage.rawValue)","token":"","device_type":"\(DeviceType.iPhone.rawValue)","jsonText":"{\"image_type\":\"\(type)\"}"]
                     return ("/\(RoutePath.GetIndexPage.rawValue)", params)
+                    //=========LoginWithWechat=============
+                case .LoginWithWechat(let userInfo):
+                    
+                    let openid = userInfo.valueForKey("openid") as! String
+                    let nickname = userInfo.valueForKey("nickname") as! String
+                    let sex = userInfo.valueForKey("sex") as! String
+                    let province = userInfo.valueForKey("province") as! String
+                    let city = userInfo.valueForKey("city") as! String
+                    let country = userInfo.valueForKey("country") as! String
+                    let headimgurl = userInfo.valueForKey("headimgurl") as! String
+                    let unionid = userInfo.valueForKey("unionid") as! String
+                    
+                    let params = ["route":"\(RoutePath.LoginWithWechat.rawValue)","token":"","jsonText":"{\"wx_info\":{\"openid\":\"\(openid)\",\"nickname\":\"\(nickname)\",\"sex\":\"\(sex)\",\"province\":\"\(province)\",\"city\":\"\(city)\",\"country\":\"\(country)\",\"headimgurl\":\"\(headimgurl)\",\"unionid\":\"\(unionid)\"}}"]
+                    return ("/\(RoutePath.LoginWithWechat.rawValue)", params)
+                    //=========RegWithWechat=============
+                case .RegWithWechat(let userInfo, let mobile, let code):
+                    
+                    let openid = userInfo.valueForKey("openid") as! String
+                    let nickname = userInfo.valueForKey("nickname") as! String
+                    let sex = userInfo.valueForKey("sex") as! String
+                    let province = userInfo.valueForKey("province") as! String
+                    let city = userInfo.valueForKey("city") as! String
+                    let country = userInfo.valueForKey("country") as! String
+                    let headimgurl = userInfo.valueForKey("headimgurl") as! String
+                    let unionid = userInfo.valueForKey("unionid") as! String
+                    
+                    let params = ["route":"\(RoutePath.RegWithWechat.rawValue)","token":"","jsonText":"{\"wx_info\":{\"openid\":\"\(openid)\",\"nickname\":\"\(nickname)\",\"sex\":\"\(sex)\",\"province\":\"\(province)\",\"city\":\"\(city)\",\"country\":\"\(country)\",\"headimgurl\":\"\(headimgurl)\",\"unionid\":\"\(unionid)\"},\"mobile\":\"\(mobile)\",\"code\":\"\(code)\"}"]
+                    return ("/\(RoutePath.RegWithWechat.rawValue)", params)
                 //=========PushDeviceToken===========
                 case .PushDeviceToken(let memberId, let deviceToken, let pushDeviceType, let token):
                     let params = ["route":"\(RoutePath.PushDeviceToken.rawValue)","token":"\(token)","device_type":"\(DeviceType.iPhone.rawValue)","jsonText":"{\"member_id\":\"\(memberId)\",\"device_token\":\"\(deviceToken)\",\"operator_type\":\"\(pushDeviceType.rawValue)\"}"]
@@ -169,6 +206,14 @@ struct VCheckGo {
                 case .EditMyCollection(let memberId, let collectionEditType, let articleId, let token):
                     let params = ["route":"\(RoutePath.EditMyCollection.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"operator_type\":\"\(collectionEditType.rawValue)\",\"article_list\":{\"article_id\":\"\(articleId)\"}}"]
                     return ("/\(RoutePath.EditMyCollection.rawValue)", params)
+                    //=========GetVoucherList==========
+                case .GetMyVouchers(let memberId, let page, let count, let token):
+                    let params = ["route":"\(RoutePath.GetMyVouchers.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"pagination\":{\"page\":\"\(page)\",\"count\":\"\(count)\"}}"]
+                    return ("/\(RoutePath.GetMyVouchers.rawValue)", params)
+                    //=========VoucherExchange==========
+                case .VoucherExchange(let memberId, let code, let token):
+                    let params = ["route":"\(RoutePath.VoucherExchange.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"code_no\":\"\(code)\"}"]
+                    return ("/\(RoutePath.VoucherExchange.rawValue)", params)
                 //=========EditCart==================
                 case .EditCart(let memberId, let editCartType, let menuId, let count, let articleId, let token):
                     let params = ["route":"\(RoutePath.EditCart.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"operator_type\":\"\(editCartType.rawValue)\",\"cart_info\":{\"menu_info\":{\"menu_id\":\"\(menuId)\",\"count\":\"\(count)\"},\"article_info\":{\"article_id\":\"\(articleId)\"}}}"]
@@ -182,8 +227,8 @@ struct VCheckGo {
                     let params = ["route":"\(RoutePath.AddOrder.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\"}"]
                     return ("/\(RoutePath.AddOrder.rawValue)", params)
                 //=========UpdatePay=================
-                case .UpdatePay(let memberId, let paymentCode, let orderId, let token):
-                    let params = ["route":"\(RoutePath.UpdatePay.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"checkout_info\":{\"payment_code\":\"\(paymentCode.rawValue)\"},\"order_id\":\"\(orderId)\"}"]
+                case .UpdatePay(let memberId, let paymentCode, let voucherId, let orderId, let token):
+                    let params = ["route":"\(RoutePath.UpdatePay.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"checkout_info\":{\"payment_code\":\"\(paymentCode.rawValue)\",\"voucher_member_id\":\"\(voucherId)\"},\"order_id\":\"\(orderId)\"}"]
                     return ("/\(RoutePath.UpdatePay.rawValue)", params)
                 //=========GetPayData================
                 case .GetPayData(let memberId, let orderId, let token):
@@ -214,6 +259,7 @@ struct VCheckGo {
             let URL = NSURL(string: Router.baseAPIURLString)
             let URLRequest = NSMutableURLRequest(URL: URL!.URLByAppendingPathComponent(path))
             URLRequest.HTTPMethod = "POST"
+            URLRequest.timeoutInterval = 10
             
             let encoding = Alamofire.ParameterEncoding.URL
             
@@ -222,47 +268,6 @@ struct VCheckGo {
         
     }
     
-    enum ImageRouter: URLRequestConvertible {
-        
-        // API Base URL
-        #if DEBUG
-        static let baseAPIURLString = "http://218.244.158.175/imenu_test/app_interface_vcheck/index.php"
-        #else
-        static let baseAPIURLString = "http://218.244.158.175/imenu_test/app_interface_vcheck/index.php"
-        #endif
-        
-        // Security Key
-        static let consumerKey = "yEUwUg5gPOtlymh2vFW1chwoTYJomgjWikzNva16"
-        
-        case EditMemberIcon(String, UIImage, String)
-        
-        
-        var URLRequest: NSURLRequest {
-            
-            let (path: String, route: String, tokenStr: String, jsonText: String, params: [String: String], image: UIImage) = {
-                
-                switch self {
-                    
-                //=========EditMemberIcon===========
-                case .EditMemberIcon(let memberId, let icon, let token):
-                    let params = ["route":"\(RoutePath.EditMemberIcon.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\"}"]
-                    return ("/\(RoutePath.EditMemberIcon.rawValue)", "\(RoutePath.EditMemberIcon.rawValue)", token, "{\"member_id\":\"\(memberId)\"}", params, icon)
-                //=========DEFAULT===================
-                default: return ("/","","","",["":""],UIImage.new())
-                }
-            }()
-            
-            let URL = NSURL(string: Router.baseAPIURLString)
-            let URLRequest = NSMutableURLRequest(URL: URL!.URLByAppendingPathComponent(path))
-            URLRequest.HTTPMethod = "POST"
-            
-            let encoding = Alamofire.ParameterEncoding.URL
-            
-            return encoding.encodeImage(URLRequest, route: route, jsonText: jsonText, token: tokenStr, parameters: params, image: image).0
-            
-        }
-        
-    }
     
     enum DeviceType: Int {
         case iPhone = 10
@@ -329,6 +334,8 @@ struct VCheckGo {
         case QuickLogin = "member/member/quickLogin"
         case EditMyCollection = "member/collection/editCollectionProduct"
         case GetMyCollection = "member/collection/getCollectionProductList"
+        case GetMyVouchers = "member/voucher/getVoucherList"
+        case VoucherExchange = "member/voucher/exchangeVoucher"
         
         case GetProductList = "product/product/getProductList"
         case GetProductDetail = "product/product/getProductDetail"
@@ -346,6 +353,9 @@ struct VCheckGo {
         case GetRefundReasons = "base/return/getReturnReasonList"
         case SubmitRefund = "sale/return/submitReturn"
         case GetRefundInfo = "sale/return/getReturnDetail"
+        
+        case LoginWithWechat = "member/member_thirdpart/loginWithWx"
+        case RegWithWechat = "member/member_thirdpart/registerWithWx"
         
     }
     
@@ -395,6 +405,61 @@ class CityInfo: NSObject {
     
 }
 
+
+class MemberInfo: NSObject {
+    
+    let memberId: String
+    
+    var email: String?
+    var mobile: String?
+    var nickname: String?
+    var icon: String?
+    
+    var orderCount: String?
+    var orderPending: String?
+    var collectionCount: String?
+    var voucherCount: String?
+    var voucherValid: String?
+    
+    var inviteCode: String?
+    var inviteCount: String?
+    var inviteTip: String?
+    var inviteRewards: String?
+    
+    var pushSwitch: String?
+    var pushOrder: String?
+    var pushRefund: String?
+    var pushVoucher: String?
+    
+    
+    init(mid: String) {
+        
+        self.memberId = mid
+    }
+    
+}
+
+class Voucher: NSObject {
+    
+    let voucherId: String
+    
+    var price: String?
+    var title: String?
+    var desc: String?
+    var limit: String?
+    var limitDesc: String?
+    var startDate: NSDate?
+    var endDate: NSDate?
+    var status: String?
+    
+    
+    init(vid: String) {
+        self.voucherId = vid
+    }
+    
+    
+}
+
 class OrderInfo: NSObject {
     
     let id: String
@@ -414,6 +479,10 @@ class OrderInfo: NSObject {
     var menuUnit: String?
     var itemCount: String?
     var couponInfo: NSMutableArray?
+    var voucherId: String?
+    var voucherName: String?
+    
+    var paymentCode: String?
     
     // Extent
     var status: VCAppLetor.OrderType?

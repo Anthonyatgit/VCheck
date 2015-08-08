@@ -100,6 +100,8 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         }
     }
     
+    var keyboardHeight: CGFloat = 0
+    
     var hud: MBProgressHUD!
     
     var tapGueture: UITapGestureRecognizer?
@@ -123,6 +125,8 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.scrollView.frame.size.height = self.view.bounds.height - VCAppLetor.ConstValue.CheckNowBarHeight
         self.scrollView.contentMode = UIViewContentMode.Top
         self.scrollView.backgroundColor = UIColor.whiteColor()
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.delegate = self
         
         self.setupOrderView()
         
@@ -135,22 +139,25 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.tapGueture?.numberOfTouchesRequired = 1
         self.scrollView.addGestureRecognizer(self.tapGueture!)
         
+        self.registerForKeyboardNotifications()
+        
     }
+    
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        
+        IHKeyboardAvoiding.setAvoidingView(self.view, withTriggerView: self.verifyCode)
+        IHKeyboardAvoiding.setPaddingForCurrentAvoidingView(140)
+        IHKeyboardAvoiding.setBuffer(140)
         
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        println("view: \(self.view.bounds): scroll: \(self.scrollView.frame) | \(self.scrollView.contentSize)")
-        
         self.scrollView.contentSize = self.scrollView.frame.size
         self.scrollView.contentSize.height = self.scrollView.height - VCAppLetor.ConstValue.CheckNowBarHeight
-        self.scrollView.showsVerticalScrollIndicator = false
-        self.scrollView.delegate = self
     }
     
     override func updateViewConstraints() {
@@ -328,7 +335,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.submitView.addSubview(self.orderPriceValue)
         
         
-        self.submitView.backgroundColor = UIColor.grayColor().colorWithAlphaComponent(0.1)
+        self.submitView.backgroundColor = UIColor.cloudsColor(alpha: 1.0)
         
         let topBorder: CustomDrawView = CustomDrawView.newAutoLayoutView()
         topBorder.drawType = "GrayLine"
@@ -476,7 +483,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             
             self.loginNote.text = VCAppLetor.StringLine.LoginWithCoupon
             self.loginNote.textAlignment = .Left
-            self.loginNote.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+            self.loginNote.textColor = UIColor.blackColor().colorWithAlphaComponent(0.4)
             self.loginNote.font = VCAppLetor.Font.SmallFont
             self.scrollView.addSubview(self.loginNote)
             
@@ -484,6 +491,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             self.loginBtn.setTitleColor(UIColor.pumpkinColor(), forState: .Normal)
             self.loginBtn.titleLabel?.font = VCAppLetor.Font.SmallFont
             self.loginBtn.layer.borderWidth = 0.0
+            self.loginBtn.hidden = true
             self.loginBtn.addTarget(self, action: "userLogin", forControlEvents: .TouchUpInside)
             self.scrollView.addSubview(self.loginBtn)
         }
@@ -495,7 +503,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             self.mobileName.font = VCAppLetor.Font.NormalFont
             self.scrollView.addSubview(self.mobileName)
             
-            var phoneNumber: String = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Mobile, namespace: "member")?.data as! String
+            var phoneNumber: String = (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo).mobile!
             var range = Range<String.Index>(start: advance(phoneNumber.startIndex, 3),end: advance(phoneNumber.endIndex, -4))
             phoneNumber.replaceRange(range, with: "••••")
             
@@ -518,7 +526,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     
     func isLogin() -> Bool {
         
-        return CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String != "0"
+        return CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optToken, namespace: "token")
     }
     
     func checkMobile() {
@@ -542,34 +550,6 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
             self.mobile.resignFirstResponder()
             
             self.sendOrderingAuthCode(mobile)
-            
-            //            Alamofire.request(VCheckGo.Router.ValidateMemberInfo(VCheckGo.ValidateType.Mobile, mobile)).validate().responseSwiftyJSON({
-            //                (_, _, JSON, error) -> Void in
-            //
-            //                let json = JSON
-            //
-            //                if (error == nil) {
-            //
-            //                    if json["status"]["succeed"].string == "0" && json["status"]["error_code"].string == VCAppLetor.ErrorCode.MobileAlreadyExist {
-            //                        self.sendRegAuthCode(mobile)
-            //                    }
-            //                    else {
-            //                        self.mobileShaker?.shakeWithDuration(VCAppLetor.ConstValue.TextFieldShakeTime, completion: { () -> Void in
-            //                            RKDropdownAlert.title(VCAppLetor.StringLine.MobileNotExist, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime, delegate: self)
-            //                        })
-            //                    }
-            //
-            //
-            //                }
-            //                else {
-            //                    println("ERROR @ Validate member info request : \(error?.localizedDescription)")
-            //                }
-            //
-            //                self.mobile.resignFirstResponder()
-            //                hud.hide(true)
-            //
-            //            })
-            
             
         }
         
@@ -860,6 +840,10 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                                 newOrder.orderType = json["data"]["order_info"]["order_type"].string!
                                 newOrder.typeDescription = json["data"]["order_info"]["order_type_description"].string!
                                 
+                                newOrder.voucherId = json["data"]["order_info"]["voucher_info"]["voucher_member_id"].string!
+                                newOrder.voucherName = json["data"]["order_info"]["voucher_info"]["voucher_name"].string!
+                                
+                                println("newOrder voucherId: \(newOrder.voucherId) | name: \(newOrder.voucherName)")
                                 
                                 //                                // Cache member order session, CAN NOT submit order with same menu until the order session complete (Deleted OR Paid)
                                 //                                let orderSessionMenus = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.orderSessionMenuIds, namespace: "order")?.data as? NSMutableArray
@@ -968,19 +952,43 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     // MARK: - UITextField Delegate
     
     func textFieldDidBeginEditing(textField: UITextField) {
-        IHKeyboardAvoiding.setAvoidingView(self.mobile)
-        IHKeyboardAvoiding.setAvoidingView(self.verifyCode)
-        IHKeyboardAvoiding.setAvoidingView(self.submitView)
         
     }
     
     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        //        IHKeyboardAvoiding.setAvoidingView(self.view)
+        
         return true
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
+        
+        textField.resignFirstResponder()
         return true
+    }
+    
+    // MARK: - Keyboard Notification
+    
+    func registerForKeyboardNotifications() {
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWasShow:", name: UIKeyboardDidShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWasHide:", name: UIKeyboardDidHideNotification, object: nil)
+        
+    }
+    
+    func keyboardWasShow(notification: NSNotification) {
+        
+        let userInfo: NSDictionary = notification.userInfo!
+        let keyboardFrame = (userInfo[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        
+        self.keyboardHeight = keyboardFrame.height
+        
+        self.submitView.animation.moveY(-self.keyboardHeight).animate(0.01)
+    }
+    
+    func keyboardWasHide(notification: NSNotification) {
+        
+        self.keyboardHeight = 0
+        self.submitView.animation.moveY(self.keyboardHeight).animate(0.01)
     }
     
     
@@ -998,39 +1006,55 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                 
                 if json["status"]["succeed"].string == "1" {
                     
-                    // Member info
-                    let midString = json["data"]["member_info"]["member_id"].string!
-                    let emailString = json["data"]["member_info"]["email"].string!
-                    let mobileString = json["data"]["member_info"]["mobile"].string!
-                    let nicknameString = json["data"]["member_info"]["member_name"].string!
-                    let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
+                    let memberInfo: MemberInfo = MemberInfo(mid: json["data"]["member_info"]["member_id"].string!)
+                    
+                    
+                    memberInfo.email = json["data"]["member_info"]["email"].string!
+                    memberInfo.mobile = json["data"]["member_info"]["mobile"].string!
+                    memberInfo.nickname = json["data"]["member_info"]["member_name"].string!
+                    memberInfo.icon = json["data"]["member_info"]["icon_image"]["source"].string!
+                    
+                    // Listing Info
+                    memberInfo.orderCount = json["data"]["order_info"]["order_total_count"].string!
+                    memberInfo.orderPending = json["data"]["order_info"]["order_pending_count"].string!
+                    memberInfo.collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
+                    memberInfo.voucherCount = json["data"]["voucher_info"]["voucher_total_count"].string!
+                    memberInfo.voucherValid = json["data"]["voucher_info"]["voucher_use_count"].string!
+                    
+                    // Share Info
+                    memberInfo.inviteCode = json["data"]["share_info"]["invite_code"].string!
+                    memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
+                    memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
+                    memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                    
+                    memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
+                    memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
+                    memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
+                    memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
+                    
+                    
+                    // update local data
+                    self.updateSettings(token, currentMid: mid)
                     
                     // Get member info and refresh userinterface
                     BreezeStore.saveInMain({ (contextType) -> Void in
                         
                         let member = Member.createInContextOfType(contextType) as! Member
                         
-                        member.mid = midString
-                        member.email = emailString
-                        member.phone = mobileString
-                        member.nickname = nicknameString
-                        member.iconURL = iconString
+                        member.mid = mid
+                        member.email = memberInfo.email!
+                        member.phone = memberInfo.mobile!
+                        member.nickname = memberInfo.nickname!
+                        member.iconURL = memberInfo.icon!
                         member.lastLog = NSDate()
                         member.token = token
                         
                     })
                     
-                    // update local data
-                    self.updateSettings(token, currentMid: mid)
-                    
+                    pushDeviceToken(VCheckGo.PushDeviceType.add)
                     // setup cache & user panel interface
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberInfo, data: memberInfo, namespace: "member")
                     
-                    let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
-                    pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                     
                     self.resetOrderPageLayout()
                     
@@ -1047,6 +1071,10 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
     
     
     // MARK: - Member Signin Delegate
+    
+    func memberDidSigninWithWechatSuccess(mid: String, token: String) {
+        
+    }
     
     func memberDidSigninSuccess(mid: String, token: String) {
         
@@ -1065,29 +1093,46 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                     
                     if json["status"]["succeed"].string == "1" {
                         
-                        let midString = json["data"]["member_info"]["member_id"].string!
-                        let emailString = json["data"]["member_info"]["email"].string!
-                        let mobileString = json["data"]["member_info"]["mobile"].string!
-                        let nicknameString = json["data"]["member_info"]["member_name"].string!
-                        let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
+                        let memberInfo: MemberInfo = MemberInfo(mid: json["data"]["member_info"]["member_id"].string!)
                         
+                        memberInfo.email = json["data"]["member_info"]["email"].string!
+                        memberInfo.mobile = json["data"]["member_info"]["mobile"].string!
+                        memberInfo.nickname = json["data"]["member_info"]["member_name"].string!
+                        memberInfo.icon = json["data"]["member_info"]["icon_image"]["source"].string!
+                        
+                        // Listing Info
+                        memberInfo.orderCount = json["data"]["order_info"]["order_total_count"].string!
+                        memberInfo.orderPending = json["data"]["order_info"]["order_pending_count"].string!
+                        memberInfo.collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
+                        memberInfo.voucherCount = json["data"]["voucher_info"]["voucher_total_count"].string!
+                        memberInfo.voucherValid = json["data"]["voucher_info"]["voucher_use_count"].string!
+                        
+                        // Share Info
+                        memberInfo.inviteCode = json["data"]["share_info"]["invite_code"].string!
+                        memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
+                        memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
+                        memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                        
+                        memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
+                        memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
+                        memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
+                        memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
                         
                         // update local data
                         self.updateSettings(token, currentMid: mid)
                         
-                        if let member = Member.findFirst(attribute: "mid", value: midString, contextType: BreezeContextType.Main) as? Member {
+                        if let member = Member.findFirst(attribute: "mid", value: memberInfo.memberId, contextType: BreezeContextType.Main) as? Member {
                             
                             BreezeStore.saveInMain({ (contextType) -> Void in
                                 
-                                member.email = emailString
-                                member.phone = mobileString
-                                member.nickname = nicknameString
-                                member.iconURL = iconString
+                                member.email = memberInfo.email!
+                                member.phone = memberInfo.mobile!
+                                member.nickname = memberInfo.nickname!
+                                member.iconURL = memberInfo.icon!
                                 member.lastLog = NSDate()
                                 member.token = token
                                 
                             })
-                            
                         }
                         else { // Member login for the first time without register on the device
                             // Get member info and refresh userinterface
@@ -1095,11 +1140,11 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                                 
                                 let member = Member.createInContextOfType(contextType) as! Member
                                 
-                                member.mid = midString
-                                member.email = emailString
-                                member.phone = mobileString
-                                member.nickname = nicknameString
-                                member.iconURL = iconString
+                                member.mid = memberInfo.memberId
+                                member.email = memberInfo.email!
+                                member.phone = memberInfo.mobile!
+                                member.nickname = memberInfo.nickname!
+                                member.iconURL = memberInfo.icon!
                                 member.lastLog = NSDate()
                                 member.token = token
                                 
@@ -1107,15 +1152,12 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                             
                         }
                         
+                        // Push user device token
+                        pushDeviceToken(VCheckGo.PushDeviceType.add)
                         
-                        let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
-                        pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                         
                         // setup cache & user panel interface
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberInfo, data: memberInfo, namespace: "member")
                         
                         self.resetOrderPageLayout()
                         self.checkOrderInfo()
@@ -1151,24 +1193,44 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                     
                     if json["status"]["succeed"].string == "1" {
                         
-                        let midString = json["data"]["member_info"]["member_id"].string!
-                        let emailString = json["data"]["member_info"]["email"].string!
-                        let mobileString = json["data"]["member_info"]["mobile"].string!
-                        let nicknameString = json["data"]["member_info"]["member_name"].string!
-                        let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
+                        let memberInfo: MemberInfo = MemberInfo(mid: json["data"]["member_info"]["member_id"].string!)
+                        
+                        memberInfo.email = json["data"]["member_info"]["email"].string!
+                        memberInfo.mobile = json["data"]["member_info"]["mobile"].string!
+                        memberInfo.nickname = json["data"]["member_info"]["member_name"].string!
+                        memberInfo.icon = json["data"]["member_info"]["icon_image"]["source"].string!
+                        
+                        // Listing Info
+                        memberInfo.orderCount = json["data"]["order_info"]["order_total_count"].string!
+                        memberInfo.orderPending = json["data"]["order_info"]["order_pending_count"].string!
+                        memberInfo.collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
+                        memberInfo.voucherCount = json["data"]["voucher_info"]["voucher_total_count"].string!
+                        memberInfo.voucherValid = json["data"]["voucher_info"]["voucher_use_count"].string!
+                        
+                        // Share Info
+                        memberInfo.inviteCode = json["data"]["share_info"]["invite_code"].string!
+                        memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
+                        memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
+                        memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                        
+                        memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
+                        memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
+                        memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
+                        memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
                         
                         
                         // update local data
                         self.updateSettings(token, currentMid: mid)
                         
-                        if let member = Member.findFirst(attribute: "mid", value: midString, contextType: BreezeContextType.Main) as? Member {
+                        if let member = Member.findFirst(attribute: "mid", value: memberInfo.memberId, contextType: BreezeContextType.Main) as? Member {
                             
                             BreezeStore.saveInMain({ (contextType) -> Void in
                                 
-                                member.email = emailString
-                                member.phone = mobileString
-                                member.nickname = nicknameString
-                                member.iconURL = iconString
+                                
+                                member.email = memberInfo.email!
+                                member.phone = memberInfo.mobile!
+                                member.nickname = memberInfo.nickname!
+                                member.iconURL = memberInfo.icon!
                                 member.lastLog = NSDate()
                                 member.token = token
                                 
@@ -1181,25 +1243,23 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                                 
                                 let member = Member.createInContextOfType(contextType) as! Member
                                 
-                                member.mid = midString
-                                member.email = emailString
-                                member.phone = mobileString
-                                member.nickname = nicknameString
-                                member.iconURL = iconString
+                                member.mid = memberInfo.memberId
+                                member.email = memberInfo.email!
+                                member.phone = memberInfo.mobile!
+                                member.nickname = memberInfo.nickname!
+                                member.iconURL = memberInfo.icon!
                                 member.lastLog = NSDate()
                                 member.token = token
                                 
                             })
                             
-                            let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "token")?.data as! String
-                            pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
                         }
                         
+                        // Push user device token
+                        pushDeviceToken(VCheckGo.PushDeviceType.add)
+                        
                         // setup cache & user panel interface
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
-                        CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
+                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberInfo, data: memberInfo, namespace: "member")
                         
                         self.resetOrderPageLayout()
                         self.checkOrderInfo()
@@ -1287,7 +1347,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         self.mobileName.font = VCAppLetor.Font.NormalFont
         self.scrollView.addSubview(self.mobileName)
         
-        var phoneNumber: String = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Mobile, namespace: "member")?.data as! String
+        var phoneNumber: String = (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo).mobile!
         var range = Range<String.Index>(start: advance(phoneNumber.startIndex, 3),end: advance(phoneNumber.endIndex, -4))
         phoneNumber.replaceRange(range, with: "••••")
         

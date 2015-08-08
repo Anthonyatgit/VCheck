@@ -16,6 +16,7 @@ class VCAboutViewController: VCBaseViewController {
     let subtitleLine: CustomDrawView = CustomDrawView.newAutoLayoutView()
     let appIcon: UILabel = UILabel.newAutoLayoutView()
     
+    let appName: UILabel = UILabel.newAutoLayoutView()
     let appVersion: UILabel = UILabel.newAutoLayoutView()
     let appWebsiteURL: UILabel = UILabel.newAutoLayoutView()
     let appCopyright: UILabel = UILabel.newAutoLayoutView()
@@ -69,12 +70,20 @@ class VCAboutViewController: VCBaseViewController {
             self.appVersion.text = "V1.0.0"
         }
         
+        
+        self.appName.text = VCAppLetor.StringLine.AppNameZh
+        self.appName.textAlignment = .Center
+        self.appName.textColor = UIColor.lightGrayColor()
+        self.appName.font = VCAppLetor.Font.NormalFont
+        self.view.addSubview(self.appName)
+        
         self.appVersion.textAlignment = .Center
         self.appVersion.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.appVersion.font = VCAppLetor.Font.BigFont
         self.appVersion.backgroundColor = UIColor.clearColor()
         self.appVersion.layer.cornerRadius = 15.0
         self.appVersion.layer.backgroundColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.1).CGColor
+        self.appVersion.sizeToFit()
         self.view.addSubview(self.appVersion)
         
         self.appWebsiteURL.text = VCAppLetor.StringLine.AppWebsiteURL
@@ -104,7 +113,7 @@ class VCAboutViewController: VCBaseViewController {
         super.updateViewConstraints()
         
         self.subtitleLine.autoSetDimensionsToSize(CGSizeMake(202.0, 3.0))
-        self.subtitleLine.autoPinEdgeToSuperviewEdge(.Top, withInset: 200.0)
+        self.subtitleLine.autoPinEdgeToSuperviewEdge(.Top, withInset: 120.0)
         self.subtitleLine.autoAlignAxisToSuperviewAxis(.Vertical)
         
         self.aboutSubTitle.autoSetDimensionsToSize(CGSizeMake(162.0, 30.0))
@@ -125,7 +134,11 @@ class VCAboutViewController: VCBaseViewController {
         
         self.appVersion.autoSetDimensionsToSize(CGSizeMake(80.0, 28.0))
         self.appVersion.autoAlignAxisToSuperviewAxis(.Vertical)
-        self.appVersion.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.appWebsiteURL, withOffset: -40.0)
+        self.appVersion.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.appWebsiteURL, withOffset: -30.0)
+        
+        self.appName.autoSetDimensionsToSize(CGSizeMake(self.view.width-100.0, 20.0))
+        self.appName.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.appVersion, withOffset: -10.0)
+        self.appName.autoAlignAxisToSuperviewAxis(.Vertical)
         
     }
     

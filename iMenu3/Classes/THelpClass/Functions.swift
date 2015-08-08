@@ -27,30 +27,47 @@ func escape(html: String) -> String{
 
 
 // Push Device Token
-func pushDeviceToken(deviceToken: String, type: VCheckGo.PushDeviceType) {
+func pushDeviceToken(type: VCheckGo.PushDeviceType, tokenStr: String? = "") {
     
-    let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
-    let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
-    
-    Alamofire.request(VCheckGo.Router.PushDeviceToken(memberId, deviceToken, type, token)).validate().responseSwiftyJSON ({
-        (_, _, JSON, error) -> Void in
+    if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken") {
         
-        if error == nil {
-            
-            let json = JSON
-            if json["status"]["succeed"].string! == "1" {
-                
-                // Push Done!
-                println("push device token done!")
-            }
-            else {
-                println("push device token error: " + json["status"]["error_desc"].string!)
-            }
+        let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
+        
+        let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+        
+        var token: String = ""
+        
+        if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optToken, namespace: "token") {
+            token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
         }
         else {
-            println("ERROR @ Request to push device token : \(error?.localizedDescription)")
+            if tokenStr != "" {
+                token = tokenStr!
+            }
         }
-    })
+        
+        Alamofire.request(VCheckGo.Router.PushDeviceToken(memberId, deviceToken, type, token)).validate().responseSwiftyJSON ({
+            (_, _, JSON, error) -> Void in
+            
+            if error == nil {
+                
+                let json = JSON
+                if json["status"]["succeed"].string! == "1" {
+                    
+                    // Push Done!
+                    println("push device token done!")
+                }
+                else {
+                    println("push device token error: " + json["status"]["error_desc"].string!)
+                }
+            }
+            else {
+                println("ERROR @ Request to push device token : \(error?.localizedDescription)")
+            }
+        })
+        
+    }
+    
 }
 
 

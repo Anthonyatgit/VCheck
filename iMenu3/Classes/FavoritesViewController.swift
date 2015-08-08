@@ -12,6 +12,10 @@ import Alamofire
 import RKDropdownAlert
 import MBProgressHUD
 
+protocol FavoriteDelegate {
+    func didFinishEditRow()
+}
+
 class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, RKDropdownAlertDelegate, UIScrollViewDelegate {
     
     var parentNav: UINavigationController?
@@ -21,6 +25,8 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
     var favoritesList: NSMutableArray = NSMutableArray()
     
     var tableView: UITableView!
+    
+    var delegate: FavoriteDelegate?
     
     var currentPage: Int = 1
     var haveMore: Bool = false
@@ -171,7 +177,14 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
                             self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
                             self.tableView.endUpdates()
                             
-                            //                            self.tableView.reloadData()
+//                            let memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo
+//                            let deCount: Int = ("\(memberInfo.collectionCount!)" as NSString).integerValue - 1
+//                            memberInfo.collectionCount = "\(deCount)"
+//                            
+//                            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberInfo, data: memberInfo, namespace: "member")
+//                            
+//                            self.delegate?.didFinishEditRow()
+                            
                         }
                         else {
                             RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
@@ -373,7 +386,7 @@ class FavoritesViewController: VCBaseViewController, UITableViewDataSource, UITa
                             
                             // Load favorites list, if empty ..
                             let bgView: UIView = UIView()
-                            bgView.frame = self.view.bounds
+                            bgView.frame = self.view.frame
                             
                             let favoriteIcon: UIImageView = UIImageView.newAutoLayoutView()
                             favoriteIcon.alpha = 0.1

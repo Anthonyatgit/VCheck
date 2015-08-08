@@ -128,11 +128,13 @@ class VCInviteViewController: VCBaseViewController, UIScrollViewDelegate {
     
     func setupShareView() {
         
+        let memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo
+        
         self.largeCircle.drawType = "circle"
         self.largeCircle.backgroundColor = UIColor.clearColor()
         self.scrollView.addSubview(self.largeCircle)
         
-        self.inviteCount.text = "48"
+        self.inviteCount.text = memberInfo.inviteCount
         self.inviteCount.textAlignment = .Center
         self.inviteCount.textColor = UIColor.cloudsColor(alpha: 0.8)
         self.inviteCount.font = VCAppLetor.Font.XXXXUltraLight
@@ -148,9 +150,9 @@ class VCInviteViewController: VCBaseViewController, UIScrollViewDelegate {
         self.inviteUnit.sizeToFit()
         self.scrollView.addSubview(self.inviteUnit)
         
-        self.inviteTips.text = VCAppLetor.StringLine.ShareTips
+        self.inviteTips.text = memberInfo.inviteTip
         self.inviteTips.textAlignment = .Center
-        self.inviteTips.textColor = UIColor.silverColor(alpha: 0.8)
+        self.inviteTips.textColor = UIColor.cloudsColor(alpha: 0.5)
         self.inviteTips.font = VCAppLetor.Font.NormalFont
         self.inviteTips.backgroundColor = UIColor.clearColor()
         self.inviteTips.sizeToFit()
@@ -159,28 +161,28 @@ class VCInviteViewController: VCBaseViewController, UIScrollViewDelegate {
         self.codeBg.backgroundColor = UIColor.whiteColor().colorWithAlphaComponent(0.9)
         self.scrollView.addSubview(self.codeBg)
         
-        self.myCode.text = "JJ9VVZDJX"
+        self.myCode.text = memberInfo.inviteCode
         self.myCode.textAlignment = .Center
         self.myCode.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.myCode.font = VCAppLetor.Font.XXLight
         self.myCode.sizeToFit()
         self.codeBg.addSubview(self.myCode)
         
-        self.codeIcon.image = UIImage(named: VCAppLetor.IconName.CouponBlack)
+        self.codeIcon.image = UIImage(named: VCAppLetor.IconName.CouponBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         self.codeIcon.tintColor = UIColor.blackColor().colorWithAlphaComponent(0.6)
         self.codeBg.addSubview(self.codeIcon)
         
-        self.rewards1.text = VCAppLetor.StringLine.Rewards1
-        self.rewards1.textAlignment = .Center
-        self.rewards1.textColor = UIColor.blackColor().colorWithAlphaComponent(0.3)
-        self.rewards1.font = VCAppLetor.Font.NormalFont
-        self.rewards1.sizeToFit()
-        self.codeBg.addSubview(self.rewards1)
+//        self.rewards1.text = VCAppLetor.StringLine.Rewards1
+//        self.rewards1.textAlignment = .Center
+//        self.rewards1.textColor = UIColor.blackColor().colorWithAlphaComponent(0.3)
+//        self.rewards1.font = VCAppLetor.Font.NormalFont
+//        self.rewards1.sizeToFit()
+//        self.codeBg.addSubview(self.rewards1)
         
-        self.rewards2.text = VCAppLetor.StringLine.Rewards2
+        self.rewards2.text = memberInfo.inviteRewards
         self.rewards2.textAlignment = .Center
         self.rewards2.textColor = UIColor.blackColor().colorWithAlphaComponent(0.3)
-        self.rewards2.font = VCAppLetor.Font.NormalFont
+        self.rewards2.font = VCAppLetor.Font.SmallFont
         self.rewards2.sizeToFit()
         self.codeBg.addSubview(self.rewards2)
         
@@ -220,10 +222,10 @@ class VCInviteViewController: VCBaseViewController, UIScrollViewDelegate {
         self.codeIcon.autoAlignAxis(.Horizontal, toSameAxisOfView: self.myCode)
         self.codeIcon.autoSetDimensionsToSize(CGSizeMake(28, 24))
         
-        self.rewards1.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.myCode, withOffset: 20.0)
-        self.rewards1.autoAlignAxisToSuperviewAxis(.Vertical)
+//        self.rewards1.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.myCode, withOffset: 20.0)
+//        self.rewards1.autoAlignAxisToSuperviewAxis(.Vertical)
         
-        self.rewards2.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.rewards1, withOffset: 8.0)
+        self.rewards2.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.myCode, withOffset: 24.0)
         self.rewards2.autoAlignAxisToSuperviewAxis(.Vertical)
         
         self.inviteBtn.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.rewards2, withOffset: 20.0)
@@ -238,8 +240,11 @@ class VCInviteViewController: VCBaseViewController, UIScrollViewDelegate {
         
         self.shareView?.removeFromSuperview()
         
+        let memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo
+        
         self.shareView = VCShareActionView(frame: self.view.frame)
         self.shareView!.shareType = VCAppLetor.ShareToType.invite
+        self.shareView!.shareCode = memberInfo.inviteCode
         self.view.addSubview(self.shareView!)
         
     }
@@ -247,13 +252,6 @@ class VCInviteViewController: VCBaseViewController, UIScrollViewDelegate {
 
 
 }
-
-
-
-
-
-
-
 
 
 

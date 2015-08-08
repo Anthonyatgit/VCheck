@@ -93,6 +93,8 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
     
     var isInitLoad: Bool = true
     
+    var slideDone: Bool = false
+    
     var scrollContentSize: CGSize = CGSizeMake(0, 0)
     
     // MARK: - LifeCycle
@@ -142,12 +144,6 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         }
         
         
-        // Set detail frame
-//        if self.scrollView.contentSize.height > self.view.height {
-//            println("Appear: \(self.scrollView.contentSize)")
-//            self.resetDetailFrame()
-//        }
-        
         // Check if member have order session
         if self.isLogin() && !self.isInitLoad {
             
@@ -174,6 +170,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         
+        self.slideDone = false
     }
     
     override func viewDidLayoutSubviews() {
@@ -182,6 +179,11 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         if self.detailSegmentControl != nil && self.segIndex >= 0 {
             
             self.detailSegmentControl.selectSegmentAtIndex(self.segIndex)
+        }
+        
+        if self.slideDone {
+            self.payView.originY = self.view.height - 60.0
+            
         }
         
     }
@@ -522,9 +524,10 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             
             self.payView.animation.moveY(-60).animateWithCompletion(0.3, {
-            
+                
                 self.payView.originY = self.view.height - 60.0
-//                println("payview: \(self.payView.originY)")
+                self.slideDone = true
+                
             })
             
         })
@@ -573,11 +576,11 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         
         // Date Tag
         self.dateTagBg.drawType = "DateTagLong"
-        self.dateTagBg.alpha = 0.1
+        self.dateTagBg.alpha = 0.6
         self.scrollView.addSubview(self.dateTagBg)
         
         self.dateTagBg2.drawType = "DateTag"
-        self.dateTagBg2.alpha = 0.1
+        self.dateTagBg2.alpha = 0.6
         self.scrollView.addSubview(self.dateTagBg2)
         
         
@@ -1208,9 +1211,6 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.detailView.autoSetDimension(.Width, toSize: self.view.width - 40.0)
         self.detailView.autoSetDimension(.Height, toSize: 200.0)
         
-        self.dateTagBg.animation.makeAlpha(0.6).animate(1.0)
-        self.dateTagBg2.animation.makeAlpha(0.6).animate(1.0)
-        
     }
     
     // Submit order action
@@ -1261,6 +1261,9 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                     order.typeDescription = json["data"]["member_order_info"]["order_info"]["order_type_description"].string!
                     order.orderImageURL = json["data"]["member_order_info"]["article_info"]["article_image"]["source"].string!
                     order.foodId = json["data"]["member_order_info"]["article_info"]["article_id"].string!
+                    
+                    order.voucherId = json["data"]["member_order_info"]["order_info"]["voucher_info"]["voucher_member_id"].string!
+                    order.voucherName = json["data"]["member_order_info"]["order_info"]["voucher_info"]["voucher_name"].string!
                     
                     
                     // Transfer to payment page
@@ -1452,7 +1455,7 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         }
         
         
-//        println("S:scroll: \(self.scrollView.contentSize)")
+        //        println("S:scroll: \(self.scrollView.contentSize)")
     }
     
     func resetDetailFrame() {
@@ -1498,41 +1501,54 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                 
                 if json["status"]["succeed"].string == "1" {
                     
-                    // Member info
-                    let midString = json["data"]["member_info"]["member_id"].string!
-                    let emailString = json["data"]["member_info"]["email"].string!
-                    let mobileString = json["data"]["member_info"]["mobile"].string!
-                    let nicknameString = json["data"]["member_info"]["member_name"].string!
-                    let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
+                    let memberInfo: MemberInfo = MemberInfo(mid: json["data"]["member_info"]["member_id"].string!)
                     
+                    
+                    memberInfo.email = json["data"]["member_info"]["email"].string!
+                    memberInfo.mobile = json["data"]["member_info"]["mobile"].string!
+                    memberInfo.nickname = json["data"]["member_info"]["member_name"].string!
+                    memberInfo.icon = json["data"]["member_info"]["icon_image"]["source"].string!
+                    
+                    // Listing Info
+                    memberInfo.orderCount = json["data"]["order_info"]["order_total_count"].string!
+                    memberInfo.orderPending = json["data"]["order_info"]["order_pending_count"].string!
+                    memberInfo.collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
+                    memberInfo.voucherCount = json["data"]["voucher_info"]["voucher_total_count"].string!
+                    memberInfo.voucherValid = json["data"]["voucher_info"]["voucher_use_count"].string!
+                    
+                    // Share Info
+                    memberInfo.inviteCode = json["data"]["share_info"]["invite_code"].string!
+                    memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
+                    memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
+                    memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                    
+                    memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
+                    memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
+                    memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
+                    memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
+                    
+                    
+                    // update local data
+                    self.updateSettings(token, currentMid: mid)
                     
                     // Get member info and refresh userinterface
                     BreezeStore.saveInMain({ (contextType) -> Void in
                         
                         let member = Member.createInContextOfType(contextType) as! Member
                         
-                        member.mid = midString
-                        member.email = emailString
-                        member.phone = mobileString
-                        member.nickname = nicknameString
-                        member.iconURL = iconString
+                        member.mid = mid
+                        member.email = memberInfo.email!
+                        member.phone = memberInfo.mobile!
+                        member.nickname = memberInfo.nickname!
+                        member.iconURL = memberInfo.icon!
                         member.lastLog = NSDate()
                         member.token = token
                         
                     })
                     
-                    // update local data
-                    self.updateSettings(token, currentMid: mid)
-                    
+                    pushDeviceToken(VCheckGo.PushDeviceType.add)
                     // setup cache & user panel interface
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
-                    
-                    
-                    let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
-                    pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
+                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberInfo, data: memberInfo, namespace: "member")
                     
                 }
                 else {
@@ -1632,6 +1648,10 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
     
     // MARK: - Member Signin Delegate
     
+    func memberDidSigninWithWechatSuccess(mid: String, token: String) {
+        
+    }
+    
     func memberDidSigninSuccess(mid: String, token: String) {
         
         // Get member info which just finish register
@@ -1644,24 +1664,42 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                 
                 if json["status"]["succeed"].string == "1" {
                     
-                    let midString = json["data"]["member_info"]["member_id"].string!
-                    let emailString = json["data"]["member_info"]["email"].string!
-                    let mobileString = json["data"]["member_info"]["mobile"].string!
-                    let nicknameString = json["data"]["member_info"]["member_name"].string!
-                    let iconString = json["data"]["member_info"]["icon_image"]["thumb"].string!
+                    let memberInfo: MemberInfo = MemberInfo(mid: json["data"]["member_info"]["member_id"].string!)
                     
+                    memberInfo.email = json["data"]["member_info"]["email"].string!
+                    memberInfo.mobile = json["data"]["member_info"]["mobile"].string!
+                    memberInfo.nickname = json["data"]["member_info"]["member_name"].string!
+                    memberInfo.icon = json["data"]["member_info"]["icon_image"]["source"].string!
+                    
+                    // Listing Info
+                    memberInfo.orderCount = json["data"]["order_info"]["order_total_count"].string!
+                    memberInfo.orderPending = json["data"]["order_info"]["order_pending_count"].string!
+                    memberInfo.collectionCount = json["data"]["collection_info"]["collection_total_count"].string!
+                    memberInfo.voucherCount = json["data"]["voucher_info"]["voucher_total_count"].string!
+                    memberInfo.voucherValid = json["data"]["voucher_info"]["voucher_use_count"].string!
+                    
+                    // Share Info
+                    memberInfo.inviteCode = json["data"]["share_info"]["invite_code"].string!
+                    memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
+                    memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
+                    memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                    
+                    memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
+                    memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
+                    memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
+                    memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
                     
                     // update local data
                     self.updateSettings(token, currentMid: mid)
                     
-                    if let member = Member.findFirst(attribute: "mid", value: midString, contextType: BreezeContextType.Main) as? Member {
+                    if let member = Member.findFirst(attribute: "mid", value: memberInfo.memberId, contextType: BreezeContextType.Main) as? Member {
                         
                         BreezeStore.saveInMain({ (contextType) -> Void in
                             
-                            member.email = emailString
-                            member.phone = mobileString
-                            member.nickname = nicknameString
-                            member.iconURL = iconString
+                            member.email = memberInfo.email!
+                            member.phone = memberInfo.mobile!
+                            member.nickname = memberInfo.nickname!
+                            member.iconURL = memberInfo.icon!
                             member.lastLog = NSDate()
                             member.token = token
                             
@@ -1673,11 +1711,11 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                             
                             let member = Member.createInContextOfType(contextType) as! Member
                             
-                            member.mid = midString
-                            member.email = emailString
-                            member.phone = mobileString
-                            member.nickname = nicknameString
-                            member.iconURL = iconString
+                            member.mid = memberInfo.memberId
+                            member.email = memberInfo.email!
+                            member.phone = memberInfo.mobile!
+                            member.nickname = memberInfo.nickname!
+                            member.iconURL = memberInfo.icon!
                             member.lastLog = NSDate()
                             member.token = token
                             
@@ -1685,16 +1723,14 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                         
                     }
                     
-                    let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
-                    pushDeviceToken(deviceToken, VCheckGo.PushDeviceType.add)
+                    // Push user device token
+                    pushDeviceToken(VCheckGo.PushDeviceType.add)
                     
                     
                     // setup cache & user panel interface
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nicknameString, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: emailString, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobileString, namespace: "member")
-                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Icon, data: iconString, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberInfo, data: memberInfo, namespace: "member")
                     
+                    //self.updateFoodInfo()
                     
                 }
                 else {

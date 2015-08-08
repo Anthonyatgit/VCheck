@@ -53,7 +53,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="VYI-qp-m85"/>
                     <connections>
-                        <segue destination="e34-LJ-Ab8" kind="show" identifier="showtime" id="cDS-pC-M7c"/>
+                        <segue destination="e34-LJ-Ab8" kind="showDetail" identifier="showtime" id="cDS-pC-M7c"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oqz-Gb-13b" userLabel="First Responder" sceneMemberID="firstResponder"/>

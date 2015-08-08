@@ -24,6 +24,8 @@ class UserInfoHeaderView: UIView {
     let mailBoxButton: UserIconButton = UserIconButton()
     let inviteButton: UserIconButton = UserIconButton()
     
+    var memberInfo: MemberInfo?
+    
     var didSetupConstraints = false
     
     var userPanelViewController: UserPanelViewController?
@@ -69,61 +71,79 @@ class UserInfoHeaderView: UIView {
         if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optMemberIcon, namespace: "member") {
             
             self.panelIcon.image = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberIcon, namespace: "member")?.data as? UIImage
-            self.panelTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
+            self.panelTitle.text = self.memberInfo!.nickname!
         }
         else {
             if (token != "0"){
                 
-                if self.reachability.isReachable() {
+                
+                self.panelTitle.text = self.memberInfo!.nickname
+                
+                let midString = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+                
+                // Read avatar icon from local cache file
+                if var avatarDirectoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
                     
-                    self.panelTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
-                    let icon = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Icon, namespace: "member")?.data as! String
-                    Alamofire.request(.GET, icon).validate().responseImage() {
-                        (_, _, image, error) in
+                    var err: NSError?
+                    
+                    avatarDirectoryURL = avatarDirectoryURL.URLByAppendingPathComponent("/avatar/\(midString)")
+                    
+                    let avatarIconFile = NSFileManager.defaultManager().contentsAtPath(avatarDirectoryURL.path!)
+                    
+                    if avatarIconFile != nil {
                         
-                        if error == nil && image != nil {
-                            self.panelIcon.image = image
+                        let avatarIconImage = UIImage(data: avatarIconFile!)
+                        
+                        let avatarIcon = Toucan.Resize.resizeImage(avatarIconImage!, size: CGSizeMake(self.width/5.0, self.width/5.0), fitMode: Toucan.Resize.FitMode.Crop)
+                        
+                        self.panelIcon.image = avatarIcon
+                        
+                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberIcon, data: avatarIcon, namespace: "member")
+                    }
+                    else {
+                        
+                        let icon = self.memberInfo!.icon!
+                        Alamofire.request(.GET, icon).validate().responseImage() {
+                            (_, _, image, error) in
+                            
+                            if error == nil && image != nil {
+                                
+                                self.panelIcon.image = image
+                                
+                                CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberIcon, data: image, namespace: "member")
+                            }
                         }
                     }
-                }
-                else {
-                    
-                    self.panelTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
-                    
-                    let midString = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
-                    
-                    // Read avatar icon from local cache file
-                    if var avatarDirectoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
-                        
-                        var err: NSError?
-                        
-                        avatarDirectoryURL = avatarDirectoryURL.URLByAppendingPathComponent("/avatar/\(midString)")
-                        
-                        
-                        let avatarIconFile = NSFileManager.defaultManager().contentsAtPath(avatarDirectoryURL.path!)
-                        
-                        if avatarIconFile != nil {
-                            
-                            let avatarIconImage = UIImage(data: avatarIconFile!)
-                            
-                            let avatarIcon = Toucan.Resize.resizeImage(avatarIconImage!, size: CGSizeMake(self.width/5.0, self.width/5.0), fitMode: Toucan.Resize.FitMode.Crop)
-                            
-                            self.panelIcon.image = avatarIcon
-                        }
-                        else {
-                            self.panelIcon.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
-                            self.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-                        }
-                    }
-                    
                 }
                 
             }
             else {
                 
-                self.panelIcon.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
-                self.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-                self.panelTitle.text = VCAppLetor.StringLine.UserInfoWithoutSignin
+                if CTMemCache.sharedInstance.exists(VCAppLetor.LoginType.WeChat, namespace: "Sign") {
+                    
+                    let avatar = CTMemCache.sharedInstance.get(VCAppLetor.LoginStatus.WechatAvatar, namespace: "LoginStatus")?.data as! String
+                    let nickname = CTMemCache.sharedInstance.get(VCAppLetor.LoginStatus.WechatNickname, namespace: "LoginStatus")?.data as! String
+                    
+                    self.panelTitle.text = nickname
+                    // If local file do not exist, download and save in local directory
+                    Alamofire.request(.GET, avatar).validate().responseImage() {
+                        (_, _, image, error) in
+                        
+                        if error == nil && image != nil {
+                            
+                            self.panelIcon.image = image
+                            
+                        }
+                    }
+                }
+                else {
+                    
+                    self.panelIcon.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
+                    self.panelIcon.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+                    self.panelTitle.text = VCAppLetor.StringLine.UserInfoWithoutSignin
+                }
+                
+                
             }
         }
         
@@ -170,7 +190,8 @@ class UserInfoHeaderView: UIView {
             self.userPanelViewController?.parentNav?.showViewController(inviteVC, sender: self)
         }
         else {
-            self.userPanelViewController?.presentLoginPanel()
+            
+            self.userPanelViewController!.presentLoginPanel()
         }
         
     }

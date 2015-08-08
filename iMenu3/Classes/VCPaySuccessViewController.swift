@@ -244,6 +244,7 @@ class VCPaySuccessViewController: VCBaseViewController, UIScrollViewDelegate {
         
         let memberPanel: UserPanelViewController = UserPanelViewController()
         memberPanel.parentNav = self.parentNav
+        memberPanel.memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as? MemberInfo
         self.parentNav.showViewController(memberPanel, sender: nil)
         
         let orderDetailVC: OrderInfoViewController = OrderInfoViewController()

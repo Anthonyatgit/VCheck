@@ -21,9 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
     
     var _mapManager: BMKMapManager?
     
-    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        
+    
         
         // Override point for customization after application launch.
         UINavigationBar.appearance().barStyle = UIBarStyle.Black
@@ -52,14 +51,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         
         //======= ShareSDK ===========================
         // Register for ShareSDK
-        ShareSDK.registerApp(VCAppLetor.ShareSDK.appKey)
+        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+            
+            ShareSDK.registerApp(VCAppLetor.ShareSDK.appKey)
+            // Connect Sina Weibo
+            ShareSDK.connectSinaWeiboWithAppKey(VCAppLetor.ShareSDK.SinaAppKey, appSecret: VCAppLetor.ShareSDK.SinaAppSecret, redirectUri: VCAppLetor.ShareSDK.SinaRedirectURL, weiboSDKCls: WeiboSDK.classForCoder())
+            
+            // Connect WeChat
+            ShareSDK.connectWeChatWithAppId(VCAppLetor.ShareSDK.WeChatAppKey, appSecret: VCAppLetor.ShareSDK.WeChatAppSecret, wechatCls: WXApi.classForCoder())
+            ShareSDK.connectWeChatSessionWithAppId(VCAppLetor.ShareSDK.WeChatAppKey, appSecret: VCAppLetor.ShareSDK.WeChatAppSecret, wechatCls: WXApi.classForCoder())
+        })
         
-        // Connect Sina Weibo
-        ShareSDK.connectSinaWeiboWithAppKey(VCAppLetor.ShareSDK.SinaAppKey, appSecret: VCAppLetor.ShareSDK.SinaAppSecret, redirectUri: VCAppLetor.ShareSDK.SinaRedirectURL, weiboSDKCls: WeiboSDK.classForCoder())
         
-        // Connect WeChat
-        ShareSDK.connectWeChatWithAppId(VCAppLetor.ShareSDK.WeChatAppKey, appSecret: VCAppLetor.ShareSDK.WeChatAppSecret, wechatCls: WXApi.classForCoder())
-        ShareSDK.connectWeChatSessionWithAppId(VCAppLetor.ShareSDK.WeChatAppKey, appSecret: VCAppLetor.ShareSDK.WeChatAppSecret, wechatCls: WXApi.classForCoder())
+        
+        
         
         // Wechat Pay
         let we = WXApi.registerApp(VCAppLetor.ShareSDK.WeChatAppKey, withDescription: "VCheck beta")
@@ -100,7 +105,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         
         // Handle notification launching action callback
         XGPush.handleLaunching(launchOptions, successCallback: { () -> Void in
+            
+            
             println("[XGPush]HandleLaunching success")
+            
+            let opts = launchOptions![UIApplicationLaunchOptionsRemoteNotificationKey] as! NSDictionary
+            
+            //RKDropdownAlert.title("\(launchOptions)", backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: 6)
+            //let alert: UIAlertView = UIAlertView(title: "launchOptions", message: "\(opts)", delegate: nil, cancelButtonTitle: "ok")
+            //alert.show()
+            
+            let route = opts.objectForKey("route") as! String
+            CTMemCache.sharedInstance.set(VCAppLetor.PN.route, data: route, namespace: "push")
+            //RKDropdownAlert.title("\(route)", backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: 6)
+            
+            
+            var param: String = ""
+            
+            if route == "web" {
+                param = opts.valueForKey("url") as! String
+            }
+            if route == "article" {
+                param = opts.valueForKey("article_id") as! String
+            }
+            if route == "order_detail" {
+                param = opts.valueForKey("order_id") as! String
+            }
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.PN.param, data: param, namespace: "push")
+            
+            
+            
         }) { () -> Void in
             println("[XGPush]HandleLaunching failed")
         }
@@ -133,10 +168,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
     
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        
+        //println("Will Enter Foreground")
+        
+        
     }
     
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        
+        //println("Become Active")
+        
+        // Prepare for the push notification call
+        
     }
     
     func applicationWillTerminate(application: UIApplication) {
@@ -174,6 +218,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         }
     }
     
+    
+    
     func application(application: UIApplication, handleActionWithIdentifier identifier: String?, forLocalNotification notification: UILocalNotification, completionHandler: () -> Void) {
         
         if identifier == "ACCEPT_IDENTIFIER" {
@@ -183,37 +229,66 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
     
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         
-        // Register for Channel OR Server
-//        XGSetting.getInstance().Channel = "VCheck"
-//        XGSetting.getInstance().GameServer = "VCheck"
-        
-//        let deviceTokenString: String = NSString(data: deviceToken, encoding: NSUTF8StringEncoding) as! String
-        let deviceTokenString: String = deviceToken.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.allZeros)
-        println("device token: \(deviceTokenString)")
-        
-        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optDeviceToken, data: deviceTokenString, namespace: "DeviceToken")
+        //let deviceTokenString: String = deviceToken.base64EncodedStringWithOptions(NSDataBase64EncodingOptions.allZeros)
         
         let deviceTokenStr: String = XGPush.registerDevice(deviceToken, successCallback: { () -> Void in
-            println("[XGPush]Register success for deviceToken")
             
+            println("[XGPush]Register success for device")
+            
+            XGPush.setTag(VCAppLetor.XGPush.pushOpen, successCallback: { () -> Void in
+                
+                println("[XGPush]SetTag - push_open")
+                
+            }, errorCallback: { () -> Void in
+                
+            })
             
         }) { () -> Void in
             println("[XGPush]Register failed for deviceToken")
         }
         
         
-        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optDeviceToken, data: deviceTokenStr, namespace: "token")
+        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optDeviceToken, data: deviceTokenStr, namespace: "DeviceToken")
+        println("[XGPush]DeviceToken: \(deviceTokenStr)")
     }
     
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
         
-        println("ERROR @ DeviceToken Error : \(error.localizedDescription)")
+        println("[XGPush]Register fail for device : \(error.localizedDescription)")
     }
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         
+        
         XGPush.handleReceiveNotification(userInfo, completion: { () -> Void in
-            println("[XGPush]HandleReceivedNotification: \(userInfo)")
+            
+            let route = (userInfo as NSDictionary).valueForKey("link_route") as! String
+            CTMemCache.sharedInstance.set(VCAppLetor.PN.route, data: route, namespace: "push")
+            
+            var param: String = ""
+            
+            if route == "web" {
+                param = (userInfo as NSDictionary).valueForKey("link_value") as! String
+            }
+            if route == "article" {
+                param = (userInfo as NSDictionary).valueForKey("link_value") as! String
+            }
+            if route == "order_detail" {
+                param = (userInfo as NSDictionary).valueForKey("link_value") as! String
+            }
+            
+            CTMemCache.sharedInstance.set(VCAppLetor.PN.param, data: param, namespace: "push")
+            
+            println("route: \(route) | param: \(param)")
+            
+            
+            if CTMemCache.sharedInstance.exists(VCAppLetor.ObjectIns.objHome, namespace: "object") {
+                
+                let foodListVC = CTMemCache.sharedInstance.get(VCAppLetor.ObjectIns.objHome, namespace: "object")?.data as! FoodListController
+                foodListVC.pushHandler()
+                
+            }
+            
         })
     }
     
@@ -345,7 +420,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
     func application(application: UIApplication, handleOpenURL url: NSURL) -> Bool {
         
         println("url[handle]: \(url)")
-        return ShareSDK.handleOpenURL(url, wxDelegate: self)
+        return ShareSDK.handleOpenURL(url, wxDelegate: nil)
         
     }
     
@@ -355,110 +430,40 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         
         println("URL: Scheme:\(url))")
         
-        if sourceApplication == "com.apple.mobilesafari" {
+        if sourceApplication! == "com.apple.mobilesafari" {
             
             if ((url.query!.componentsSeparatedByString("&").count > 1)) {
                 
-                let queryStringArr = url.query!.componentsSeparatedByString("&")
+                let queryArr: NSArray = url.query!.componentsSeparatedByString("&")
+                let route: String = (queryArr[0].componentsSeparatedByString("="))[1] as! String
+                CTMemCache.sharedInstance.set(VCAppLetor.LINKS.route, data: route, namespace: "Links")
                 
-                let contentStringArr = queryStringArr[1].componentsSeparatedByString("=")
+                let param: String = (queryArr[1].componentsSeparatedByString("="))[1] as! String
+                CTMemCache.sharedInstance.set(VCAppLetor.LINKS.param, data: param, namespace: "Links")
                 
-                let productId = (contentStringArr[1] as NSString).integerValue
+            }
+            else if ((url.query!.componentsSeparatedByString("&").count == 1)) {
                 
-                Alamofire.request(VCheckGo.Router.GetProductDetail(productId)).validate().responseSwiftyJSON({
-                    (_, _, JSON, error) -> Void in
-                    
-                    if error == nil {
-                        
-                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                            
-                            let json = JSON
-                            
-                            if json["status"]["succeed"].string! == "1" {
-                                
-                                let product: FoodInfo = FoodInfo(id: (json["data"]["article_info"]["article_id"].string! as NSString).integerValue)
-                                
-                                product.title = json["data"]["article_info"]["title"].string!
-                                
-                                var dateFormatter = NSDateFormatter()
-                                dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
-                                product.addDate = dateFormatter.dateFromString(json["data"]["article_info"]["article_date"].string!)!
-                                
-                                product.desc = json["data"]["article_info"]["summary"].string!
-                                product.subTitle = json["data"]["article_info"]["sub_title"].string!
-                                product.status = json["data"]["article_info"]["menu_info"]["menu_status"]["menu_status_id"].string!
-                                product.originalPrice = json["data"]["article_info"]["menu_info"]["price"]["original_price"].string!
-                                product.price = json["data"]["article_info"]["menu_info"]["price"]["special_price"].string!
-                                product.priceUnit = json["data"]["article_info"]["menu_info"]["price"]["price_unit"].string!
-                                product.unit = json["data"]["article_info"]["menu_info"]["menu_unit"]["menu_unit"].string!
-                                product.remainingCount = json["data"]["article_info"]["menu_info"]["stock"]["menu_count"].string!
-                                product.remainingCountUnit = json["data"]["article_info"]["menu_info"]["stock"]["menu_unit"].string!
-                                product.remainder = json["data"]["article_info"]["menu_info"]["remainder_time"].string!
-                                product.outOfStock = json["data"]["article_info"]["menu_info"]["stock"]["out_of_stock_info"].string!
-                                product.endDate = json["data"]["article_info"]["menu_info"]["end_date"].string!
-                                product.returnable = "1"
-                                
-                                product.memberIcon = json["data"]["article_info"]["member_info"]["icon_image"]["thumb"].string!
-                                
-                                product.menuId = json["data"]["article_info"]["menu_info"]["menu_id"].string!
-                                product.menuName = json["data"]["article_info"]["menu_info"]["menu_name"].string!
-                                
-                                product.storeId = json["data"]["article_info"]["store_info"]["store_id"].string!
-                                product.storeName = json["data"]["article_info"]["store_info"]["store_name"].string!
-                                product.address = json["data"]["article_info"]["store_info"]["address"].string!
-                                product.longitude = (json["data"]["article_info"]["store_info"]["longitude_num"].string! as NSString).doubleValue
-                                product.latitude = (json["data"]["article_info"]["store_info"]["latitude_num"].string! as NSString).doubleValue
-                                product.tel1 = json["data"]["article_info"]["store_info"]["tel_1"].string!
-                                product.tel2 = json["data"]["article_info"]["store_info"]["tel_2"].string!
-                                product.acp = json["data"]["article_info"]["store_info"]["per"].string!
-                                product.icon_thumb = json["data"]["article_info"]["store_info"]["icon_image"]["thumb"].string!
-                                product.icon_source = json["data"]["article_info"]["store_info"]["icon_image"]["source"].string!
-                                
-                                
-                                //====== Show Product VC
-                                
-                                if CTMemCache.sharedInstance.exists(VCAppLetor.ObjectIns.objNavigation, namespace: "object") {
-                                    
-                                    let parentNav = CTMemCache.sharedInstance.get(VCAppLetor.ObjectIns.objNavigation, namespace: "object")?.data as! UINavigationController
-                                    
-                                    
-                                    let foodViewerViewController: FoodViewerViewController = FoodViewerViewController()
-                                    foodViewerViewController.foodInfo = product
-                                    foodViewerViewController.parentNav = parentNav
-                                    
-                                    parentNav.showViewController(foodViewerViewController, sender: self)
-                                    
-                                }
-                                else {
-                                    
-                                    CTMemCache.sharedInstance.set("Product", data: url.query!, namespace: "outcall")
-                                }
-                            }
-                            else {
-                                RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
-                            }
-                        })
-                    }
-                    else {
-                        
-                        println("ERROR @ Request for Product Info with outcall : \(error?.localizedDescription)")
-                        RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
-                    }
-                })
+                let queryArr: NSArray = url.query!.componentsSeparatedByString("&")
+                let route: String = (queryArr[0].componentsSeparatedByString("="))[1] as! String
+                CTMemCache.sharedInstance.set(VCAppLetor.LINKS.route, data: route, namespace: "Links")
                 
             }
             else {
                 
-                // route=home
+                // CAN NOT FIND INFORMATION
+            }
+            
+            if CTMemCache.sharedInstance.exists(VCAppLetor.ObjectIns.objHome, namespace: "object") {
                 
-                
-                
+                let foodListVC = CTMemCache.sharedInstance.get(VCAppLetor.ObjectIns.objHome, namespace: "object")?.data as! FoodListController
+                foodListVC.showOutCall()
             }
             
             return true
             
         }
-        else if sourceApplication == "com.alipay.iphoneclient" {
+        else if sourceApplication! == "com.alipay.iphoneclient" {
             
             
             AlipaySDK.defaultService().processOrderWithPaymentResult(url, standbyCallback: {
@@ -498,11 +503,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
             
             return true
         }
-        else if sourceApplication == "com.tencent.xin" {
+        else if sourceApplication! == "com.tencent.xin" {
             
             if CTMemCache.sharedInstance.exists(VCAppLetor.ShareTag.shareWechat, namespace: "share") {
                 
                 CTMemCache.sharedInstance.cleanNamespace("share")
+                return ShareSDK.handleOpenURL(url, sourceApplication: sourceApplication, annotation: annotation, wxDelegate: self)
+                
+            }
+            else if CTMemCache.sharedInstance.exists(VCAppLetor.LoginType.WeChat, namespace: "Sign") {
+                
+                CTMemCache.sharedInstance.cleanNamespace("Sign")
                 return ShareSDK.handleOpenURL(url, sourceApplication: sourceApplication, annotation: annotation, wxDelegate: self)
                 
             }

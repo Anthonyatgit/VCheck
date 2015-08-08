@@ -17,11 +17,19 @@ protocol EditUserInfoDelegate {
     func didFinishEditingMemberInfo(email: String, nickname: String)
 }
 
+protocol MemberAuthDelegate {
+    func didMemberFinishAuthMobile(mid: String, token: String)
+}
+
 class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
     
     var delegate: EditUserInfoDelegate?
     
+    var mobileDelegate: MemberAuthDelegate?
+    
     var parentNav: UINavigationController?
+    
+    var memberInfo: MemberInfo?
     
     let scrollView: UIScrollView = UIScrollView()
     
@@ -44,7 +52,36 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
     let newPassUnderline: CustomDrawView = CustomDrawView.newAutoLayoutView()
     let againPassUnderline: CustomDrawView = CustomDrawView.newAutoLayoutView()
     
-    // MARK : - LifeCycle
+    let requireMobile: UILabel = UILabel.newAutoLayoutView()
+    let mobile: UITextField = UITextField.newAutoLayoutView()
+    let mobileUnderline: CustomDrawView = CustomDrawView.newAutoLayoutView()
+    let sendVerifyBtn: UIButton = UIButton.newAutoLayoutView()
+    let verifyCode: UITextField = UITextField.newAutoLayoutView()
+    let verifyCodeUnderline: CustomDrawView = CustomDrawView.newAutoLayoutView()
+    
+    var mobileShaker: AFViewShaker?
+    var verifyCodeShaker: AFViewShaker?
+    
+    var remainingSecond: Int = VCAppLetor.ConstValue.SMSRemainingSeconds {
+        willSet(newSecond) {
+            self.sendVerifyBtn.titleLabel?.text = "\(newSecond)"
+        }
+    }
+    
+    var timer: NSTimer?
+    var isCounting: Bool = false {
+        willSet(newValue) {
+            if newValue {
+                self.timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "updateTimer:", userInfo: nil, repeats: true)
+            }
+            else {
+                self.timer?.invalidate()
+                self.timer = nil
+            }
+        }
+    }
+    
+    // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -66,7 +103,37 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
     override func updateViewConstraints() {
         super.updateViewConstraints()
         
-        if self.editType == VCAppLetor.EditType.Email {
+        if self.editType == VCAppLetor.EditType.Mobile {
+            
+            self.requireMobile.autoPinEdgeToSuperviewEdge(.Top, withInset: 30.0)
+            self.requireMobile.autoAlignAxisToSuperviewAxis(.Vertical)
+            
+            self.mobile.autoPinEdgeToSuperviewEdge(.Leading, withInset: 30.0)
+            self.mobile.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.requireMobile, withOffset: 24.0)
+            self.mobile.autoSetDimension(.Width, toSize: self.view.width - 60 - 80 - 10)
+            self.mobile.autoSetDimension(.Height, toSize: 30.0)
+            
+            self.sendVerifyBtn.autoSetDimensionsToSize(CGSizeMake(80.0, 32.0))
+            self.sendVerifyBtn.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.mobile, withOffset: 10.0)
+            self.sendVerifyBtn.autoPinEdge(.Top, toEdge: .Top, ofView: self.mobile, withOffset: 0.0)
+            
+            self.mobileUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.mobile, withOffset: -10.0)
+            self.mobileUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.mobile, withOffset: 5.0)
+            self.mobileUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.mobile)
+            self.mobileUnderline.autoSetDimension(.Height, toSize: 3.0)
+            
+            self.verifyCode.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.mobile)
+            self.verifyCode.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.mobileUnderline, withOffset: 10.0)
+            self.verifyCode.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.sendVerifyBtn)
+            self.verifyCode.autoSetDimension(.Height, toSize: 30.0)
+            
+            self.verifyCodeUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.verifyCode, withOffset: -10.0)
+            self.verifyCodeUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.sendVerifyBtn, withOffset: 10.0)
+            self.verifyCodeUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.verifyCode, withOffset: 5.0)
+            self.verifyCodeUnderline.autoSetDimension(.Height, toSize: 3.0)
+            
+        }
+        else if self.editType == VCAppLetor.EditType.Email {
             
             self.email.autoPinEdgeToSuperviewEdge(.Top, withInset: 30.0)
             self.email.autoMatchDimension(.Width, toDimension: .Width, ofView: self.scrollView, withMultiplier: 0.7)
@@ -131,15 +198,66 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
         
     }
     
-    // MARK : - Functions
+    // MARK: - Functions
     
     func setupView() {
         
-        if self.editType == VCAppLetor.EditType.Email {
+        if self.editType == VCAppLetor.EditType.Mobile {
+            
+            self.title = VCAppLetor.StringLine.BindMobile
+            
+            self.requireMobile.text = VCAppLetor.StringLine.RequireMobileString
+            self.requireMobile.textAlignment = .Center
+            self.requireMobile.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+            self.requireMobile.font = VCAppLetor.Font.NormalFont
+            self.requireMobile.sizeToFit()
+            self.scrollView.addSubview(self.requireMobile)
+            
+            self.mobile.placeholder = VCAppLetor.StringLine.MobilePlease
+            self.mobile.clearButtonMode = .WhileEditing
+            self.mobile.keyboardType = UIKeyboardType.DecimalPad
+            self.mobile.textAlignment = .Left
+            self.mobile.font = VCAppLetor.Font.BigFont
+            self.mobile.delegate = self
+            self.scrollView.addSubview(self.mobile)
+            
+            self.mobileShaker = AFViewShaker(view: self.mobile)
+            
+            self.sendVerifyBtn.setTitle(VCAppLetor.StringLine.SendAutoCode, forState: .Normal)
+            self.sendVerifyBtn.setTitleColor(UIColor.blackColor().colorWithAlphaComponent(0.8), forState: .Normal)
+            self.sendVerifyBtn.titleLabel?.font = VCAppLetor.Font.SmallFont
+            self.sendVerifyBtn.titleLabel?.textAlignment = .Center
+            self.sendVerifyBtn.layer.borderColor = UIColor.lightGrayColor().CGColor
+            self.sendVerifyBtn.layer.borderWidth = VCAppLetor.ConstValue.GrayLineWidth
+            self.sendVerifyBtn.addTarget(self, action: "checkMobile", forControlEvents: .TouchUpInside)
+            self.scrollView.addSubview(self.sendVerifyBtn)
+            
+            self.mobileUnderline.drawType = "GrayLine"
+            self.mobileUnderline.lineWidth = VCAppLetor.ConstValue.GrayLineWidth
+            self.scrollView.addSubview(self.mobileUnderline)
+            
+            self.verifyCode.placeholder = VCAppLetor.StringLine.InputVerifyCode
+            self.verifyCode.clearButtonMode = .WhileEditing
+            self.verifyCode.keyboardType = UIKeyboardType.DecimalPad
+            self.verifyCode.textAlignment = .Left
+            self.verifyCode.font = VCAppLetor.Font.BigFont
+            self.verifyCode.delegate = self
+            self.scrollView.addSubview(self.verifyCode)
+            
+            self.verifyCodeUnderline.drawType = "GrayLine"
+            self.verifyCodeUnderline.lineWidth = VCAppLetor.ConstValue.GrayLineWidth
+            self.scrollView.addSubview(self.verifyCodeUnderline)
+            
+            self.verifyCodeShaker = AFViewShaker(view: self.verifyCode)
+            
+            self.mobile.becomeFirstResponder()
+            
+        }
+        else if self.editType == VCAppLetor.EditType.Email {
             
             self.title = VCAppLetor.StringLine.EditMemberEmail
             
-            self.email.placeholder = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Email, namespace: "member")?.data as? String
+            self.email.placeholder = self.memberInfo?.email
             self.email.clearButtonMode = .WhileEditing
             self.email.keyboardType = UIKeyboardType.EmailAddress
             self.email.returnKeyType = UIReturnKeyType.Done
@@ -161,7 +279,7 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
             
             self.title = VCAppLetor.StringLine.EditMemberNickname
             
-            self.nickname.placeholder = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String
+            self.nickname.placeholder = self.memberInfo?.nickname
             self.nickname.clearButtonMode = .WhileEditing
             self.nickname.keyboardType = UIKeyboardType.EmailAddress
             self.nickname.returnKeyType = UIReturnKeyType.Done
@@ -232,9 +350,200 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
         }
     }
     
+    func checkMobile() {
+        // Check mobile phone number
+        let mobile: String = self.mobile.text as String
+        self.disableSending()
+        
+        if (mobile == "") {
+            
+            self.enableSending()
+            self.mobileShaker?.shakeWithDuration(VCAppLetor.ConstValue.TextFieldShakeTime, completion: { () -> Void in
+                RKDropdownAlert.title(VCAppLetor.StringLine.MobileCannotEmpty, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            })
+        }
+        else if (!self.isMobile(mobile)) {
+            self.enableSending()
+            self.mobileShaker?.shakeWithDuration(VCAppLetor.ConstValue.TextFieldShakeTime, completion: { () -> Void in
+                RKDropdownAlert.title(VCAppLetor.StringLine.MobileIllegal, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            })
+        }
+        else {
+            
+            self.mobile.resignFirstResponder()
+            
+            self.sendOrderingAuthCode(mobile)
+            
+        }
+        
+    }
+    
+    func isMobile(mobile: String) -> Bool {
+        
+        let mobileRegex: String = "^((13[0-9])|(15[^4,\\D])|(18[0,0-9]))\\d{8}$"
+        let mobileTest: NSPredicate = NSPredicate(format: "SELF MATCHES %@", mobileRegex)
+        return mobileTest.evaluateWithObject(mobile)
+    }
+    
+    func enableSending() {
+        
+        self.sendVerifyBtn.enabled = true
+        self.sendVerifyBtn.backgroundColor = UIColor.whiteColor()
+        self.sendVerifyBtn.setTitleColor(UIColor.blackColor().colorWithAlphaComponent(0.8), forState: .Normal)
+    }
+    
+    func disableSending() {
+        
+        // disable sending button while processing
+        self.sendVerifyBtn.enabled = false
+        self.sendVerifyBtn.backgroundColor = UIColor.grayColor().colorWithAlphaComponent(0.1)
+        self.sendVerifyBtn.setTitleColor(UIColor.grayColor(), forState: UIControlState.Disabled)
+    }
+    
+    func sendOrderingAuthCode(mobile: String) {
+        
+        let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        hud.mode = MBProgressHUDMode.Indeterminate
+        hud.labelText = VCAppLetor.StringLine.VerifyCodeInProgress
+        
+        let validateCode: String = (mobile + VCAppLetor.StringLine.SaltKey).md5
+        println("code: \(validateCode)")
+        
+        Alamofire.request(VCheckGo.Router.GetVerifyCode(mobile, validateCode)).validate().responseSwiftyJSON({
+            (_, _, JSON, error) -> Void in
+            
+            if error == nil {
+                
+                let json = JSON
+                
+                if json["status"]["succeed"].string == "1" {
+                    
+                    self.startCounting()
+                    
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Mobile, data: mobile, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.VerifyCode, data: json["data"]["verify_code"].string, namespace: "member")
+                    CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.SaltCode, data: json["data"]["code"].string, namespace: "member")
+                    
+                    RKDropdownAlert.title(VCAppLetor.StringLine.VerifyCodeSendDone, backgroundColor: UIColor.nephritisColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    
+                }
+                else {
+                    RKDropdownAlert.title(json["status"]["error_desc"].string, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                }
+                
+                hud.hide(true)
+            }
+            else {
+                println("ERROR @ Request for sending varify code : \(error?.localizedDescription)")
+                RKDropdownAlert.title(VCAppLetor.StringLine.VerifyCodeSendFail, backgroundColor: UIColor.nephritisColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            }
+        })
+        
+    }
+    
+    func startCounting() {
+        self.remainingSecond = VCAppLetor.ConstValue.SMSRemainingSeconds
+        self.isCounting = !self.isCounting
+    }
+    
+    func updateTimer(timer: NSTimer) {
+        
+        self.remainingSecond -= 1
+        
+        if self.remainingSecond <= 0 {
+            self.isCounting = !self.isCounting
+            
+            self.sendVerifyBtn.enabled = true
+            self.sendVerifyBtn.setTitle(VCAppLetor.StringLine.SendAutoCode, forState: .Normal)
+            self.sendVerifyBtn.setTitleColor(UIColor.blackColor().colorWithAlphaComponent(0.8), forState: .Normal)
+            self.sendVerifyBtn.backgroundColor = UIColor.whiteColor()
+        }
+    }
+    
     func editDone() {
         
-        if self.editType == VCAppLetor.EditType.Email {
+        if self.editType == VCAppLetor.EditType.Mobile {
+            
+            if self.mobile.text == "" {
+                RKDropdownAlert.title(VCAppLetor.StringLine.MobilePlease, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            }
+            else if self.verifyCode.text == "" {
+                RKDropdownAlert.title(VCAppLetor.StringLine.VerifyCodePlease, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            }
+            else if CTMemCache.sharedInstance.exists(VCAppLetor.UserInfo.VerifyCode, namespace: "member") {
+                
+                let verifyCodeStr = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.VerifyCode, namespace: "member")?.data as! String
+                
+                if self.verifyCode.text != verifyCodeStr {
+                    
+                    RKDropdownAlert.title(VCAppLetor.StringLine.VerifyCodeWrong, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                }
+                else {
+                    
+                    let mobileStr = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Mobile, namespace: "member")?.data as! String
+                    
+                    if self.mobile.text != mobileStr {
+                        
+                        RKDropdownAlert.title(VCAppLetor.StringLine.MobilePlease, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    }
+                    else {
+                        
+                        let mobileStr = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Mobile, namespace: "member")?.data as! String
+                        //let verifyCodeStr = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.VerifyCode, namespace: "member")?.data as! String
+                        let code = ((CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.SaltCode, namespace: "member")?.data as! String) + VCAppLetor.StringLine.SaltKey).md5
+                        
+                        let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        hud.mode = MBProgressHUDMode.Indeterminate
+                        
+                        let wxUserInfo = CTMemCache.sharedInstance.get(VCAppLetor.LoginStatus.WechatLogInfo, namespace: "LoginStatus")?.data as! NSDictionary
+                        
+                        println("mobile: \(mobileStr)")
+                        println("code: \(code)")
+                        println("user: \(wxUserInfo)")
+                        
+                        Alamofire.request(VCheckGo.Router.RegWithWechat(wxUserInfo, mobileStr, code)).validate().responseSwiftyJSON({
+                            (_, _, JSON, error) -> Void in
+                            
+                            if error == nil {
+                                
+                                let json = JSON
+                                
+                                if json["status"]["succeed"].string! == "1" {
+                                    
+                                    let memberId = json["data"]["member_id"].string!
+                                    let token = json["data"]["token"].string!
+                                    
+                                    CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatLog, data: true, namespace: "LoginStatus")
+                                    
+                                    CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatAvatar, data: wxUserInfo.valueForKey("headimgurl"), namespace: "LoginStatus")
+                                    CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatNickname, data: wxUserInfo.valueForKey("nickname"), namespace: "LoginStatus")
+                                    
+                                    hud.hide(true)
+                                    self.mobileDelegate?.didMemberFinishAuthMobile(memberId, token: token)
+                                    self.parentNav?.popViewControllerAnimated(true)
+                                    
+                                }
+                                else {
+                                    hud.hide(true)
+                                    RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                                }
+                                
+                            }
+                            else {
+                                hud.hide(true)
+                                println("ERROR @ Reg with wechat : \(error?.localizedDescription)")
+                            }
+                        })
+                    }
+                }
+            }
+            else {
+                
+                RKDropdownAlert.title(VCAppLetor.StringLine.ResendVerifyCodePlease, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            }
+            
+        }
+        else if self.editType == VCAppLetor.EditType.Email {
             
             let email = self.email.text
             self.email.resignFirstResponder()

@@ -13,6 +13,20 @@
 		9203E68D1B0063FD00407F66 /* ShareSDKContentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */; };
 		920940A81B37036C006686C7 /* OrderListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920940A71B37036C006686C7 /* OrderListViewController.swift */; };
 		920940AA1B370390006686C7 /* OrderListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 920940A91B370390006686C7 /* OrderListViewCell.swift */; };
+		920FA4AA1B60953B00C0D78B /* SinaWeiboConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 920FA4921B60953A00C0D78B /* SinaWeiboConnection.framework */; };
+		920FA4AB1B60953B00C0D78B /* SMSConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 920FA4931B60953A00C0D78B /* SMSConnection.framework */; };
+		920FA4AC1B60953B00C0D78B /* WeChatConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 920FA4941B60953A00C0D78B /* WeChatConnection.framework */; };
+		920FA4AD1B60953B00C0D78B /* AGCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 920FA4961B60953A00C0D78B /* AGCommon.framework */; };
+		920FA4AE1B60953B00C0D78B /* ShareSDKLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 920FA4971B60953A00C0D78B /* ShareSDKLocalizable.strings */; };
+		920FA4AF1B60953B00C0D78B /* Resource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 920FA4991B60953B00C0D78B /* Resource.bundle */; };
+		920FA4B01B60953B00C0D78B /* ShareSDKCoreService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 920FA49A1B60953B00C0D78B /* ShareSDKCoreService.framework */; };
+		920FA4B11B60953B00C0D78B /* libWeiboSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 920FA49E1B60953B00C0D78B /* libWeiboSDK.a */; };
+		920FA4B21B60953B00C0D78B /* WeiboSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 920FA49F1B60953B00C0D78B /* WeiboSDK.bundle */; };
+		920FA4B31B60953B00C0D78B /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 920FA4A21B60953B00C0D78B /* libWeChatSDK.a */; };
+		920FA4B41B60953B00C0D78B /* ShareSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 920FA4A51B60953B00C0D78B /* ShareSDK.framework */; };
+		920FA4B51B60953B00C0D78B /* ShareSDKFlatShareViewUI.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 920FA4A71B60953B00C0D78B /* ShareSDKFlatShareViewUI.bundle */; };
+		920FA4B61B60953B00C0D78B /* ShareSDKFlatShareViewUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 920FA4A81B60953B00C0D78B /* ShareSDKFlatShareViewUI.framework */; };
+		920FA4B71B60953B00C0D78B /* ShareSDKShareActionSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 920FA4A91B60953B00C0D78B /* ShareSDKShareActionSheet.framework */; };
 		9214D7981B32B1B3007AC818 /* VCShareActionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9214D7971B32B1B2007AC818 /* VCShareActionView.swift */; };
 		9214D79C1B32CE78007AC818 /* friends_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D7991B32CE78007AC818 /* friends_color.png */; };
 		9214D79D1B32CE78007AC818 /* wechat_color.png in Resources */ = {isa = PBXBuildFile; fileRef = 9214D79A1B32CE78007AC818 /* wechat_color.png */; };
@@ -33,8 +47,9 @@
 		9227E2DE1AE8DCCC008C6381 /* iMenu3Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2DD1AE8DCCC008C6381 /* iMenu3Tests.swift */; };
 		9227E2E81AE8DDD9008C6381 /* FoodListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2E71AE8DDD9008C6381 /* FoodListController.swift */; };
 		9227E2EE1AE8E4AE008C6381 /* FoodListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */; };
-		92347F7E1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92347F7D1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift */; };
 		92347F801B306AB100DF0A47 /* FoodDetailScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92347F7F1B306AB100DF0A47 /* FoodDetailScrollView.swift */; };
+		923B6B231B6A286D00947E89 /* expired_tag.png in Resources */ = {isa = PBXBuildFile; fileRef = 923B6B211B6A286D00947E89 /* expired_tag.png */; };
+		923B6B241B6A286D00947E89 /* used_tag.png in Resources */ = {isa = PBXBuildFile; fileRef = 923B6B221B6A286D00947E89 /* used_tag.png */; };
 		923C253D1B3F9B630060DBFC /* NSMutableAttributedString+TY.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C252C1B3F9B630060DBFC /* NSMutableAttributedString+TY.m */; };
 		923C253E1B3F9B630060DBFC /* TYAttributedLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C252E1B3F9B630060DBFC /* TYAttributedLabel.m */; };
 		923C253F1B3F9B630060DBFC /* TYDrawStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C25301B3F9B630060DBFC /* TYDrawStorage.m */; };
@@ -44,19 +59,29 @@
 		923C25431B3F9B630060DBFC /* TYTextContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C25371B3F9B630060DBFC /* TYTextContainer.m */; };
 		923C25441B3F9B630060DBFC /* TYTextStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C25391B3F9B630060DBFC /* TYTextStorage.m */; };
 		923C25451B3F9B630060DBFC /* TYViewStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = 923C253C1B3F9B630060DBFC /* TYViewStorage.m */; };
-		924546DC1B4CADFA00790846 /* libWeChatSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0611B00362A003A6D76 /* libWeChatSDK.a */; };
 		924546DE1B4D7A6B00790846 /* VCAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 924546DD1B4D7A6B00790846 /* VCAppViewController.swift */; };
 		92457CD81B2FD2EC005B0E33 /* VCAboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92457CD71B2FD2EC005B0E33 /* VCAboutViewController.swift */; };
 		92457CDA1B300949005B0E33 /* VCMailBoxViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92457CD91B300949005B0E33 /* VCMailBoxViewController.swift */; };
 		9259050B1B098EEE00F343D4 /* UserInfoHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */; };
 		9264F8ED1B2597CD00AF8640 /* VCPayNowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9264F8EC1B2597CD00AF8640 /* VCPayNowViewController.swift */; };
 		9264F8F01B26765500AF8640 /* ali_68.png in Resources */ = {isa = PBXBuildFile; fileRef = 9264F8EF1B26765400AF8640 /* ali_68.png */; };
-		9267443F1B1855C60075EDB5 /* EditUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */; };
+		926AAFAF1B65FF300070D113 /* VoucherViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926AAFAD1B65FF2F0070D113 /* VoucherViewCell.swift */; };
+		926AAFB01B65FF300070D113 /* VoucherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926AAFAE1B65FF300070D113 /* VoucherViewController.swift */; };
+		926AAFB21B66185E0070D113 /* voucher_black.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 926AAFB11B66185E0070D113 /* voucher_black.jpg */; };
+		926AAFB41B6766F90070D113 /* UserPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926AAFB31B6766F90070D113 /* UserPanelViewController.swift */; };
+		926AAFB71B68FAB60070D113 /* VCSettingsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926AAFB51B68FAB60070D113 /* VCSettingsViewCell.swift */; };
+		926AAFB81B68FAB60070D113 /* VCSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926AAFB61B68FAB60070D113 /* VCSettingsViewController.swift */; };
+		926AAFBB1B69F45E0070D113 /* VCNotificationViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926AAFB91B69F45E0070D113 /* VCNotificationViewCell.swift */; };
+		926AAFBC1B69F45E0070D113 /* VCNotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926AAFBA1B69F45E0070D113 /* VCNotificationViewController.swift */; };
+		926AAFBE1B6A0DFC0070D113 /* switch_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 926AAFBD1B6A0DFC0070D113 /* switch_off.png */; };
 		9271B6E71B30396A00BC0F29 /* CustomDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9271B6E61B30396A00BC0F29 /* CustomDrawView.swift */; };
+		9275A68D1B608F9E00419141 /* ResetMyPasscodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9275A68C1B608F9E00419141 /* ResetMyPasscodeViewController.swift */; };
 		927779DC1B0B0304002A50EB /* CTMemCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779D91B0B0304002A50EB /* CTMemCache.swift */; };
 		927779DD1B0B0304002A50EB /* FlatUIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779DA1B0B0304002A50EB /* FlatUIColor.swift */; };
 		927779DE1B0B0304002A50EB /* JSSAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927779DB1B0B0304002A50EB /* JSSAlertView.swift */; };
 		92795DE51B4A469C00E9A83F /* OrderInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92795DE41B4A469C00E9A83F /* OrderInfoViewController.swift */; };
+		927B68DA1B6084AC00D4DA5A /* EditUserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927B68D91B6084AC00D4DA5A /* EditUserInfoViewController.swift */; };
+		927B68DC1B60850B00D4DA5A /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 927B68DB1B60850B00D4DA5A /* UserInfoCell.swift */; };
 		927B7C901B29607D00B55DB2 /* BaiduMapAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C8F1B29607D00B55DB2 /* BaiduMapAPI.framework */; };
 		927B7C921B29629100B55DB2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C911B29629100B55DB2 /* CoreLocation.framework */; };
 		927B7C941B2962A700B55DB2 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B7C931B2962A700B55DB2 /* OpenGLES.framework */; };
@@ -94,7 +119,6 @@
 		9284A1411AF0AF5400E662B2 /* FoodCollectionsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9284A1401AF0AF5400E662B2 /* FoodCollectionsViewCell.swift */; };
 		9284A1451AF0CFCF00E662B2 /* VCAppLetor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9284A1441AF0CFCF00E662B2 /* VCAppLetor.swift */; };
 		9284A14B1AF1B98100E662B2 /* VCheckGo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9284A14A1AF1B98100E662B2 /* VCheckGo.swift */; };
-		928633751B0AE43B0040CBA2 /* UserPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928633741B0AE43B0040CBA2 /* UserPanelViewController.swift */; };
 		928633801B0AE6070040CBA2 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9286337F1B0AE6070040CBA2 /* Settings.swift */; };
 		92868A241B395BD600DB9B91 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92868A231B395BD600DB9B91 /* Functions.swift */; };
 		928B2FBA1B2150AF001FA746 /* FoodViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */; };
@@ -111,7 +135,6 @@
 		92BD2E151B27BE810053408B /* UzysRadialProgressActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BD2E131B27BE810053408B /* UzysRadialProgressActivityIndicator.m */; };
 		92BD2E181B2827EF0053408B /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD2E171B2827EF0053408B /* FeedbackViewController.swift */; };
 		92BD603C1B05DE8900649DDF /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */; };
-		92BD603E1B05DEDF00649DDF /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */; };
 		92BDB6931B267D3F00D1EEEA /* wx_logo_64.png in Resources */ = {isa = PBXBuildFile; fileRef = 92BDB6921B267D3F00D1EEEA /* wx_logo_64.png */; };
 		92CBE1101B5F42ED00656E6C /* VCGalleryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CBE10F1B5F42ED00656E6C /* VCGalleryView.swift */; };
 		92CFFB251AF774F700C9AA7D /* UserPanelTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CFFB241AF774F700C9AA7D /* UserPanelTableViewCell.swift */; };
@@ -124,6 +147,7 @@
 		92CFFB351AF8663400C9AA7D /* ticket.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CFFB2D1AF8663300C9AA7D /* ticket.png */; };
 		92CFFB361AF8663400C9AA7D /* user.png in Resources */ = {isa = PBXBuildFile; fileRef = 92CFFB2E1AF8663400C9AA7D /* user.png */; };
 		92CFFB381AF8CCB600C9AA7D /* VCMemberLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92CFFB371AF8CCB600C9AA7D /* VCMemberLoginViewController.swift */; };
+		92D301F61B70C309006AECCE /* launchImage.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92D301F51B70C309006AECCE /* launchImage.jpg */; };
 		92D5C4241B30756C00DAFB36 /* libXG-SDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92457CDF1B302095005B0E33 /* libXG-SDK.a */; };
 		92D5C4261B3075FD00DAFB36 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92D5C4251B3075FD00DAFB36 /* CFNetwork.framework */; };
 		92D5C4281B30765B00DAFB36 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 92D5C4271B30765B00DAFB36 /* libz.dylib */; };
@@ -134,7 +158,6 @@
 		92D6EB2A1B413A69005DF3DB /* AlipaySDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 92D6EB281B413A69005DF3DB /* AlipaySDK.bundle */; };
 		92D6EB2D1B413A8F005DF3DB /* AlipaySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92D6EB2C1B413A8F005DF3DB /* AlipaySDK.framework */; };
 		92E3586D1B1D455700D61119 /* brand.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 92E3586C1B1D455700D61119 /* brand.jpg */; };
-		92E57FFE1B2A6C4E00E463A3 /* VCCityListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */; };
 		92E580001B2AD09200E463A3 /* BMKObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 92E57FFF1B2AD09200E463A3 /* BMKObject.mm */; };
 		92E962E21AF2017400030226 /* Toucan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E962E11AF2017400030226 /* Toucan.swift */; };
 		92EAF9371B218F8900B5EEA8 /* VCCheckNowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */; };
@@ -147,19 +170,6 @@
 		92F121AA1B5773410036A3A9 /* UzysGroupPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F1219F1B5773410036A3A9 /* UzysGroupPickerView.m */; };
 		92F121AB1B5773410036A3A9 /* UzysGroupViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F121A11B5773410036A3A9 /* UzysGroupViewCell.m */; };
 		92F121AC1B5773410036A3A9 /* UzysWrapperPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92F121A31B5773410036A3A9 /* UzysWrapperPickerController.m */; };
-		92F3B0691B00362A003A6D76 /* SinaWeiboConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0511B00362A003A6D76 /* SinaWeiboConnection.framework */; };
-		92F3B06A1B00362A003A6D76 /* SMSConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0521B00362A003A6D76 /* SMSConnection.framework */; };
-		92F3B06B1B00362A003A6D76 /* WeChatConnection.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0531B00362A003A6D76 /* WeChatConnection.framework */; };
-		92F3B06C1B00362A003A6D76 /* AGCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0551B00362A003A6D76 /* AGCommon.framework */; };
-		92F3B06D1B00362A003A6D76 /* ShareSDKLocalizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 92F3B0561B00362A003A6D76 /* ShareSDKLocalizable.strings */; };
-		92F3B06E1B00362A003A6D76 /* Resource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 92F3B0581B00362A003A6D76 /* Resource.bundle */; };
-		92F3B06F1B00362A003A6D76 /* ShareSDKCoreService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0591B00362A003A6D76 /* ShareSDKCoreService.framework */; };
-		92F3B0701B00362A003A6D76 /* libWeiboSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B05D1B00362A003A6D76 /* libWeiboSDK.a */; };
-		92F3B0711B00362A003A6D76 /* WeiboSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 92F3B05E1B00362A003A6D76 /* WeiboSDK.bundle */; };
-		92F3B0731B00362A003A6D76 /* ShareSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0641B00362A003A6D76 /* ShareSDK.framework */; };
-		92F3B0741B00362A003A6D76 /* ShareSDKFlatShareViewUI.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 92F3B0661B00362A003A6D76 /* ShareSDKFlatShareViewUI.bundle */; };
-		92F3B0751B00362A003A6D76 /* ShareSDKFlatShareViewUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0671B00362A003A6D76 /* ShareSDKFlatShareViewUI.framework */; };
-		92F3B0761B00362A003A6D76 /* ShareSDKShareActionSheet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0681B00362A003A6D76 /* ShareSDKShareActionSheet.framework */; };
 		92F3B0781B00367A003A6D76 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0771B00367A003A6D76 /* SystemConfiguration.framework */; };
 		92F3B07A1B00368C003A6D76 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B0791B00368C003A6D76 /* QuartzCore.framework */; };
 		92F3B07C1B003697003A6D76 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 92F3B07B1B003697003A6D76 /* CoreTelephony.framework */; };
@@ -208,6 +218,24 @@
 		9203E68C1B0063FD00407F66 /* ShareSDKContentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShareSDKContentController.m; sourceTree = "<group>"; };
 		920940A71B37036C006686C7 /* OrderListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrderListViewController.swift; path = Classes/OrderListViewController.swift; sourceTree = "<group>"; };
 		920940A91B370390006686C7 /* OrderListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrderListViewCell.swift; path = Classes/OrderListViewCell.swift; sourceTree = "<group>"; };
+		920FA4921B60953A00C0D78B /* SinaWeiboConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SinaWeiboConnection.framework; sourceTree = "<group>"; };
+		920FA4931B60953A00C0D78B /* SMSConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SMSConnection.framework; sourceTree = "<group>"; };
+		920FA4941B60953A00C0D78B /* WeChatConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WeChatConnection.framework; sourceTree = "<group>"; };
+		920FA4961B60953A00C0D78B /* AGCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AGCommon.framework; sourceTree = "<group>"; };
+		920FA4981B60953B00C0D78B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ShareSDKLocalizable.strings; sourceTree = "<group>"; };
+		920FA4991B60953B00C0D78B /* Resource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Resource.bundle; sourceTree = "<group>"; };
+		920FA49A1B60953B00C0D78B /* ShareSDKCoreService.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ShareSDKCoreService.framework; sourceTree = "<group>"; };
+		920FA49B1B60953B00C0D78B /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/ShareSDKLocalizable.strings"; sourceTree = "<group>"; };
+		920FA49E1B60953B00C0D78B /* libWeiboSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeiboSDK.a; sourceTree = "<group>"; };
+		920FA49F1B60953B00C0D78B /* WeiboSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = WeiboSDK.bundle; sourceTree = "<group>"; };
+		920FA4A01B60953B00C0D78B /* WeiboSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiboSDK.h; sourceTree = "<group>"; };
+		920FA4A21B60953B00C0D78B /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
+		920FA4A31B60953B00C0D78B /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
+		920FA4A41B60953B00C0D78B /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
+		920FA4A51B60953B00C0D78B /* ShareSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ShareSDK.framework; sourceTree = "<group>"; };
+		920FA4A71B60953B00C0D78B /* ShareSDKFlatShareViewUI.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ShareSDKFlatShareViewUI.bundle; sourceTree = "<group>"; };
+		920FA4A81B60953B00C0D78B /* ShareSDKFlatShareViewUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ShareSDKFlatShareViewUI.framework; sourceTree = "<group>"; };
+		920FA4A91B60953B00C0D78B /* ShareSDKShareActionSheet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ShareSDKShareActionSheet.framework; sourceTree = "<group>"; };
 		9214D7971B32B1B2007AC818 /* VCShareActionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCShareActionView.swift; path = Classes/VCShareActionView.swift; sourceTree = "<group>"; };
 		9214D7991B32CE78007AC818 /* friends_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friends_color.png; sourceTree = "<group>"; };
 		9214D79A1B32CE78007AC818 /* wechat_color.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wechat_color.png; sourceTree = "<group>"; };
@@ -237,8 +265,9 @@
 		9227E2DD1AE8DCCC008C6381 /* iMenu3Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iMenu3Tests.swift; sourceTree = "<group>"; };
 		9227E2E71AE8DDD9008C6381 /* FoodListController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodListController.swift; path = Classes/FoodListController.swift; sourceTree = "<group>"; };
 		9227E2ED1AE8E4AE008C6381 /* FoodListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodListTableViewCell.swift; path = Classes/FoodListTableViewCell.swift; sourceTree = "<group>"; };
-		92347F7D1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResetMyPasscodeViewController.swift; path = Classes/ResetMyPasscodeViewController.swift; sourceTree = "<group>"; };
 		92347F7F1B306AB100DF0A47 /* FoodDetailScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodDetailScrollView.swift; path = Classes/FoodDetailScrollView.swift; sourceTree = "<group>"; };
+		923B6B211B6A286D00947E89 /* expired_tag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = expired_tag.png; sourceTree = "<group>"; };
+		923B6B221B6A286D00947E89 /* used_tag.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = used_tag.png; sourceTree = "<group>"; };
 		923C252B1B3F9B630060DBFC /* NSMutableAttributedString+TY.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+TY.h"; sourceTree = "<group>"; };
 		923C252C1B3F9B630060DBFC /* NSMutableAttributedString+TY.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableAttributedString+TY.m"; sourceTree = "<group>"; };
 		923C252D1B3F9B630060DBFC /* TYAttributedLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TYAttributedLabel.h; sourceTree = "<group>"; };
@@ -267,12 +296,23 @@
 		9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoHeaderView.swift; path = Classes/UserInfoHeaderView.swift; sourceTree = "<group>"; };
 		9264F8EC1B2597CD00AF8640 /* VCPayNowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCPayNowViewController.swift; path = Classes/VCPayNowViewController.swift; sourceTree = "<group>"; };
 		9264F8EF1B26765400AF8640 /* ali_68.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ali_68.png; sourceTree = "<group>"; };
-		9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EditUserInfoViewController.swift; path = Classes/EditUserInfoViewController.swift; sourceTree = "<group>"; };
+		926AAFAD1B65FF2F0070D113 /* VoucherViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VoucherViewCell.swift; path = Classes/VoucherViewCell.swift; sourceTree = "<group>"; };
+		926AAFAE1B65FF300070D113 /* VoucherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VoucherViewController.swift; path = Classes/VoucherViewController.swift; sourceTree = "<group>"; };
+		926AAFB11B66185E0070D113 /* voucher_black.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = voucher_black.jpg; sourceTree = "<group>"; };
+		926AAFB31B6766F90070D113 /* UserPanelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserPanelViewController.swift; path = Classes/UserPanelViewController.swift; sourceTree = "<group>"; };
+		926AAFB51B68FAB60070D113 /* VCSettingsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCSettingsViewCell.swift; path = Classes/VCSettingsViewCell.swift; sourceTree = "<group>"; };
+		926AAFB61B68FAB60070D113 /* VCSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCSettingsViewController.swift; path = Classes/VCSettingsViewController.swift; sourceTree = "<group>"; };
+		926AAFB91B69F45E0070D113 /* VCNotificationViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCNotificationViewCell.swift; path = Classes/VCNotificationViewCell.swift; sourceTree = "<group>"; };
+		926AAFBA1B69F45E0070D113 /* VCNotificationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCNotificationViewController.swift; path = Classes/VCNotificationViewController.swift; sourceTree = "<group>"; };
+		926AAFBD1B6A0DFC0070D113 /* switch_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = switch_off.png; sourceTree = "<group>"; };
 		9271B6E61B30396A00BC0F29 /* CustomDrawView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomDrawView.swift; path = Classes/CustomDrawView.swift; sourceTree = "<group>"; };
+		9275A68C1B608F9E00419141 /* ResetMyPasscodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ResetMyPasscodeViewController.swift; path = Classes/ResetMyPasscodeViewController.swift; sourceTree = "<group>"; };
 		927779D91B0B0304002A50EB /* CTMemCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CTMemCache.swift; sourceTree = "<group>"; };
 		927779DA1B0B0304002A50EB /* FlatUIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlatUIColor.swift; sourceTree = "<group>"; };
 		927779DB1B0B0304002A50EB /* JSSAlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSSAlertView.swift; sourceTree = "<group>"; };
 		92795DE41B4A469C00E9A83F /* OrderInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OrderInfoViewController.swift; path = Classes/OrderInfoViewController.swift; sourceTree = "<group>"; };
+		927B68D91B6084AC00D4DA5A /* EditUserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EditUserInfoViewController.swift; path = Classes/EditUserInfoViewController.swift; sourceTree = "<group>"; };
+		927B68DB1B60850B00D4DA5A /* UserInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoCell.swift; path = Classes/UserInfoCell.swift; sourceTree = "<group>"; };
 		927B7C8F1B29607D00B55DB2 /* BaiduMapAPI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BaiduMapAPI.framework; path = iMenu3/BMK/BaiduMapAPI.framework; sourceTree = "<group>"; };
 		927B7C911B29629100B55DB2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		927B7C931B2962A700B55DB2 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
@@ -310,7 +350,6 @@
 		9284A1401AF0AF5400E662B2 /* FoodCollectionsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodCollectionsViewCell.swift; path = Classes/FoodCollectionsViewCell.swift; sourceTree = "<group>"; };
 		9284A1441AF0CFCF00E662B2 /* VCAppLetor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCAppLetor.swift; path = Classes/VCAppLetor.swift; sourceTree = "<group>"; };
 		9284A14A1AF1B98100E662B2 /* VCheckGo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCheckGo.swift; path = Classes/VCheckGo.swift; sourceTree = "<group>"; };
-		928633741B0AE43B0040CBA2 /* UserPanelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserPanelViewController.swift; path = Classes/UserPanelViewController.swift; sourceTree = "<group>"; };
 		9286337F1B0AE6070040CBA2 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		92868A231B395BD600DB9B91 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodViewerViewController.swift; path = Classes/FoodViewerViewController.swift; sourceTree = "<group>"; };
@@ -330,7 +369,6 @@
 		92BD2E131B27BE810053408B /* UzysRadialProgressActivityIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysRadialProgressActivityIndicator.m; sourceTree = "<group>"; };
 		92BD2E171B2827EF0053408B /* FeedbackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedbackViewController.swift; path = Classes/FeedbackViewController.swift; sourceTree = "<group>"; };
 		92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoViewController.swift; path = Classes/UserInfoViewController.swift; sourceTree = "<group>"; };
-		92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserInfoCell.swift; path = Classes/UserInfoCell.swift; sourceTree = "<group>"; };
 		92BDB6921B267D3F00D1EEEA /* wx_logo_64.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = wx_logo_64.png; sourceTree = "<group>"; };
 		92CBE10F1B5F42ED00656E6C /* VCGalleryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCGalleryView.swift; path = Classes/VCGalleryView.swift; sourceTree = "<group>"; };
 		92CFFB241AF774F700C9AA7D /* UserPanelTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserPanelTableViewCell.swift; path = Classes/UserPanelTableViewCell.swift; sourceTree = "<group>"; };
@@ -343,6 +381,7 @@
 		92CFFB2D1AF8663300C9AA7D /* ticket.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ticket.png; sourceTree = "<group>"; };
 		92CFFB2E1AF8663400C9AA7D /* user.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = user.png; sourceTree = "<group>"; };
 		92CFFB371AF8CCB600C9AA7D /* VCMemberLoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCMemberLoginViewController.swift; path = Classes/VCMemberLoginViewController.swift; sourceTree = "<group>"; };
+		92D301F51B70C309006AECCE /* launchImage.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = launchImage.jpg; sourceTree = "<group>"; };
 		92D5C4251B3075FD00DAFB36 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		92D5C4271B30765B00DAFB36 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		92D5C4291B3076E400DAFB36 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -352,7 +391,6 @@
 		92D6EB281B413A69005DF3DB /* AlipaySDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = AlipaySDK.bundle; sourceTree = "<group>"; };
 		92D6EB2C1B413A8F005DF3DB /* AlipaySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AlipaySDK.framework; path = iMenu3/AliSDK/AlipaySDK.framework; sourceTree = "<group>"; };
 		92E3586C1B1D455700D61119 /* brand.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = brand.jpg; sourceTree = "<group>"; };
-		92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCCityListViewController.swift; path = Classes/VCCityListViewController.swift; sourceTree = "<group>"; };
 		92E57FFF1B2AD09200E463A3 /* BMKObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BMKObject.mm; sourceTree = "<group>"; };
 		92E962E11AF2017400030226 /* Toucan.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Toucan.swift; path = Classes/Toucan.swift; sourceTree = "<group>"; };
 		92EAF9361B218F8900B5EEA8 /* VCCheckNowViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCCheckNowViewController.swift; path = Classes/VCCheckNowViewController.swift; sourceTree = "<group>"; };
@@ -373,24 +411,6 @@
 		92F121A11B5773410036A3A9 /* UzysGroupViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysGroupViewCell.m; sourceTree = "<group>"; };
 		92F121A21B5773410036A3A9 /* UzysWrapperPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UzysWrapperPickerController.h; sourceTree = "<group>"; };
 		92F121A31B5773410036A3A9 /* UzysWrapperPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UzysWrapperPickerController.m; sourceTree = "<group>"; };
-		92F3B0511B00362A003A6D76 /* SinaWeiboConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SinaWeiboConnection.framework; sourceTree = "<group>"; };
-		92F3B0521B00362A003A6D76 /* SMSConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SMSConnection.framework; sourceTree = "<group>"; };
-		92F3B0531B00362A003A6D76 /* WeChatConnection.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = WeChatConnection.framework; sourceTree = "<group>"; };
-		92F3B0551B00362A003A6D76 /* AGCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = AGCommon.framework; sourceTree = "<group>"; };
-		92F3B0571B00362A003A6D76 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/ShareSDKLocalizable.strings; sourceTree = "<group>"; };
-		92F3B0581B00362A003A6D76 /* Resource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Resource.bundle; sourceTree = "<group>"; };
-		92F3B0591B00362A003A6D76 /* ShareSDKCoreService.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ShareSDKCoreService.framework; sourceTree = "<group>"; };
-		92F3B05A1B00362A003A6D76 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/ShareSDKLocalizable.strings"; sourceTree = "<group>"; };
-		92F3B05D1B00362A003A6D76 /* libWeiboSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeiboSDK.a; sourceTree = "<group>"; };
-		92F3B05E1B00362A003A6D76 /* WeiboSDK.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = WeiboSDK.bundle; sourceTree = "<group>"; };
-		92F3B05F1B00362A003A6D76 /* WeiboSDK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WeiboSDK.h; sourceTree = "<group>"; };
-		92F3B0611B00362A003A6D76 /* libWeChatSDK.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libWeChatSDK.a; sourceTree = "<group>"; };
-		92F3B0621B00362A003A6D76 /* WXApi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApi.h; sourceTree = "<group>"; };
-		92F3B0631B00362A003A6D76 /* WXApiObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WXApiObject.h; sourceTree = "<group>"; };
-		92F3B0641B00362A003A6D76 /* ShareSDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ShareSDK.framework; sourceTree = "<group>"; };
-		92F3B0661B00362A003A6D76 /* ShareSDKFlatShareViewUI.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = ShareSDKFlatShareViewUI.bundle; sourceTree = "<group>"; };
-		92F3B0671B00362A003A6D76 /* ShareSDKFlatShareViewUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ShareSDKFlatShareViewUI.framework; sourceTree = "<group>"; };
-		92F3B0681B00362A003A6D76 /* ShareSDKShareActionSheet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ShareSDKShareActionSheet.framework; sourceTree = "<group>"; };
 		92F3B0771B00367A003A6D76 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		92F3B0791B00368C003A6D76 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		92F3B07B1B003697003A6D76 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -426,7 +446,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				924546DC1B4CADFA00790846 /* libWeChatSDK.a in Frameworks */,
+				920FA4B01B60953B00C0D78B /* ShareSDKCoreService.framework in Frameworks */,
 				9291DE1C1B4B6B2000FD5CC8 /* libsqlite3.0.dylib in Frameworks */,
 				92D6EB2D1B413A8F005DF3DB /* AlipaySDK.framework in Frameworks */,
 				92A9AD781B3C011B0025D29A /* libxml2.dylib in Frameworks */,
@@ -439,23 +459,23 @@
 				927B7C941B2962A700B55DB2 /* OpenGLES.framework in Frameworks */,
 				927B7C921B29629100B55DB2 /* CoreLocation.framework in Frameworks */,
 				927B7C901B29607D00B55DB2 /* BaiduMapAPI.framework in Frameworks */,
+				920FA4AB1B60953B00C0D78B /* SMSConnection.framework in Frameworks */,
 				92F3B0861B0036F0003A6D76 /* MessageUI.framework in Frameworks */,
 				92F3B0841B0036E2003A6D76 /* ImageIO.framework in Frameworks */,
+				920FA4AD1B60953B00C0D78B /* AGCommon.framework in Frameworks */,
 				92F3B0821B0036C6003A6D76 /* Security.framework in Frameworks */,
+				920FA4AC1B60953B00C0D78B /* WeChatConnection.framework in Frameworks */,
 				92F3B0801B0036BB003A6D76 /* libz.1.2.5.dylib in Frameworks */,
+				920FA4B31B60953B00C0D78B /* libWeChatSDK.a in Frameworks */,
+				920FA4B71B60953B00C0D78B /* ShareSDKShareActionSheet.framework in Frameworks */,
 				92F3B07E1B0036B0003A6D76 /* libicucore.dylib in Frameworks */,
+				920FA4B11B60953B00C0D78B /* libWeiboSDK.a in Frameworks */,
+				920FA4B41B60953B00C0D78B /* ShareSDK.framework in Frameworks */,
 				92F3B07A1B00368C003A6D76 /* QuartzCore.framework in Frameworks */,
 				92F3B0781B00367A003A6D76 /* SystemConfiguration.framework in Frameworks */,
-				92F3B06A1B00362A003A6D76 /* SMSConnection.framework in Frameworks */,
-				92F3B0761B00362A003A6D76 /* ShareSDKShareActionSheet.framework in Frameworks */,
-				92F3B0751B00362A003A6D76 /* ShareSDKFlatShareViewUI.framework in Frameworks */,
-				92F3B06C1B00362A003A6D76 /* AGCommon.framework in Frameworks */,
-				92F3B0691B00362A003A6D76 /* SinaWeiboConnection.framework in Frameworks */,
-				92F3B0701B00362A003A6D76 /* libWeiboSDK.a in Frameworks */,
-				92F3B06B1B00362A003A6D76 /* WeChatConnection.framework in Frameworks */,
-				92F3B0731B00362A003A6D76 /* ShareSDK.framework in Frameworks */,
-				92F3B06F1B00362A003A6D76 /* ShareSDKCoreService.framework in Frameworks */,
+				920FA4AA1B60953B00C0D78B /* SinaWeiboConnection.framework in Frameworks */,
 				0BE02F5CD93607CAD28B61E4 /* Pods.framework in Frameworks */,
+				920FA4B61B60953B00C0D78B /* ShareSDKFlatShareViewUI.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,6 +514,78 @@
 				1E1B9F71B7F8A3007EFAD6E6 /* Pods.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		920FA4901B60953A00C0D78B /* ShareSDK */ = {
+			isa = PBXGroup;
+			children = (
+				920FA4911B60953A00C0D78B /* Connection */,
+				920FA4951B60953A00C0D78B /* Core */,
+				920FA49C1B60953B00C0D78B /* Extend */,
+				920FA4A51B60953B00C0D78B /* ShareSDK.framework */,
+				920FA4A61B60953B00C0D78B /* UI */,
+			);
+			path = ShareSDK;
+			sourceTree = "<group>";
+		};
+		920FA4911B60953A00C0D78B /* Connection */ = {
+			isa = PBXGroup;
+			children = (
+				920FA4921B60953A00C0D78B /* SinaWeiboConnection.framework */,
+				920FA4931B60953A00C0D78B /* SMSConnection.framework */,
+				920FA4941B60953A00C0D78B /* WeChatConnection.framework */,
+			);
+			path = Connection;
+			sourceTree = "<group>";
+		};
+		920FA4951B60953A00C0D78B /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				920FA4961B60953A00C0D78B /* AGCommon.framework */,
+				920FA4971B60953A00C0D78B /* ShareSDKLocalizable.strings */,
+				920FA4991B60953B00C0D78B /* Resource.bundle */,
+				920FA49A1B60953B00C0D78B /* ShareSDKCoreService.framework */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		920FA49C1B60953B00C0D78B /* Extend */ = {
+			isa = PBXGroup;
+			children = (
+				920FA49D1B60953B00C0D78B /* SinaWeiboSDK */,
+				920FA4A11B60953B00C0D78B /* WeChatSDK */,
+			);
+			path = Extend;
+			sourceTree = "<group>";
+		};
+		920FA49D1B60953B00C0D78B /* SinaWeiboSDK */ = {
+			isa = PBXGroup;
+			children = (
+				920FA49E1B60953B00C0D78B /* libWeiboSDK.a */,
+				920FA49F1B60953B00C0D78B /* WeiboSDK.bundle */,
+				920FA4A01B60953B00C0D78B /* WeiboSDK.h */,
+			);
+			path = SinaWeiboSDK;
+			sourceTree = "<group>";
+		};
+		920FA4A11B60953B00C0D78B /* WeChatSDK */ = {
+			isa = PBXGroup;
+			children = (
+				920FA4A21B60953B00C0D78B /* libWeChatSDK.a */,
+				920FA4A31B60953B00C0D78B /* WXApi.h */,
+				920FA4A41B60953B00C0D78B /* WXApiObject.h */,
+			);
+			path = WeChatSDK;
+			sourceTree = "<group>";
+		};
+		920FA4A61B60953B00C0D78B /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				920FA4A71B60953B00C0D78B /* ShareSDKFlatShareViewUI.bundle */,
+				920FA4A81B60953B00C0D78B /* ShareSDKFlatShareViewUI.framework */,
+				920FA4A91B60953B00C0D78B /* ShareSDKShareActionSheet.framework */,
+			);
+			path = UI;
 			sourceTree = "<group>";
 		};
 		92163E771B5C7D4F003B3A43 /* FBShimmering */ = {
@@ -550,6 +642,7 @@
 		9227E2C11AE8DCCC008C6381 /* iMenu3 */ = {
 			isa = PBXGroup;
 			children = (
+				920FA4901B60953A00C0D78B /* ShareSDK */,
 				92163E821B5CD860003B3A43 /* ZFCheckbox */,
 				92163E771B5C7D4F003B3A43 /* FBShimmering */,
 				92F121921B5773410036A3A9 /* UzysAssetsVC */,
@@ -561,7 +654,6 @@
 				92BD2E0F1B27BE810053408B /* UPullToRefresh */,
 				927779D81B0B0304002A50EB /* THelpClass */,
 				922412921B200D560049A9B5 /* SMSegmentView */,
-				92F3B04F1B003629003A6D76 /* ShareSDK */,
 				92A7106E1AEF3E3600376C06 /* Toucan */,
 				92F51C8A1AEDE7D300FDD50C /* Assets */,
 				928205011AEDE1330067BB92 /* Breeze */,
@@ -761,6 +853,8 @@
 				92CFFB2C1AF8663300C9AA7D /* shopping-bag.png */,
 				92CFFB2D1AF8663300C9AA7D /* ticket.png */,
 				92CFFB2E1AF8663400C9AA7D /* user.png */,
+				923B6B211B6A286D00947E89 /* expired_tag.png */,
+				923B6B221B6A286D00947E89 /* used_tag.png */,
 			);
 			path = userPanel;
 			sourceTree = "<group>";
@@ -774,7 +868,7 @@
 				929DCAC11B0578800050B63F /* VCTermsViewController.swift */,
 				92FA19461AFCCA8400D33538 /* FindMyPasscodeViewController.swift */,
 				92FA19481AFCD6CE00D33538 /* SMSCodeViewController.swift */,
-				92347F7D1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift */,
+				9275A68C1B608F9E00419141 /* ResetMyPasscodeViewController.swift */,
 			);
 			name = MemberLoginAndReg;
 			sourceTree = "<group>";
@@ -799,16 +893,18 @@
 		92D6DBE11B33C426003E80AE /* MemberCenter */ = {
 			isa = PBXGroup;
 			children = (
-				928633741B0AE43B0040CBA2 /* UserPanelViewController.swift */,
+				926AAFB31B6766F90070D113 /* UserPanelViewController.swift */,
 				92CFFB241AF774F700C9AA7D /* UserPanelTableViewCell.swift */,
 				9259050A1B098EEE00F343D4 /* UserInfoHeaderView.swift */,
 				92BD603B1B05DE8900649DDF /* UserInfoViewController.swift */,
-				9267443E1B1855C60075EDB5 /* EditUserInfoViewController.swift */,
-				92BD603D1B05DEDF00649DDF /* UserInfoCell.swift */,
+				927B68D91B6084AC00D4DA5A /* EditUserInfoViewController.swift */,
+				927B68DB1B60850B00D4DA5A /* UserInfoCell.swift */,
 				920940A71B37036C006686C7 /* OrderListViewController.swift */,
 				920940A91B370390006686C7 /* OrderListViewCell.swift */,
 				92795DE41B4A469C00E9A83F /* OrderInfoViewController.swift */,
 				92163E801B5CA73B003B3A43 /* OrderRefundViewController.swift */,
+				926AAFAE1B65FF300070D113 /* VoucherViewController.swift */,
+				926AAFAD1B65FF2F0070D113 /* VoucherViewCell.swift */,
 				92D6DBE31B33C4D5003E80AE /* FavoritesViewController.swift */,
 				92D6DBE51B33C503003E80AE /* FavoritesViewCell.swift */,
 				920212081B58E0510047AF5C /* VCInviteViewController.swift */,
@@ -816,6 +912,10 @@
 				92457CD71B2FD2EC005B0E33 /* VCAboutViewController.swift */,
 				92457CD91B300949005B0E33 /* VCMailBoxViewController.swift */,
 				92FB21731B311F4000877C07 /* MailBoxCell.swift */,
+				926AAFB51B68FAB60070D113 /* VCSettingsViewCell.swift */,
+				926AAFB61B68FAB60070D113 /* VCSettingsViewController.swift */,
+				926AAFB91B69F45E0070D113 /* VCNotificationViewCell.swift */,
+				926AAFBA1B69F45E0070D113 /* VCNotificationViewController.swift */,
 			);
 			name = MemberCenter;
 			sourceTree = "<group>";
@@ -827,7 +927,6 @@
 				9284A1441AF0CFCF00E662B2 /* VCAppLetor.swift */,
 				9223DD301B15692E0072BFF1 /* VCBaseViewController.swift */,
 				924546DD1B4D7A6B00790846 /* VCAppViewController.swift */,
-				92E57FFD1B2A6C4E00E463A3 /* VCCityListViewController.swift */,
 				9271B6E61B30396A00BC0F29 /* CustomDrawView.swift */,
 				9214D7971B32B1B2007AC818 /* VCShareActionView.swift */,
 				92CBE10F1B5F42ED00656E6C /* VCGalleryView.swift */,
@@ -880,78 +979,6 @@
 			path = UzysAssetsVC;
 			sourceTree = "<group>";
 		};
-		92F3B04F1B003629003A6D76 /* ShareSDK */ = {
-			isa = PBXGroup;
-			children = (
-				92F3B0501B00362A003A6D76 /* Connection */,
-				92F3B0541B00362A003A6D76 /* Core */,
-				92F3B05B1B00362A003A6D76 /* Extend */,
-				92F3B0641B00362A003A6D76 /* ShareSDK.framework */,
-				92F3B0651B00362A003A6D76 /* UI */,
-			);
-			path = ShareSDK;
-			sourceTree = "<group>";
-		};
-		92F3B0501B00362A003A6D76 /* Connection */ = {
-			isa = PBXGroup;
-			children = (
-				92F3B0511B00362A003A6D76 /* SinaWeiboConnection.framework */,
-				92F3B0521B00362A003A6D76 /* SMSConnection.framework */,
-				92F3B0531B00362A003A6D76 /* WeChatConnection.framework */,
-			);
-			path = Connection;
-			sourceTree = "<group>";
-		};
-		92F3B0541B00362A003A6D76 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				92F3B0551B00362A003A6D76 /* AGCommon.framework */,
-				92F3B0561B00362A003A6D76 /* ShareSDKLocalizable.strings */,
-				92F3B0581B00362A003A6D76 /* Resource.bundle */,
-				92F3B0591B00362A003A6D76 /* ShareSDKCoreService.framework */,
-			);
-			path = Core;
-			sourceTree = "<group>";
-		};
-		92F3B05B1B00362A003A6D76 /* Extend */ = {
-			isa = PBXGroup;
-			children = (
-				92F3B05C1B00362A003A6D76 /* SinaWeiboSDK */,
-				92F3B0601B00362A003A6D76 /* WeChatSDK */,
-			);
-			path = Extend;
-			sourceTree = "<group>";
-		};
-		92F3B05C1B00362A003A6D76 /* SinaWeiboSDK */ = {
-			isa = PBXGroup;
-			children = (
-				92F3B05D1B00362A003A6D76 /* libWeiboSDK.a */,
-				92F3B05E1B00362A003A6D76 /* WeiboSDK.bundle */,
-				92F3B05F1B00362A003A6D76 /* WeiboSDK.h */,
-			);
-			path = SinaWeiboSDK;
-			sourceTree = "<group>";
-		};
-		92F3B0601B00362A003A6D76 /* WeChatSDK */ = {
-			isa = PBXGroup;
-			children = (
-				92F3B0611B00362A003A6D76 /* libWeChatSDK.a */,
-				92F3B0621B00362A003A6D76 /* WXApi.h */,
-				92F3B0631B00362A003A6D76 /* WXApiObject.h */,
-			);
-			path = WeChatSDK;
-			sourceTree = "<group>";
-		};
-		92F3B0651B00362A003A6D76 /* UI */ = {
-			isa = PBXGroup;
-			children = (
-				92F3B0661B00362A003A6D76 /* ShareSDKFlatShareViewUI.bundle */,
-				92F3B0671B00362A003A6D76 /* ShareSDKFlatShareViewUI.framework */,
-				92F3B0681B00362A003A6D76 /* ShareSDKShareActionSheet.framework */,
-			);
-			path = UI;
-			sourceTree = "<group>";
-		};
 		92F51C8A1AEDE7D300FDD50C /* Assets */ = {
 			isa = PBXGroup;
 			children = (
@@ -977,8 +1004,11 @@
 		92FB21701B31114200877C07 /* bg */ = {
 			isa = PBXGroup;
 			children = (
+				92D301F51B70C309006AECCE /* launchImage.jpg */,
 				92FB21711B31114200877C07 /* bar_black.png */,
 				927E31101B453472003455DF /* user_nep.jpg */,
+				926AAFB11B66185E0070D113 /* voucher_black.jpg */,
+				926AAFBD1B6A0DFC0070D113 /* switch_off.png */,
 			);
 			path = bg;
 			sourceTree = "<group>";
@@ -1109,35 +1139,39 @@
 			buildActionMask = 2147483647;
 			files = (
 				927B7C981B29641100B55DB2 /* mapapi.bundle in Resources */,
+				920FA4AF1B60953B00C0D78B /* Resource.bundle in Resources */,
 				92ACC2461B2ECEF100C824F2 /* LICENSE in Resources */,
 				9214D79D1B32CE78007AC818 /* wechat_color.png in Resources */,
 				9282050F1AEDE1330067BB92 /* Info.plist in Resources */,
+				920FA4B21B60953B00C0D78B /* WeiboSDK.bundle in Resources */,
 				9284A1311AF0AECD00E662B2 /* hungry.png in Resources */,
 				9284A1371AF0AECD00E662B2 /* mood5.jpg in Resources */,
 				92CFFB2F1AF8663400C9AA7D /* cards.png in Resources */,
 				9284A12F1AF0AECD00E662B2 /* adventurous.png in Resources */,
 				9214D79C1B32CE78007AC818 /* friends_color.png in Resources */,
+				923B6B241B6A286D00947E89 /* used_tag.png in Resources */,
 				92FB218D1B31571800877C07 /* cloud_light@2x.png in Resources */,
 				92CFFB311AF8663400C9AA7D /* gift.png in Resources */,
 				9227E2CD1AE8DCCC008C6381 /* Main.storyboard in Resources */,
 				9284A1391AF0AECD00E662B2 /* mood7.jpg in Resources */,
 				9284A1351AF0AECD00E662B2 /* mood3.jpg in Resources */,
-				92F3B06D1B00362A003A6D76 /* ShareSDKLocalizable.strings in Resources */,
 				92E3586D1B1D455700D61119 /* brand.jpg in Resources */,
 				92FB21851B31571800877C07 /* bulb_light@2x.png in Resources */,
 				92FB21861B31571800877C07 /* clip.png in Resources */,
 				92FB21881B31571800877C07 /* clip_light.png in Resources */,
 				92CFFB351AF8663400C9AA7D /* ticket.png in Resources */,
-				92F3B06E1B00362A003A6D76 /* Resource.bundle in Resources */,
-				92F3B0711B00362A003A6D76 /* WeiboSDK.bundle in Resources */,
 				92FB21871B31571800877C07 /* clip@2x.png in Resources */,
 				92FB21721B31114200877C07 /* bar_black.png in Resources */,
 				9227E2D21AE8DCCC008C6381 /* LaunchScreen.xib in Resources */,
 				92FB21891B31571800877C07 /* clip_light@2x.png in Resources */,
+				926AAFBE1B6A0DFC0070D113 /* switch_off.png in Resources */,
+				923B6B231B6A286D00947E89 /* expired_tag.png in Resources */,
+				926AAFB21B66185E0070D113 /* voucher_black.jpg in Resources */,
 				92CFFB361AF8663400C9AA7D /* user.png in Resources */,
 				92FB21821B31571800877C07 /* bulb.png in Resources */,
 				92CFFB331AF8663400C9AA7D /* like.png in Resources */,
 				9264F8F01B26765500AF8640 /* ali_68.png in Resources */,
+				920FA4AE1B60953B00C0D78B /* ShareSDKLocalizable.strings in Resources */,
 				92FB21921B31572200877C07 /* weibo.png in Resources */,
 				9284A13C1AF0AECD00E662B2 /* relax.png in Resources */,
 				92FB21911B31572200877C07 /* wechat.png in Resources */,
@@ -1146,7 +1180,6 @@
 				92F51C8D1AEDE7D300FDD50C /* hagaki.jpg in Resources */,
 				9284A1321AF0AECD00E662B2 /* loved.png in Resources */,
 				92CFFB321AF8663400C9AA7D /* image.png in Resources */,
-				92F3B0741B00362A003A6D76 /* ShareSDKFlatShareViewUI.bundle in Resources */,
 				92FB218A1B31571800877C07 /* cloud.png in Resources */,
 				9284A13A1AF0AECD00E662B2 /* mood8.jpg in Resources */,
 				9284A13B1AF0AECD00E662B2 /* playful.png in Resources */,
@@ -1165,8 +1198,10 @@
 				9284A1381AF0AECD00E662B2 /* mood6.jpg in Resources */,
 				9284A1331AF0AECD00E662B2 /* mood1.jpg in Resources */,
 				9284A12E1AF0AECD00E662B2 /* active.png in Resources */,
+				92D301F61B70C309006AECCE /* launchImage.jpg in Resources */,
 				92CFFB301AF8663400C9AA7D /* coffee.png in Resources */,
 				9214D79E1B32CE78007AC818 /* weibo_color.png in Resources */,
+				920FA4B51B60953B00C0D78B /* ShareSDKFlatShareViewUI.bundle in Resources */,
 				92FB218B1B31571800877C07 /* cloud@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1240,16 +1275,17 @@
 				9280E4481B14444B00959798 /* Reachability.swift in Sources */,
 				92ACC2471B2ECEF100C824F2 /* MGFashionMenuView.m in Sources */,
 				92163E851B5CD860003B3A43 /* ZFCheckbox.m in Sources */,
-				9267443F1B1855C60075EDB5 /* EditUserInfoViewController.swift in Sources */,
 				92163E7E1B5C7D4F003B3A43 /* FBShimmeringLayer.m in Sources */,
 				923C253E1B3F9B630060DBFC /* TYAttributedLabel.m in Sources */,
 				923C253F1B3F9B630060DBFC /* TYDrawStorage.m in Sources */,
-				92BD603E1B05DEDF00649DDF /* UserInfoCell.swift in Sources */,
+				9275A68D1B608F9E00419141 /* ResetMyPasscodeViewController.swift in Sources */,
+				926AAFBB1B69F45E0070D113 /* VCNotificationViewCell.swift in Sources */,
+				926AAFBC1B69F45E0070D113 /* VCNotificationViewController.swift in Sources */,
 				9282050E1AEDE1330067BB92 /* BreezeStore.swift in Sources */,
-				92347F7E1B306A5400DF0A47 /* ResetMyPasscodeViewController.swift in Sources */,
 				9282050D1AEDE1330067BB92 /* BreezeStore+Saving.swift in Sources */,
 				9227E2C81AE8DCCC008C6381 /* iMenu3.xcdatamodeld in Sources */,
-				928633751B0AE43B0040CBA2 /* UserPanelViewController.swift in Sources */,
+				927B68DC1B60850B00D4DA5A /* UserInfoCell.swift in Sources */,
+				927B68DA1B6084AC00D4DA5A /* EditUserInfoViewController.swift in Sources */,
 				923C253D1B3F9B630060DBFC /* NSMutableAttributedString+TY.m in Sources */,
 				92B0F0ED1B12FF2E009F368B /* StringExt.swift in Sources */,
 				922248A51B4628B200553BFA /* VCMapViewController.swift in Sources */,
@@ -1261,6 +1297,7 @@
 				9284A14B1AF1B98100E662B2 /* VCheckGo.swift in Sources */,
 				9284A13F1AF0AF2500E662B2 /* FoodCollectionsViewController.swift in Sources */,
 				92CFFB381AF8CCB600C9AA7D /* VCMemberLoginViewController.swift in Sources */,
+				926AAFAF1B65FF300070D113 /* VoucherViewCell.swift in Sources */,
 				927E310D1B43E690003455DF /* VCPaySuccessViewController.swift in Sources */,
 				92868A241B395BD600DB9B91 /* Functions.swift in Sources */,
 				92BD2E141B27BE810053408B /* UIScrollView+UzysCircularProgressPullToRefresh.m in Sources */,
@@ -1278,11 +1315,14 @@
 				9227E2C51AE8DCCC008C6381 /* AppDelegate.swift in Sources */,
 				928633801B0AE6070040CBA2 /* Settings.swift in Sources */,
 				92FA19471AFCCA8400D33538 /* FindMyPasscodeViewController.swift in Sources */,
+				926AAFB71B68FAB60070D113 /* VCSettingsViewCell.swift in Sources */,
 				92F121A41B5773410036A3A9 /* UIImage+UzysExtension.m in Sources */,
 				92795DE51B4A469C00E9A83F /* OrderInfoViewController.swift in Sources */,
 				9284A1451AF0CFCF00E662B2 /* VCAppLetor.swift in Sources */,
 				923C25441B3F9B630060DBFC /* TYTextStorage.m in Sources */,
 				923C25401B3F9B630060DBFC /* TYImageStorage.m in Sources */,
+				926AAFB41B6766F90070D113 /* UserPanelViewController.swift in Sources */,
+				926AAFB01B65FF300070D113 /* VoucherViewController.swift in Sources */,
 				92BD2E151B27BE810053408B /* UzysRadialProgressActivityIndicator.m in Sources */,
 				928205111AEDE1330067BB92 /* NSManagedObject+Deleting.swift in Sources */,
 				92457CD81B2FD2EC005B0E33 /* VCAboutViewController.swift in Sources */,
@@ -1292,6 +1332,7 @@
 				92D6DBE61B33C503003E80AE /* FavoritesViewCell.swift in Sources */,
 				9284A1411AF0AF5400E662B2 /* FoodCollectionsViewCell.swift in Sources */,
 				928205101AEDE1330067BB92 /* NSManagedObject+Creating.swift in Sources */,
+				926AAFB81B68FAB60070D113 /* VCSettingsViewController.swift in Sources */,
 				920212091B58E0510047AF5C /* VCInviteViewController.swift in Sources */,
 				923C25451B3F9B630060DBFC /* TYViewStorage.m in Sources */,
 				9282050B1AEDE1330067BB92 /* BreezeStore+Defaults.swift in Sources */,
@@ -1303,7 +1344,6 @@
 				9264F8ED1B2597CD00AF8640 /* VCPayNowViewController.swift in Sources */,
 				923C25431B3F9B630060DBFC /* TYTextContainer.m in Sources */,
 				9214D7981B32B1B3007AC818 /* VCShareActionView.swift in Sources */,
-				92E57FFE1B2A6C4E00E463A3 /* VCCityListViewController.swift in Sources */,
 				9282050C1AEDE1330067BB92 /* BreezeStore+iCloud.swift in Sources */,
 				92457CDA1B300949005B0E33 /* VCMailBoxViewController.swift in Sources */,
 				920940A81B37036C006686C7 /* OrderListViewController.swift in Sources */,
@@ -1344,6 +1384,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		920FA4971B60953A00C0D78B /* ShareSDKLocalizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				920FA4981B60953B00C0D78B /* en */,
+				920FA49B1B60953B00C0D78B /* zh-Hans */,
+			);
+			name = ShareSDKLocalizable.strings;
+			sourceTree = "<group>";
+		};
 		9227E2CB1AE8DCCC008C6381 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1358,15 +1407,6 @@
 				9227E2D11AE8DCCC008C6381 /* Base */,
 			);
 			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
-		92F3B0561B00362A003A6D76 /* ShareSDKLocalizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				92F3B0571B00362A003A6D76 /* en */,
-				92F3B05A1B00362A003A6D76 /* zh-Hans */,
-			);
-			name = ShareSDKLocalizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -1491,9 +1531,39 @@
 					"$(PROJECT_DIR)/iMenu3/XGSDK",
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"\"AFNetworking\"",
+					"-framework",
+					"\"AFViewShaker\"",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"DKChainableAnimationKit\"",
+					"-framework",
+					"\"HYBLoopScrollView\"",
+					"-framework",
+					"\"IHKeyboardAvoiding\"",
+					"-framework",
+					"\"MBProgressHUD\"",
+					"-framework",
+					"\"Punctual\"",
+					"-framework",
+					"\"PureLayout\"",
+					"-framework",
+					"\"RKDropdownAlert\"",
+					"-framework",
+					"\"SCLAlertView\"",
+					"-framework",
+					"\"SWTableViewCell\"",
+					"-framework",
+					"\"SwiftyJSON\"",
+					"-ObjC",
+				);
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" -D DEBUG";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "879e650a-352f-4c43-a22a-c7262818bd66";
+				PROVISIONING_PROFILE = "44f61ace-e03a-42d3-8a53-c15f4cce73e9";
 				SWIFT_OBJC_BRIDGING_HEADER = "iMenu3/iMenu3-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1536,8 +1606,38 @@
 					"$(PROJECT_DIR)/iMenu3/XGSDK",
 				);
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"\"AFNetworking\"",
+					"-framework",
+					"\"AFViewShaker\"",
+					"-framework",
+					"\"Alamofire\"",
+					"-framework",
+					"\"DKChainableAnimationKit\"",
+					"-framework",
+					"\"HYBLoopScrollView\"",
+					"-framework",
+					"\"IHKeyboardAvoiding\"",
+					"-framework",
+					"\"MBProgressHUD\"",
+					"-framework",
+					"\"Punctual\"",
+					"-framework",
+					"\"PureLayout\"",
+					"-framework",
+					"\"RKDropdownAlert\"",
+					"-framework",
+					"\"SCLAlertView\"",
+					"-framework",
+					"\"SWTableViewCell\"",
+					"-framework",
+					"\"SwiftyJSON\"",
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "879e650a-352f-4c43-a22a-c7262818bd66";
+				PROVISIONING_PROFILE = "44f61ace-e03a-42d3-8a53-c15f4cce73e9";
 				SWIFT_OBJC_BRIDGING_HEADER = "iMenu3/iMenu3-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
 				TARGETED_DEVICE_FAMILY = 1;

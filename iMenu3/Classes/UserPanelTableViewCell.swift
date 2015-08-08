@@ -14,6 +14,7 @@ class UserPanelTableViewCell: UITableViewCell {
     let panelIcon: UIImageView = UIImageView.newAutoLayoutView()
     let panelTitle: UILabel = UILabel.newAutoLayoutView()
     let countLabel: UILabel = UILabel.newAutoLayoutView()
+    let tipLabel: UILabel = UILabel.newAutoLayoutView()
     
     var didSetupConstraints = false
     
@@ -40,14 +41,23 @@ class UserPanelTableViewCell: UITableViewCell {
         self.contentView.addSubview(self.panelIcon)
         
         self.panelTitle.font = VCAppLetor.Font.BigFont
+        self.panelTitle.textAlignment = .Left
         self.panelTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
         self.contentView.addSubview(self.panelTitle)
         
         self.countLabel.text = ""
+        self.countLabel.textAlignment = .Right
         self.countLabel.font = VCAppLetor.Font.NormalFont
         self.countLabel.textColor = UIColor.lightGrayColor()
         self.countLabel.sizeToFit()
         self.contentView.addSubview(self.countLabel)
+        
+        self.tipLabel.text = ""
+        self.tipLabel.textAlignment = .Right
+        self.tipLabel.font = VCAppLetor.Font.NormalFont
+        self.tipLabel.textColor = UIColor.alizarinColor(alpha: 0.6)
+        self.tipLabel.sizeToFit()
+        self.contentView.addSubview(self.tipLabel)
         
         self.contentView.setNeedsUpdateConstraints()
     }
@@ -66,6 +76,9 @@ class UserPanelTableViewCell: UITableViewCell {
             
             self.countLabel.autoPinEdgeToSuperviewEdge(.Trailing)
             self.countLabel.autoAlignAxisToSuperviewAxis(.Horizontal)
+            
+            self.tipLabel.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.countLabel, withOffset: -12.0)
+            self.tipLabel.autoAlignAxisToSuperviewAxis(.Horizontal)
             
             didSetupConstraints = true
         }

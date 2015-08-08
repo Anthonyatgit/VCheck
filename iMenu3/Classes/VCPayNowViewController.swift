@@ -13,7 +13,7 @@ import RKDropdownAlert
 import MBProgressHUD
 
 
-class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDropdownAlertDelegate, WXApiDelegate {
+class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDropdownAlertDelegate, WXApiDelegate, VoucherDelegate {
     
     
     var orderInfo: OrderInfo!
@@ -31,6 +31,9 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
             }
         }
     }
+    
+    var voucherId: String? = ""
+    var voucherPrice: String? = ""
     
     var parentNav: UINavigationController!
     var foodDetailVC: VCBaseViewController!
@@ -97,6 +100,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
     //MARK: - LifeCycle
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
         self.title = VCAppLetor.StringLine.PayOrderTitle
@@ -126,7 +130,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
         self.updateViewConstraints()
         
-        self.updatePaymentInfo("payType")
+        self.updatePaymentInfo()
         
     }
     
@@ -144,7 +148,8 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         super.viewDidLayoutSubviews()
         
         self.scrollView.contentSize = self.scrollView.frame.size
-        self.scrollView.contentSize.height = self.scrollView.height - VCAppLetor.ConstValue.CheckNowBarHeight
+        self.scrollView.contentSize.height = self.scrollView.frame.size.height
+        
     }
     
     override func updateViewConstraints() {
@@ -210,7 +215,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.couponName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.totalPriceUnderline, withOffset: 10.0)
         self.couponName.autoSetDimensionsToSize(CGSizeMake(78.0, 20.0))
         
-        self.couponArraw.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
+        self.couponArraw.autoSetDimensionsToSize(CGSizeMake(20.0, 24.0))
         self.couponArraw.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
         self.couponArraw.autoPinEdge(.Top, toEdge: .Top, ofView: self.couponName, withOffset: -4.0)
         
@@ -335,6 +340,15 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
     }
     
+    // MARK: - Voucher Delegate
+    func didUseVoucher(voucherId: String, price: String) {
+        
+        self.voucherId = voucherId
+        self.voucherPrice = price
+        self.updatePaymentInfo()
+    }
+    
+    
     
     // MARK: - Functions
     
@@ -400,7 +414,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.totalPriceName.font = VCAppLetor.Font.NormalFont
         self.scrollView.addSubview(self.totalPriceName)
         
-        self.totalPriceValue.text = round_price(self.orderInfo.totalPrice!) + self.orderInfo.priceUnit!
+        self.totalPriceValue.text = round_price("\((self.orderInfo.pricePU! as NSString).floatValue * (self.orderInfo.itemCount! as NSString).floatValue)") + self.orderInfo.priceUnit!
         self.totalPriceValue.textAlignment = .Right
         self.totalPriceValue.textColor = UIColor.orangeColor()
         self.totalPriceValue.font = VCAppLetor.Font.LightSmall
@@ -417,15 +431,27 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         self.couponName.font = VCAppLetor.Font.NormalFont
         self.scrollView.addSubview(self.couponName)
         
-        self.couponStat.text = VCAppLetor.StringLine.CouponNone
+        if self.orderInfo.voucherId! != "" {
+            self.voucherId = self.orderInfo.voucherId!
+            self.voucherPrice = round_price("\((self.orderInfo.pricePU! as NSString).floatValue * (self.orderInfo.itemCount! as NSString).floatValue - (self.orderInfo.totalPrice! as NSString).floatValue)")
+            
+        }
+        
+        self.couponStat.text = self.voucherId! != "" ? "-\(self.voucherPrice!)元" : VCAppLetor.StringLine.CouponNone
         self.couponStat.textAlignment = .Right
-        self.couponStat.textColor = UIColor.grayColor()
-        self.couponStat.font = VCAppLetor.Font.NormalFont
+        if self.voucherId! != "" {
+            
+            self.couponStat.textColor = UIColor.alizarinColor(alpha: 0.8)
+        }
+        else {
+            self.couponStat.textColor = UIColor.grayColor()
+        }
+        self.couponStat.font = VCAppLetor.Font.LightSmall
         self.couponStat.sizeToFit()
         self.scrollView.addSubview(self.couponStat)
         
-        self.couponArraw.image = UIImage(named: VCAppLetor.IconName.RightDisclosureIcon)
-        self.couponArraw.alpha = 0.2
+        self.couponArraw.image = UIImage(named: VCAppLetor.IconName.RightDisclosureIcon)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+        self.couponArraw.tintColor = UIColor.lightGrayColor()
         self.scrollView.addSubview(self.couponArraw)
         
         self.couponBtn.setTitle("", forState: .Normal)
@@ -595,27 +621,19 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         }
         
         // Update payment info
-        self.updatePaymentInfo("payType")
+        self.updatePaymentInfo()
         
         
     }
     
-    func updatePaymentInfo(type: String) {
+    func updatePaymentInfo() {
         
         
         let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
         let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
-        let couponId = ""
         
-        // Set params if needed
-        if type == "payType" {
-            
-        }
-        else if type == "coupon" {
-            
-        }
         
-        Alamofire.request(VCheckGo.Router.UpdatePay(memberId, self.paymentCode, self.orderInfo.id, token)).validate().responseSwiftyJSON ({
+        Alamofire.request(VCheckGo.Router.UpdatePay(memberId, self.paymentCode, self.voucherId!, self.orderInfo.id, token)).validate().responseSwiftyJSON ({
             (_, _, JSON, error) -> Void in
             
             if error == nil {
@@ -624,6 +642,20 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
                 
                 if json["status"]["succeed"].string! == "1" {
                     // Update done!
+                    
+                    if self.voucherId! != "" {
+                        self.couponStat.text = "-\(round_price(self.voucherPrice!))元"
+                        self.couponStat.textColor = UIColor.alizarinColor(alpha: 0.8)
+                    }
+                    else {
+                        self.couponStat.text = VCAppLetor.StringLine.CouponNone
+                        self.couponStat.textColor = UIColor.grayColor()
+                    }
+                    
+                    let needToPay = json["data"]["order_info"]["total_price"]["special_price"].string!
+                    self.finalTotalValue.text = round_price(needToPay) + self.orderInfo.priceUnit!
+                    self.orderPriceValue.text = round_price(needToPay) + self.orderInfo.priceUnit!
+                    
                 }
                 else {
                     
@@ -642,6 +674,20 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
     
     func showCoupon() {
         
+        let voucherVC: VoucherViewController = VoucherViewController()
+        voucherVC.parentNav = self.parentNav
+        voucherVC.active = true
+        voucherVC.delegate = self
+        self.parentNav.showViewController(voucherVC, sender: self)
+        
+    }
+    
+    
+    func didCancleVoucher() {
+        
+        self.voucherId = ""
+        self.voucherPrice = ""
+        self.updatePaymentInfo()
         
     }
     
@@ -824,36 +870,43 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
                 // Payment Result
                 let resultString = "\(resp.errCode)"
                 
-                Alamofire.request(VCheckGo.Router.AsyncPayment(memberId, self.orderInfo.id, resultString, token)).validate().responseSwiftyJSON({
-                    (_, _, JSON, error) -> Void in
-                    
-                    if error == nil {
-                        
-                        let json = JSON
-                        
-                        if json["status"]["succeed"].string! == "1" {
-                            
-                            self.hud.hide(true)
-                            
-                            // Show success view
-                            let paySuccessVC: VCPaySuccessViewController = VCPaySuccessViewController()
-                            paySuccessVC.parentNav = self.parentNav
-                            paySuccessVC.foodDetailVC = self.foodDetailVC
-                            paySuccessVC.orderInfo = self.orderInfo
-                            self.parentNav.showViewController(paySuccessVC, sender: self)
-                            
-                        }
-                        else {
-                            self.hud.hide(true)
-                            RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
-                        }
-                    }
-                    else {
-                        self.hud.hide(true)
-                        println("ERROR @ Request for async payment result[PaySuccess] : \(error?.localizedDescription)")
-                        RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
-                    }
-                })
+                // Show success view
+                let paySuccessVC: VCPaySuccessViewController = VCPaySuccessViewController()
+                paySuccessVC.parentNav = self.parentNav
+                paySuccessVC.foodDetailVC = self.foodDetailVC
+                paySuccessVC.orderInfo = self.orderInfo
+                self.parentNav.showViewController(paySuccessVC, sender: self)
+                
+//                Alamofire.request(VCheckGo.Router.AsyncPayment(memberId, self.orderInfo.id, resultString, token)).validate().responseSwiftyJSON({
+//                    (_, _, JSON, error) -> Void in
+//                    
+//                    if error == nil {
+//                        
+//                        let json = JSON
+//                        
+//                        if json["status"]["succeed"].string! == "1" {
+//                            
+//                            self.hud.hide(true)
+//                            
+//                            // Show success view
+//                            let paySuccessVC: VCPaySuccessViewController = VCPaySuccessViewController()
+//                            paySuccessVC.parentNav = self.parentNav
+//                            paySuccessVC.foodDetailVC = self.foodDetailVC
+//                            paySuccessVC.orderInfo = self.orderInfo
+//                            self.parentNav.showViewController(paySuccessVC, sender: self)
+//                            
+//                        }
+//                        else {
+//                            self.hud.hide(true)
+//                            RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+//                        }
+//                    }
+//                    else {
+//                        self.hud.hide(true)
+//                        println("ERROR @ Request for async payment result[PaySuccess] : \(error?.localizedDescription)")
+//                        RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: VCAppLetor.Colors.error, textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+//                    }
+//                })
                 
                 
             }

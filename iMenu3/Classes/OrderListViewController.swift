@@ -14,6 +14,10 @@ import MBProgressHUD
 import SWTableViewCell
 import DKChainableAnimationKit
 
+protocol OrderListDelegate {
+    func didFinishEditOrder()
+}
+
 class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, RKDropdownAlertDelegate, UIScrollViewDelegate{
     
     var parentNav: UINavigationController?
@@ -23,6 +27,8 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
     var orderList: NSMutableArray = NSMutableArray()
     
     var tableView: UITableView!
+    
+    var delegate: OrderListDelegate?
     
     var currentPage: Int = 1
     var haveMore: Bool = false
@@ -204,6 +210,14 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                             self.orderList.removeObjectAtIndex(indexPath.row)
                             self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
                             self.tableView.endUpdates()
+                            
+//                            let memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo
+//                            let deCount: Int = ("\(memberInfo.orderCount!)" as NSString).integerValue - 1
+//                            memberInfo.orderCount = "\(deCount)"
+//                            
+//                            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberInfo, data: memberInfo, namespace: "member")
+//                            
+//                            self.delegate?.didFinishEditOrder()
                         }
                         else {
                             RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
@@ -449,6 +463,8 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                             order.orderImageURL = item["article_info"]["article_image"]["source"].string!
                             order.foodId = item["article_info"]["article_id"].string!
                             
+                            order.voucherId = item["order_info"]["voucher_info"]["voucher_member_id"].string!
+                            order.voucherName = item["order_info"]["voucher_info"]["voucher_name"].string!
                             
                             self.orderList.addObject(order)
                             

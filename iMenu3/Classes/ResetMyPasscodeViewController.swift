@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import PureLayout
 import Alamofire
+import PureLayout
 import RKDropdownAlert
 import AFViewShaker
 import MBProgressHUD

@@ -1,7 +1,7 @@
 //
 //  CustomDrawView.swift
 //  iMenu3
-//  
+//
 //  Factory Class for Custom UIView Rendering
 //
 //  Created by Gabriel Anthony on 15/5/12.
@@ -76,6 +76,41 @@ class CustomDrawView: UIView {
             self.addSubview(secStep)
             secStep.autoAlignAxisToSuperviewAxis(.Horizontal)
             secStep.autoPinEdgeToSuperviewEdge(.Trailing, withInset: 23.0)
+        }
+        else if (self.drawType == "imageplcadeholder") {
+            
+            let bg: UIView = UIView.newAutoLayoutView()
+            bg.backgroundColor = UIColor.cloudsColor(alpha: 0.4)
+            self.addSubview(bg)
+            
+            bg.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsZero)
+            
+            let text: UILabel = UILabel.newAutoLayoutView()
+            text.text = "- TASTE -"
+            text.textAlignment = .Center
+            text.textColor = UIColor.cloudsColor()
+            self.addSubview(text)
+            
+            text.autoCenterInSuperview()
+            
+            
+        }
+        else if (self.drawType == "voucherBG") {
+            
+            self.backgroundColor = UIColor.clearColor()
+            
+            let view1: UIView = UIView(frame: CGRectMake(25, 15, self.width-50, self.height-30))
+            view1.backgroundColor = UIColor.clearColor()
+            view1.layer.borderWidth = 1.0
+            view1.layer.borderColor = self.lineColor?.CGColor
+            self.addSubview(view1)
+            
+            let view2: UIView = UIView(frame: CGRectMake(28, 18, self.width-56, self.height-36))
+            view2.backgroundColor = UIColor.clearColor()
+            view2.layer.borderWidth = 1.0
+            view2.layer.borderColor = self.lineColor?.CGColor
+            self.addSubview(view2)
+            
         }
         else if (self.drawType == "Line") {
             
@@ -187,6 +222,26 @@ class CustomDrawView: UIView {
             CGContextSetBlendMode(context, kCGBlendModeClear)
             CGContextFillPath(context)
         }
+        else if (self.drawType == "voucherHeader") {
+            
+            CGContextSetLineWidth(context, 1.0)
+            CGContextSetStrokeColorWithColor(context, UIColor.blackColor().colorWithAlphaComponent(0.1).CGColor)
+            CGContextMoveToPoint(context, 20.0, self.height / 2.0)
+            CGContextAddLineToPoint(context, self.width - 20.0, self.height / 2.0)
+            CGContextStrokePath(context)
+            
+            let validCountStr: UILabel = UILabel.newAutoLayoutView()
+            validCountStr.text = self.withTitle! + " " + VCAppLetor.StringLine.VoucherAvailable
+            validCountStr.textAlignment = .Center
+            validCountStr.textColor = UIColor.blackColor().colorWithAlphaComponent(0.4)
+            validCountStr.font = VCAppLetor.Font.LightSmall
+            validCountStr.backgroundColor = UIColor.whiteColor()
+            self.addSubview(validCountStr)
+            
+            validCountStr.autoSetDimensionsToSize(CGSizeMake(100.0, 14.0))
+            validCountStr.autoCenterInSuperview()
+            
+        }
         else if (self.drawType == "noMore") {
             
             CGContextSetLineWidth(context, 1.0)
@@ -260,7 +315,7 @@ class CustomDrawView: UIView {
         else if (self.drawType == "circle") {
             
             CGContextSetLineWidth(context, 6)
-            CGContextSetStrokeColorWithColor(context, UIColor.silverColor().colorWithAlphaComponent(0.8).CGColor)
+            CGContextSetStrokeColorWithColor(context, UIColor.cloudsColor(alpha: 0.4).CGColor)
             CGContextAddArc(context, self.width/2, self.width/2, self.width/2-10, 0, CGFloat(2*VCAppLetor.ConstValue.PI), 0)
             CGContextStrokePath(context)
             

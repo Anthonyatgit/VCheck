@@ -16,6 +16,7 @@ import AFViewShaker
 protocol MemberSigninDelegate {
     
     func memberDidSigninSuccess(mid: String, token: String)
+    func memberDidSigninWithWechatSuccess(mid: String, token: String)
 }
 
 class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, UITextFieldDelegate, RKDropdownAlertDelegate {
@@ -49,15 +50,17 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
     
     var tapGesture: UITapGestureRecognizer!
     
+    var hud: MBProgressHUD?
+    
     // MARK: - LifeCycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        self.scrollView.originX = 0.0
-//        self.scrollView.originY = 62.0
-//        self.scrollView.width = self.view.width
-//        self.scrollView.height = self.view.height-62.0
+        //        self.scrollView.originX = 0.0
+        //        self.scrollView.originY = 62.0
+        //        self.scrollView.width = self.view.width
+        //        self.scrollView.height = self.view.height-62.0
         
         self.title = VCAppLetor.StringLine.LoginPageTitle
         self.view.backgroundColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
@@ -73,7 +76,7 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
         closeView.addSubview(self.closeButton)
         
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: closeView)
-//        self.navigationController?.navigationBar.alpha = 0.2
+        //        self.navigationController?.navigationBar.alpha = 0.2
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: VCAppLetor.StringLine.Done, style: .Done, target: self, action: "letMeLogin")
         
@@ -327,7 +330,7 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
         self.loginPass.resignFirstResponder()
     }
     
-    // MARK: Functions
+    // MARK: - Functions
     
     func letMeLogin() {
         
@@ -406,7 +409,7 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
         
         // Present member register page
         
-        if CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String == "0" {
+        if !CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optToken, namespace: "token") {
             
             let regViewController: RegisterViewController = RegisterViewController()
             let parentNav = self.parentViewController as! UINavigationController
@@ -431,6 +434,7 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
     
     func signinWithWeibo() {
         
+        /**
         ShareSDK.getUserInfoWithType(ShareTypeSinaWeibo, authOptions: nil) {
             (result, userInfo, error) -> Void in
             
@@ -479,18 +483,24 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
                 })
             }
         }
-        
+        **/
     }
     
     
     func signinWithWechat() {
         
-        ShareSDK.getUserInfoWithType(ShareTypeWeixiTimeline, authOptions: nil) {
+        
+        
+        CTMemCache.sharedInstance.set(VCAppLetor.LoginType.WeChat, data: true, namespace: "Sign")
+        
+        ShareSDK.getUserInfoWithType(ShareTypeWeixiSession, authOptions: nil) {
             (result, userInfo, error) -> Void in
             
             if result {
                 
                 
+                self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                self.hud?.mode = MBProgressHUDMode.Indeterminate
                 
                 println("result: \(result) | userInfo: \(userInfo.sourceData() as NSDictionary)")
                 
@@ -498,27 +508,82 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
                 //============================================================
                 var mid: String = userInfo.uid()
                 
-                BreezeStore.saveInBackground({ (contextType) -> Void in
+                if (error == nil) {
+                    
+                    let userInfoDict = userInfo.sourceData() as NSDictionary
+                    
+                    var wxUserInfo: NSMutableDictionary = NSMutableDictionary()
+                    wxUserInfo.setValue(userInfo.uid(), forKeyPath: "uid")
+                    wxUserInfo.setValue(userInfoDict.valueForKey("openid"), forKeyPath: "openid")
+                    wxUserInfo.setValue(userInfo.nickname(), forKeyPath: "nickname")
+                    let sex: AnyObject? = userInfoDict.valueForKey("sex")
+                    wxUserInfo.setValue("\(sex!)", forKeyPath: "sex")
+                    wxUserInfo.setValue(userInfoDict.valueForKey("province"), forKeyPath: "province")
+                    wxUserInfo.setValue(userInfoDict.valueForKey("city"), forKeyPath: "city")
+                    wxUserInfo.setValue(userInfoDict.valueForKey("country"), forKeyPath: "country")
+                    wxUserInfo.setValue(userInfo.profileImage(), forKeyPath: "headimgurl")
+                    wxUserInfo.setValue(userInfoDict.valueForKey("unionid"), forKeyPath: "unionid")
+                    
+                    CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatLogInfo, data: wxUserInfo, namespace: "LoginStatus")
+                    
+                    Alamofire.request(VCheckGo.Router.LoginWithWechat(wxUserInfo)).validate().responseSwiftyJSON({
+                        (_, _, JSON, error) -> Void in
+                        
+                        if error == nil {
+                            
+                            let json = JSON
+                            
+                            if json["status"]["succeed"].string! == "1" {
+                                
+                                let memberId = json["data"]["member_id"].string!
+                                let token = json["data"]["token"].string!
+                                
+                                if memberId == "0" && token == "" {
+                                    
+                                    CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatLog, data: true, namespace: "LoginStatus")
+                                    
+                                    CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatAvatar, data: wxUserInfo.valueForKey("headimgurl"), namespace: "LoginStatus")
+                                    CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatNickname, data: wxUserInfo.valueForKey("nickname"), namespace: "LoginStatus")
+                                    
+                                    self.delegate?.memberDidSigninWithWechatSuccess(memberId, token: token)
+                                    
+                                }
+                                else {
+                                    
+                                    self.delegate?.memberDidSigninSuccess(memberId, token: token)
+                                    
+                                }
+                                
+                                self.dismiss()
+                                
+                            }
+                            else {
+                                RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                            }
+                            
+                        }
+                        else {
+                            println("ERROR @ Login with wechat : \(error?.localizedDescription)")
+                        }
+                    })
+                }
+                else {
+                    
+                    self.hud?.hide(true)
+                    println("ERROR @ Auth with WeChat:\(error.errorCode())-\(error.errorDescription())")
+                }
+                
+                
+                BreezeStore.saveInMain({ (contextType) -> Void in
                     
                     let member = Member.createInContextOfType(contextType) as! Member
+                    
                     member.mid = userInfo.uid()
                     member.nickname = userInfo.nickname()
                     member.iconURL = userInfo.profileImage()
+                    member.lastLog = NSDate()
+                    member.token = "1"
                     
-                    }, completion: { error -> Void in
-                        
-                        if (error != nil) {
-                            println("\(error?.localizedDescription)")
-                        }
-                        else {
-                            
-                            CTMemCache.sharedInstance.set("isLogin", data: true, namespace: "member")
-                            CTMemCache.sharedInstance.set("loginType", data: VCAppLetor.LoginType.WeChat, namespace: "member")
-                            CTMemCache.sharedInstance.set("currentMid", data: mid, namespace: "member")
-                            // Prepare for member login refresh
-                            self.delegate?.memberDidSigninSuccess(mid, token: "0")
-                            self.dismiss()
-                        }
                 })
             }
         }

@@ -45,10 +45,14 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
     // Interface datasource
     var userInfoDataSource: NSMutableArray = NSMutableArray()
     
+    var memberInfo: MemberInfo?
+    
     var delegate: MemberLogoutDelegate?
     var parentNav: UINavigationController?
     
     let reachability = Reachability.reachabilityForInternetConnection()
+    
+    let picker: UzysAssetsPickerController = UzysAssetsPickerController()
     
     var hud: MBProgressHUD!
     
@@ -116,67 +120,60 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
                 cell.avatar.image = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberIcon, namespace: "member")?.data as? UIImage
             }
             else {
-                if self.reachability.isReachable() {
+                
+                let midString = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+                
+                // Read avatar icon from local cache file
+                if var avatarDirectoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
                     
-                    let icon = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Icon, namespace: "member")?.data as! String
-                    Alamofire.request(.GET, icon).validate().responseImage() {
-                        (_, _, image, error) in
+                    var err: NSError?
+                    
+                    avatarDirectoryURL = avatarDirectoryURL.URLByAppendingPathComponent("/avatar/\(midString)")
+                    
+                    let avatarIconFile = NSFileManager.defaultManager().contentsAtPath(avatarDirectoryURL.path!)
+                    
+                    if avatarIconFile != nil {
                         
-                        if error == nil && image != nil {
-                            cell.avatar.image = image
+                        let avatarIconImage = UIImage(data: avatarIconFile!)
+                        
+                        let avatarIcon = Toucan.Resize.resizeImage(avatarIconImage!, size: CGSizeMake(40.0, 40.0), fitMode: Toucan.Resize.FitMode.Crop)
+                        
+                        cell.avatar.image = avatarIcon
+                    }
+                    else {
+                        
+                        let icon = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Icon, namespace: "member")?.data as! String
+                        Alamofire.request(.GET, icon).validate().responseImage() {
+                            (_, _, image, error) in
+                            
+                            if error == nil && image != nil {
+                                
+                                cell.avatar.image = image
+                            }
                         }
                     }
-                }
-                else {
-                    
-                    let midString = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
-                    
-                    // Read avatar icon from local cache file
-                    if var avatarDirectoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL {
-                        
-                        var err: NSError?
-                        
-                        avatarDirectoryURL = avatarDirectoryURL.URLByAppendingPathComponent("/avatar/\(midString)")
-                        
-                        
-                        let avatarIconFile = NSFileManager.defaultManager().contentsAtPath(avatarDirectoryURL.path!)
-                        
-                        if avatarIconFile != nil {
-                            
-                            let avatarIconImage = UIImage(data: avatarIconFile!)
-                            
-                            let avatarIcon = Toucan.Resize.resizeImage(avatarIconImage!, size: CGSizeMake(40, 40), fitMode: Toucan.Resize.FitMode.Crop)
-                            
-                            cell.avatar.image = avatarIcon
-                        }
-                        else {
-                            cell.avatar.tintColor = UIColor.whiteColor().colorWithAlphaComponent(0.4)
-                            cell.avatar.image = UIImage(named: VCAppLetor.IconName.UserInfoIconWithoutSignin)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-                        }
-                    }
-                    
                 }
             }
             
         }
         else if (indexPath.section == 0 && indexPath.row == 1) { // Email
             cell.title.text = VCAppLetor.UserPanel.Email
-            cell.subTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Email, namespace: "member")?.data as? String ?? VCAppLetor.StringLine.NotSetYet
+            cell.subTitle.text = self.memberInfo?.email == "" ? VCAppLetor.StringLine.NotSetYet : self.memberInfo?.email
         }
         else if (indexPath.section == 0 && indexPath.row == 2) { // Nickname
             cell.title.text = VCAppLetor.UserPanel.Nickname
-            cell.subTitle.text = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as? String ?? VCAppLetor.StringLine.NotSetYet
+            cell.subTitle.text = self.memberInfo?.nickname == "" ? VCAppLetor.StringLine.NotSetYet : self.memberInfo?.nickname
         }
         else if (indexPath.section == 1 && indexPath.row == 0) { // Phone Number
             cell.title.text = VCAppLetor.UserPanel.PhoneNumber
-            var phoneNumber = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Mobile, namespace: "member")?.data as? String ??  VCAppLetor.StringLine.NotSetYet
+            var phoneNumber = self.memberInfo?.mobile == "" ?  VCAppLetor.StringLine.NotSetYet : self.memberInfo?.mobile!
             
             if phoneNumber != VCAppLetor.StringLine.NotSetYet {
-                var range = Range<String.Index>(start: advance(phoneNumber.startIndex, 3),end: advance(phoneNumber.endIndex, -4))
-                phoneNumber.replaceRange(range, with: "••••")
+                var range = Range<String.Index>(start: advance(phoneNumber!.startIndex, 3),end: advance(phoneNumber!.endIndex, -4))
+                phoneNumber!.replaceRange(range, with: "••••")
             }
             
-            cell.subTitle.text = phoneNumber
+            cell.subTitle.text = phoneNumber!
             
         }
         else if (indexPath.section == 1 && indexPath.row == 1) { // Passcode
@@ -217,6 +214,7 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         let editMemberInfoViewController: EditUserInfoViewController = EditUserInfoViewController()
         editMemberInfoViewController.parentNav = self.parentNav
         editMemberInfoViewController.delegate = self
+        editMemberInfoViewController.memberInfo = self.memberInfo
         
         if (indexPath.section == 0 && indexPath.row == 0) { // Avatar
             
@@ -226,11 +224,11 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
             UConfig.assetsCountInALine = 3
             UzysAssetsPickerController.setUpAppearanceConfig(UConfig)
             
-            let picker: UzysAssetsPickerController = UzysAssetsPickerController()
-            picker.delegate = self
-            picker.maximumNumberOfSelectionPhoto = 1
             
-            self.presentViewController(picker, animated: true, completion: { () -> Void in
+            self.picker.delegate = self
+            self.picker.maximumNumberOfSelectionPhoto = 1
+            
+            self.presentViewController(self.picker, animated: true, completion: { () -> Void in
                 
             })
             return
@@ -238,7 +236,7 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         else if (indexPath.section == 0 && indexPath.row == 1) { // Nickname
             editMemberInfoViewController.editType = VCAppLetor.EditType.Email
         }
-        else if (indexPath.section == 0 && indexPath.row == 1) { // Nickname
+        else if (indexPath.section == 0 && indexPath.row == 2) { // Nickname
             editMemberInfoViewController.editType = VCAppLetor.EditType.Nickname
         }
         else if (indexPath.section == 1 && indexPath.row == 0) { // Phone number
@@ -335,11 +333,14 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
             
             let assetsArr = assets as NSArray
             
+            let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.picker.view, animated: true)
+            hud.mode = MBProgressHUDMode.Indeterminate
+            
             assetsArr.enumerateObjectsUsingBlock({ (obj, idx, stop) -> Void in
                 
                 let representation: ALAsset = obj as! ALAsset
                 
-//                let img: UIImage = UIImage(CGImage: representation.defaultRepresentation().fullResolutionImage() as! CGImage)!
+                //                let img: UIImage = UIImage(CGImage: representation.defaultRepresentation().fullResolutionImage() as! CGImage)!
                 let img: UIImage = UIImage(CGImage: representation.defaultRepresentation().fullResolutionImage().takeUnretainedValue() as CGImage)!
                 
                 let iconResizedImage = Toucan.Resize.resizeImage(img, size: CGSizeMake(200, 200), fitMode: Toucan.Resize.FitMode.Crop)
@@ -348,13 +349,30 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
                 let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
                 let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
                 
-                let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                hud.mode = MBProgressHUDMode.Indeterminate
-                
-                
                 let dic: NSDictionary = NSDictionary(object: memberId, forKey: "member_id")
                 
                 if self.reachability.isReachable() {
+                    
+                    var directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL
+                    directoryURL = directoryURL!.URLByAppendingPathComponent("avatar")
+                    
+                    if !NSFileManager.defaultManager().fileExistsAtPath(directoryURL!.path!) {
+                        
+                        NSFileManager.defaultManager().createDirectoryAtPath(directoryURL!.path!, withIntermediateDirectories: true, attributes: nil, error: nil)
+                    }
+                    
+                    directoryURL = directoryURL!.URLByAppendingPathComponent("\(memberId)")
+                    
+                    var err: NSError?
+                    
+                    if NSFileManager.defaultManager().fileExistsAtPath(directoryURL!.path!) {
+                        
+                        NSFileManager.defaultManager().removeItemAtPath(directoryURL!.path!, error: &err)
+                        println("remove path: \(directoryURL!.path!)")
+                    }
+                    
+                    NSFileManager.defaultManager().createFileAtPath(directoryURL!.path!, contents: UIImagePNGRepresentation(iconResizedImage), attributes: nil)
+                    
                     
                     (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserInfoCell).avatar.image = iconResizedImage
                     
@@ -482,7 +500,7 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         
         if email != "" {
             
-            let cell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0)) as! UserInfoCell
+            let cell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! UserInfoCell
             cell.subTitle.text = email
             
             let mid = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
@@ -494,9 +512,15 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
                     member.email = email
                 })
                 
-                CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Email, data: email, namespace: "member")
+                let memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo
+                
+                memberInfo.email = email
+                
+                CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberInfo, data: memberInfo, namespace: "member")
             }
             else { //Create member record if DO NOT EXIST
+                
+                let memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo
                 
                 BreezeStore.saveInBackground({ (contextType) -> Void in
                     
@@ -504,9 +528,9 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
                     
                     member.mid = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
                     member.email = email
-                    member.phone = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Mobile, namespace: "member")?.data as! String
-                    member.nickname = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Nickname, namespace: "member")?.data as! String
-                    member.iconURL = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Icon, namespace: "member")?.data as! String
+                    member.phone = memberInfo.mobile!
+                    member.nickname = memberInfo.nickname!
+                    member.iconURL = memberInfo.icon!
                     member.lastLog = NSDate()
                     member.token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
                     
@@ -523,7 +547,7 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         }
         else if nickname != "" {
             
-            let cell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 1, inSection: 0)) as! UserInfoCell
+            let cell = self.tableView.cellForRowAtIndexPath(NSIndexPath(forRow: 2, inSection: 0)) as! UserInfoCell
             cell.subTitle.text = nickname
             
             let mid = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
@@ -535,19 +559,25 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
                     member.nickname = nickname
                 })
                 
-                CTMemCache.sharedInstance.set(VCAppLetor.UserInfo.Nickname, data: nickname, namespace: "member")
+                let memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo
+                
+                memberInfo.nickname = nickname
+                
+                CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberInfo, data: memberInfo, namespace: "member")
             }
             else { //Create member record if DO NOT EXIST
+                
+                let memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo
                 
                 BreezeStore.saveInBackground({ (contextType) -> Void in
                     
                     let member = Member.createInContextOfType(contextType) as! Member
                     
                     member.mid = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
-                    member.email = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Email, namespace: "member")?.data as! String
-                    member.phone = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Mobile, namespace: "member")?.data as! String
+                    member.email = memberInfo.email!
+                    member.phone = memberInfo.mobile!
                     member.nickname = nickname
-                    member.iconURL = CTMemCache.sharedInstance.get(VCAppLetor.UserInfo.Icon, namespace: "member")?.data as! String
+                    member.iconURL = memberInfo.icon!
                     member.lastLog = NSDate()
                     member.token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
                     
@@ -580,7 +610,9 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
             if memberId != "0" && token != "0" {
                 
                 
-                Alamofire.request(VCheckGo.Router.MemberLogout(token, memberId)).validate().responseSwiftyJSON({
+                let deviceToken = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optDeviceToken, namespace: "DeviceToken")?.data as! String
+                
+                Alamofire.request(VCheckGo.Router.MemberLogout(token, memberId, deviceToken)).validate().responseSwiftyJSON({
                     (_, _, JSON, error) -> Void in
                     
                     if error == nil {
@@ -598,9 +630,12 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
                                 ShareSDK.cancelAuthWithType(ShareTypeWeixiTimeline)
                             }
                             
+                            // Push user device token
+                            //pushDeviceToken(VCheckGo.PushDeviceType.delete, tokenStr: token)
+                            
                             // Call delegate
-                            self.delegate?.memberDidLogoutSuccess(memberId)
                             self.parentNav?.popViewControllerAnimated(true)
+                            self.delegate?.memberDidLogoutSuccess(memberId)
                             
                             self.hud.hide(true)
                             
