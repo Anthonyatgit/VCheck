@@ -158,15 +158,15 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         }
         else if (indexPath.section == 0 && indexPath.row == 1) { // Email
             cell.title.text = VCAppLetor.UserPanel.Email
-            cell.subTitle.text = self.memberInfo?.email == "" ? VCAppLetor.StringLine.NotSetYet : self.memberInfo?.email
+            cell.subTitle.text = self.memberInfo?.email! == "" ? VCAppLetor.StringLine.NotSetYet : self.memberInfo?.email!
         }
         else if (indexPath.section == 0 && indexPath.row == 2) { // Nickname
             cell.title.text = VCAppLetor.UserPanel.Nickname
-            cell.subTitle.text = self.memberInfo?.nickname == "" ? VCAppLetor.StringLine.NotSetYet : self.memberInfo?.nickname
+            cell.subTitle.text = self.memberInfo?.nickname! == "" ? VCAppLetor.StringLine.NotSetYet : self.memberInfo?.nickname!
         }
         else if (indexPath.section == 1 && indexPath.row == 0) { // Phone Number
             cell.title.text = VCAppLetor.UserPanel.PhoneNumber
-            var phoneNumber = self.memberInfo?.mobile == "" ?  VCAppLetor.StringLine.NotSetYet : self.memberInfo?.mobile!
+            var phoneNumber = self.memberInfo?.mobile! == "" ?  VCAppLetor.StringLine.NotSetYet : self.memberInfo?.mobile!
             
             if phoneNumber != VCAppLetor.StringLine.NotSetYet {
                 var range = Range<String.Index>(start: advance(phoneNumber!.startIndex, 3),end: advance(phoneNumber!.endIndex, -4))
@@ -182,11 +182,22 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         }
         else if (indexPath.section == 2 && indexPath.row == 0) { // Weibo
             cell.title.text = VCAppLetor.UserPanel.SinaWeibo
-            cell.subTitle.text = CTMemCache.sharedInstance.get("nickname_weibo", namespace: "member")?.data as? String ?? VCAppLetor.StringLine.NotAuthYet
+            cell.subTitle.text = VCAppLetor.StringLine.NotAuthYet
+            
+            if self.memberInfo?.bindWeibo! == "1" {
+                //cell.subTitle.text = self.memberInfo?.nickname!
+                cell.subTitle.text = VCAppLetor.StringLine.DoAuthed
+            }
+            
         }
         else if (indexPath.section == 2 && indexPath.row == 1) { // WeChat
             cell.title.text = VCAppLetor.UserPanel.WeChat
-            cell.subTitle.text = CTMemCache.sharedInstance.get("nickname_wechat", namespace: "member")?.data as? String ?? VCAppLetor.StringLine.NotAuthYet
+            cell.subTitle.text = VCAppLetor.StringLine.NotAuthYet
+            
+            if self.memberInfo?.bindWechat! == "1" {
+                //cell.subTitle.text = self.memberInfo?.nickname!
+                cell.subTitle.text = VCAppLetor.StringLine.DoAuthed
+            }
         }
         
         cell.setNeedsUpdateConstraints()
@@ -214,7 +225,7 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         let editMemberInfoViewController: EditUserInfoViewController = EditUserInfoViewController()
         editMemberInfoViewController.parentNav = self.parentNav
         editMemberInfoViewController.delegate = self
-        editMemberInfoViewController.memberInfo = self.memberInfo
+        editMemberInfoViewController.memberInfo = self.memberInfo!
         
         if (indexPath.section == 0 && indexPath.row == 0) { // Avatar
             
@@ -247,16 +258,120 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
             editMemberInfoViewController.editType = VCAppLetor.EditType.Password
         }
         else if (indexPath.section == 2 && indexPath.row == 0) { // Weibo
-            // Logout with ShareSDK if neccesory
-            if !ShareSDK.hasAuthorizedWithType(ShareTypeSinaWeibo) {
-                
-            }
+            
+            
+            
+            
             return
         }
         else if (indexPath.section == 2 && indexPath.row == 1) { // WeChat
-            if ShareSDK.hasAuthorizedWithType(ShareTypeWeixiTimeline) {
+            
+            if self.memberInfo?.bindWechat! == "0" {
                 
+                ShareSDK.getUserInfoWithType(ShareTypeWeixiSession, authOptions: nil) {
+                    (result, userInfo, error) -> Void in
+                    
+                    if result {
+                        
+                        
+                        self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                        self.hud?.mode = MBProgressHUDMode.Indeterminate
+                        
+                        // Fitch member info from server when login return success, cache member info in the local and refresh userinterface
+                        //============================================================
+                        var mid: String = userInfo.uid()
+                        
+                        if (error == nil) {
+                            
+                            let userInfoDict = userInfo.sourceData() as NSDictionary
+                            
+                            var wxUserInfo: NSMutableDictionary = NSMutableDictionary()
+                            wxUserInfo.setValue(userInfo.uid(), forKeyPath: "uid")
+                            wxUserInfo.setValue(userInfoDict.valueForKey("openid"), forKeyPath: "openid")
+                            wxUserInfo.setValue(userInfo.nickname(), forKeyPath: "nickname")
+                            let sex: AnyObject? = userInfoDict.valueForKey("sex")
+                            wxUserInfo.setValue("\(sex!)", forKeyPath: "sex")
+                            wxUserInfo.setValue(userInfoDict.valueForKey("province"), forKeyPath: "province")
+                            wxUserInfo.setValue(userInfoDict.valueForKey("city"), forKeyPath: "city")
+                            wxUserInfo.setValue(userInfoDict.valueForKey("country"), forKeyPath: "country")
+                            wxUserInfo.setValue(userInfo.profileImage(), forKeyPath: "headimgurl")
+                            wxUserInfo.setValue(userInfoDict.valueForKey("unionid"), forKeyPath: "unionid")
+                            
+                            CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatAuthUserInfo, data: wxUserInfo, namespace: "Thirdpart")
+                            
+                            let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+                            
+                            Alamofire.request(VCheckGo.Router.EditBindWithWechat(self.memberInfo!.memberId, "1", wxUserInfo, token)).validate().responseSwiftyJSON({
+                                (_, _, JSON, error) -> Void in
+                                
+                                if error == nil {
+                                    
+                                    let json = JSON
+                                    
+                                    if json["status"]["succeed"].string! == "1" {
+                                        
+                                        let cell = self.tableView.cellForRowAtIndexPath(indexPath) as! UserInfoCell
+                                        
+                                        cell.subTitle.text = VCAppLetor.StringLine.DoAuthed
+                                        
+                                        
+                                    }
+                                    else {
+                                        RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                                    }
+                                    
+                                }
+                                else {
+                                    println("ERROR @ Login with wechat : \(error?.localizedDescription)")
+                                }
+                                self.hud.hide(true)
+                            })
+                        }
+                        else {
+                            
+                            self.hud?.hide(true)
+                            println("ERROR @ Auth with WeChat:\(error.errorCode())-\(error.errorDescription())")
+                        }
+                        
+                    }
+                    
+                }
             }
+            else {
+                
+                self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                self.hud.mode = MBProgressHUDMode.Indeterminate
+                
+                let wxUserInfo = CTMemCache.sharedInstance.get(VCAppLetor.LoginStatus.WechatAuthUserInfo, namespace: "Thirdpart")?.data as! NSDictionary
+                let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+                
+                Alamofire.request(VCheckGo.Router.EditBindWithWechat(self.memberInfo!.memberId, "0", wxUserInfo, token)).validate().responseSwiftyJSON({
+                    (_, _, JSON, error) -> Void in
+                    
+                    if error == nil {
+                        
+                        let json = JSON
+                        
+                        if json["status"]["succeed"].string! == "1" {
+                            
+                            let cell = self.tableView.cellForRowAtIndexPath(indexPath) as! UserInfoCell
+                            
+                            cell.subTitle.text = VCAppLetor.StringLine.NotAuthYet
+                            
+                        }
+                        else {
+                            RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                        }
+                        
+                    }
+                    else {
+                        println("ERROR @ Login with wechat : \(error?.localizedDescription)")
+                    }
+                    
+                    self.hud.hide(true)
+                })
+            }
+            
             return
         }
         else {

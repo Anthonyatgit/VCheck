@@ -390,6 +390,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
             mailBoxVC.modalPresentationStyle = .Popover
             mailBoxVC.modalTransitionStyle = .CoverVertical
             mailBoxVC.popoverPresentationController?.delegate = self
+            mailBoxVC.userPenalVC = self
             presentViewController(mailBoxVC, animated: true, completion: nil)
         }
         else {
@@ -553,6 +554,9 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                         memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
                         memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
                         memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
+                        
+                        memberInfo.bindWechat = json["data"]["thirdpart_info"]["weixin_bind"].string!
+                        memberInfo.bindWeibo = json["data"]["thirdpart_info"]["weibo_bind"].string!
                         
                         // update local data
                         self.updateSettings(token, currentMid: mid)
@@ -741,6 +745,9 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                     memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
                     memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
                     
+                    memberInfo.bindWechat = json["data"]["thirdpart_info"]["weixin_bind"].string!
+                    memberInfo.bindWeibo = json["data"]["thirdpart_info"]["weibo_bind"].string!
+                    
                     // update local data
                     self.updateSettings(token, currentMid: mid)
                     
@@ -839,6 +846,9 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                     memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
                     memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
                     memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
+                    
+                    memberInfo.bindWechat = json["data"]["thirdpart_info"]["weixin_bind"].string!
+                    memberInfo.bindWeibo = json["data"]["thirdpart_info"]["weibo_bind"].string!
                     
                     // update local data
                     self.updateSettings(token, currentMid: mid)
@@ -939,7 +949,11 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                     memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
                     memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
                     
+                    memberInfo.bindWechat = json["data"]["thirdpart_info"]["weixin_bind"].string!
+                    memberInfo.bindWeibo = json["data"]["thirdpart_info"]["weibo_bind"].string!
+                    
                     // update local data
+                    println("LoginToken: \(token)")
                     self.updateSettings(token, currentMid: mid)
                     
                     if let member = Member.findFirst(attribute: "mid", value: memberInfo.memberId, contextType: BreezeContextType.Main) as? Member {

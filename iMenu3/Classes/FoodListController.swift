@@ -520,6 +520,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optMemberInfo, namespace: "member") {
                 
                 memberPanel.memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as? MemberInfo
+                
+                println("member: \(memberPanel.memberInfo!.bindWechat!)")
             }
             self.navigationController?.showViewController(memberPanel, sender: self)
         }
@@ -2187,6 +2189,9 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                     memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
                     memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
                     memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
+                    
+                    memberInfo.bindWechat = json["data"]["thirdpart_info"]["weixin_bind"].string!
+                    memberInfo.bindWeibo = json["data"]["thirdpart_info"]["weibo_bind"].string!
                     
                     // update local data
                     self.updateSettings(token, currentMid: mid)

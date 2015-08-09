@@ -43,6 +43,7 @@ struct VCheckGo {
         case GetMemberInfo(String, String)                                          // 12.会员-获取个人详情
         case GetMyCollections(String, Int, Int, String)                             // 13.会员-获取我的收藏列表
         case EditMyCollection(String, CollectionEditType, String, String)           // 14.会员-编辑我的收藏列表
+        case GetMyMessages(String, Int, Int, String)                                // 15.会员-获取会员消息列表
         case FeedBack(String, String, String)                                       // 16.基本-提交反馈信息
         case GetCityList()                                                          // 17.基本-获取地区列表
         case GetProductList(Int, Int)                                               // 18.产品-获取产品列表
@@ -51,6 +52,7 @@ struct VCheckGo {
         case GetIndexImage(String)                                                  // 20.基本-获取封面首页
         case LoginWithWechat(NSDictionary)                                          // 21.第三方-微信登陆
         case RegWithWechat(NSDictionary, String, String)                            // 22.第三方-微信注册
+        case EditBindWithWechat(String, String, NSDictionary, String)               // 23.第三方-编辑微信绑定关系
         case PushDeviceToken(String, String, PushDeviceType, String)                // 24.基本-提交推送设备信息
         case GetOrderList(String, Int, Int, String)                                 // 26.会员-获取订单列表
         case GetOrderDetail(String, String, String)                                 // 27.会员-获取订单详情
@@ -182,6 +184,20 @@ struct VCheckGo {
                     
                     let params = ["route":"\(RoutePath.RegWithWechat.rawValue)","token":"","jsonText":"{\"wx_info\":{\"openid\":\"\(openid)\",\"nickname\":\"\(nickname)\",\"sex\":\"\(sex)\",\"province\":\"\(province)\",\"city\":\"\(city)\",\"country\":\"\(country)\",\"headimgurl\":\"\(headimgurl)\",\"unionid\":\"\(unionid)\"},\"mobile\":\"\(mobile)\",\"code\":\"\(code)\"}"]
                     return ("/\(RoutePath.RegWithWechat.rawValue)", params)
+                    //=========EditBindWithWechat=============
+                case .EditBindWithWechat(let memberId, let opType, let userInfo, let token):
+                    
+                    let openid = userInfo.valueForKey("openid") as! String
+                    let nickname = userInfo.valueForKey("nickname") as! String
+                    let sex = userInfo.valueForKey("sex") as! String
+                    let province = userInfo.valueForKey("province") as! String
+                    let city = userInfo.valueForKey("city") as! String
+                    let country = userInfo.valueForKey("country") as! String
+                    let headimgurl = userInfo.valueForKey("headimgurl") as! String
+                    let unionid = userInfo.valueForKey("unionid") as! String
+                    
+                    let params = ["route":"\(RoutePath.EditBindWithWechat.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"operator_type\":\"\(opType)\",\"wx_info\":{\"openid\":\"\(openid)\",\"nickname\":\"\(nickname)\",\"sex\":\"\(sex)\",\"province\":\"\(province)\",\"city\":\"\(city)\",\"country\":\"\(country)\",\"headimgurl\":\"\(headimgurl)\",\"unionid\":\"\(unionid)\"}}"]
+                    return ("/\(RoutePath.EditBindWithWechat.rawValue)", params)
                 //=========PushDeviceToken===========
                 case .PushDeviceToken(let memberId, let deviceToken, let pushDeviceType, let token):
                     let params = ["route":"\(RoutePath.PushDeviceToken.rawValue)","token":"\(token)","device_type":"\(DeviceType.iPhone.rawValue)","jsonText":"{\"member_id\":\"\(memberId)\",\"device_token\":\"\(deviceToken)\",\"operator_type\":\"\(pushDeviceType.rawValue)\"}"]
@@ -206,6 +222,10 @@ struct VCheckGo {
                 case .EditMyCollection(let memberId, let collectionEditType, let articleId, let token):
                     let params = ["route":"\(RoutePath.EditMyCollection.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"operator_type\":\"\(collectionEditType.rawValue)\",\"article_list\":{\"article_id\":\"\(articleId)\"}}"]
                     return ("/\(RoutePath.EditMyCollection.rawValue)", params)
+                    //=========GetMyMessages==========
+                case .GetMyMessages(let memberId, let page, let count, let token):
+                    let params = ["route":"\(RoutePath.GetMessageList.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"pagination\":{\"page\":\"\(page)\",\"count\":\"\(count)\"}}"]
+                    return ("/\(RoutePath.GetMessageList.rawValue)", params)
                     //=========GetVoucherList==========
                 case .GetMyVouchers(let memberId, let page, let count, let token):
                     let params = ["route":"\(RoutePath.GetMyVouchers.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"pagination\":{\"page\":\"\(page)\",\"count\":\"\(count)\"}}"]
@@ -327,6 +347,7 @@ struct VCheckGo {
         case MemberRegister = "member/member/register"
         case MemberLogin = "member/member/login"
         case GetMemberInfo = "member/member/getMemberDetail"
+        case GetMessageList = "member/message/getMessageList"
         case MemberLogout = "member/member/logout"
         case EditMemberIcon = "member/member/editMemberIcon"
         case ResetPassword = "member/member/resetPassword"
@@ -356,6 +377,7 @@ struct VCheckGo {
         
         case LoginWithWechat = "member/member_thirdpart/loginWithWx"
         case RegWithWechat = "member/member_thirdpart/registerWithWx"
+        case EditBindWithWechat = "member/member_thirdpart/editWithWx"
         
     }
     
@@ -405,6 +427,26 @@ class CityInfo: NSObject {
     
 }
 
+class MessageInfo: NSObject {
+    
+    let msg_id: String
+    
+    var type: String?
+    var content: String?
+    var addDate: NSDate?
+    
+    var route: String?
+    var param: String?
+    
+    var is_open: String?
+    
+    init(msgId: String) {
+        
+        self.msg_id = msgId
+    }
+    
+}
+
 
 class MemberInfo: NSObject {
     
@@ -431,6 +473,8 @@ class MemberInfo: NSObject {
     var pushRefund: String?
     var pushVoucher: String?
     
+    var bindWechat: String?
+    var bindWeibo: String?
     
     init(mid: String) {
         

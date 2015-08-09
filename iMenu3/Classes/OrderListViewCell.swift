@@ -120,8 +120,8 @@ class OrderListViewCell: UITableViewCell {
         self.price.sizeToFit()
         self.addSubview(self.price)
         
-        let amountValue = round_price("\((self.orderInfo.totalPrice! as NSString).floatValue / (self.orderInfo.pricePU! as NSString).floatValue)")
-        self.amount.text = "\(VCAppLetor.StringLine.AmountName): \(amountValue)"
+        //let amountValue = round_price("\((self.orderInfo.totalPrice! as NSString).floatValue / (self.orderInfo.pricePU! as NSString).floatValue)")
+        self.amount.text = "\(VCAppLetor.StringLine.AmountName): \(self.orderInfo.itemCount!)"
         self.amount.textAlignment = .Left
         self.amount.textColor = UIColor.lightGrayColor().colorWithAlphaComponent(0.8)
         self.amount.font = VCAppLetor.Font.SmallFont

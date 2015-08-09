@@ -91,6 +91,8 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
             self.tableView.triggerPullToRefresh()
         }
         
+        CTMemCache.sharedInstance.set(VCAppLetor.ObjectIns.objOrderList, data: self, namespace: "object")
+        
     }
     
     override func updateViewConstraints() {

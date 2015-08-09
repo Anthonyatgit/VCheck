@@ -97,6 +97,8 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
     
     var hud: MBProgressHUD!
     
+    var didUpdateConstraint: Bool = false
+    
     //MARK: - LifeCycle
     
     override func viewDidLoad() {
@@ -118,10 +120,10 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
         self.scrollView.frame = self.view.bounds
         self.scrollView.frame.size.height = self.view.bounds.height - VCAppLetor.ConstValue.CheckNowBarHeight
-        
+        self.scrollView.contentMode = UIViewContentMode.Top
+        self.scrollView.backgroundColor = UIColor.whiteColor()
         self.scrollView.showsVerticalScrollIndicator = false
         self.scrollView.delegate = self
-        self.scrollView.backgroundColor = UIColor.whiteColor()
         
         
         self.setupPayView()
@@ -134,10 +136,6 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         
     }
     
-    func canclePay() {
-        
-        self.parentNav.popToViewController(self.foodDetailVC, animated: true)
-    }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -147,196 +145,214 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        self.scrollView.contentSize = self.scrollView.frame.size
-        self.scrollView.contentSize.height = self.scrollView.frame.size.height
-        
+        if self.didUpdateConstraint {
+            
+            self.scrollView.contentSize = self.scrollView.frame.size
+            
+            if (self.wechatUnderline.originY + 15.0) < self.scrollView.frame.height {
+                
+                self.scrollView.contentSize.height = self.scrollView.frame.height + 1.0 - VCAppLetor.ConstValue.CheckNowBarHeight
+            }
+            else {
+                self.scrollView.contentSize.height = self.wechatUnderline.originY + 15.0
+            }
+        }
     }
     
     override func updateViewConstraints() {
+        
         super.updateViewConstraints()
         
-        self.topTip.autoSetDimensionsToSize(CGSizeMake(self.scrollView.width, 32.0))
-        self.topTip.autoPinEdgeToSuperviewEdge(.Top)
-        self.topTip.autoAlignAxisToSuperviewAxis(.Vertical)
         
-        self.foodTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 20.0)
-        self.foodTitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.topTip, withOffset: 25.0)
-        self.foodTitle.autoSetDimensionsToSize(CGSizeMake(self.scrollView.width - 40.0, 30.0))
         
-        self.foodTitleUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.foodTitleUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodTitle, withOffset: 5.0)
-        self.foodTitleUnderline.autoMatchDimension(.Width, toDimension: .Width, ofView: self.foodTitle)
-        self.foodTitleUnderline.autoSetDimension(.Height, toSize: 5.0)
-        
-        self.priceName.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.priceName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodTitleUnderline, withOffset: 10.0)
-        self.priceName.autoSetDimensionsToSize(CGSizeMake(40.0, 20.0))
-        
-        self.priceUnit.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.priceUnit.autoPinEdge(.Top, toEdge: .Top, ofView: self.priceName)
-        //self.priceUnit.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
-        
-        self.priceValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.priceUnit)
-        self.priceValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.priceName)
-        //self.priceValue.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
-        
-        self.priceUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.priceName, withOffset: 10.0)
-        self.priceUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.priceName)
-        self.priceUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.priceUnderline.autoSetDimension(.Height, toSize: 3.0)
-        
-        self.amountName.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.amountName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.priceUnderline, withOffset: 10.0)
-        self.amountName.autoSetDimensionsToSize(CGSizeMake(40.0, 20.0))
-        
-        self.amountValue.autoAlignAxis(.Horizontal, toSameAxisOfView: self.amountName)
-        self.amountValue.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        //self.amountValue.autoSetDimensionsToSize(CGSizeMake(30.0, 14.0))
-        
-        self.amountUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.amountUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.amountName, withOffset: 10.0)
-        self.amountUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.amountUnderline.autoSetDimension(.Height, toSize: 3.0)
-        
-        self.totalPriceName.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.totalPriceName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.amountUnderline, withOffset: 10.0)
-        self.totalPriceName.autoSetDimensionsToSize(CGSizeMake(40.0, 20.0))
-        
-        self.totalPriceValue.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.totalPriceValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.totalPriceName)
-        //self.totalPriceValue.autoSetDimensionsToSize(CGSizeMake(80.0, 20.0))
-        
-        self.totalPriceUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.totalPriceUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.totalPriceUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.totalPriceName, withOffset: 10.0)
-        self.totalPriceUnderline.autoSetDimension(.Height, toSize: 3.0)
-        
-        self.couponName.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.couponName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.totalPriceUnderline, withOffset: 10.0)
-        self.couponName.autoSetDimensionsToSize(CGSizeMake(78.0, 20.0))
-        
-        self.couponArraw.autoSetDimensionsToSize(CGSizeMake(20.0, 24.0))
-        self.couponArraw.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.couponArraw.autoPinEdge(.Top, toEdge: .Top, ofView: self.couponName, withOffset: -4.0)
-        
-        //self.couponStat.autoSetDimensionsToSize(CGSizeMake(140.0, 20.0))
-        self.couponStat.autoPinEdge(.Top, toEdge: .Top, ofView: self.couponName)
-        self.couponStat.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.couponArraw, withOffset: -6.0)
-        
-        self.couponUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.couponUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.couponUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.couponName, withOffset: 10.0)
-        self.couponUnderline.autoSetDimension(.Height, toSize: 3.0)
-        
-        self.couponBtn.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.couponBtn.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.couponBtn.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.totalPriceUnderline)
-        self.couponBtn.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.couponUnderline)
-        
-        self.finalTotalName.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.finalTotalName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.couponUnderline, withOffset: 10.0)
-        self.finalTotalName.autoSetDimensionsToSize(CGSizeMake(78.0, 20.0))
-        
-        self.finalTotalValue.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.finalTotalValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.finalTotalName)
-        //self.finalTotalValue.autoSetDimensionsToSize(CGSizeMake(80.0, 20.0))
-        
-        self.finalTotalUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.finalTotalUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.finalTotalUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.finalTotalName, withOffset: 10.0)
-        self.finalTotalUnderline.autoSetDimension(.Height, toSize: 3.0)
-        
-        self.choosePayType.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.choosePayType.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.finalTotalUnderline, withOffset: 20.0)
-        self.choosePayType.autoSetDimensionsToSize(CGSizeMake(124.0, 24.0))
-        
-        self.payTip.autoSetDimensionsToSize(CGSizeMake(100.0, 20.0))
-        self.payTip.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.payTip.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.choosePayType)
-        
-        self.choosePayTypeUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.choosePayTypeUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.choosePayType, withOffset: 10.0)
-        self.choosePayTypeUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.choosePayTypeUnderline.autoSetDimension(.Height, toSize: 5.0)
-        
-        self.alipayIcon.autoSetDimensionsToSize(CGSizeMake(28.0, 28.0))
-        self.alipayIcon.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.alipayIcon.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.choosePayTypeUnderline, withOffset: 12.0)
-        
-        self.alipayTitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.alipayIcon, withOffset: 10.0)
-        //self.alipayTitle.autoSetDimensionsToSize(CGSizeMake(132.0, 20.0))
-        self.alipayTitle.autoPinEdge(.Top, toEdge: .Top, ofView: self.alipayIcon, withOffset: 0.0)
-        
-        self.alipaySubtitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.wechatIcon, withOffset: 10.0)
-        //self.alipaySubtitle.autoSetDimensionsToSize(CGSizeMake(self.view.width - 120, 20.0))
-        self.alipaySubtitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.alipayTitle, withOffset: 1.0)
-        
-        self.alipayActive.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.alipayActive.autoAlignAxis(.Horizontal, toSameAxisOfView: self.alipayIcon)
-        self.alipayActive.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
-        
-        self.activeCircleAlipay.autoPinEdge(.Top, toEdge: .Top, ofView: self.alipayActive)
-        self.activeCircleAlipay.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.alipayActive)
-        self.activeCircleAlipay.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
-        
-        self.alipayUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.alipayUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.alipayUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.alipayIcon, withOffset: 12.0)
-        self.alipayUnderline.autoSetDimension(.Height, toSize: 3.0)
-        
-        self.alipayBtn.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.alipayIcon)
-        self.alipayBtn.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.alipayBtn.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.choosePayTypeUnderline)
-        self.alipayBtn.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.alipayUnderline)
-        
-        self.wechatIcon.autoSetDimensionsToSize(CGSizeMake(28.0, 28.0))
-        self.wechatIcon.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.wechatIcon.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.alipayUnderline, withOffset: 12.0)
-        
-        self.wechatTitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.wechatIcon, withOffset: 10.0)
-        //self.wechatTitle.autoSetDimensionsToSize(CGSizeMake(132.0, 20.0))
-        self.wechatTitle.autoPinEdge(.Top, toEdge: .Top, ofView: self.wechatIcon, withOffset: 0.0)
-        
-        self.wechatSubtitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.wechatIcon, withOffset: 10.0)
-        //self.wechatSubtitle.autoSetDimensionsToSize(CGSizeMake(self.view.width - 120, 20.0))
-        self.wechatSubtitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.wechatTitle, withOffset: 1.0)
-        
-        self.wechatActive.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.wechatActive.autoAlignAxis(.Horizontal, toSameAxisOfView: self.wechatIcon)
-        self.wechatActive.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
-        
-        self.activeCircleWechat.autoPinEdge(.Top, toEdge: .Top, ofView: self.wechatActive)
-        self.activeCircleWechat.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.wechatActive)
-        self.activeCircleWechat.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
-        
-        self.wechatUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.wechatUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.wechatUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.wechatIcon, withOffset: 12.0)
-        self.wechatUnderline.autoSetDimension(.Height, toSize: 3.0)
-        
-        self.wechatBtn.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.wechatIcon)
-        self.wechatBtn.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
-        self.wechatBtn.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.alipayUnderline)
-        self.wechatBtn.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.wechatUnderline)
-        
-        self.payBarView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0), excludingEdge: .Top)
-        self.payBarView.autoSetDimension(.Height, toSize: VCAppLetor.ConstValue.CheckNowBarHeight)
-        
-        self.payBtn.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(10.0, 0.0, 10.0, 20.0), excludingEdge: .Leading)
-        self.payBtn.autoMatchDimension(.Width, toDimension: .Width, ofView: self.payBarView, withMultiplier: 0.4)
-        
-        self.payBg.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.payBtn, withOffset: -1.0)
-        self.payBg.autoPinEdge(.Top, toEdge: .Top, ofView: self.payBtn, withOffset: -1.0)
-        self.payBg.autoMatchDimension(.Height, toDimension: .Height, ofView: self.payBtn, withOffset: 2.0)
-        self.payBg.autoMatchDimension(.Width, toDimension: .Width, ofView: self.payBtn, withOffset: 2.0)
-        
-        self.orderPriceValue.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.payBtn)
-        self.orderPriceValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.payBtn, withOffset: -30.0)
-        //self.orderPriceValue.autoSetDimensionsToSize(CGSizeMake(54.0, 22.0))
-        
-        self.orderPriceName.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.orderPriceValue, withOffset: 0.0)
-        self.orderPriceName.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.payBtn)
-        self.orderPriceName.autoSetDimensionsToSize(CGSizeMake(62.0, 20.0))
+        if !self.didUpdateConstraint {
+            
+            self.topTip.autoSetDimensionsToSize(CGSizeMake(self.scrollView.width, 32.0))
+            self.topTip.autoPinEdgeToSuperviewEdge(.Top)
+            self.topTip.autoAlignAxisToSuperviewAxis(.Vertical)
+            
+            self.foodTitle.autoPinEdgeToSuperviewEdge(.Left, withInset: 20.0)
+            self.foodTitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.topTip, withOffset: 25.0)
+            self.foodTitle.autoSetDimensionsToSize(CGSizeMake(self.scrollView.width - 40.0, 30.0))
+            
+            self.foodTitleUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.foodTitleUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodTitle, withOffset: 5.0)
+            self.foodTitleUnderline.autoMatchDimension(.Width, toDimension: .Width, ofView: self.foodTitle)
+            self.foodTitleUnderline.autoSetDimension(.Height, toSize: 5.0)
+            
+            self.priceName.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.priceName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodTitleUnderline, withOffset: 10.0)
+            self.priceName.autoSetDimensionsToSize(CGSizeMake(40.0, 20.0))
+            
+            self.priceUnit.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.priceUnit.autoPinEdge(.Top, toEdge: .Top, ofView: self.priceName)
+            //self.priceUnit.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
+            
+            self.priceValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.priceUnit)
+            self.priceValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.priceName)
+            //self.priceValue.autoSetDimensionsToSize(CGSizeMake(50.0, 20.0))
+            
+            self.priceUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.priceName, withOffset: 10.0)
+            self.priceUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.priceName)
+            self.priceUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.priceUnderline.autoSetDimension(.Height, toSize: 3.0)
+            
+            self.amountName.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.amountName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.priceUnderline, withOffset: 10.0)
+            self.amountName.autoSetDimensionsToSize(CGSizeMake(40.0, 20.0))
+            
+            self.amountValue.autoAlignAxis(.Horizontal, toSameAxisOfView: self.amountName)
+            self.amountValue.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            //self.amountValue.autoSetDimensionsToSize(CGSizeMake(30.0, 14.0))
+            
+            self.amountUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.amountUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.amountName, withOffset: 10.0)
+            self.amountUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.amountUnderline.autoSetDimension(.Height, toSize: 3.0)
+            
+            self.totalPriceName.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.totalPriceName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.amountUnderline, withOffset: 10.0)
+            self.totalPriceName.autoSetDimensionsToSize(CGSizeMake(40.0, 20.0))
+            
+            self.totalPriceValue.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.totalPriceValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.totalPriceName)
+            //self.totalPriceValue.autoSetDimensionsToSize(CGSizeMake(80.0, 20.0))
+            
+            self.totalPriceUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.totalPriceUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.totalPriceUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.totalPriceName, withOffset: 10.0)
+            self.totalPriceUnderline.autoSetDimension(.Height, toSize: 3.0)
+            
+            self.couponName.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.couponName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.totalPriceUnderline, withOffset: 10.0)
+            self.couponName.autoSetDimensionsToSize(CGSizeMake(78.0, 20.0))
+            
+            self.couponArraw.autoSetDimensionsToSize(CGSizeMake(20.0, 24.0))
+            self.couponArraw.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.couponArraw.autoPinEdge(.Top, toEdge: .Top, ofView: self.couponName, withOffset: -4.0)
+            
+            //self.couponStat.autoSetDimensionsToSize(CGSizeMake(140.0, 20.0))
+            self.couponStat.autoPinEdge(.Top, toEdge: .Top, ofView: self.couponName)
+            self.couponStat.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.couponArraw, withOffset: -6.0)
+            
+            self.couponUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.couponUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.couponUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.couponName, withOffset: 10.0)
+            self.couponUnderline.autoSetDimension(.Height, toSize: 3.0)
+            
+            self.couponBtn.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.couponBtn.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.couponBtn.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.totalPriceUnderline)
+            self.couponBtn.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.couponUnderline)
+            
+            self.finalTotalName.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.finalTotalName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.couponUnderline, withOffset: 10.0)
+            self.finalTotalName.autoSetDimensionsToSize(CGSizeMake(78.0, 20.0))
+            
+            self.finalTotalValue.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.finalTotalValue.autoPinEdge(.Top, toEdge: .Top, ofView: self.finalTotalName)
+            //self.finalTotalValue.autoSetDimensionsToSize(CGSizeMake(80.0, 20.0))
+            
+            self.finalTotalUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.finalTotalUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.finalTotalUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.finalTotalName, withOffset: 10.0)
+            self.finalTotalUnderline.autoSetDimension(.Height, toSize: 3.0)
+            
+            self.choosePayType.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.choosePayType.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.finalTotalUnderline, withOffset: 20.0)
+            self.choosePayType.autoSetDimensionsToSize(CGSizeMake(124.0, 24.0))
+            
+            self.payTip.autoSetDimensionsToSize(CGSizeMake(100.0, 20.0))
+            self.payTip.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.payTip.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.choosePayType)
+            
+            self.choosePayTypeUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.choosePayTypeUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.choosePayType, withOffset: 10.0)
+            self.choosePayTypeUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.choosePayTypeUnderline.autoSetDimension(.Height, toSize: 5.0)
+            
+            self.alipayIcon.autoSetDimensionsToSize(CGSizeMake(28.0, 28.0))
+            self.alipayIcon.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.alipayIcon.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.choosePayTypeUnderline, withOffset: 12.0)
+            
+            self.alipayTitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.alipayIcon, withOffset: 10.0)
+            //self.alipayTitle.autoSetDimensionsToSize(CGSizeMake(132.0, 20.0))
+            self.alipayTitle.autoPinEdge(.Top, toEdge: .Top, ofView: self.alipayIcon, withOffset: 0.0)
+            
+            self.alipaySubtitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.wechatIcon, withOffset: 10.0)
+            //self.alipaySubtitle.autoSetDimensionsToSize(CGSizeMake(self.view.width - 120, 20.0))
+            self.alipaySubtitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.alipayTitle, withOffset: 1.0)
+            
+            self.alipayActive.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.alipayActive.autoAlignAxis(.Horizontal, toSameAxisOfView: self.alipayIcon)
+            self.alipayActive.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
+            
+            self.activeCircleAlipay.autoPinEdge(.Top, toEdge: .Top, ofView: self.alipayActive)
+            self.activeCircleAlipay.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.alipayActive)
+            self.activeCircleAlipay.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
+            
+            self.alipayUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.alipayUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.alipayUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.alipayIcon, withOffset: 12.0)
+            self.alipayUnderline.autoSetDimension(.Height, toSize: 3.0)
+            
+            self.alipayBtn.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.alipayIcon)
+            self.alipayBtn.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.alipayBtn.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.choosePayTypeUnderline)
+            self.alipayBtn.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.alipayUnderline)
+            
+            self.wechatIcon.autoSetDimensionsToSize(CGSizeMake(28.0, 28.0))
+            self.wechatIcon.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.wechatIcon.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.alipayUnderline, withOffset: 12.0)
+            
+            self.wechatTitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.wechatIcon, withOffset: 10.0)
+            //self.wechatTitle.autoSetDimensionsToSize(CGSizeMake(132.0, 20.0))
+            self.wechatTitle.autoPinEdge(.Top, toEdge: .Top, ofView: self.wechatIcon, withOffset: 0.0)
+            
+            self.wechatSubtitle.autoPinEdge(.Leading, toEdge: .Trailing, ofView: self.wechatIcon, withOffset: 10.0)
+            //self.wechatSubtitle.autoSetDimensionsToSize(CGSizeMake(self.view.width - 120, 20.0))
+            self.wechatSubtitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.wechatTitle, withOffset: 1.0)
+            
+            self.wechatActive.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.wechatActive.autoAlignAxis(.Horizontal, toSameAxisOfView: self.wechatIcon)
+            self.wechatActive.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
+            
+            self.activeCircleWechat.autoPinEdge(.Top, toEdge: .Top, ofView: self.wechatActive)
+            self.activeCircleWechat.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.wechatActive)
+            self.activeCircleWechat.autoSetDimensionsToSize(CGSizeMake(24.0, 24.0))
+            
+            self.wechatUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
+            self.wechatUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.wechatUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.wechatIcon, withOffset: 12.0)
+            self.wechatUnderline.autoSetDimension(.Height, toSize: 3.0)
+            
+            self.wechatBtn.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.wechatIcon)
+            self.wechatBtn.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodTitle)
+            self.wechatBtn.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.alipayUnderline)
+            self.wechatBtn.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.wechatUnderline)
+            
+            self.payBarView.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(0.0, 0.0, 0.0, 0.0), excludingEdge: .Top)
+            self.payBarView.autoSetDimension(.Height, toSize: VCAppLetor.ConstValue.CheckNowBarHeight)
+            
+            self.payBtn.autoPinEdgesToSuperviewEdgesWithInsets(UIEdgeInsetsMake(10.0, 0.0, 10.0, 20.0), excludingEdge: .Leading)
+            self.payBtn.autoMatchDimension(.Width, toDimension: .Width, ofView: self.payBarView, withMultiplier: 0.4)
+            
+            self.payBg.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.payBtn, withOffset: -1.0)
+            self.payBg.autoPinEdge(.Top, toEdge: .Top, ofView: self.payBtn, withOffset: -1.0)
+            self.payBg.autoMatchDimension(.Height, toDimension: .Height, ofView: self.payBtn, withOffset: 2.0)
+            self.payBg.autoMatchDimension(.Width, toDimension: .Width, ofView: self.payBtn, withOffset: 2.0)
+            
+            self.orderPriceValue.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.payBtn)
+            self.orderPriceValue.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.payBtn, withOffset: -30.0)
+            //self.orderPriceValue.autoSetDimensionsToSize(CGSizeMake(54.0, 22.0))
+            
+            self.orderPriceName.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.orderPriceValue, withOffset: 0.0)
+            self.orderPriceName.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.payBtn)
+            self.orderPriceName.autoSetDimensionsToSize(CGSizeMake(62.0, 20.0))
+            
+            self.didUpdateConstraint = true
+            
+        }
         
     }
     
@@ -351,6 +367,11 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
     
     
     // MARK: - Functions
+    
+    func canclePay() {
+        
+        self.parentNav.popToViewController(self.foodDetailVC, animated: true)
+    }
     
     func setupPayView() {
         
@@ -632,13 +653,14 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
         let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
         
-        
         Alamofire.request(VCheckGo.Router.UpdatePay(memberId, self.paymentCode, self.voucherId!, self.orderInfo.id, token)).validate().responseSwiftyJSON ({
             (_, _, JSON, error) -> Void in
             
             if error == nil {
                 
                 let json = JSON
+                
+                //println("json: \(json)")
                 
                 if json["status"]["succeed"].string! == "1" {
                     // Update done!

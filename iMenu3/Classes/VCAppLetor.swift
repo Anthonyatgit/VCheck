@@ -111,7 +111,8 @@ struct VCAppLetor {
         static let BlackUserIconURL: String = "http://218.244.158.175/siyocc/t/account_circle_black.png"
         static let NotSetYet: String = "未设置"
         static let PassCodeString = "••••••"
-        static let NotAuthYet: String = "未认证"
+        static let NotAuthYet: String = "未绑定"
+        static let DoAuthed: String = "已绑定"
         static let RequireMobileString: String = "通过你的手机号获取验证码"
         static let ResendVerifyCodePlease: String = "请重新获取验证码"
         static let UserInfoSettings: String = "账户设置"
@@ -329,6 +330,7 @@ struct VCAppLetor {
         static let GiftBlack: String = "gift_black"
         static let SettingsBlack: String = "settings_black"
         static let AddBlack: String = "add_black"
+        static let AlarmBlack: String = "alarm_black"
         
         static let PlaceBlack: String = "place_black"
         static let MemberBlack: String = "member_black"
@@ -484,6 +486,7 @@ struct VCAppLetor {
         static let objPayVC: String = "PaymentVC"
         static let objNavigation: String = "Navigation"
         static let objHome: String = "FoodListVC"
+        static let objOrderList: String = "OrderList"
     }
     
     enum ShareTag {
@@ -504,12 +507,14 @@ struct VCAppLetor {
     
     enum LoginStatus {
         
+        static let WechatAuthUserInfo = "WechatAuthUserInfo"
         static let WechatLog = "WechatLogin"
         static let WechatReg = "WechatReg"
         static let WechatAvatar = "WechatAvatar"
         static let WechatNickname = "WechatNickname"
         static let WechatLogInfo = "WechatLogInfo"
         
+        static let SinaWeiboAuthUserInfo = "SinaWeiboAuthUserInfo"
         static let SinaWeiboLog = "SinaWeiboLogin"
         static let SinaWeiboReg = "SinaWeiboReg"
         static let SinaAvatar = "SinaAvatar"
