@@ -54,4 +54,13 @@
 //ZFCheckbox
 #import "ZFCheckbox.h"
 
+//PBActivity
+#import "PBSafariActivity.h"
+
+//JSVideo
+#import "JSVideoViewController.h"
+
+//PhotoTweaks
+#import "PhotoTweaksViewController.h"
+
 #endif

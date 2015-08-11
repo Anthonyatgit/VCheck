@@ -11,7 +11,7 @@ import CoreData
 import Alamofire
 import RKDropdownAlert
 import MBProgressHUD
-import KINWebBrowser
+import PBWebViewController
 
 class FoodListController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, RKDropdownAlertDelegate, UIViewControllerTransitioningDelegate, BMKLocationServiceDelegate, BMKGeoCodeSearchDelegate {
     
@@ -62,6 +62,10 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let appIntroVC: VCAppViewController = VCAppViewController()
+        
+        UIApplication.sharedApplication().keyWindow?.addSubview(appIntroVC.view)
         
         // Prepare for interface
         self.title = VCAppLetor.StringLine.AppName
@@ -834,11 +838,13 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             if route == VCAppLetor.PNRoute.web.rawValue {
                 let url = CTMemCache.sharedInstance.get(VCAppLetor.LINKS.param, namespace: "Links")?.data as! String
                 
-                let webPage: KINWebBrowserViewController = KINWebBrowserViewController.webBrowser()
-                self.navigationController?.showViewController(webPage, sender: self)
-                webPage.loadURLString(url)
-                webPage.tintColor = UIColor.whiteColor()
-                webPage.actionButtonHidden = true
+                let webVC: PBWebViewController = PBWebViewController()
+                webVC.URL = NSURL(string: url)
+                
+                let activity: PBSafariActivity = PBSafariActivity()
+                webVC.applicationActivities = [activity]
+                
+                self.navigationController?.showViewController(webVC, sender: self)
                 
             }
             if route == VCAppLetor.PNRoute.home.rawValue {
@@ -1135,11 +1141,13 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             if route == VCAppLetor.PNRoute.web.rawValue {
                 let url = CTMemCache.sharedInstance.get(VCAppLetor.INDEX.param, namespace: "indexPage")?.data as! String
                 
-                let webPage: KINWebBrowserViewController = KINWebBrowserViewController.webBrowser()
-                self.navigationController?.showViewController(webPage, sender: self)
-                webPage.loadURLString(url)
-                webPage.tintColor = UIColor.whiteColor()
-                webPage.actionButtonHidden = true
+                let webVC: PBWebViewController = PBWebViewController()
+                webVC.URL = NSURL(string: url)
+                
+                let activity: PBSafariActivity = PBSafariActivity()
+                webVC.applicationActivities = [activity]
+                
+                self.navigationController?.showViewController(webVC, sender: self)
                 
             }
             if route == VCAppLetor.PNRoute.home.rawValue {
@@ -1495,11 +1503,15 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             if route == VCAppLetor.PNRoute.web.rawValue {
                 let url = CTMemCache.sharedInstance.get(VCAppLetor.PN.param, namespace: "push")?.data as! String
                 
-                let webPage: KINWebBrowserViewController = KINWebBrowserViewController.webBrowser()
-                self.navigationController?.showViewController(webPage, sender: self)
-                webPage.loadURLString(url)
-                webPage.tintColor = UIColor.whiteColor()
-                webPage.actionButtonHidden = true
+                
+                let webVC: PBWebViewController = PBWebViewController()
+                webVC.URL = NSURL(string: url)
+                
+                let activity: PBSafariActivity = PBSafariActivity()
+                webVC.applicationActivities = [activity]
+                
+                self.navigationController?.showViewController(webVC, sender: self)
+                
                 
             }
             if route == VCAppLetor.PNRoute.home.rawValue {

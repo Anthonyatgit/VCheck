@@ -225,7 +225,7 @@ class VCMailBoxViewController: VCBaseViewController, UITableViewDataSource, UITa
                     
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         
-                        // Available City?
+                        // Available Messages?
                         if json["paginated"]["total"].string! == "0" {
                             
                             // Load favorites list, if empty ..
@@ -238,7 +238,7 @@ class VCMailBoxViewController: VCBaseViewController, UITableViewDataSource, UITa
                             bgView.addSubview(favoriteIcon)
                             
                             let favoriteEmptyLabel: UILabel = UILabel.newAutoLayoutView()
-                            favoriteEmptyLabel.text = VCAppLetor.StringLine.FavoritesEmpty
+                            favoriteEmptyLabel.text = VCAppLetor.StringLine.MailboxEmpty
                             favoriteEmptyLabel.font = VCAppLetor.Font.NormalFont
                             favoriteEmptyLabel.textColor = UIColor.lightGrayColor()
                             favoriteEmptyLabel.textAlignment = .Center

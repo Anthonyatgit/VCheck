@@ -8,11 +8,12 @@
 
 import UIKit
 import Alamofire
-import KINWebBrowser
 import RKDropdownAlert
+import DKChainableAnimationKit
 
 class VCAppViewController: VCBaseViewController {
     
+    var videoVC: JSVideoViewController?
     
     var launchImage: UIImageView!
     var tapBtn: UIButton!
@@ -26,6 +27,59 @@ class VCAppViewController: VCBaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let videoTag = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.VideoTag, contextType: BreezeContextType.Main) as? Settings { // Get current app version
+            
+            if videoTag.value == "1" {
+                
+                self.showIndexPage()
+                
+            }
+            else {
+                
+                self.showVideo()
+            }
+            
+        }
+        else { // App version DO NOT exist, create one with version "1.0"
+            
+            BreezeStore.saveInMain({ contextType -> Void in
+                
+                let videoTagToBeCreate: Settings = Settings.createInContextOfType(contextType) as! Settings
+                
+                videoTagToBeCreate.sid = "\(NSDate())"
+                videoTagToBeCreate.name = VCAppLetor.SettingName.VideoTag
+                videoTagToBeCreate.value = "0"
+                videoTagToBeCreate.type = VCAppLetor.SettingType.AppConfig
+                videoTagToBeCreate.data = ""
+                
+            })
+            
+            self.showVideo()
+            
+        }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        
+        super.viewDidAppear(animated)
+        
+    }
+    
+    // MARK: - Functions
+    
+    func showVideo() {
+        
+        // Attach Video View
+        self.videoVC = JSVideoViewController()
+        self.videoVC!.view.frame = self.view.frame
+        self.view.addSubview(self.videoVC!.view)
+        
+        NSTimer.scheduledTimerWithTimeInterval(VCAppLetor.ConstValue.VideoShowTime, target: self, selector: "removeVideo", userInfo: nil, repeats: false)
+        
+    }
+    
+    func showIndexPage() {
         
         // Launch Image
         self.launchImage = UIImageView(frame: self.view.frame)
@@ -76,6 +130,8 @@ class VCAppViewController: VCBaseViewController {
                                 
                                 self.launchImage.image = indexImage
                                 
+                                self.view.animation.makeAlpha(1.0).animate(1.0)
+                                
                             }
                         })
                     }
@@ -106,17 +162,7 @@ class VCAppViewController: VCBaseViewController {
         
         
         NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "removeIndexImage", userInfo: nil, repeats: false)
-        
-        
     }
-    
-    override func viewDidAppear(animated: Bool) {
-        
-        super.viewDidAppear(animated)
-        
-    }
-    
-    // MARK: - Functions
     
     func addTapAction(tap: UIButton) {
         
@@ -124,6 +170,19 @@ class VCAppViewController: VCBaseViewController {
         CTMemCache.sharedInstance.set(VCAppLetor.INDEX.param, data: self.param, namespace: "indexPage")
         
         self.removeIndexImage()
+        
+    }
+    
+    func removeVideo() {
+        
+        self.videoVC?.view.animation.makeAlpha(0).animateWithCompletion(2.0, {
+            
+            self.view.removeFromSuperview()
+        })
+        
+        
+        //self.view.alpha = 0.1
+        //self.showIndexPage()
         
     }
     

@@ -66,6 +66,7 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
         // Register Cell View
         self.tableView.registerClass(OrderListViewCell.self, forCellReuseIdentifier: "orderItemCell")
         
+        
         self.tableView.addPullToRefreshActionHandler { () -> Void in
             self.getOrderList()
         }
@@ -146,7 +147,12 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
         }
         else {
             
+            if cell.orderInfo.voucherPrice != "" {
+                cell.discount.hidden = true
+            }
+            
             cell.payButton.hidden = false
+            
         }
         
         return cell
@@ -423,6 +429,8 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                             
                             self.tableView.stopRefreshAnimation()
                             
+                            self.tableView.animation.makeAlpha(1.0).animate(0.4)
+                            
                             return
                         }
                         
@@ -467,6 +475,7 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                             
                             order.voucherId = item["order_info"]["voucher_info"]["voucher_member_id"].string!
                             order.voucherName = item["order_info"]["voucher_info"]["voucher_name"].string!
+                            order.voucherPrice = item["order_info"]["voucher_info"]["discount"].string!
                             
                             self.orderList.addObject(order)
                             

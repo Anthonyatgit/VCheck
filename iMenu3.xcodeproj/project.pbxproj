@@ -122,6 +122,17 @@
 		928633801B0AE6070040CBA2 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9286337F1B0AE6070040CBA2 /* Settings.swift */; };
 		92868A241B395BD600DB9B91 /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92868A231B395BD600DB9B91 /* Functions.swift */; };
 		928B2FBA1B2150AF001FA746 /* FoodViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */; };
+		9290C7971B783EE200452623 /* 782-compass.png in Resources */ = {isa = PBXBuildFile; fileRef = 9290C7931B783EE200452623 /* 782-compass.png */; };
+		9290C7981B783EE200452623 /* 782-compass@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9290C7941B783EE200452623 /* 782-compass@2x.png */; };
+		9290C7991B783EE200452623 /* PBSafariActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 9290C7961B783EE200452623 /* PBSafariActivity.m */; };
+		9290C79C1B7858D200452623 /* intro.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 9290C79B1B7858D200452623 /* intro.mp4 */; };
+		9290C7A51B78821800452623 /* JSVideoFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9290C7A21B78821800452623 /* JSVideoFunctions.m */; };
+		9290C7A61B78821800452623 /* JSVideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9290C7A41B78821800452623 /* JSVideoViewController.m */; };
+		9290C7A81B7882AA00452623 /* JSVideoController-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9290C7A71B7882AA00452623 /* JSVideoController-Info.plist */; };
+		9290C7AA1B78857700452623 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9290C7A91B78857700452623 /* MediaPlayer.framework */; };
+		9290C7B21B78982C00452623 /* PhotoTweaksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9290C7AD1B78982C00452623 /* PhotoTweaksViewController.m */; };
+		9290C7B31B78982C00452623 /* PhotoTweakView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9290C7AF1B78982C00452623 /* PhotoTweakView.m */; };
+		9290C7B41B78982C00452623 /* UIColor+Tweak.m in Sources */ = {isa = PBXBuildFile; fileRef = 9290C7B11B78982C00452623 /* UIColor+Tweak.m */; };
 		9291DE1C1B4B6B2000FD5CC8 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 9291DE1B1B4B6B2000FD5CC8 /* libsqlite3.0.dylib */; };
 		9293BBC91B018ECC0034F3C5 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */; };
 		929DCAC21B0578800050B63F /* VCTermsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929DCAC11B0578800050B63F /* VCTermsViewController.swift */; };
@@ -353,6 +364,24 @@
 		9286337F1B0AE6070040CBA2 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		92868A231B395BD600DB9B91 /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		928B2FB91B2150AF001FA746 /* FoodViewerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FoodViewerViewController.swift; path = Classes/FoodViewerViewController.swift; sourceTree = "<group>"; };
+		9290C7931B783EE200452623 /* 782-compass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "782-compass.png"; sourceTree = "<group>"; };
+		9290C7941B783EE200452623 /* 782-compass@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "782-compass@2x.png"; sourceTree = "<group>"; };
+		9290C7951B783EE200452623 /* PBSafariActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PBSafariActivity.h; sourceTree = "<group>"; };
+		9290C7961B783EE200452623 /* PBSafariActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBSafariActivity.m; sourceTree = "<group>"; };
+		9290C79B1B7858D200452623 /* intro.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = intro.mp4; sourceTree = "<group>"; };
+		9290C7A01B78821800452623 /* JSConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSConstants.h; sourceTree = "<group>"; };
+		9290C7A11B78821800452623 /* JSVideoFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSVideoFunctions.h; sourceTree = "<group>"; };
+		9290C7A21B78821800452623 /* JSVideoFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSVideoFunctions.m; sourceTree = "<group>"; };
+		9290C7A31B78821800452623 /* JSVideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSVideoViewController.h; sourceTree = "<group>"; };
+		9290C7A41B78821800452623 /* JSVideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSVideoViewController.m; sourceTree = "<group>"; };
+		9290C7A71B7882AA00452623 /* JSVideoController-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "JSVideoController-Info.plist"; sourceTree = "<group>"; };
+		9290C7A91B78857700452623 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		9290C7AC1B78982C00452623 /* PhotoTweaksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoTweaksViewController.h; sourceTree = "<group>"; };
+		9290C7AD1B78982C00452623 /* PhotoTweaksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoTweaksViewController.m; sourceTree = "<group>"; };
+		9290C7AE1B78982C00452623 /* PhotoTweakView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PhotoTweakView.h; sourceTree = "<group>"; };
+		9290C7AF1B78982C00452623 /* PhotoTweakView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PhotoTweakView.m; sourceTree = "<group>"; };
+		9290C7B01B78982C00452623 /* UIColor+Tweak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Tweak.h"; sourceTree = "<group>"; };
+		9290C7B11B78982C00452623 /* UIColor+Tweak.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Tweak.m"; sourceTree = "<group>"; };
 		9291DE1B1B4B6B2000FD5CC8 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		9293BBC81B018ECC0034F3C5 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegisterViewController.swift; path = Classes/RegisterViewController.swift; sourceTree = "<group>"; };
 		929DCAC11B0578800050B63F /* VCTermsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCTermsViewController.swift; path = Classes/VCTermsViewController.swift; sourceTree = "<group>"; };
@@ -446,6 +475,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9290C7AA1B78857700452623 /* MediaPlayer.framework in Frameworks */,
 				920FA4B01B60953B00C0D78B /* ShareSDKCoreService.framework in Frameworks */,
 				9291DE1C1B4B6B2000FD5CC8 /* libsqlite3.0.dylib in Frameworks */,
 				92D6EB2D1B413A8F005DF3DB /* AlipaySDK.framework in Frameworks */,
@@ -492,6 +522,7 @@
 		05B8E7EB2168B867A50937F6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9290C7A91B78857700452623 /* MediaPlayer.framework */,
 				9291DE1B1B4B6B2000FD5CC8 /* libsqlite3.0.dylib */,
 				92D6EB2C1B413A8F005DF3DB /* AlipaySDK.framework */,
 				92A9AD771B3C011B0025D29A /* libxml2.dylib */,
@@ -642,6 +673,9 @@
 		9227E2C11AE8DCCC008C6381 /* iMenu3 */ = {
 			isa = PBXGroup;
 			children = (
+				9290C7AB1B78982C00452623 /* PhotoTweaks */,
+				9290C79F1B78821800452623 /* JSVideo */,
+				9290C7921B783EE200452623 /* PBSafariActivity */,
 				920FA4901B60953A00C0D78B /* ShareSDK */,
 				92163E821B5CD860003B3A43 /* ZFCheckbox */,
 				92163E771B5C7D4F003B3A43 /* FBShimmering */,
@@ -672,6 +706,7 @@
 			isa = PBXGroup;
 			children = (
 				9255AC251B3CDA050076C107 /* iMenu3-Bridging-Header.h */,
+				9290C7A71B7882AA00452623 /* JSVideoController-Info.plist */,
 				9227E2C31AE8DCCC008C6381 /* Info.plist */,
 				92E57FFF1B2AD09200E463A3 /* BMKObject.mm */,
 				9203E68A1B00637300407F66 /* ShareSDKContentController.h */,
@@ -811,6 +846,50 @@
 				9284A12D1AF0AECD00E662B2 /* wealthy.png */,
 			);
 			path = collectionImages;
+			sourceTree = "<group>";
+		};
+		9290C7921B783EE200452623 /* PBSafariActivity */ = {
+			isa = PBXGroup;
+			children = (
+				9290C7931B783EE200452623 /* 782-compass.png */,
+				9290C7941B783EE200452623 /* 782-compass@2x.png */,
+				9290C7951B783EE200452623 /* PBSafariActivity.h */,
+				9290C7961B783EE200452623 /* PBSafariActivity.m */,
+			);
+			path = PBSafariActivity;
+			sourceTree = "<group>";
+		};
+		9290C79A1B7858D200452623 /* intro */ = {
+			isa = PBXGroup;
+			children = (
+				9290C79B1B7858D200452623 /* intro.mp4 */,
+			);
+			path = intro;
+			sourceTree = "<group>";
+		};
+		9290C79F1B78821800452623 /* JSVideo */ = {
+			isa = PBXGroup;
+			children = (
+				9290C7A01B78821800452623 /* JSConstants.h */,
+				9290C7A11B78821800452623 /* JSVideoFunctions.h */,
+				9290C7A21B78821800452623 /* JSVideoFunctions.m */,
+				9290C7A31B78821800452623 /* JSVideoViewController.h */,
+				9290C7A41B78821800452623 /* JSVideoViewController.m */,
+			);
+			path = JSVideo;
+			sourceTree = "<group>";
+		};
+		9290C7AB1B78982C00452623 /* PhotoTweaks */ = {
+			isa = PBXGroup;
+			children = (
+				9290C7AC1B78982C00452623 /* PhotoTweaksViewController.h */,
+				9290C7AD1B78982C00452623 /* PhotoTweaksViewController.m */,
+				9290C7AE1B78982C00452623 /* PhotoTweakView.h */,
+				9290C7AF1B78982C00452623 /* PhotoTweakView.m */,
+				9290C7B01B78982C00452623 /* UIColor+Tweak.h */,
+				9290C7B11B78982C00452623 /* UIColor+Tweak.m */,
+			);
+			path = PhotoTweaks;
 			sourceTree = "<group>";
 		};
 		92A7106E1AEF3E3600376C06 /* Toucan */ = {
@@ -982,6 +1061,7 @@
 		92F51C8A1AEDE7D300FDD50C /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				9290C79A1B7858D200452623 /* intro */,
 				92FB218E1B31572200877C07 /* social */,
 				92FB21751B31571800877C07 /* buttonIcon */,
 				92FB21701B31114200877C07 /* bg */,
@@ -1147,13 +1227,16 @@
 				9284A1311AF0AECD00E662B2 /* hungry.png in Resources */,
 				9284A1371AF0AECD00E662B2 /* mood5.jpg in Resources */,
 				92CFFB2F1AF8663400C9AA7D /* cards.png in Resources */,
+				9290C7981B783EE200452623 /* 782-compass@2x.png in Resources */,
 				9284A12F1AF0AECD00E662B2 /* adventurous.png in Resources */,
 				9214D79C1B32CE78007AC818 /* friends_color.png in Resources */,
 				923B6B241B6A286D00947E89 /* used_tag.png in Resources */,
 				92FB218D1B31571800877C07 /* cloud_light@2x.png in Resources */,
 				92CFFB311AF8663400C9AA7D /* gift.png in Resources */,
 				9227E2CD1AE8DCCC008C6381 /* Main.storyboard in Resources */,
+				9290C79C1B7858D200452623 /* intro.mp4 in Resources */,
 				9284A1391AF0AECD00E662B2 /* mood7.jpg in Resources */,
+				9290C7A81B7882AA00452623 /* JSVideoController-Info.plist in Resources */,
 				9284A1351AF0AECD00E662B2 /* mood3.jpg in Resources */,
 				92E3586D1B1D455700D61119 /* brand.jpg in Resources */,
 				92FB21851B31571800877C07 /* bulb_light@2x.png in Resources */,
@@ -1196,6 +1279,7 @@
 				92FB21831B31571800877C07 /* bulb@2x.png in Resources */,
 				9284A13D1AF0AECD00E662B2 /* wealthy.png in Resources */,
 				9284A1381AF0AECD00E662B2 /* mood6.jpg in Resources */,
+				9290C7971B783EE200452623 /* 782-compass.png in Resources */,
 				9284A1331AF0AECD00E662B2 /* mood1.jpg in Resources */,
 				9284A12E1AF0AECD00E662B2 /* active.png in Resources */,
 				92D301F61B70C309006AECCE /* launchImage.jpg in Resources */,
@@ -1320,12 +1404,15 @@
 				92795DE51B4A469C00E9A83F /* OrderInfoViewController.swift in Sources */,
 				9284A1451AF0CFCF00E662B2 /* VCAppLetor.swift in Sources */,
 				923C25441B3F9B630060DBFC /* TYTextStorage.m in Sources */,
+				9290C7B21B78982C00452623 /* PhotoTweaksViewController.m in Sources */,
 				923C25401B3F9B630060DBFC /* TYImageStorage.m in Sources */,
 				926AAFB41B6766F90070D113 /* UserPanelViewController.swift in Sources */,
 				926AAFB01B65FF300070D113 /* VoucherViewController.swift in Sources */,
 				92BD2E151B27BE810053408B /* UzysRadialProgressActivityIndicator.m in Sources */,
 				928205111AEDE1330067BB92 /* NSManagedObject+Deleting.swift in Sources */,
+				9290C7B41B78982C00452623 /* UIColor+Tweak.m in Sources */,
 				92457CD81B2FD2EC005B0E33 /* VCAboutViewController.swift in Sources */,
+				9290C7A51B78821800452623 /* JSVideoFunctions.m in Sources */,
 				929DCAC41B0588B90050B63F /* RegSetPassViewController.swift in Sources */,
 				92E962E21AF2017400030226 /* Toucan.swift in Sources */,
 				922412961B200D560049A9B5 /* SMSegmentView.swift in Sources */,
@@ -1339,6 +1426,7 @@
 				92B10EC51B00993C00E0674F /* Member.swift in Sources */,
 				92F121A51B5773410036A3A9 /* UzysAppearanceConfig.m in Sources */,
 				9271B6E71B30396A00BC0F29 /* CustomDrawView.swift in Sources */,
+				9290C7B31B78982C00452623 /* PhotoTweakView.m in Sources */,
 				92F121AB1B5773410036A3A9 /* UzysGroupViewCell.m in Sources */,
 				9223DD311B15692E0072BFF1 /* VCBaseViewController.swift in Sources */,
 				9264F8ED1B2597CD00AF8640 /* VCPayNowViewController.swift in Sources */,
@@ -1357,10 +1445,12 @@
 				92FB21741B311F4000877C07 /* MailBoxCell.swift in Sources */,
 				920940AA1B370390006686C7 /* OrderListViewCell.swift in Sources */,
 				92CFFB251AF774F700C9AA7D /* UserPanelTableViewCell.swift in Sources */,
+				9290C7991B783EE200452623 /* PBSafariActivity.m in Sources */,
 				928205131AEDE1330067BB92 /* NSManagedObjectContext+Breeze.swift in Sources */,
 				928B2FBA1B2150AF001FA746 /* FoodViewerViewController.swift in Sources */,
 				92D6DBE41B33C4D5003E80AE /* FavoritesViewController.swift in Sources */,
 				92BD603C1B05DE8900649DDF /* UserInfoViewController.swift in Sources */,
+				9290C7A61B78821800452623 /* JSVideoViewController.m in Sources */,
 				92163E7F1B5C7D4F003B3A43 /* FBShimmeringView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

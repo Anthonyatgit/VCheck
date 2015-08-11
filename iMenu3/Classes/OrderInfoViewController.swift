@@ -53,6 +53,9 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
     let orderInfoTitle: UILabel = UILabel.newAutoLayoutView()
     let orderInfoUnderline: CustomDrawView = CustomDrawView.newAutoLayoutView()
     
+    let orderFinal: UILabel = UILabel.newAutoLayoutView()
+    let orderDiscount: UILabel = UILabel.newAutoLayoutView()
+    
     let orderNoName: UILabel = UILabel.newAutoLayoutView()
     let orderNoValue: UILabel = UILabel.newAutoLayoutView()
     let orderNoUnderline: CustomDrawView = CustomDrawView.newAutoLayoutView()
@@ -76,6 +79,8 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
     let payBtn: UIButton = UIButton.newAutoLayoutView()
     let orderPriceName: UILabel = UILabel.newAutoLayoutView()
     let orderPriceValue: UILabel = UILabel.newAutoLayoutView()
+    
+    let discount: UILabel = UILabel.newAutoLayoutView()
     
     let deleteBtn: UIButton = UIButton.newAutoLayoutView()
     
@@ -370,7 +375,24 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
         self.orderInfoTitle.textAlignment = .Left
         self.orderInfoTitle.textColor = VCAppLetor.Colors.Title
         self.orderInfoTitle.font = VCAppLetor.Font.XLarge
+        self.orderInfoTitle.backgroundColor = UIColor.clearColor()
         self.scrollView.addSubview(self.orderInfoTitle)
+        
+        self.orderFinal.text = "支付: " + round_price(self.orderInfo.totalPrice!) + self.orderInfo.priceUnit!
+        self.orderFinal.textAlignment = .Center
+        self.orderFinal.textColor = UIColor.alizarinColor()
+        self.orderFinal.font = VCAppLetor.Font.LightSmall
+        self.orderFinal.sizeToFit()
+        self.scrollView.addSubview(self.orderFinal)
+        
+        self.orderDiscount.text = "-" + round_price(self.orderInfo.voucherPrice!) + self.orderInfo.priceUnit!
+        self.orderDiscount.textAlignment = .Center
+        self.orderDiscount.textColor = UIColor.whiteColor()
+        self.orderDiscount.font = VCAppLetor.Font.LightSmall
+        self.orderDiscount.layer.cornerRadius = 2.0
+        self.orderDiscount.layer.backgroundColor = UIColor.alizarinColor(alpha: 0.6).CGColor
+        self.orderDiscount.sizeToFit()
+        self.scrollView.addSubview(self.orderDiscount)
         
         self.orderInfoUnderline.drawType = "DoubleLine"
         self.scrollView.addSubview(self.orderInfoUnderline)
@@ -495,6 +517,19 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
         self.orderPriceValue.font = VCAppLetor.Font.XLarge
         self.orderPriceValue.sizeToFit()
         self.payBarView.addSubview(self.orderPriceValue)
+        
+        if self.orderInfo.voucherPrice! != "" {
+            
+            self.discount.text = "-\(round_price(self.orderInfo.voucherPrice!))\(self.orderInfo.priceUnit!)"
+            self.discount.textAlignment = .Left
+            self.discount.textColor = UIColor.whiteColor()
+            self.discount.font = VCAppLetor.Font.SmallFont
+            self.discount.layer.backgroundColor = UIColor.alizarinColor(alpha: 0.6).CGColor
+            self.discount.layer.cornerRadius = 2.0
+            self.discount.sizeToFit()
+            self.payBarView.addSubview(self.discount)
+            
+        }
         
         
         self.payBarView.backgroundColor = UIColor.grayColor().colorWithAlphaComponent(0.1)
@@ -724,6 +759,21 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
             self.orderInfoTitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.tipsEndUnderline, withOffset: 30.0)
             self.orderInfoTitle.autoSetDimension(.Height, toSize: 30.0)
             
+            if self.orderInfo.voucherPrice! != "" {
+                
+                self.orderDiscount.autoAlignAxis(.Horizontal, toSameAxisOfView: self.orderInfoTitle)
+                self.orderDiscount.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.storeName)
+                
+                self.orderFinal.autoAlignAxis(.Horizontal, toSameAxisOfView: self.orderInfoTitle)
+                self.orderFinal.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.orderDiscount, withOffset: -10.0)
+            }
+            else {
+                
+                self.orderFinal.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.orderInfoTitle)
+                self.orderFinal.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.storeName)
+                
+            }
+            
             self.orderInfoUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.storeName)
             self.orderInfoUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.storeName)
             self.orderInfoUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.orderInfoTitle, withOffset: 8.0)
@@ -806,6 +856,16 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
                 self.orderPriceName.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.orderPriceValue, withOffset: 0.0)
                 self.orderPriceName.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.payBtn)
                 self.orderPriceName.autoSetDimensionsToSize(CGSizeMake(62.0, 20.0))
+                
+                if self.orderInfo.voucherPrice! != "" {
+                    
+                    self.discount.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.orderPriceValue, withOffset: -8.0)
+                    self.discount.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.orderPriceValue)
+                    
+                }
+                else {
+                    self.discount.hidden = true
+                }
             }
             
             self.didSetupConstraints = true

@@ -700,6 +700,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
         voucherVC.parentNav = self.parentNav
         voucherVC.active = true
         voucherVC.delegate = self
+        voucherVC.orderId = self.orderInfo.id
         self.parentNav.showViewController(voucherVC, sender: self)
         
     }

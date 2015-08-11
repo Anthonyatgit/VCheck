@@ -517,6 +517,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
                 return ShareSDK.handleOpenURL(url, sourceApplication: sourceApplication, annotation: annotation, wxDelegate: self)
                 
             }
+            else if CTMemCache.sharedInstance.exists(VCAppLetor.BindType.Wechat, namespace: "Bind") {
+                
+                CTMemCache.sharedInstance.cleanNamespace("Bind")
+                return ShareSDK.handleOpenURL(url, sourceApplication: sourceApplication, annotation: annotation, wxDelegate: self)
+                
+            }
             else {
                 
                 if let shareTag = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.optShareTag, contextType: BreezeContextType.Main) as? Settings {

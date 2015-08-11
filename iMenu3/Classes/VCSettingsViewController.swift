@@ -199,6 +199,14 @@ class VCSettingsViewController: VCBaseViewController, UITableViewDelegate, UITab
         }
         else if (indexPath.section == 0 && indexPath.row == 3) { // Rate Us
             
+            let url = NSURL(string: VCAppLetor.ConstValue.AppStoreRateURL)
+            
+            if UIApplication.sharedApplication().canOpenURL(url!) {
+                UIApplication.sharedApplication().openURL(url!)
+            }
+            else {
+                RKDropdownAlert.title(VCAppLetor.StringLine.AppStoreUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+            }
         }
         else {
             return

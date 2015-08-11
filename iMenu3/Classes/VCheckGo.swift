@@ -58,6 +58,7 @@ struct VCheckGo {
         case GetOrderDetail(String, String, String)                                 // 27.会员-获取订单详情
         case EditOrder(String, String, EditOrderType, String)                       // 28.会员-编辑订单状态
         case GetMyVouchers(String, Int, Int, String)                                // 29.会员-获取优惠券
+        case GetMyVouchersWithOrderId(String, String, Int, Int, String)             // 29.会员-获取优惠券[带订单参数]
         case VoucherExchange(String, String, String)                                // 30.会员-兑换优惠券
         case EditCart(String, EditCartType, String, String, String, String)         // 38.订单-编辑购物车信息
         case ClearCart(String, String)                                              // 38.订单-清空购物车信息
@@ -229,6 +230,10 @@ struct VCheckGo {
                     //=========GetVoucherList==========
                 case .GetMyVouchers(let memberId, let page, let count, let token):
                     let params = ["route":"\(RoutePath.GetMyVouchers.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"pagination\":{\"page\":\"\(page)\",\"count\":\"\(count)\"}}"]
+                    return ("/\(RoutePath.GetMyVouchers.rawValue)", params)
+                    //=========GetVoucherListWithOrderId==========
+                case .GetMyVouchersWithOrderId(let memberId, let orderId, let page, let count, let token):
+                    let params = ["route":"\(RoutePath.GetMyVouchers.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"order_id\":\"\(orderId)\",\"pagination\":{\"page\":\"\(page)\",\"count\":\"\(count)\"}}"]
                     return ("/\(RoutePath.GetMyVouchers.rawValue)", params)
                     //=========VoucherExchange==========
                 case .VoucherExchange(let memberId, let code, let token):
@@ -525,6 +530,7 @@ class OrderInfo: NSObject {
     var couponInfo: NSMutableArray?
     var voucherId: String?
     var voucherName: String?
+    var voucherPrice: String?
     
     var paymentCode: String?
     

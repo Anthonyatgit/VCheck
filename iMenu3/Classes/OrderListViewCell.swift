@@ -29,6 +29,9 @@ class OrderListViewCell: UITableViewCell {
     let amount: UILabel = UILabel.newAutoLayoutView()
     let payButton: UIButton = UIButton.newAutoLayoutView()
     
+    let finalPayPrice: UILabel = UILabel.newAutoLayoutView()
+    let discount: UILabel = UILabel.newAutoLayoutView()
+    
     let foodImageView: UIImageView = UIImageView.newAutoLayoutView()
     
     let cellBottomLine: CustomDrawView = CustomDrawView.newAutoLayoutView()
@@ -138,6 +141,20 @@ class OrderListViewCell: UITableViewCell {
         self.payButton.addTarget(self, action: "payNowAction:", forControlEvents: UIControlEvents.TouchUpInside)
         self.addSubview(self.payButton)
         
+        if self.orderInfo.voucherPrice! != "" {
+            
+            self.discount.text = "-" + round_price(self.orderInfo.voucherPrice!) + self.orderInfo.priceUnit!
+            self.discount.textAlignment = .Center
+            self.discount.textColor = UIColor.whiteColor()
+            self.discount.font = VCAppLetor.Font.SmallFont
+            self.discount.layer.backgroundColor = UIColor.alizarinColor(alpha: 0.6).CGColor
+            self.discount.layer.cornerRadius = 2.0
+            self.addSubview(self.discount)
+            
+        }
+        
+        
+        
         self.cellBottomLine.drawType = "GrayLine"
         self.cellBottomLine.lineWidth = VCAppLetor.ConstValue.GrayLineWidth
         self.addSubview(self.cellBottomLine)
@@ -186,6 +203,14 @@ class OrderListViewCell: UITableViewCell {
         self.payButton.autoSetDimensionsToSize(CGSizeMake(80.0, 26.0))
         self.payButton.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.typeDescription)
         self.payButton.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.price, withOffset: 6.0)
+        
+        if self.orderInfo.voucherPrice! != "" {
+            
+            self.discount.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.typeDescription)
+            self.discount.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.price, withOffset: 10.0)
+            self.discount.autoSetDimensionsToSize(CGSizeMake(56.0, 18.0))
+            
+        }
         
         self.cellBottomLine.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodImageView)
         self.cellBottomLine.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodImageView, withOffset: 10.0)

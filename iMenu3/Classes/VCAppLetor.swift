@@ -284,6 +284,8 @@ struct VCAppLetor {
         static let ClearImageCache: String = "确定清除图片缓存？"
         static let NotificationOptionsTitle: String = "推送设置"
         static let AllowNotificationTitle: String = "接收推送"
+        
+        static let AppStoreUnreachable: String = "App Store无法打开，请稍后再试"
     }
     
     enum City: String {
@@ -382,6 +384,8 @@ struct VCAppLetor {
         static let OrderItemCellHeight: CGFloat = 122.0
         static let StockAlertPoint: Int = 5
         
+        static let VideoShowTime: NSTimeInterval = 13
+        
         static let DefaultItemCountPerPage: Int = 5
         static let DefaultListItemCountPerPage: Int = 10
         static let DefaultDateFormat: String = "yyyy-MM-dd HH:mm:ss"
@@ -390,6 +394,8 @@ struct VCAppLetor {
         
         static let LocationServiceDistanceFilter: Double = 1000.0
         static let DefaultCityCode: Int = 29
+        
+        static let AppStoreRateURL: String = "itms-apps://ax.itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?mt=8&sortOrdering=1&type=Purple+Software&id="
     }
     
     enum PN {
@@ -480,6 +486,8 @@ struct VCAppLetor {
         static let optSelectedCity: String = "SelectedCity"
         static let LocLong: String = "LocLong"
         static let LocLat: String = "LocLat"
+        
+        static let VideoTag: String = "VideoTag"
     }
     
     enum ObjectIns {
@@ -503,6 +511,12 @@ struct VCAppLetor {
         static let SinaWeibo: String = "SinaWeibo"
         static let WeChat: String = "WeChat"
         
+    }
+    
+    enum BindType {
+        
+        static let Wechat: String = "Wechat"
+        static let Weibo: String = "Weibo"
     }
     
     enum LoginStatus {

@@ -40,7 +40,7 @@ class UserInfoSectionHeaderView: UITableViewHeaderFooterView {
     }
 }
 
-class UserInfoViewController: UITableViewController, UITableViewDelegate, UITableViewDataSource, EditUserInfoDelegate, UzysAssetsPickerControllerDelegate, UIAlertViewDelegate {
+class UserInfoViewController: UITableViewController, UITableViewDelegate, UITableViewDataSource, EditUserInfoDelegate, UzysAssetsPickerControllerDelegate, UIAlertViewDelegate, UIImagePickerControllerDelegate, PhotoTweaksViewControllerDelegate, UINavigationControllerDelegate {
     
     // Interface datasource
     var userInfoDataSource: NSMutableArray = NSMutableArray()
@@ -53,6 +53,8 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
     let reachability = Reachability.reachabilityForInternetConnection()
     
     let picker: UzysAssetsPickerController = UzysAssetsPickerController()
+    
+    var imagePicker: UIImagePickerController?
     
     var hud: MBProgressHUD!
     
@@ -229,19 +231,29 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         
         if (indexPath.section == 0 && indexPath.row == 0) { // Avatar
             
-            let UConfig: UzysAppearanceConfig = UzysAppearanceConfig()
-            UConfig.finishSelectionButtonColor = UIColor.nephritisColor()
-            UConfig.cellSpacing = 1.0
-            UConfig.assetsCountInALine = 3
-            UzysAssetsPickerController.setUpAppearanceConfig(UConfig)
-            
-            
-            self.picker.delegate = self
-            self.picker.maximumNumberOfSelectionPhoto = 1
-            
-            self.presentViewController(self.picker, animated: true, completion: { () -> Void in
+            self.imagePicker = UIImagePickerController()
+            self.imagePicker!.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+            self.imagePicker!.delegate = self
+            self.imagePicker!.allowsEditing = false
+            self.imagePicker!.navigationBarHidden = true
+            self.presentViewController(self.imagePicker!, animated: true, completion: { () -> Void in
                 
             })
+            
+            
+//            let UConfig: UzysAppearanceConfig = UzysAppearanceConfig()
+//            UConfig.finishSelectionButtonColor = UIColor.nephritisColor()
+//            UConfig.cellSpacing = 1.0
+//            UConfig.assetsCountInALine = 3
+//            UzysAssetsPickerController.setUpAppearanceConfig(UConfig)
+//            
+//            
+//            self.picker.delegate = self
+//            self.picker.maximumNumberOfSelectionPhoto = 1
+//            
+//            self.presentViewController(self.picker, animated: true, completion: { () -> Void in
+//                
+//            })
             return
         }
         else if (indexPath.section == 0 && indexPath.row == 1) { // Nickname
@@ -267,6 +279,8 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         else if (indexPath.section == 2 && indexPath.row == 1) { // WeChat
             
             if self.memberInfo?.bindWechat! == "0" {
+                
+                CTMemCache.sharedInstance.set(VCAppLetor.BindType.Wechat, data: true, namespace: "Bind")
                 
                 ShareSDK.getUserInfoWithType(ShareTypeWeixiSession, authOptions: nil) {
                     (result, userInfo, error) -> Void in
@@ -440,6 +454,101 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
         }
     }
     
+    // MARK: - PhotoTweaksDelegate
+    
+    func photoTweaksController(controller: PhotoTweaksViewController!, didFinishWithCroppedImage croppedImage: UIImage!) {
+        
+        let image: UIImage = croppedImage
+        
+        let hud: MBProgressHUD = MBProgressHUD.showHUDAddedTo(self.imagePicker?.view, animated: true)
+        hud.mode = MBProgressHUDMode.Indeterminate
+        
+        let iconResizedImage = Toucan.Resize.resizeImage(image, size: CGSizeMake(200, 200), fitMode: Toucan.Resize.FitMode.Crop)
+        
+        // Uploading image to server
+        let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+        let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+        
+        let dic: NSDictionary = NSDictionary(object: memberId, forKey: "member_id")
+        
+        if self.reachability.isReachable() {
+            
+            var directoryURL = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)[0] as? NSURL
+            directoryURL = directoryURL!.URLByAppendingPathComponent("avatar")
+            
+            if !NSFileManager.defaultManager().fileExistsAtPath(directoryURL!.path!) {
+                
+                NSFileManager.defaultManager().createDirectoryAtPath(directoryURL!.path!, withIntermediateDirectories: true, attributes: nil, error: nil)
+            }
+            
+            directoryURL = directoryURL!.URLByAppendingPathComponent("\(memberId)")
+            
+            var err: NSError?
+            
+            if NSFileManager.defaultManager().fileExistsAtPath(directoryURL!.path!) {
+                
+                NSFileManager.defaultManager().removeItemAtPath(directoryURL!.path!, error: &err)
+                println("remove path: \(directoryURL!.path!)")
+            }
+            
+            NSFileManager.defaultManager().createFileAtPath(directoryURL!.path!, contents: UIImagePNGRepresentation(iconResizedImage), attributes: nil)
+            
+            let result: NSDictionary = self.uploadIcon(dic, route: "member/member/editMemberIcon", token: token, image: iconResizedImage)
+            
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                
+                if !result.isEqualToDictionary(NSDictionary.new() as [NSObject : AnyObject]) {
+                    
+                    if (result.valueForKey("status") as! NSDictionary).valueForKey("succeed") as! String == "1" {
+                        
+                        hud.hide(true)
+                        println("upload successful")
+                        self.imagePicker?.dismissViewControllerAnimated(true, completion: { () -> Void in
+                            
+                            (self.tableView.cellForRowAtIndexPath(NSIndexPath(forItem: 0, inSection: 0)) as! UserInfoCell).avatar.image = iconResizedImage
+                        })
+                        
+                        CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberIcon, data: iconResizedImage, namespace: "member")
+                    }
+                    else {
+                        let errStr = (result.valueForKey("status") as! NSDictionary).valueForKey("error_desc") as! String
+                        println("\(errStr)")
+                        hud.hide(true)
+                    }
+                }
+            })
+        }
+        else {
+            
+            hud.hide(true)
+            RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+        }
+        
+    }
+    
+    func photoTweaksControllerDidCancel(controller: PhotoTweaksViewController!) {
+        
+        self.imagePicker?.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    // MARK: - UIImagePickerDelegate
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+        
+        let image: UIImage = (info as NSDictionary).objectForKey(UIImagePickerControllerOriginalImage) as! UIImage
+        
+        let photoTweaksVC: PhotoTweaksViewController = PhotoTweaksViewController(image: image)
+        photoTweaksVC.delegate = self
+        photoTweaksVC.autoSaveToLibray = false
+        picker.pushViewController(photoTweaksVC, animated: true)
+        
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        
+        self.imagePicker?.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     // MARK: - UzysAssetsPickerController Delegate
     
     func uzysAssetsPickerController(picker: UzysAssetsPickerController!, didFinishPickingAssets assets: [AnyObject]!) {
@@ -455,8 +564,12 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
                 
                 let representation: ALAsset = obj as! ALAsset
                 
-                //                let img: UIImage = UIImage(CGImage: representation.defaultRepresentation().fullResolutionImage() as! CGImage)!
-                let img: UIImage = UIImage(CGImage: representation.defaultRepresentation().fullResolutionImage().takeUnretainedValue() as CGImage)!
+                //let img: UIImage = UIImage(CGImage: representation.defaultRepresentation().fullResolutionImage().takeUnretainedValue() as CGImage)!
+                
+                let img: UIImage = UIImage(CGImage: representation.defaultRepresentation().fullResolutionImage().takeUnretainedValue(),
+                    scale: CGFloat(representation.defaultRepresentation().scale()),
+                    orientation: UIImageOrientation(rawValue: representation.defaultRepresentation().orientation().rawValue)!)!
+                
                 
                 let iconResizedImage = Toucan.Resize.resizeImage(img, size: CGSizeMake(200, 200), fitMode: Toucan.Resize.FitMode.Crop)
                 

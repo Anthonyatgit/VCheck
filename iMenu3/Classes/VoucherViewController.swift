@@ -42,6 +42,7 @@ class VoucherViewController: VCBaseViewController, UITableViewDataSource, UITabl
     var validCount: Int = 0
     
     var active: Bool = false
+    var orderId: String = ""
     
     var hud: MBProgressHUD!
     
@@ -207,144 +208,292 @@ class VoucherViewController: VCBaseViewController, UITableViewDataSource, UITabl
         let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
         let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
         
-        Alamofire.request(VCheckGo.Router.GetMyVouchers(memberId, self.currentPage, VCAppLetor.ConstValue.DefaultListItemCountPerPage, token)).validate().responseSwiftyJSON ({
-            (_, _, JSON, error) -> Void in
+        if self.orderId == "" {
             
-            if error == nil {
+            Alamofire.request(VCheckGo.Router.GetMyVouchers(memberId, self.currentPage, VCAppLetor.ConstValue.DefaultListItemCountPerPage, token)).validate().responseSwiftyJSON ({
+                (_, _, JSON, error) -> Void in
                 
-                let json = JSON
-                
-                if json["status"]["succeed"].string! == "1" {
+                if error == nil {
                     
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    let json = JSON
+                    
+                    if json["status"]["succeed"].string! == "1" {
                         
-                        // Available City?
-                        if json["paginated"]["total"].string! == "0" {
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
                             
-                            // Load favorites list, if empty ..
-                            let bgView: UIView = UIView()
-                            bgView.frame = self.view.bounds
-                            
-                            let favoriteIcon: UIImageView = UIImageView.newAutoLayoutView()
-                            favoriteIcon.alpha = 0.1
-                            favoriteIcon.image = UIImage(named: VCAppLetor.IconName.GiftBlack)
-                            bgView.addSubview(favoriteIcon)
-                            
-                            let favoriteEmptyLabel: UILabel = UILabel.newAutoLayoutView()
-                            favoriteEmptyLabel.text = VCAppLetor.StringLine.FavoritesEmpty
-                            favoriteEmptyLabel.font = VCAppLetor.Font.NormalFont
-                            favoriteEmptyLabel.textColor = UIColor.lightGrayColor()
-                            favoriteEmptyLabel.textAlignment = .Center
-                            bgView.addSubview(favoriteEmptyLabel)
-                            
-                            self.tableView.backgroundView = bgView
-                            
-                            favoriteIcon.autoAlignAxisToSuperviewAxis(.Vertical)
-                            favoriteIcon.autoPinEdgeToSuperviewEdge(.Top, withInset: 160.0)
-                            favoriteIcon.autoSetDimensionsToSize(CGSizeMake(48.0, 48.0))
-                            
-                            favoriteEmptyLabel.autoSetDimensionsToSize(CGSizeMake(200.0, 20.0))
-                            favoriteEmptyLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: favoriteIcon, withOffset: 20.0)
-                            favoriteEmptyLabel.autoAlignAxisToSuperviewAxis(.Vertical)
-                            
-                            self.tableView.stopRefreshAnimation()
-                            
-                            return
-                        }
-                        
-                        // Deal with paging
-                        if json["paginated"]["more"].string! == "1" {
-                            self.haveMore = true
-                        }
-                        else {
-                            self.haveMore = false
-                        }
-                        
-                        // Deal with the current page listing
-                        
-                        self.voucherList.removeAllObjects()
-                        
-                        let voucherList: Array = json["data"]["voucher_list"].arrayValue
-                        
-                        for item in voucherList {
-                            
-                            
-                            let voucher: Voucher = Voucher(vid: item["voucher_member_id"].string!)
-                            
-                            voucher.title = item["voucher_name"].string!
-                            voucher.desc = item["description"].string!
-                            
-                            var dateFormatter = NSDateFormatter()
-                            dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
-                            
-                            voucher.startDate = dateFormatter.dateFromString(item["begin_date"].string!)!
-                            voucher.endDate = dateFormatter.dateFromString(item["end_date"].string!)!
-                            
-                            voucher.status = item["voucher_status"].string!
-                            voucher.price = item["discount"].string!
-                            
-                            voucher.limit = item["total"].string!
-                            voucher.limitDesc = item["limit_description"].string!
-                            
-                            if !self.active {
+                            // Available City?
+                            if json["paginated"]["total"].string! == "0" {
                                 
-                                self.voucherList.addObject(voucher)
+                                // Load favorites list, if empty ..
+                                let bgView: UIView = UIView()
+                                bgView.frame = self.view.bounds
+                                
+                                let favoriteIcon: UIImageView = UIImageView.newAutoLayoutView()
+                                favoriteIcon.alpha = 0.1
+                                favoriteIcon.image = UIImage(named: VCAppLetor.IconName.GiftBlack)
+                                bgView.addSubview(favoriteIcon)
+                                
+                                let favoriteEmptyLabel: UILabel = UILabel.newAutoLayoutView()
+                                favoriteEmptyLabel.text = VCAppLetor.StringLine.FavoritesEmpty
+                                favoriteEmptyLabel.font = VCAppLetor.Font.NormalFont
+                                favoriteEmptyLabel.textColor = UIColor.lightGrayColor()
+                                favoriteEmptyLabel.textAlignment = .Center
+                                bgView.addSubview(favoriteEmptyLabel)
+                                
+                                self.tableView.backgroundView = bgView
+                                
+                                favoriteIcon.autoAlignAxisToSuperviewAxis(.Vertical)
+                                favoriteIcon.autoPinEdgeToSuperviewEdge(.Top, withInset: 160.0)
+                                favoriteIcon.autoSetDimensionsToSize(CGSizeMake(48.0, 48.0))
+                                
+                                favoriteEmptyLabel.autoSetDimensionsToSize(CGSizeMake(200.0, 20.0))
+                                favoriteEmptyLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: favoriteIcon, withOffset: 20.0)
+                                favoriteEmptyLabel.autoAlignAxisToSuperviewAxis(.Vertical)
+                                
+                                self.tableView.stopRefreshAnimation()
+                                
+                                self.tableView.animation.makeAlpha(1.0).animate(0.4)
+                                
+                                return
+                            }
+                            
+                            // Deal with paging
+                            if json["paginated"]["more"].string! == "1" {
+                                self.haveMore = true
                             }
                             else {
+                                self.haveMore = false
+                            }
+                            
+                            // Deal with the current page listing
+                            
+                            self.voucherList.removeAllObjects()
+                            
+                            let voucherList: Array = json["data"]["voucher_list"].arrayValue
+                            
+                            for item in voucherList {
                                 
-                                if voucher.status == "1" {
+                                
+                                let voucher: Voucher = Voucher(vid: item["voucher_member_id"].string!)
+                                
+                                voucher.title = item["voucher_name"].string!
+                                voucher.desc = item["description"].string!
+                                
+                                var dateFormatter = NSDateFormatter()
+                                dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                                
+                                voucher.startDate = dateFormatter.dateFromString(item["begin_date"].string!)!
+                                voucher.endDate = dateFormatter.dateFromString(item["end_date"].string!)!
+                                
+                                voucher.status = item["voucher_status"].string!
+                                voucher.price = item["discount"].string!
+                                
+                                voucher.limit = item["total"].string!
+                                voucher.limitDesc = item["limit_description"].string!
+                                
+                                if !self.active {
+                                    
                                     self.voucherList.addObject(voucher)
                                 }
+                                else {
+                                    
+                                    if voucher.status == "1" {
+                                        self.voucherList.addObject(voucher)
+                                    }
+                                }
+                                
+                                
+                                if voucher.status == "1" {
+                                    self.validCount++
+                                }
+                                
                             }
                             
+                            self.isLoading = false
                             
-                            if voucher.status == "1" {
-                                self.validCount++
-                            }
+                            let validCountNumber = json["data"]["voucher_info"]["voucher_use_count"].string!
                             
-                        }
+                            self.headerView.frame = CGRectMake(0, 0, self.view.width, 50)
+                            self.headerView.drawType = "voucherHeader"
+                            self.headerView.withTitle = "\(validCountNumber)"
+                            self.tableView.tableHeaderView = self.headerView
+                            
+                            self.hud.hide(true)
+                            self.tableView.stopRefreshAnimation()
+                            self.tableView.reloadData()
+                            self.tableView.animation.makeAlpha(1.0).animate(0.4)
+                        })
                         
-                        self.isLoading = false
-                        
-                        let validCountNumber = json["data"]["voucher_info"]["voucher_use_count"].string!
-                        
-                        self.headerView.frame = CGRectMake(0, 0, self.view.width, 50)
-                        self.headerView.drawType = "voucherHeader"
-                        self.headerView.withTitle = "\(validCountNumber)"
-                        self.tableView.tableHeaderView = self.headerView
+                    }
+                    else {
+                        RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                         
                         self.hud.hide(true)
                         self.tableView.stopRefreshAnimation()
-                        self.tableView.reloadData()
-                        self.tableView.animation.makeAlpha(1.0).animate(0.4)
-                    })
-                    
+                        
+                        // Restore FoodList
+                        self.voucherList = voucherListCopy
+                    }
                 }
                 else {
-                    RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
-                    
-                    self.hud.hide(true)
-                    self.tableView.stopRefreshAnimation()
+                    println("ERROR @ Get Favorites List Request: \(error?.localizedDescription)")
                     
                     // Restore FoodList
                     self.voucherList = voucherListCopy
+                    
+                    // Restore interface
+                    self.hud.hide(true)
+                    self.tableView.stopRefreshAnimation()
+                    
+                    RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
                 }
-            }
-            else {
-                println("ERROR @ Get Favorites List Request: \(error?.localizedDescription)")
                 
-                // Restore FoodList
-                self.voucherList = voucherListCopy
-                
-                // Restore interface
-                self.hud.hide(true)
-                self.tableView.stopRefreshAnimation()
-                
-                RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
-            }
+            })
             
-        })
-        
+        }
+        else {
+            
+            Alamofire.request(VCheckGo.Router.GetMyVouchersWithOrderId(memberId, self.orderId, self.currentPage, VCAppLetor.ConstValue.DefaultListItemCountPerPage, token)).validate().responseSwiftyJSON ({
+                (_, _, JSON, error) -> Void in
+                
+                if error == nil {
+                    
+                    let json = JSON
+                    
+                    if json["status"]["succeed"].string! == "1" {
+                        
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            
+                            // Available City?
+                            if json["paginated"]["total"].string! == "0" {
+                                
+                                // Load favorites list, if empty ..
+                                let bgView: UIView = UIView()
+                                bgView.frame = self.view.bounds
+                                
+                                let favoriteIcon: UIImageView = UIImageView.newAutoLayoutView()
+                                favoriteIcon.alpha = 0.1
+                                favoriteIcon.image = UIImage(named: VCAppLetor.IconName.GiftBlack)
+                                bgView.addSubview(favoriteIcon)
+                                
+                                let favoriteEmptyLabel: UILabel = UILabel.newAutoLayoutView()
+                                favoriteEmptyLabel.text = VCAppLetor.StringLine.FavoritesEmpty
+                                favoriteEmptyLabel.font = VCAppLetor.Font.NormalFont
+                                favoriteEmptyLabel.textColor = UIColor.lightGrayColor()
+                                favoriteEmptyLabel.textAlignment = .Center
+                                bgView.addSubview(favoriteEmptyLabel)
+                                
+                                self.tableView.backgroundView = bgView
+                                
+                                favoriteIcon.autoAlignAxisToSuperviewAxis(.Vertical)
+                                favoriteIcon.autoPinEdgeToSuperviewEdge(.Top, withInset: 160.0)
+                                favoriteIcon.autoSetDimensionsToSize(CGSizeMake(48.0, 48.0))
+                                
+                                favoriteEmptyLabel.autoSetDimensionsToSize(CGSizeMake(200.0, 20.0))
+                                favoriteEmptyLabel.autoPinEdge(.Top, toEdge: .Bottom, ofView: favoriteIcon, withOffset: 20.0)
+                                favoriteEmptyLabel.autoAlignAxisToSuperviewAxis(.Vertical)
+                                
+                                self.tableView.stopRefreshAnimation()
+                                
+                                self.tableView.animation.makeAlpha(1.0).animate(0.4)
+                                
+                                return
+                            }
+                            
+                            // Deal with paging
+                            if json["paginated"]["more"].string! == "1" {
+                                self.haveMore = true
+                            }
+                            else {
+                                self.haveMore = false
+                            }
+                            
+                            // Deal with the current page listing
+                            
+                            self.voucherList.removeAllObjects()
+                            
+                            let voucherList: Array = json["data"]["voucher_list"].arrayValue
+                            
+                            for item in voucherList {
+                                
+                                
+                                let voucher: Voucher = Voucher(vid: item["voucher_member_id"].string!)
+                                
+                                voucher.title = item["voucher_name"].string!
+                                voucher.desc = item["description"].string!
+                                
+                                var dateFormatter = NSDateFormatter()
+                                dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                                
+                                voucher.startDate = dateFormatter.dateFromString(item["begin_date"].string!)!
+                                voucher.endDate = dateFormatter.dateFromString(item["end_date"].string!)!
+                                
+                                voucher.status = item["voucher_status"].string!
+                                voucher.price = item["discount"].string!
+                                
+                                voucher.limit = item["total"].string!
+                                voucher.limitDesc = item["limit_description"].string!
+                                
+                                if !self.active {
+                                    
+                                    self.voucherList.addObject(voucher)
+                                }
+                                else {
+                                    
+                                    if voucher.status == "1" {
+                                        self.voucherList.addObject(voucher)
+                                    }
+                                }
+                                
+                                
+                                if voucher.status == "1" {
+                                    self.validCount++
+                                }
+                                
+                            }
+                            
+                            self.isLoading = false
+                            
+                            let validCountNumber = json["data"]["voucher_info"]["voucher_use_count"].string!
+                            
+                            self.headerView.frame = CGRectMake(0, 0, self.view.width, 50)
+                            self.headerView.drawType = "voucherHeader"
+                            self.headerView.withTitle = "\(validCountNumber)"
+                            self.tableView.tableHeaderView = self.headerView
+                            
+                            self.hud.hide(true)
+                            self.tableView.stopRefreshAnimation()
+                            self.tableView.reloadData()
+                            self.tableView.animation.makeAlpha(1.0).animate(0.4)
+                        })
+                        
+                    }
+                    else {
+                        RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                        
+                        self.hud.hide(true)
+                        self.tableView.stopRefreshAnimation()
+                        
+                        // Restore FoodList
+                        self.voucherList = voucherListCopy
+                    }
+                }
+                else {
+                    println("ERROR @ Get Favorites List Request: \(error?.localizedDescription)")
+                    
+                    // Restore FoodList
+                    self.voucherList = voucherListCopy
+                    
+                    // Restore interface
+                    self.hud.hide(true)
+                    self.tableView.stopRefreshAnimation()
+                    
+                    RKDropdownAlert.title(VCAppLetor.StringLine.InternetUnreachable, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                }
+                
+            })
+            
+        }
         
     }
     
