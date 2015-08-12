@@ -14,6 +14,7 @@ import DKChainableAnimationKit
 class VCAppViewController: VCBaseViewController {
     
     var videoVC: JSVideoViewController?
+    var playVideo: Bool = false
     
     var launchImage: UIImageView!
     var tapBtn: UIButton!
@@ -30,9 +31,17 @@ class VCAppViewController: VCBaseViewController {
         
         if let videoTag = Settings.findFirst(attribute: "name", value: VCAppLetor.SettingName.VideoTag, contextType: BreezeContextType.Main) as? Settings { // Get current app version
             
-            if videoTag.value == "1" {
+            if videoTag.value == "0" {
                 
-                self.showIndexPage()
+                if self.playVideo {
+                    
+                    self.showVideo()
+                }
+                else {
+                    
+                    self.showIndexPage()
+                }
+                
                 
             }
             else {
@@ -189,7 +198,7 @@ class VCAppViewController: VCBaseViewController {
     
     func removeIndexImage() {
         
-        performSegueWithIdentifier("showtime", sender: self)
+        self.view.removeFromSuperview()
     }
     
     

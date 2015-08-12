@@ -16,6 +16,8 @@ class VCAboutViewController: VCBaseViewController {
     let subtitleLine: CustomDrawView = CustomDrawView.newAutoLayoutView()
     let appIcon: UILabel = UILabel.newAutoLayoutView()
     
+    let playVideo: UIImageView = UIImageView.newAutoLayoutView()
+    let playBtn: UIButton = UIButton.newAutoLayoutView()
     let appName: UILabel = UILabel.newAutoLayoutView()
     let appVersion: UILabel = UILabel.newAutoLayoutView()
     let appWebsiteURL: UILabel = UILabel.newAutoLayoutView()
@@ -70,6 +72,16 @@ class VCAboutViewController: VCBaseViewController {
             self.appVersion.text = "V1.0.0"
         }
         
+        
+        self.playVideo.image = UIImage(named: VCAppLetor.IconName.VideoBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+        self.playVideo.tintColor = UIColor.grayColor()
+        self.view.addSubview(self.playVideo)
+        
+        self.playBtn.setTitle("", forState: .Normal)
+        self.playBtn.setTitleColor(UIColor.clearColor(), forState: .Normal)
+        self.playBtn.backgroundColor = UIColor.clearColor()
+        self.playBtn.addTarget(self, action: "showVideo", forControlEvents: .TouchUpInside)
+        self.view.addSubview(self.playBtn)
         
         self.appName.text = VCAppLetor.StringLine.AppNameZh
         self.appName.textAlignment = .Center
@@ -140,8 +152,24 @@ class VCAboutViewController: VCBaseViewController {
         self.appName.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.appVersion, withOffset: -10.0)
         self.appName.autoAlignAxisToSuperviewAxis(.Vertical)
         
+        self.playVideo.autoPinEdge(.Bottom, toEdge: .Top, ofView: self.appName, withOffset: -10.0)
+        self.playVideo.autoAlignAxisToSuperviewAxis(.Vertical)
+        self.playVideo.autoSetDimensionsToSize(CGSizeMake(60.0, 60.0))
+        
+        self.playBtn.autoSetDimensionsToSize(CGSizeMake(60.0, 60.0))
+        self.playBtn.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.playVideo)
+        self.playBtn.autoPinEdge(.Top, toEdge: .Top, ofView: self.playVideo)
+        
     }
     
+    func showVideo() {
+        
+        let appIntroVC: VCAppViewController = VCAppViewController()
+        appIntroVC.playVideo = true
+        
+        UIApplication.sharedApplication().keyWindow?.addSubview(appIntroVC.view)
+        
+    }
     
     
     

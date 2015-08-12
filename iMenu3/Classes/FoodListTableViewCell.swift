@@ -21,6 +21,7 @@ class FoodListTableViewCell: UITableViewCell {
     
     let foodImageView: UIImageView = UIImageView.newAutoLayoutView()
     let foodBrandImageView: UIImageView = UIImageView.newAutoLayoutView()
+    let brandName: UILabel = UILabel.newAutoLayoutView()
     let shimmerView: FBShimmeringView = FBShimmeringView.newAutoLayoutView()
     let foodDate: UILabel = UILabel.newAutoLayoutView()
     let foodDateBg: CustomDrawView = CustomDrawView.newAutoLayoutView()
@@ -59,6 +60,32 @@ class FoodListTableViewCell: UITableViewCell {
         self.foodImagePlaceholder.drawType = "imageplcadeholder"
         self.contentView.addSubview(self.foodImagePlaceholder)
         
+        
+        self.foodDateBg.drawType = "DateTagLong"
+        self.foodDateBg.alpha = 0 //0.4
+        self.contentView.addSubview(self.foodDateBg)
+        
+        self.foodDateBg2.drawType = "DateTag"
+        self.foodDateBg2.alpha = 0 // 0.8
+        self.contentView.addSubview(self.foodDateBg2)
+        
+        //        self.shimmerView.shimmering = true
+        //        self.shimmerView.shimmeringOpacity = 1.0
+        //        self.shimmerView.shimmeringPauseDuration = 3.0
+        //        self.shimmerView.shimmeringSpeed = 100
+        //        self.foodDateBg2.addSubview(self.shimmerView)
+        
+        
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = VCAppLetor.ConstValue.DateWithoutTimeFormat
+        
+        self.foodDate.text = dateFormatter.stringFromDate(self.foodInfo.addDate!)
+        self.foodDate.font = VCAppLetor.Font.XSmall
+        self.foodDate.textAlignment = .Left
+        self.foodDate.textColor = UIColor.whiteColor()
+        self.foodDate.alpha = 0 // 1.0
+        self.foodDateBg2.addSubview(self.foodDate)
+        
         let imageURL = self.foodInfo.foodImage!
         
         self.foodImageView.backgroundColor = UIColor.clearColor()
@@ -85,6 +112,10 @@ class FoodListTableViewCell: UITableViewCell {
                     self.imageCache!.setObject(foodImage, forKey: imageURL)
                     
                     self.foodImageView.image = foodImage
+                    
+                    self.foodDateBg.animation.makeAlpha(0.4).animate(1.0)
+                    self.foodDateBg2.animation.makeAlpha(0.8).animate(1.0)
+                    self.foodDate.animation.makeAlpha(1.0).animate(1.0)
                 }
             }
             
@@ -93,29 +124,6 @@ class FoodListTableViewCell: UITableViewCell {
         
 //        self.foodImageView.animation.makeAlpha(1.0).animate(1.0)
         
-        self.foodDateBg.drawType = "DateTagLong"
-        self.foodDateBg.alpha = 0.4
-        self.contentView.addSubview(self.foodDateBg)
-        
-        self.foodDateBg2.drawType = "DateTag"
-        self.foodDateBg2.alpha = 0.8
-        self.contentView.addSubview(self.foodDateBg2)
-        
-//        self.shimmerView.shimmering = true
-//        self.shimmerView.shimmeringOpacity = 1.0
-//        self.shimmerView.shimmeringPauseDuration = 3.0
-//        self.shimmerView.shimmeringSpeed = 100
-//        self.foodDateBg2.addSubview(self.shimmerView)
-        
-        
-        let dateFormatter = NSDateFormatter()
-        dateFormatter.dateFormat = VCAppLetor.ConstValue.DateWithoutTimeFormat
-        
-        self.foodDate.text = dateFormatter.stringFromDate(self.foodInfo.addDate!)
-        self.foodDate.font = VCAppLetor.Font.LightXXSmall
-        self.foodDate.textAlignment = .Left
-        self.foodDate.textColor = UIColor.whiteColor()
-        self.foodDateBg2.addSubview(self.foodDate)
         
         
         self.foodBrandImageView.backgroundColor = UIColor.whiteColor()
@@ -146,6 +154,15 @@ class FoodListTableViewCell: UITableViewCell {
                 }
             }
         }
+        
+        self.brandName.text = self.foodInfo.memberName!
+        self.brandName.textAlignment = .Center
+        self.brandName.textColor = UIColor.whiteColor()
+        self.brandName.font = VCAppLetor.Font.NormalFont
+        self.brandName.shadowColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+        self.brandName.shadowOffset = CGSizeMake(1.0, 1.0)
+        self.brandName.sizeToFit()
+        self.contentView.addSubview(self.brandName)
         
         self.foodBrandImageView.layer.borderWidth = 1.0
         self.foodBrandImageView.layer.borderColor = UIColor.blackColor().colorWithAlphaComponent(0.6).CGColor
@@ -269,6 +286,9 @@ class FoodListTableViewCell: UITableViewCell {
             self.foodBrandImageView.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.foodImageView, withOffset: 10.0)
             self.foodBrandImageView.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodImageView, withOffset: -10.0)
             self.foodBrandImageView.autoSetDimensionsToSize(CGSizeMake(50.0, 50.0))
+            
+            self.brandName.autoAlignAxis(.Horizontal, toSameAxisOfView: self.foodBrandImageView)
+            self.brandName.autoPinEdge(.Trailing, toEdge: .Leading, ofView: self.foodBrandImageView, withOffset: -10.0)
             
             self.foodTitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodImageView, withOffset: 20.0)
             self.foodTitle.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodImageView, withOffset: 10.0)

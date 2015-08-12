@@ -57,7 +57,7 @@ class VoucherViewCell: UITableViewCell {
         self.voucherBg.lineColor = UIColor.lightGrayColor()
         
         if self.voucher.status == "1" {
-            self.VouImageView.image = UIImage(named: "voucher_black.jpg")
+            self.VouImageView.image = UIImage(named: "voucher_black_bg.jpg")
             self.voucherBg.lineColor = goldColor.colorWithAlphaComponent(0.3)
         }
         

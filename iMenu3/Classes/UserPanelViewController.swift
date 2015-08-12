@@ -179,7 +179,8 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
         cell.panelTitle.text = current
         
         let icon = self.userPanelIcon.values.array[indexPath.section][indexPath.row]
-        cell.panelIcon.image = UIImage(named: icon)
+        cell.panelIcon.tintColor = UIColor.blackColor().colorWithAlphaComponent(0.5)
+        cell.panelIcon.image = UIImage(named: icon)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
         
         if self.isLogined() {
             

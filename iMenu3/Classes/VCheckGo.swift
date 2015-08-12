@@ -53,6 +53,7 @@ struct VCheckGo {
         case LoginWithWechat(NSDictionary)                                          // 21.第三方-微信登陆
         case RegWithWechat(NSDictionary, String, String)                            // 22.第三方-微信注册
         case EditBindWithWechat(String, String, NSDictionary, String)               // 23.第三方-编辑微信绑定关系
+        case UnBindWithWechat(String, String, String)                               // 23.第三方-编辑微信绑定关系
         case PushDeviceToken(String, String, PushDeviceType, String)                // 24.基本-提交推送设备信息
         case GetOrderList(String, Int, Int, String)                                 // 26.会员-获取订单列表
         case GetOrderDetail(String, String, String)                                 // 27.会员-获取订单详情
@@ -198,6 +199,11 @@ struct VCheckGo {
                     let unionid = userInfo.valueForKey("unionid") as! String
                     
                     let params = ["route":"\(RoutePath.EditBindWithWechat.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"operator_type\":\"\(opType)\",\"wx_info\":{\"openid\":\"\(openid)\",\"nickname\":\"\(nickname)\",\"sex\":\"\(sex)\",\"province\":\"\(province)\",\"city\":\"\(city)\",\"country\":\"\(country)\",\"headimgurl\":\"\(headimgurl)\",\"unionid\":\"\(unionid)\"}}"]
+                    return ("/\(RoutePath.EditBindWithWechat.rawValue)", params)
+                    //=========EditBindWithWechat=============
+                case .UnBindWithWechat(let memberId, let opType, let token):
+                    
+                    let params = ["route":"\(RoutePath.EditBindWithWechat.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"operator_type\":\"\(opType)\"}"]
                     return ("/\(RoutePath.EditBindWithWechat.rawValue)", params)
                 //=========PushDeviceToken===========
                 case .PushDeviceToken(let memberId, let deviceToken, let pushDeviceType, let token):
@@ -577,6 +583,7 @@ class FoodInfo: NSObject {
     
     // VM
     var memberIcon: String?
+    var memberName: String?
     
     // STORE
     var storeId: String?
@@ -605,6 +612,9 @@ class FoodInfo: NSObject {
     
     // ORDER
     var orderExist: String?
+    
+    // SHARE
+    var shareLink: String?
     
     init(id: Int) {
     

@@ -346,9 +346,7 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
                             self.hud?.hide(true)
                             println("ERROR @ Auth with WeChat:\(error.errorCode())-\(error.errorDescription())")
                         }
-                        
                     }
-                    
                 }
             }
             else {
@@ -356,10 +354,10 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
                 self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
                 self.hud.mode = MBProgressHUDMode.Indeterminate
                 
-                let wxUserInfo = CTMemCache.sharedInstance.get(VCAppLetor.LoginStatus.WechatAuthUserInfo, namespace: "Thirdpart")?.data as! NSDictionary
+                //let wxUserInfo = CTMemCache.sharedInstance.get(VCAppLetor.LoginStatus.WechatAuthUserInfo, namespace: "Thirdpart")?.data as! NSDictionary
                 let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
                 
-                Alamofire.request(VCheckGo.Router.EditBindWithWechat(self.memberInfo!.memberId, "0", wxUserInfo, token)).validate().responseSwiftyJSON({
+                Alamofire.request(VCheckGo.Router.UnBindWithWechat(self.memberInfo!.memberId, "2", token)).validate().responseSwiftyJSON({
                     (_, _, JSON, error) -> Void in
                     
                     if error == nil {

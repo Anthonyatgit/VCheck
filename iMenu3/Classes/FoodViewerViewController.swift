@@ -238,6 +238,8 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                     
                     if json["status"]["succeed"].string! == "1" {
                         
+                        self.foodInfo.shareLink = json["data"]["article_info"]["share_info"]["share_url"].string!
+                        
                         // Slide images
                         let foodSlideImages = json["data"]["article_info"]["article_image_list"].arrayValue
                         self.foodInfo.slideImages = NSMutableArray()
@@ -1295,6 +1297,12 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.shareView = VCShareActionView(frame: self.view.frame)
         self.shareView!.shareType = VCAppLetor.ShareToType.food
         self.shareView!.foodInfo = self.foodInfo
+        self.shareView!.shareCode = ""
+        
+        if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optToken, namespace: "token") {
+            self.shareView!.shareCode = (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo).inviteCode!
+        }
+        
         self.view.addSubview(self.shareView!)
         
     }

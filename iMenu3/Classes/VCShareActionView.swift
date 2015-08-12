@@ -240,7 +240,32 @@ class VCShareActionView: UIView {
                     
                     let png = ShareSDK.pngImageWithImage(foodImage)
                     
-                    let shareContent: ISSContent = ShareSDK.content(self.foodInfo?.title!, defaultContent: VCAppLetor.StringLine.DefaultShareContent, image: png, title: "知味-精品美食", url: VCAppLetor.StringLine.AppWebsiteURL, description: "Description", mediaType: SSPublishContentMediaTypeNews)
+                    var msg: String = "知味-最精致的餐品和就餐体验"
+                    
+                    var title = "\(self.foodInfo!.subTitle!)" as String
+                    
+                    if self.shareCode! != "" {
+                        msg = msg + ", 用邀请码\(self.shareCode!)注册即获30元礼券"
+                    }
+                    
+                    if type.value == ShareTypeWeixiTimeline.value {
+                        title = title + ", 使用邀请码:\(self.shareCode!) 注册即获30元礼券"
+                    }
+                    
+                    if type.value == ShareTypeSinaWeibo.value {
+                        msg = "@知味_Taste 上的「\(title)」超赞~ 知味Taste最精致的高端定制餐饮体验"
+                        
+                        if self.shareCode! != "" {
+                            msg = msg + ", 用邀请码 \(self.shareCode!) 即可获取30元礼券 \(self.foodInfo!.shareLink!)"
+                        }
+                        else {
+                            msg = msg + " \(self.foodInfo!.shareLink!)"
+                        }
+                        
+                    }
+                    
+                    
+                    let shareContent: ISSContent = ShareSDK.content(msg, defaultContent: VCAppLetor.StringLine.DefaultShareContent, image: png, title: title, url: "", description: "Description", mediaType: SSPublishContentMediaTypeNews)
                     
                     ShareSDK.shareContent(shareContent, type: type, authOptions: nil, shareOptions: nil, statusBarTips: false) {
                         (type, state, statusInfo, error, end) -> Void in
@@ -271,7 +296,25 @@ class VCShareActionView: UIView {
             
             let png = ShareSDK.pngImageWithImage(voucherImage)
             
-            let shareContent: ISSContent = ShareSDK.content("好友邀请你体验知味App，邀请码:\(self.shareCode!)", defaultContent: VCAppLetor.StringLine.DefaultShareContent, image: png, title: "知味-精品美食", url: VCAppLetor.StringLine.AppWebsiteURL, description: "v0.0.1", mediaType: SSPublishContentMediaTypeNews)
+            var title: String = "送你知味App独享30元礼券"
+            
+            if type.value == ShareTypeWeixiTimeline.value {
+                
+                title = title + ", 邀请码:\(self.shareCode!)"
+            }
+            
+            var msg = "高端定制限量美食,享受最优质的用餐体验, 邀请码: \(self.shareCode!)"
+            
+            if type.value == ShareTypeSinaWeibo.value {
+                
+                msg = "@知味_Taste 邀请你体验 知味App-最精致的高端定制餐饮"
+                
+                msg = msg + ", 使用邀请码 \(self.shareCode!) 即可获取30元礼券 "
+                
+                
+            }
+            
+            let shareContent: ISSContent = ShareSDK.content(msg, defaultContent: "", image: png, title: title, url: VCAppLetor.StringLine.AppWebsiteURL, description: "v0.0.1", mediaType: SSPublishContentMediaTypeNews)
             
             ShareSDK.shareContent(shareContent, type: type, authOptions: nil, shareOptions: nil, statusBarTips: false) {
                 (type, state, statusInfo, error, end) -> Void in

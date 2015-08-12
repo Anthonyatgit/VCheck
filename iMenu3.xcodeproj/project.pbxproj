@@ -67,7 +67,7 @@
 		9264F8F01B26765500AF8640 /* ali_68.png in Resources */ = {isa = PBXBuildFile; fileRef = 9264F8EF1B26765400AF8640 /* ali_68.png */; };
 		926AAFAF1B65FF300070D113 /* VoucherViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926AAFAD1B65FF2F0070D113 /* VoucherViewCell.swift */; };
 		926AAFB01B65FF300070D113 /* VoucherViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926AAFAE1B65FF300070D113 /* VoucherViewController.swift */; };
-		926AAFB21B66185E0070D113 /* voucher_black.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 926AAFB11B66185E0070D113 /* voucher_black.jpg */; };
+		926AAFB21B66185E0070D113 /* voucher_black_bg.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 926AAFB11B66185E0070D113 /* voucher_black_bg.jpg */; };
 		926AAFB41B6766F90070D113 /* UserPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926AAFB31B6766F90070D113 /* UserPanelViewController.swift */; };
 		926AAFB71B68FAB60070D113 /* VCSettingsViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926AAFB51B68FAB60070D113 /* VCSettingsViewCell.swift */; };
 		926AAFB81B68FAB60070D113 /* VCSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 926AAFB61B68FAB60070D113 /* VCSettingsViewController.swift */; };
@@ -309,7 +309,7 @@
 		9264F8EF1B26765400AF8640 /* ali_68.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ali_68.png; sourceTree = "<group>"; };
 		926AAFAD1B65FF2F0070D113 /* VoucherViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VoucherViewCell.swift; path = Classes/VoucherViewCell.swift; sourceTree = "<group>"; };
 		926AAFAE1B65FF300070D113 /* VoucherViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VoucherViewController.swift; path = Classes/VoucherViewController.swift; sourceTree = "<group>"; };
-		926AAFB11B66185E0070D113 /* voucher_black.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = voucher_black.jpg; sourceTree = "<group>"; };
+		926AAFB11B66185E0070D113 /* voucher_black_bg.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = voucher_black_bg.jpg; sourceTree = "<group>"; };
 		926AAFB31B6766F90070D113 /* UserPanelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserPanelViewController.swift; path = Classes/UserPanelViewController.swift; sourceTree = "<group>"; };
 		926AAFB51B68FAB60070D113 /* VCSettingsViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCSettingsViewCell.swift; path = Classes/VCSettingsViewCell.swift; sourceTree = "<group>"; };
 		926AAFB61B68FAB60070D113 /* VCSettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = VCSettingsViewController.swift; path = Classes/VCSettingsViewController.swift; sourceTree = "<group>"; };
@@ -1087,7 +1087,7 @@
 				92D301F51B70C309006AECCE /* launchImage.jpg */,
 				92FB21711B31114200877C07 /* bar_black.png */,
 				927E31101B453472003455DF /* user_nep.jpg */,
-				926AAFB11B66185E0070D113 /* voucher_black.jpg */,
+				926AAFB11B66185E0070D113 /* voucher_black_bg.jpg */,
 				926AAFBD1B6A0DFC0070D113 /* switch_off.png */,
 			);
 			path = bg;
@@ -1249,7 +1249,7 @@
 				92FB21891B31571800877C07 /* clip_light@2x.png in Resources */,
 				926AAFBE1B6A0DFC0070D113 /* switch_off.png in Resources */,
 				923B6B231B6A286D00947E89 /* expired_tag.png in Resources */,
-				926AAFB21B66185E0070D113 /* voucher_black.jpg in Resources */,
+				926AAFB21B66185E0070D113 /* voucher_black_bg.jpg in Resources */,
 				92CFFB361AF8663400C9AA7D /* user.png in Resources */,
 				92FB21821B31571800877C07 /* bulb.png in Resources */,
 				92CFFB331AF8663400C9AA7D /* like.png in Resources */,

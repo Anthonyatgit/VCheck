@@ -436,14 +436,14 @@ class CustomDrawView: UIView {
             CGContextStrokePath(context)
             
             let wechat: UILabel = UILabel.newAutoLayoutView()
-            wechat.text = VCAppLetor.StringLine.wechatServiceName + VCAppLetor.StringLine.AppName + VCAppLetor.StringLine.wechatServiceTitle
+            wechat.text = VCAppLetor.StringLine.wechatServiceTitle + "知味Taste"
             wechat.textAlignment = .Center
             wechat.textColor = UIColor.blackColor().colorWithAlphaComponent(0.4)
             wechat.font = VCAppLetor.Font.SmallFont
             wechat.backgroundColor = UIColor.whiteColor()
             self.addSubview(wechat)
             
-            wechat.autoSetDimensionsToSize(CGSizeMake(200.0, 20.0))
+            wechat.autoSetDimensionsToSize(CGSizeMake(150.0, 20.0))
             wechat.autoCenterInSuperview()
         }
         

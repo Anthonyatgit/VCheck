@@ -317,6 +317,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                                 product.endDate = item["menu_info"]["end_date"].string!
                                 product.returnable = "1"
                                 product.memberIcon = item["member_info"]["icon_image"]["thumb"].string!
+                                product.memberName = item["member_info"]["member_name"].string!
                                 
                                 product.menuId = item["menu_info"]["menu_id"].string!
                                 product.menuName = item["menu_info"]["menu_name"].string!
@@ -627,6 +628,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                             product.returnable = "1"
                             
                             product.memberIcon = item["member_info"]["icon_image"]["thumb"].string!
+                            product.memberName = item["member_info"]["member_name"].string!
                             
                             product.menuId = item["menu_info"]["menu_id"].string!
                             product.menuName = item["menu_info"]["menu_name"].string!

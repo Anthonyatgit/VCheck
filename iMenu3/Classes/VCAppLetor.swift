@@ -140,7 +140,7 @@ struct VCAppLetor {
         static let ContactPlaceHolder: String = "邮箱，微信，QQ，手机皆可"
         static let FeedbackTextEmpty: String = "给我们写点什么吧"
         static let FeedbackSucceed: String = "我们已经收悉你的反馈信息，我们会努力为你做的更好~"
-        static let NoMore: String = "・TASTE・"
+        static let NoMore: String = "・知味・"
         static let LSIsEnabled: String = "已开启"
         static let LSIsDisabled: String = "未开启"
         static let LocationServiceDisabled: String = "定位服务未开启"
@@ -159,7 +159,7 @@ struct VCAppLetor {
         static let Wechat: String = "微信好友"
         static let Friends: String = "朋友圈"
         
-        static let DefaultShareContent: String = "好友来自知味App的美食分享，快去看看"
+        static let DefaultShareContent: String = "知味Taste最精致的餐品和就餐体验，即刻获取30元礼券!邀请码"
         static let ShareSucceed: String = "分享成功"
         static let ShareFailed: String = "分享失败"
         static let ShareCancledByUser: String = "用户取消了分享"
@@ -333,6 +333,7 @@ struct VCAppLetor {
         static let SettingsBlack: String = "settings_black"
         static let AddBlack: String = "add_black"
         static let AlarmBlack: String = "alarm_black"
+        static let VideoBlack: String = "video_black"
         
         static let PlaceBlack: String = "place_black"
         static let MemberBlack: String = "member_black"
@@ -384,7 +385,7 @@ struct VCAppLetor {
         static let OrderItemCellHeight: CGFloat = 122.0
         static let StockAlertPoint: Int = 5
         
-        static let VideoShowTime: NSTimeInterval = 13
+        static let VideoShowTime: NSTimeInterval = 14
         
         static let DefaultItemCountPerPage: Int = 5
         static let DefaultListItemCountPerPage: Int = 10
@@ -431,8 +432,8 @@ struct VCAppLetor {
     enum ShareSDK {
         static let appKey: String = "7bcd1d7bc200"
         
-        static let SinaAppKey: String = "4092097690"
-        static let SinaAppSecret: String = "58bbc54bc29f5b9f78f095a432d4ed9e"
+        static let SinaAppKey: String = "4012589497"
+        static let SinaAppSecret: String = "cad1412fd89be70722de86337a571a54"
         static let SinaRedirectURL: String = "http://192.168.100.100"
         
         static let WeChatAppKey: String = "wx79252ca0921c523d"
@@ -556,12 +557,12 @@ struct VCAppLetor {
         
         static let MyMenus: [String: [String]] = [
 //            "User"      : ["登陆/注册享丰富礼券"],
-            "Order"     : ["我的订单", "我喜欢的礼遇", "我的礼券", "反馈", "关于"],
+            "Order"     : ["我的订单", "我喜欢的礼遇", "我的礼券", "反馈", "关于"]
 //            "Settings"  : ["反馈", "关于"]
         ]
         static let MyIcons: [String: [String]] = [
 //            "user"      : ["account_circle_black"],
-            "order"     : ["ticket", "gift", "cards", "coffee", "image"],
+            "order"     : ["order_black", "favorite_black", "voucher_black", "feedback_black", "about_black"]
 //            "settings"  : ["coffee", "image"]
         ]
         static let MyInfos: [String: [String]] = [
