@@ -113,7 +113,7 @@
     self.backgroundLayer = backgroundLayer;
     
     if(!self.imageIcon)
-        self.imageIcon = [UIImage imageNamed:@"coffee"];
+        self.imageIcon = [UIImage imageNamed:@"group_black"];
     
     //init icon layer
     CALayer *imageLayer = [CALayer layer];

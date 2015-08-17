@@ -12,6 +12,9 @@
 @implementation ShareSDKContentController
 
 
+
+
+
 +(NSMutableArray *)getUserInfoWithConnectType:(ShareType)shareType {
     
     NSMutableArray *currentUser = [[NSMutableArray alloc] init];

@@ -240,6 +240,14 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                         
                         self.foodInfo.shareLink = json["data"]["article_info"]["share_info"]["share_url"].string!
                         
+                        let tips = json["data"]["article_info"]["consume_tips_list"].arrayValue
+                        
+                        self.foodInfo.tipTag = ""
+                        for tip in tips {
+                            self.foodInfo.tipTag! += tip.string! + "  "
+                        }
+                        
+                        
                         // Slide images
                         let foodSlideImages = json["data"]["article_info"]["article_image_list"].arrayValue
                         self.foodInfo.slideImages = NSMutableArray()
@@ -638,8 +646,9 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
             timeTag = "1周以上"
         }
         else if remainder/(3600*24) > 1 {
-            let days = floor(remainder/(3600*24))
+            let days = Int(floor(remainder/(3600*24)))
             timeTag = "\(days)天"
+            
         }
         else {
             timeTag = "少于24小时"
@@ -652,10 +661,11 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.remainTime.sizeToFit()
         self.scrollView.addSubview(self.remainTime)
         
-        self.returnable.text = "可退款"
+        self.returnable.text = self.foodInfo.tipTag!
         self.returnable.font = VCAppLetor.Font.SmallFont
         self.returnable.textAlignment = .Left
         self.returnable.textColor = UIColor.nephritisColor()
+        self.returnable.sizeToFit()
         self.scrollView.addSubview(self.returnable)
         
         // Food Description
@@ -1180,7 +1190,6 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         
         self.returnable.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.remainAmount, withOffset: 10.0)
         self.returnable.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
-        self.returnable.autoSetDimensionsToSize(CGSizeMake(50.0, 14.0))
         
         self.foodDesc.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.returnable, withOffset: 12.0)
         self.foodDesc.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodTitle)
@@ -1511,7 +1520,6 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                     
                     let memberInfo: MemberInfo = MemberInfo(mid: json["data"]["member_info"]["member_id"].string!)
                     
-                    
                     memberInfo.email = json["data"]["member_info"]["email"].string!
                     memberInfo.mobile = json["data"]["member_info"]["mobile"].string!
                     memberInfo.nickname = json["data"]["member_info"]["member_name"].string!
@@ -1529,11 +1537,15 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                     memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
                     memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
                     memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                    memberInfo.shareURL = json["data"]["share_info"]["share_url"].string!
                     
                     memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
                     memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
                     memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
                     memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
+                    
+                    memberInfo.bindWechat = json["data"]["thirdpart_info"]["weixin_bind"].string!
+                    memberInfo.bindWeibo = json["data"]["thirdpart_info"]["weibo_bind"].string!
                     
                     
                     // update local data
@@ -1691,11 +1703,16 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
                     memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
                     memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
                     memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                    memberInfo.shareURL = json["data"]["share_info"]["share_url"].string!
                     
                     memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
                     memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
                     memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
                     memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
+                    
+                    memberInfo.bindWechat = json["data"]["thirdpart_info"]["weixin_bind"].string!
+                    memberInfo.bindWeibo = json["data"]["thirdpart_info"]["weibo_bind"].string!
+                    
                     
                     // update local data
                     self.updateSettings(token, currentMid: mid)

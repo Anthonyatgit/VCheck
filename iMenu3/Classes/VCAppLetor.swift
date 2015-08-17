@@ -177,6 +177,7 @@ struct VCAppLetor {
         static let OrderEmpty: String = "你还没有任何订单"
         static let OrderDetail: String = "订单详情"
         static let OrderInformation: String = "订单信息"
+        static let OrderExCodeTitle: String = "消费码"
         static let OrderNoName: String = "订单编号"
         static let OrderMobile: String = "下单手机号"
         static let OrderCreateDate: String = "下单时间"
@@ -258,7 +259,7 @@ struct VCAppLetor {
         
         static let AboutTitle: String = "关于我们"
         static let AppSubtitle: String = "• 精 选 限 量 美 食 •"
-        static let AppWebsiteURL: String = "http://taste.imenu.so/?route=home&code=12345qwert"
+        static let AppWebsiteURL: String = "http://taste.imenu.so"
         static let AppCopyRight: String = "Copyright © 2015 Siyo Tech All Rights Reserved"
         
         static let SkipLaunchImage: String = "SKIP >"
@@ -314,7 +315,8 @@ struct VCAppLetor {
     // MARK: - IconName
     enum IconName {
         
-        static let LoadingBlack: String = "group_black"
+        static let LoadingBlack: String = "refresh_black"
+        static let RefreshBlack: String = "refresh_black"
         
         static let UserInfoIconWithoutSignin: String = "account_circle_black"
         static let RightDisclosureIcon: String = "right_black"
@@ -345,6 +347,8 @@ struct VCAppLetor {
         static let WechatIcon: String = "wx_logo_64.png"
         
         static let SuccessIcon: String = "success_black"
+        
+        static let AppAbout: String = "AppAbout"
     }
     
     // MARK: - ConstValue
@@ -379,6 +383,7 @@ struct VCAppLetor {
         static let CheckNowBarHeight: CGFloat = 60.0
         static let IconImageCornerRadius: CGFloat = 3.0
         static let FoodImageHeight: CGFloat = 230.0
+        static let BannerImageHeight: CGFloat = 200.0
         static let FoodItemCellHeight: CGFloat = 320.0
         static let FavItemCellHeight: CGFloat = 122.0
         static let VoucherItemCellHeight: CGFloat = 156.0
@@ -415,6 +420,7 @@ struct VCAppLetor {
         
         static let route: String = "IndexRoute"
         static let param: String = "IndexParam"
+        static let pushType: String = "IndexPushType"
     }
     
     enum PNRoute: String {

@@ -370,6 +370,13 @@ class UserInfoViewController: UITableViewController, UITableViewDelegate, UITabl
                             
                             cell.subTitle.text = VCAppLetor.StringLine.NotAuthYet
                             
+                            // Update member bind stat
+                            let currentMemberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo
+                            
+                            currentMemberInfo.bindWechat = "0"
+                            CTMemCache.sharedInstance.set(VCAppLetor.SettingName.optMemberInfo, data: currentMemberInfo, namespace: "member")
+                            self.memberInfo = currentMemberInfo
+                            
                         }
                         else {
                             RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)

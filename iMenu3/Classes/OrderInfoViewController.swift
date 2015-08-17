@@ -31,6 +31,10 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
     let foodRightArrow: UIImageView = UIImageView.newAutoLayoutView()
     let foodBtn: UIButton = UIButton.newAutoLayoutView()
     
+    let exCodeTitle: UILabel = UILabel.newAutoLayoutView()
+    let exCodeExpire: UILabel = UILabel.newAutoLayoutView()
+    let exCode: UILabel = UILabel.newAutoLayoutView()
+    
     let storeName: UILabel = UILabel.newAutoLayoutView()
     let storeNameUnderline: CustomDrawView = CustomDrawView.newAutoLayoutView()
     
@@ -138,7 +142,13 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
             
             if self.orderInfo.orderType == "21" || self.orderInfo.orderType == "52" {
                 
-                self.scrollView.contentSize.height = self.refundBtn.originY + 70.0
+                if self.orderInfo.isReturn == "1" {
+                    
+                    self.scrollView.contentSize.height = self.refundBtn.originY + 70.0
+                }
+                else {
+                    self.scrollView.contentSize.height = self.orderAmountUnderline.originY + 70.0
+                }
             }
             else {
                 self.scrollView.contentSize.height = self.orderAmountUnderline.originY + 40.0
@@ -297,6 +307,55 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
         self.foodBtn.addTarget(self, action: "showFoodDetail:", forControlEvents: .TouchUpInside)
         self.scrollView.addSubview(self.foodBtn)
         
+        if self.orderInfo.orderType! != "10" && self.orderInfo.orderType! != "51" && self.orderInfo.orderType! != "71" {
+            
+            self.exCodeTitle.text = VCAppLetor.StringLine.OrderExCodeTitle
+            self.exCodeTitle.textAlignment = .Center
+            self.exCodeTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.6)
+            self.exCodeTitle.font = VCAppLetor.Font.NormalFont
+            self.exCodeTitle.sizeToFit()
+            self.scrollView.addSubview(self.exCodeTitle)
+            
+            let exDateFM: NSDateFormatter = NSDateFormatter()
+            exDateFM.dateFormat = VCAppLetor.ConstValue.DateWithoutTimeFormat
+            
+            self.exCodeExpire.text = "有效期至:" + exDateFM.stringFromDate(self.orderInfo.exCodeExpireDate!)
+            self.exCodeExpire.textAlignment = .Center
+            self.exCodeExpire.textColor = UIColor.lightGrayColor()
+            self.exCodeExpire.font = VCAppLetor.Font.SmallFont
+            self.exCodeExpire.sizeToFit()
+            self.scrollView.addSubview(self.exCodeExpire)
+            
+            var seconds = NSDate().timeIntervalSinceDate(self.orderInfo.exCodeExpireDate!)
+            
+            var exCodeString = NSMutableString(string: "\(self.orderInfo.exCode!)" as NSString)
+            
+            exCodeString.insertString(" ", atIndex: 8)
+            exCodeString.insertString(" ", atIndex: 4)
+            
+            self.exCode.text = exCodeString as String
+            self.exCode.textAlignment = .Center
+            self.exCode.textColor = UIColor.blackColor().colorWithAlphaComponent(0.6)
+            self.exCode.font = VCAppLetor.Font.XXLight
+            self.exCode.layer.borderWidth = 1.0
+            self.exCode.layer.borderColor = UIColor.blackColor().colorWithAlphaComponent(0.6).CGColor
+            self.exCode.layer.backgroundColor = UIColor.whiteColor().CGColor
+            self.scrollView.addSubview(self.exCode)
+            
+            if seconds >= 0 && self.orderInfo.orderType! != "22" {
+                self.exCode.textColor = UIColor.blackColor().colorWithAlphaComponent(0.1)
+                self.exCodeExpire.text = self.exCodeExpire.text! + "[已过期]"
+            }
+            
+            if self.orderInfo.exCodeUseDate! != "" && self.orderInfo.orderType! == "22" {
+                self.exCode.textColor = UIColor.blackColor().colorWithAlphaComponent(0.1)
+                self.exCodeExpire.text = self.exCodeExpire.text! + "[已使用]"
+            }
+            
+            
+        }
+        
+        
         self.storeName.text = self.foodInfo.storeName!
         self.storeName.textAlignment = .Left
         self.storeName.textColor = VCAppLetor.Colors.Title
@@ -385,14 +444,19 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
         self.orderFinal.sizeToFit()
         self.scrollView.addSubview(self.orderFinal)
         
-        self.orderDiscount.text = "-" + round_price(self.orderInfo.voucherPrice!) + self.orderInfo.priceUnit!
-        self.orderDiscount.textAlignment = .Center
-        self.orderDiscount.textColor = UIColor.whiteColor()
-        self.orderDiscount.font = VCAppLetor.Font.LightSmall
-        self.orderDiscount.layer.cornerRadius = 2.0
-        self.orderDiscount.layer.backgroundColor = UIColor.alizarinColor(alpha: 0.6).CGColor
-        self.orderDiscount.sizeToFit()
-        self.scrollView.addSubview(self.orderDiscount)
+        if self.orderInfo.voucherPrice! != "" {
+            
+            self.orderDiscount.text = "-" + round_price(self.orderInfo.voucherPrice!) + self.orderInfo.priceUnit!
+            self.orderDiscount.textAlignment = .Center
+            self.orderDiscount.textColor = UIColor.whiteColor()
+            self.orderDiscount.font = VCAppLetor.Font.LightSmall
+            self.orderDiscount.layer.cornerRadius = 2.0
+            self.orderDiscount.layer.backgroundColor = UIColor.alizarinColor(alpha: 0.6).CGColor
+            self.orderDiscount.sizeToFit()
+            self.scrollView.addSubview(self.orderDiscount)
+            
+        }
+        
         
         self.orderInfoUnderline.drawType = "DoubleLine"
         self.scrollView.addSubview(self.orderInfoUnderline)
@@ -470,12 +534,17 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
         
         if self.orderInfo.orderType == "21" || self.orderInfo.orderType == "52" {
             
-            self.refundBtn.setTitle(VCAppLetor.StringLine.OrderRefund, forState: .Normal)
-            self.refundBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-            self.refundBtn.layer.cornerRadius = VCAppLetor.ConstValue.ButtonCornerRadius
-            self.refundBtn.addTarget(self, action: "refundAction:", forControlEvents: .TouchUpInside)
-            self.refundBtn.backgroundColor = UIColor.nephritisColor()
-            self.scrollView.addSubview(self.refundBtn)
+            if self.orderInfo.isReturn == "1" {
+                
+                self.refundBtn.setTitle(VCAppLetor.StringLine.OrderRefund, forState: .Normal)
+                self.refundBtn.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+                self.refundBtn.layer.cornerRadius = VCAppLetor.ConstValue.ButtonCornerRadius
+                self.refundBtn.addTarget(self, action: "refundAction:", forControlEvents: .TouchUpInside)
+                self.refundBtn.backgroundColor = UIColor.nephritisColor()
+                self.scrollView.addSubview(self.refundBtn)
+                
+            }
+            
         }
         
         
@@ -701,9 +770,31 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
             self.foodBtn.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodRightArrow)
             self.foodBtn.autoPinEdge(.Bottom, toEdge: .Bottom, ofView: self.foodUnderline)
             
+            if self.orderInfo.orderType! != "10" && self.orderInfo.orderType! != "51" && self.orderInfo.orderType! != "71" {
+                
+                self.exCodeTitle.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodUnderline, withOffset: 10.0)
+                self.exCodeTitle.autoAlignAxisToSuperviewAxis(.Vertical)
+                
+                self.exCode.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.exCodeTitle, withOffset: 10.0)
+                self.exCode.autoAlignAxisToSuperviewAxis(.Vertical)
+                self.exCode.autoSetDimensionsToSize(CGSizeMake(self.view.width-40.0, 40.0))
+                
+                self.exCodeExpire.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.exCode, withOffset: 6.0)
+                self.exCodeExpire.autoAlignAxisToSuperviewAxis(.Vertical)
+                
+            }
+            
             self.storeName.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.foodUnderline)
             self.storeName.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.foodUnderline)
-            self.storeName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodUnderline, withOffset: 30.0)
+            
+            if self.orderInfo.orderType! != "10" && self.orderInfo.orderType! != "51" && self.orderInfo.orderType! != "71" {
+                
+                self.storeName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.exCodeExpire, withOffset: 20.0)
+            }
+            else {
+                self.storeName.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.foodUnderline, withOffset: 30.0)
+            }
+            
             self.storeName.autoSetDimension(.Height, toSize: 30.0)
             
             self.storeNameUnderline.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.storeName)
@@ -830,10 +921,15 @@ class OrderInfoViewController: VCBaseViewController, UIScrollViewDelegate, Order
             
             if self.orderInfo.orderType == "21" || self.orderInfo.orderType == "52" {
                 
-                self.refundBtn.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.orderAmountUnderline, withOffset: 20.0)
-                self.refundBtn.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.storeName)
-                self.refundBtn.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.storeName)
-                self.refundBtn.autoSetDimension(.Height, toSize: 40.0)
+                if self.orderInfo.isReturn == "1" {
+                    
+                    self.refundBtn.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.orderAmountUnderline, withOffset: 20.0)
+                    self.refundBtn.autoPinEdge(.Leading, toEdge: .Leading, ofView: self.storeName)
+                    self.refundBtn.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: self.storeName)
+                    self.refundBtn.autoSetDimension(.Height, toSize: 40.0)
+                    
+                }
+                
             }
             
             if self.orderInfo.orderType == "10" {

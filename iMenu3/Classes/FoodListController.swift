@@ -11,12 +11,15 @@ import CoreData
 import Alamofire
 import RKDropdownAlert
 import MBProgressHUD
+import HYBLoopScrollView
 import PBWebViewController
 
 class FoodListController: VCBaseViewController, UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, RKDropdownAlertDelegate, UIViewControllerTransitioningDelegate, BMKLocationServiceDelegate, BMKGeoCodeSearchDelegate {
     
     var foodListItems: NSMutableArray = NSMutableArray()
     var cityList: NSMutableArray = NSMutableArray()
+    
+    var bannerList: NSMutableArray = NSMutableArray()
     
     var parentNavigationController : UINavigationController?
     
@@ -64,11 +67,12 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
         
         let appIntroVC: VCAppViewController = VCAppViewController()
+        appIntroVC.homeVC = self
         
         UIApplication.sharedApplication().keyWindow?.addSubview(appIntroVC.view)
         
         // Prepare for interface
-        self.title = VCAppLetor.StringLine.AppName
+        self.title = ""
         
         let cityView: UIView = UIView(frame: CGRectMake(6.0, 0.0, 86.0, 32.0))
         cityView.backgroundColor = UIColor.clearColor()
@@ -97,6 +101,13 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         backButton.title = ""
         self.navigationItem.backBarButtonItem = backButton
         
+        
+        let logoView: UIImageView = UIImageView(frame: CGRectMake(self.view.width/2.0-30.0, 0, 66.0, 23.0))
+        logoView.contentMode = .ScaleAspectFit
+        
+        logoView.image = UIImage(named: "AppTopLogo")
+        self.navigationItem.titleView = logoView
+        
         // Member Center Entrain
         self.memberButton.setImage(UIImage(named: VCAppLetor.IconName.MemberBlack)?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate), forState: .Normal)
         self.memberButton.addTarget(self, action: "userPanel", forControlEvents: .TouchUpInside)
@@ -113,6 +124,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         self.tableView.addPullToRefreshActionHandler { () -> Void in
             self.initAppInfo()
+            self.loadEvents()
         }
         
         self.tableView.pullToRefreshView.borderColor = UIColor.nephritisColor()
@@ -138,11 +150,15 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             NSFileManager.defaultManager().createDirectoryAtPath(directoryURL!.path!, withIntermediateDirectories: true, attributes: nil, error: nil)
         }
         
+        
+        
         // Init App Info -
         // Loading foodlist & init member info
         self.getSavedCity()
         self.setupCityView()
         self.initAppInfo()
+        
+        self.loadEvents()
         
         self.initMemberStatus()
         
@@ -152,6 +168,77 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         self.isAllowedNotification()
         
+        
+    }
+    
+    func loadEvents() {
+        
+        Alamofire.request(VCheckGo.Router.GetEventList()).validate().responseSwiftyJSON ({
+            (_, _, JSON, error) -> Void in
+            
+            if error == nil {
+                
+                let json = JSON
+                
+                if json["status"]["succeed"].string! == "1" {
+                    
+                    let banArr: Array = json["data"]["banner_list"].arrayValue
+                    
+                    var bannerImages: NSMutableArray = NSMutableArray()
+                    
+                    for item in banArr {
+                        
+                        let imageURL: String = item["image"]["source"].string!
+                        
+                        let banner: Banner = Banner(imageURL: imageURL)
+                        
+                        banner.sortId = item["sort_order"].string!
+                        banner.route = item["link_info"]["link_route"].string!
+                        banner.param = item["link_info"]["link_value"].string!
+                        
+                        self.bannerList.addObject(banner)
+                        bannerImages.addObject(imageURL)
+                        
+                    }
+                    
+                    
+                    let bannerView = HYBLoopScrollView(frame: CGRectMake(10, 10, self.view.width-20.0, VCAppLetor.ConstValue.BannerImageHeight), imageUrls: bannerImages as [AnyObject]) as HYBLoopScrollView
+                    
+                    bannerView.alignment = HYBPageControlAlignment.PageControlAlignCenter
+                    bannerView.timeInterval = 10
+                    
+                    if self.bannerList.count == 1 {
+                        bannerView.pageControl.hidden = true
+                    }
+                    
+                    bannerView.didSelectItemBlock = {(index: Int, view: HYBLoadImageView!) -> Void in
+                        
+                        self.showBannerCall(index)
+                    }
+                    
+                    let bannerWrapVew = UIView(frame: CGRectMake(0.0, 0.0, self.view.width, VCAppLetor.ConstValue.BannerImageHeight + 30.0))
+                    bannerWrapVew.backgroundColor = UIColor.whiteColor()
+                    bannerWrapVew.addSubview(bannerView)
+                    
+                    let bannerUnderLine: CustomDrawView = CustomDrawView(frame: CGRectMake(10.0, VCAppLetor.ConstValue.BannerImageHeight+10.0+10.0, self.view.width-20.0, 3.0))
+                    bannerUnderLine.drawType = "DoubleLine"
+                    bannerWrapVew.addSubview(bannerUnderLine)
+                    
+                    self.tableView.tableHeaderView = bannerWrapVew
+                    
+                    
+                }
+                else {
+                    RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                    println("")
+                }
+                
+            }
+            else {
+                println("ERROR @ Request for events list: \(error?.localizedDescription)")
+            }
+            
+        })
         
         
     }
@@ -526,7 +613,6 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 
                 memberPanel.memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as? MemberInfo
                 
-                println("member: \(memberPanel.memberInfo!.bindWechat!)")
             }
             self.navigationController?.showViewController(memberPanel, sender: self)
         }
@@ -840,7 +926,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
             if route == VCAppLetor.PNRoute.web.rawValue {
                 let url = CTMemCache.sharedInstance.get(VCAppLetor.LINKS.param, namespace: "Links")?.data as! String
                 
-                let webVC: PBWebViewController = PBWebViewController()
+                let webVC: VCWebViewController = VCWebViewController()
+                webVC.parentNav = self.navigationController
                 webVC.URL = NSURL(string: url)
                 
                 let activity: PBSafariActivity = PBSafariActivity()
@@ -1050,6 +1137,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                                             
                                             order.voucherId = json["data"]["member_order_info"]["order_info"]["voucher_info"]["voucher_member_id"].string!
                                             order.voucherName = json["data"]["member_order_info"]["order_info"]["voucher_info"]["voucher_name"].string!
+                                            order.voucherPrice = json["data"]["member_order_info"]["order_info"]["voucher_info"]["discount"].string!
                                             
                                             
                                             let orderDetailVC: OrderInfoViewController = OrderInfoViewController()
@@ -1135,15 +1223,17 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
     
     func showIndexCall() {
         
-        
         if CTMemCache.sharedInstance.exists(VCAppLetor.INDEX.route, namespace: "indexPage") {
+            
+            println("index call")
             
             let route = CTMemCache.sharedInstance.get(VCAppLetor.INDEX.route, namespace: "indexPage")?.data as! String
             
             if route == VCAppLetor.PNRoute.web.rawValue {
                 let url = CTMemCache.sharedInstance.get(VCAppLetor.INDEX.param, namespace: "indexPage")?.data as! String
                 
-                let webVC: PBWebViewController = PBWebViewController()
+                let webVC: VCWebViewController = VCWebViewController()
+                webVC.parentNav = self.navigationController
                 webVC.URL = NSURL(string: url)
                 
                 let activity: PBSafariActivity = PBSafariActivity()
@@ -1353,7 +1443,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                                             
                                             order.voucherId = json["data"]["member_order_info"]["order_info"]["voucher_info"]["voucher_member_id"].string!
                                             order.voucherName = json["data"]["member_order_info"]["order_info"]["voucher_info"]["voucher_name"].string!
-                                            
+                                            order.voucherPrice = json["data"]["member_order_info"]["order_info"]["voucher_info"]["discount"].string!
                                             
                                             let orderDetailVC: OrderInfoViewController = OrderInfoViewController()
                                             orderDetailVC.orderInfo = order
@@ -1436,6 +1526,308 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         }
     }
     
+    func showBannerCall(index: Int) {
+        
+        if self.bannerList.objectAtIndex(index).isKindOfClass(Banner.classForCoder()) {
+            
+            
+            let route = (self.bannerList.objectAtIndex(index) as! Banner).route
+            
+            if route == VCAppLetor.PNRoute.web.rawValue {
+                let url = (self.bannerList.objectAtIndex(index) as! Banner).param
+                
+                let webVC: VCWebViewController = VCWebViewController()
+                webVC.parentNav = self.navigationController
+                webVC.URL = NSURL(string: url!)
+                
+                let activity: PBSafariActivity = PBSafariActivity()
+                webVC.applicationActivities = [activity]
+                
+                self.navigationController?.showViewController(webVC, sender: self)
+                
+            }
+            if route == VCAppLetor.PNRoute.home.rawValue {
+                
+            }
+            if route == VCAppLetor.PNRoute.article.rawValue {
+                
+                let articleIdStr = (((self.bannerList.objectAtIndex(index) as! Banner).param!).componentsSeparatedByString("="))[1] as String
+                let articleId = (articleIdStr as NSString).integerValue
+                
+                Alamofire.request(VCheckGo.Router.GetProductDetail(articleId)).validate().responseSwiftyJSON({
+                    (_, _, JSON, error) -> Void in
+                    
+                    if error == nil {
+                        
+                        let json = JSON
+                        
+                        if json["status"]["succeed"].string! == "1" {
+                            
+                            let product: FoodInfo = FoodInfo(id: (json["data"]["article_info"]["article_id"].string! as NSString).integerValue)
+                            
+                            product.title = json["data"]["article_info"]["title"].string!
+                            
+                            var dateFormatter = NSDateFormatter()
+                            dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                            product.addDate = dateFormatter.dateFromString(json["data"]["article_info"]["article_date"].string!)!
+                            
+                            product.desc = json["data"]["article_info"]["summary"].string!
+                            product.subTitle = json["data"]["article_info"]["sub_title"].string!
+                            product.status = json["data"]["article_info"]["menu_info"]["menu_status"]["menu_status_id"].string!
+                            product.originalPrice = json["data"]["article_info"]["menu_info"]["price"]["original_price"].string!
+                            product.price = json["data"]["article_info"]["menu_info"]["price"]["special_price"].string!
+                            product.priceUnit = json["data"]["article_info"]["menu_info"]["price"]["price_unit"].string!
+                            product.unit = json["data"]["article_info"]["menu_info"]["menu_unit"]["menu_unit"].string!
+                            product.remainingCount = json["data"]["article_info"]["menu_info"]["stock"]["menu_count"].string!
+                            product.remainingCountUnit = json["data"]["article_info"]["menu_info"]["stock"]["menu_unit"].string!
+                            product.remainder = json["data"]["article_info"]["menu_info"]["remainder_time"].string!
+                            product.outOfStock = json["data"]["article_info"]["menu_info"]["stock"]["out_of_stock_info"].string!
+                            product.endDate = json["data"]["article_info"]["menu_info"]["end_date"].string!
+                            product.returnable = "1"
+                            
+                            product.memberIcon = json["data"]["article_info"]["member_info"]["icon_image"]["thumb"].string!
+                            
+                            product.menuId = json["data"]["article_info"]["menu_info"]["menu_id"].string!
+                            product.menuName = json["data"]["article_info"]["menu_info"]["menu_name"].string!
+                            
+                            product.storeId = json["data"]["article_info"]["store_info"]["store_id"].string!
+                            product.storeName = json["data"]["article_info"]["store_info"]["store_name"].string!
+                            product.address = json["data"]["article_info"]["store_info"]["address"].string!
+                            product.longitude = (json["data"]["article_info"]["store_info"]["longitude_num"].string! as NSString).doubleValue
+                            product.latitude = (json["data"]["article_info"]["store_info"]["latitude_num"].string! as NSString).doubleValue
+                            product.tel1 = json["data"]["article_info"]["store_info"]["tel_1"].string!
+                            product.tel2 = json["data"]["article_info"]["store_info"]["tel_2"].string!
+                            product.acp = json["data"]["article_info"]["store_info"]["per"].string!
+                            product.icon_thumb = json["data"]["article_info"]["store_info"]["icon_image"]["thumb"].string!
+                            product.icon_source = json["data"]["article_info"]["store_info"]["icon_image"]["source"].string!
+                            
+                            let foodViewerViewController: FoodViewerViewController = FoodViewerViewController()
+                            foodViewerViewController.foodInfo = product
+                            foodViewerViewController.parentNav = self.navigationController
+                            
+                            self.navigationController?.showViewController(foodViewerViewController, sender: self)
+                            
+                        }
+                        else {
+                            RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                        }
+                        
+                    }
+                    else {
+                        println("ERROR @ Request for product detail with push: \(error?.localizedDescription)")
+                    }
+                    
+                })
+                
+                
+            }
+            if route == VCAppLetor.PNRoute.member.rawValue {
+                
+                self.userPanel()
+            }
+            if route == VCAppLetor.PNRoute.message.rawValue {
+                
+                if self.didMemberInit {
+                    
+                    let memberPanel: UserPanelViewController = UserPanelViewController()
+                    memberPanel.parentNav = self.navigationController
+                    
+                    if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optMemberInfo, namespace: "member") {
+                        
+                        memberPanel.memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as? MemberInfo
+                    }
+                    self.navigationController?.showViewController(memberPanel, sender: self)
+                    
+                    
+                    
+                    let delayInSecond = 0.5
+                    let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSecond * Double(NSEC_PER_SEC)))
+                    
+                    dispatch_after(popTime, dispatch_get_main_queue(), { () -> Void in
+                        
+                        memberPanel.showMailBox()
+                    })
+                }
+                
+            }
+            if route == VCAppLetor.PNRoute.orderList.rawValue {
+                
+                if self.didMemberInit {
+                    
+                    let memberPanel: UserPanelViewController = UserPanelViewController()
+                    memberPanel.parentNav = self.navigationController
+                    
+                    if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optMemberInfo, namespace: "member") {
+                        
+                        memberPanel.memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as? MemberInfo
+                    }
+                    self.navigationController?.showViewController(memberPanel, sender: self)
+                    
+                    let delayInSecond = 0.5
+                    let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSecond * Double(NSEC_PER_SEC)))
+                    
+                    dispatch_after(popTime, dispatch_get_main_queue(), { () -> Void in
+                        
+                        //memberPanel.tableView.selectRowAtIndexPath(NSIndexPath(forRow: 0, inSection: 0), animated: false, scrollPosition: UITableViewScrollPosition.None)
+                        
+                        memberPanel.tableView.delegate?.tableView!(memberPanel.tableView, didSelectRowAtIndexPath: NSIndexPath(forRow: 0, inSection: 0))
+                    })
+                    
+                }
+                
+            }
+            if route == VCAppLetor.PNRoute.orderDetail.rawValue {
+                
+                let orderId = (((self.bannerList.objectAtIndex(index) as! Banner).param!).componentsSeparatedByString("="))[1] as String
+                
+                if self.didMemberInit {
+                    
+                    let memberPanel: UserPanelViewController = UserPanelViewController()
+                    memberPanel.parentNav = self.navigationController
+                    
+                    if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optMemberInfo, namespace: "member") {
+                        
+                        memberPanel.memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as? MemberInfo
+                    }
+                    self.navigationController?.showViewController(memberPanel, sender: self)
+                    
+                    if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optToken, namespace: "token") {
+                        
+                        let delayInSecond = 0.2
+                        let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSecond * Double(NSEC_PER_SEC)))
+                        
+                        dispatch_after(popTime, dispatch_get_main_queue(), { () -> Void in
+                            
+                            // Get OrderList
+                            let orderListVC: OrderListViewController = OrderListViewController()
+                            orderListVC.parentNav = self.navigationController
+                            orderListVC.delegate = memberPanel
+                            self.navigationController?.showViewController(orderListVC, sender: self)
+                            
+                            let delayInSecond = 0.2
+                            let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSecond * Double(NSEC_PER_SEC)))
+                            
+                            dispatch_after(popTime, dispatch_get_main_queue(), { () -> Void in
+                                
+                                let memberId = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optNameCurrentMid, namespace: "member")?.data as! String
+                                let token = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optToken, namespace: "token")?.data as! String
+                                
+                                Alamofire.request(VCheckGo.Router.GetOrderDetail(memberId, orderId, token)).validate().responseSwiftyJSON({
+                                    (_, _, JSON, error) -> Void in
+                                    
+                                    if error == nil {
+                                        
+                                        let json = JSON
+                                        
+                                        if json["status"]["succeed"].string! == "1" {
+                                            
+                                            let order: OrderInfo = OrderInfo(id: json["data"]["member_order_info"]["order_info"]["order_id"].string!, no: json["data"]["member_order_info"]["order_info"]["order_no"].string!) as OrderInfo
+                                            
+                                            
+                                            order.title = json["data"]["member_order_info"]["order_info"]["menu_info"]["menu_name"].string!
+                                            order.pricePU = json["data"]["member_order_info"]["order_info"]["menu_info"]["price"]["special_price"].string!
+                                            order.priceUnit = json["data"]["member_order_info"]["order_info"]["menu_info"]["price"]["price_unit"].string!
+                                            order.totalPrice = json["data"]["member_order_info"]["order_info"]["total_price"]["special_price"].string!
+                                            order.originalTotalPrice = json["data"]["member_order_info"]["order_info"]["total_price"]["original_price"].string!
+                                            
+                                            var dateFormatter = NSDateFormatter()
+                                            dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                                            order.createDate = dateFormatter.dateFromString(json["data"]["member_order_info"]["order_info"]["create_date"].string!)
+                                            order.createByMobile = json["data"]["member_order_info"]["order_info"]["mobile"].string!
+                                            
+                                            order.menuId = json["data"]["member_order_info"]["order_info"]["menu_info"]["menu_id"].string!
+                                            order.menuTitle = json["data"]["member_order_info"]["order_info"]["menu_info"]["menu_name"].string!
+                                            order.menuUnit = json["data"]["member_order_info"]["order_info"]["menu_info"]["menu_unit"]["menu_unit"].string!
+                                            order.itemCount = json["data"]["member_order_info"]["order_info"]["menu_info"]["count"].string!
+                                            
+                                            order.orderType = json["data"]["member_order_info"]["order_info"]["order_type"].string!
+                                            order.typeDescription = json["data"]["member_order_info"]["order_info"]["order_type_description"].string!
+                                            order.orderImageURL = json["data"]["member_order_info"]["article_info"]["article_image"]["source"].string!
+                                            order.foodId = json["data"]["member_order_info"]["article_info"]["article_id"].string!
+                                            
+                                            order.voucherId = json["data"]["member_order_info"]["order_info"]["voucher_info"]["voucher_member_id"].string!
+                                            order.voucherName = json["data"]["member_order_info"]["order_info"]["voucher_info"]["voucher_name"].string!
+                                            order.voucherPrice = json["data"]["member_order_info"]["order_info"]["voucher_info"]["discount"].string!
+                                            
+                                            let orderDetailVC: OrderInfoViewController = OrderInfoViewController()
+                                            orderDetailVC.orderInfo = order
+                                            orderDetailVC.parentNav = self.navigationController
+                                            orderDetailVC.orderListVC = orderListVC
+                                            self.navigationController?.showViewController(orderDetailVC, sender: self)
+                                        }
+                                        else {
+                                            RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                                        }
+                                        
+                                    }
+                                    else {
+                                        println("ERROR @ Request for order detail with push: \(error?.localizedDescription)")
+                                    }
+                                })
+                            })
+                        })
+                    }
+                    else {
+                        
+                        memberPanel.presentLoginPanel()
+                    }
+                }
+                
+            }
+            if route == VCAppLetor.PNRoute.collectionList.rawValue {
+                
+                if self.didMemberInit {
+                    
+                    let memberPanel: UserPanelViewController = UserPanelViewController()
+                    memberPanel.parentNav = self.navigationController
+                    
+                    if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optMemberInfo, namespace: "member") {
+                        
+                        memberPanel.memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as? MemberInfo
+                    }
+                    self.navigationController?.showViewController(memberPanel, sender: self)
+                    
+                    let delayInSecond = 0.5
+                    let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSecond * Double(NSEC_PER_SEC)))
+                    
+                    dispatch_after(popTime, dispatch_get_main_queue(), { () -> Void in
+                        
+                        memberPanel.tableView.delegate?.tableView!(memberPanel.tableView, didSelectRowAtIndexPath: NSIndexPath(forRow: 1, inSection: 0))
+                    })
+                    
+                }
+            }
+            if route == VCAppLetor.PNRoute.voucherList.rawValue {
+                
+                if self.didMemberInit {
+                    
+                    let memberPanel: UserPanelViewController = UserPanelViewController()
+                    memberPanel.parentNav = self.navigationController
+                    
+                    if CTMemCache.sharedInstance.exists(VCAppLetor.SettingName.optMemberInfo, namespace: "member") {
+                        
+                        memberPanel.memberInfo = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as? MemberInfo
+                    }
+                    self.navigationController?.showViewController(memberPanel, sender: self)
+                    
+                    let delayInSecond = 0.5
+                    let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSecond * Double(NSEC_PER_SEC)))
+                    
+                    dispatch_after(popTime, dispatch_get_main_queue(), { () -> Void in
+                        
+                        memberPanel.tableView.delegate?.tableView!(memberPanel.tableView, didSelectRowAtIndexPath: NSIndexPath(forRow: 2, inSection: 0))
+                    })
+                    
+                }
+            }
+            
+            
+        }
+        else {
+            //println("no query")
+        }
+    }
+    
     func cityViewDidTap(gesture: UITapGestureRecognizer) {
         
         self.cityListAnimatedView.hide()
@@ -1506,7 +1898,8 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                 let url = CTMemCache.sharedInstance.get(VCAppLetor.PN.param, namespace: "push")?.data as! String
                 
                 
-                let webVC: PBWebViewController = PBWebViewController()
+                let webVC: VCWebViewController = VCWebViewController()
+                webVC.parentNav = self.navigationController
                 webVC.URL = NSURL(string: url)
                 
                 let activity: PBSafariActivity = PBSafariActivity()
@@ -1724,7 +2117,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                                             
                                             order.voucherId = json["data"]["member_order_info"]["order_info"]["voucher_info"]["voucher_member_id"].string!
                                             order.voucherName = json["data"]["member_order_info"]["order_info"]["voucher_info"]["voucher_name"].string!
-                                            
+                                            order.voucherPrice = json["data"]["member_order_info"]["order_info"]["voucher_info"]["discount"].string!
                                             
                                             let orderDetailVC: OrderInfoViewController = OrderInfoViewController()
                                             orderDetailVC.orderInfo = order
@@ -2198,6 +2591,7 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                     memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
                     memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
                     memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                    memberInfo.shareURL = json["data"]["share_info"]["share_url"].string!
                     
                     memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
                     memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!

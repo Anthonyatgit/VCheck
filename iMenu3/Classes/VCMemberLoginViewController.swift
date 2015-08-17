@@ -158,7 +158,7 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
         self.weiboSignInButton.layer.cornerRadius = 26.0
         self.weiboSignInButton.layer.borderWidth = 1.0
         self.weiboSignInButton.layer.borderColor = UIColor.blackColor().CGColor
-        self.weiboSignInButton.alpha = 0.8
+        self.weiboSignInButton.alpha = 0.4
         self.scrollView.addSubview(self.weiboSignInButton)
         
         self.wechatSignInButton.setImage(UIImage(named: "wechat.png"), forState: .Normal)

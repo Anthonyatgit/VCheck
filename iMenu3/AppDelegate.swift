@@ -31,7 +31,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: VCAppLetor.Font.UltraLight]
         
         UINavigationBar.appearance().backgroundColor = UIColor.clearColor()
-        UINavigationBar.appearance().setBackgroundImage(UIImage(named: "bar_black.png"), forBarMetrics: UIBarMetrics.Default)
+        //UINavigationBar.appearance().setBackgroundImage(UIImage(named: "navbar_black.png"), forBarMetrics: UIBarMetrics.Default)
+        UINavigationBar.appearance().setBackgroundImage(UIImage(named: "navbar_black.png"), forBarPosition: UIBarPosition.TopAttached, barMetrics: UIBarMetrics.Default)
+        
         
         //======= Breeze =============================
         // Init Breeze Storage stack with iCloud
@@ -259,6 +261,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
     
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         
+        
+        UIApplication.sharedApplication().applicationIconBadgeNumber = 0
         
         XGPush.handleReceiveNotification(userInfo, completion: { () -> Void in
             

@@ -16,6 +16,8 @@ class VCAboutViewController: VCBaseViewController {
     let subtitleLine: CustomDrawView = CustomDrawView.newAutoLayoutView()
     let appIcon: UILabel = UILabel.newAutoLayoutView()
     
+    let appIconView: UIImageView = UIImageView.newAutoLayoutView()
+    
     let playVideo: UIImageView = UIImageView.newAutoLayoutView()
     let playBtn: UIButton = UIButton.newAutoLayoutView()
     let appName: UILabel = UILabel.newAutoLayoutView()
@@ -33,23 +35,27 @@ class VCAboutViewController: VCBaseViewController {
         self.title = VCAppLetor.StringLine.AboutTitle
         self.view.backgroundColor = UIColor.whiteColor()
         
-        self.subtitleLine.drawType = "Line"
-        self.subtitleLine.lineWidth = 1.0
-        self.view.addSubview(self.subtitleLine)
+//        self.subtitleLine.drawType = "Line"
+//        self.subtitleLine.lineWidth = 1.0
+//        self.view.addSubview(self.subtitleLine)
+//        
+//        self.aboutSubTitle.text = VCAppLetor.StringLine.AppSubtitle
+//        self.aboutSubTitle.textAlignment = .Center
+//        self.aboutSubTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+//        self.aboutSubTitle.backgroundColor = UIColor.whiteColor()
+//        self.aboutSubTitle.font = VCAppLetor.Font.NormalFont
+//        self.view.addSubview(self.aboutSubTitle)
+//        
+//        
+//        self.appIcon.text = VCAppLetor.StringLine.AppName
+//        self.appIcon.textAlignment = .Center
+//        self.appIcon.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
+//        self.appIcon.font = VCAppLetor.Font.XXXXUltraLight
+//        self.view.addSubview(self.appIcon)
         
-        self.aboutSubTitle.text = VCAppLetor.StringLine.AppSubtitle
-        self.aboutSubTitle.textAlignment = .Center
-        self.aboutSubTitle.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
-        self.aboutSubTitle.backgroundColor = UIColor.whiteColor()
-        self.aboutSubTitle.font = VCAppLetor.Font.NormalFont
-        self.view.addSubview(self.aboutSubTitle)
-        
-        
-        self.appIcon.text = VCAppLetor.StringLine.AppName
-        self.appIcon.textAlignment = .Center
-        self.appIcon.textColor = UIColor.blackColor().colorWithAlphaComponent(0.8)
-        self.appIcon.font = VCAppLetor.Font.XXXXUltraLight
-        self.view.addSubview(self.appIcon)
+        self.appIconView.image = UIImage(named: VCAppLetor.IconName.AppAbout)
+        self.appIconView.backgroundColor = UIColor.clearColor()
+        self.view.addSubview(self.appIconView)
         
         if let version = Settings.findFirst(attribute: "name", value: "version_app", contextType: BreezeContextType.Main) as? Settings { // Get current app version
             
@@ -124,17 +130,21 @@ class VCAboutViewController: VCBaseViewController {
     override func updateViewConstraints() {
         super.updateViewConstraints()
         
-        self.subtitleLine.autoSetDimensionsToSize(CGSizeMake(202.0, 3.0))
-        self.subtitleLine.autoPinEdgeToSuperviewEdge(.Top, withInset: 120.0)
-        self.subtitleLine.autoAlignAxisToSuperviewAxis(.Vertical)
+//        self.subtitleLine.autoSetDimensionsToSize(CGSizeMake(202.0, 3.0))
+//        self.subtitleLine.autoPinEdgeToSuperviewEdge(.Top, withInset: 120.0)
+//        self.subtitleLine.autoAlignAxisToSuperviewAxis(.Vertical)
+//        
+//        self.aboutSubTitle.autoSetDimensionsToSize(CGSizeMake(162.0, 30.0))
+//        self.aboutSubTitle.autoAlignAxisToSuperviewAxis(.Vertical)
+//        self.aboutSubTitle.autoAlignAxis(.Horizontal, toSameAxisOfView: self.subtitleLine)
+//        
+//        self.appIcon.autoSetDimensionsToSize(CGSizeMake(220.0, 40.0))
+//        self.appIcon.autoAlignAxisToSuperviewAxis(.Vertical)
+//        self.appIcon.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.aboutSubTitle, withOffset: 30.0)
         
-        self.aboutSubTitle.autoSetDimensionsToSize(CGSizeMake(162.0, 30.0))
-        self.aboutSubTitle.autoAlignAxisToSuperviewAxis(.Vertical)
-        self.aboutSubTitle.autoAlignAxis(.Horizontal, toSameAxisOfView: self.subtitleLine)
-        
-        self.appIcon.autoSetDimensionsToSize(CGSizeMake(220.0, 40.0))
-        self.appIcon.autoAlignAxisToSuperviewAxis(.Vertical)
-        self.appIcon.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.aboutSubTitle, withOffset: 30.0)
+        self.appIconView.autoPinEdgeToSuperviewEdge(.Top, withInset: 120.0)
+        self.appIconView.autoAlignAxisToSuperviewAxis(.Vertical)
+        self.appIconView.autoSetDimensionsToSize(CGSizeMake(self.view.width/3.0, self.view.width/3.0*192.0/250.0))
         
         self.appCopyright.autoPinEdgeToSuperviewEdge(.Top, withInset: self.view.height-50.0)
         self.appCopyright.autoAlignAxisToSuperviewAxis(.Vertical)

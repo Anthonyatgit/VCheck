@@ -513,6 +513,8 @@ class EditUserInfoViewController: VCBaseViewController, UITextFieldDelegate {
                                     let memberId = json["data"]["member_id"].string!
                                     let token = json["data"]["token"].string!
                                     
+                                    println("mid:\(memberId)\ntoken:\(token)")
+                                    
                                     CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatLog, data: true, namespace: "LoginStatus")
                                     
                                     CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatAvatar, data: wxUserInfo.valueForKey("headimgurl"), namespace: "LoginStatus")

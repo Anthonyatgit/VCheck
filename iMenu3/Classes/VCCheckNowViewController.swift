@@ -798,6 +798,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
         let menuId = self.foodInfo.menuId!
         let count = "\(self.orderItemCount)"
         let articleId = "\(self.foodInfo.id)"
+        let mobileString = (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo).mobile!
         
         Alamofire.request(VCheckGo.Router.EditCart(memberId, editType, menuId, count, articleId, token)).validate().responseSwiftyJSON ({
             (_, _, JSON, error) -> Void in
@@ -829,19 +830,32 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                                 var dateFormatter = NSDateFormatter()
                                 dateFormatter.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
                                 newOrder.createDate = dateFormatter.dateFromString(json["data"]["order_info"]["create_date"].string!)
-                                
+                                newOrder.createByMobile = mobileString
                                 newOrder.totalPrice = json["data"]["order_info"]["total_price"]["special_price"].string!
                                 newOrder.originalTotalPrice = json["data"]["order_info"]["total_price"]["original_price"].string!
                                 newOrder.menuId = json["data"]["order_info"]["menu_info"]["menu_id"].string!
                                 newOrder.menuTitle = json["data"]["order_info"]["menu_info"]["menu_name"].string!
                                 newOrder.menuUnit = json["data"]["order_info"]["menu_info"]["menu_unit"]["menu_unit"].string!
                                 newOrder.itemCount = json["data"]["order_info"]["menu_info"]["count"].string!
+                                newOrder.foodId = "\(self.foodInfo.id)"
+                                newOrder.orderImageURL = "\(self.foodInfo.foodImage!)"
                                 
                                 newOrder.orderType = json["data"]["order_info"]["order_type"].string!
                                 newOrder.typeDescription = json["data"]["order_info"]["order_type_description"].string!
                                 
                                 newOrder.voucherId = json["data"]["order_info"]["voucher_info"]["voucher_member_id"].string!
                                 newOrder.voucherName = json["data"]["order_info"]["voucher_info"]["voucher_name"].string!
+                                newOrder.voucherPrice = json["data"]["order_info"]["voucher_info"]["discount"].string!
+                                
+                                newOrder.exCode = json["data"]["order_info"]["consume_info"]["consume_code"].string!
+                                
+                                let dateFM: NSDateFormatter = NSDateFormatter()
+                                dateFM.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                                
+                                newOrder.exCodeExpireDate = dateFM.dateFromString(json["data"]["order_info"]["consume_info"]["exprie_date"].string!)
+                                newOrder.exCodeUseDate = json["data"]["order_info"]["consume_info"]["consume_date"].string!
+                                
+                                newOrder.isReturn = json["data"]["order_info"]["is_return"].string!
                                 
                                 println("newOrder voucherId: \(newOrder.voucherId) | name: \(newOrder.voucherName)")
                                 
@@ -1026,12 +1040,15 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                     memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
                     memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
                     memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                    memberInfo.shareURL = json["data"]["share_info"]["share_url"].string!
                     
                     memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
                     memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
                     memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
                     memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
                     
+                    memberInfo.bindWechat = json["data"]["thirdpart_info"]["weixin_bind"].string!
+                    memberInfo.bindWeibo = json["data"]["thirdpart_info"]["weibo_bind"].string!
                     
                     // update local data
                     self.updateSettings(token, currentMid: mid)
@@ -1112,11 +1129,16 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                         memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
                         memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
                         memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                        memberInfo.shareURL = json["data"]["share_info"]["share_url"].string!
                         
                         memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
                         memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
                         memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
                         memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
+                        
+                        
+                        memberInfo.bindWechat = json["data"]["thirdpart_info"]["weixin_bind"].string!
+                        memberInfo.bindWeibo = json["data"]["thirdpart_info"]["weibo_bind"].string!
                         
                         // update local data
                         self.updateSettings(token, currentMid: mid)
@@ -1212,11 +1234,17 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                         memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
                         memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
                         memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                        memberInfo.shareURL = json["data"]["share_info"]["share_url"].string!
                         
                         memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
                         memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
                         memberInfo.pushRefund = json["data"]["push_info"]["refund_msg"].string!
                         memberInfo.pushVoucher = json["data"]["push_info"]["voucher_msg"].string!
+                        
+                        
+                        memberInfo.bindWechat = json["data"]["thirdpart_info"]["weixin_bind"].string!
+                        memberInfo.bindWeibo = json["data"]["thirdpart_info"]["weibo_bind"].string!
+                        
                         
                         
                         // update local data

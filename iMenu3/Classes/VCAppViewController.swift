@@ -13,6 +13,8 @@ import DKChainableAnimationKit
 
 class VCAppViewController: VCBaseViewController {
     
+    var homeVC: FoodListController?
+    
     var videoVC: JSVideoViewController?
     var playVideo: Bool = false
     
@@ -139,8 +141,6 @@ class VCAppViewController: VCBaseViewController {
                                 
                                 self.launchImage.image = indexImage
                                 
-                                self.view.animation.makeAlpha(1.0).animate(1.0)
-                                
                             }
                         })
                     }
@@ -198,7 +198,11 @@ class VCAppViewController: VCBaseViewController {
     
     func removeIndexImage() {
         
-        self.view.removeFromSuperview()
+        self.view.animation.makeAlpha(0).animateWithCompletion(0.6, {
+            
+            self.view.removeFromSuperview()
+            self.homeVC?.showIndexCall()
+        })
     }
     
     

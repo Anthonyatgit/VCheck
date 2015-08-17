@@ -477,6 +477,20 @@ class OrderListViewController: VCBaseViewController, UITableViewDataSource, UITa
                             order.voucherName = item["order_info"]["voucher_info"]["voucher_name"].string!
                             order.voucherPrice = item["order_info"]["voucher_info"]["discount"].string!
                             
+                            order.isReturn = item["order_info"]["is_return"].string!
+                            
+                            if order.orderType! != "10" && order.orderType! != "51" && order.orderType! != "71" {
+                                
+                                order.exCode = item["order_info"]["consume_info"]["consume_code"].string!
+                                
+                                var dateFM = NSDateFormatter()
+                                dateFM.dateFormat = VCAppLetor.ConstValue.DefaultDateFormat
+                                order.exCodeExpireDate = dateFM.dateFromString(item["order_info"]["consume_info"]["exprie_date"].string!)
+                                
+                                order.exCodeUseDate = item["order_info"]["consume_info"]["consume_date"].string!
+                            }
+                            
+                            
                             self.orderList.addObject(order)
                             
                         }

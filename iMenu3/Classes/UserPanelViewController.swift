@@ -550,6 +550,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                         memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
                         memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
                         memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                        memberInfo.shareURL = json["data"]["share_info"]["share_url"].string!
                         
                         memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
                         memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
@@ -740,6 +741,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                     memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
                     memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
                     memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                    memberInfo.shareURL = json["data"]["share_info"]["share_url"].string!
                     
                     memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
                     memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
@@ -842,6 +844,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                     memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
                     memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
                     memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                    memberInfo.shareURL = json["data"]["share_info"]["share_url"].string!
                     
                     memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
                     memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!
@@ -944,6 +947,7 @@ class UserPanelViewController: VCBaseViewController, UITableViewDelegate, UITabl
                     memberInfo.inviteCount = json["data"]["share_info"]["invite_total_count"].string!
                     memberInfo.inviteTip = json["data"]["share_info"]["invite_people_tips"].string!
                     memberInfo.inviteRewards = json["data"]["share_info"]["invite_code_tips"].string!
+                    memberInfo.shareURL = json["data"]["share_info"]["share_url"].string!
                     
                     memberInfo.pushSwitch = json["data"]["push_info"]["push_switch"].string!
                     memberInfo.pushOrder = json["data"]["push_info"]["consume_msg"].string!

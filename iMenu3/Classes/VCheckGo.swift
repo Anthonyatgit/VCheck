@@ -55,6 +55,7 @@ struct VCheckGo {
         case EditBindWithWechat(String, String, NSDictionary, String)               // 23.第三方-编辑微信绑定关系
         case UnBindWithWechat(String, String, String)                               // 23.第三方-编辑微信绑定关系
         case PushDeviceToken(String, String, PushDeviceType, String)                // 24.基本-提交推送设备信息
+        case GetEventList()                                                         // 25.基本-获取首页活动列表
         case GetOrderList(String, Int, Int, String)                                 // 26.会员-获取订单列表
         case GetOrderDetail(String, String, String)                                 // 27.会员-获取订单详情
         case EditOrder(String, String, EditOrderType, String)                       // 28.会员-编辑订单状态
@@ -209,6 +210,10 @@ struct VCheckGo {
                 case .PushDeviceToken(let memberId, let deviceToken, let pushDeviceType, let token):
                     let params = ["route":"\(RoutePath.PushDeviceToken.rawValue)","token":"\(token)","device_type":"\(DeviceType.iPhone.rawValue)","jsonText":"{\"member_id\":\"\(memberId)\",\"device_token\":\"\(deviceToken)\",\"operator_type\":\"\(pushDeviceType.rawValue)\"}"]
                     return ("/\(RoutePath.PushDeviceToken.rawValue)", params)
+                //=========GetEventList==============
+                case .GetEventList():
+                    let params = ["route":"\(RoutePath.GetEventList.rawValue)","token":"","device_type":"\(DeviceType.iPhone.rawValue)","jsonText":""]
+                    return ("/\(RoutePath.GetEventList.rawValue)", params)
                 //=========GetOrderList==============
                 case .GetOrderList(let memberId, let page, let count, let token):
                     let params = ["route":"\(RoutePath.GetOrderList.rawValue)","token":"\(token)","jsonText":"{\"member_id\":\"\(memberId)\",\"pagination\":{\"page\":\"\(page)\",\"count\":\"\(count)\"}}"]
@@ -352,6 +357,7 @@ struct VCheckGo {
         case GetCityList = "base/region/getRegionList"
         case GetIndexPage = "base/info/getIndexImage"
         case PushDeviceToken = "device/push/editPushDevice"
+        case GetEventList = "base/info/getAppBannerList"
         
         case LoginWithToken = "member/member/loginWithToken"
         case ValidateMemberInfo = "member/member/validateMemberInfo"
@@ -419,6 +425,21 @@ struct VCheckGo {
     }
 }
 
+class Banner: NSObject {
+    
+    let imageURL: String!
+    
+    var sortId: String?
+    var route: String?
+    var param: String?
+    
+    init(imageURL: String) {
+        
+        self.imageURL = imageURL
+    }
+    
+}
+
 
 class CityInfo: NSObject {
     
@@ -478,6 +499,7 @@ class MemberInfo: NSObject {
     var inviteCount: String?
     var inviteTip: String?
     var inviteRewards: String?
+    var shareURL: String?
     
     var pushSwitch: String?
     var pushOrder: String?
@@ -540,6 +562,12 @@ class OrderInfo: NSObject {
     
     var paymentCode: String?
     
+    var exCode: String?
+    var exCodeExpireDate: NSDate?
+    var exCodeUseDate: String?
+    
+    var isReturn: String?
+    
     // Extent
     var status: VCAppLetor.OrderType?
     var typeDescription: String?
@@ -578,6 +606,7 @@ class FoodInfo: NSObject {
     var endDate: String?
     var remainder: String?
     var returnable: String?
+    var tipTag: String?
     var favoriteCount: String?
     var isCollected: String?
     

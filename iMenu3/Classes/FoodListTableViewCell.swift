@@ -62,11 +62,11 @@ class FoodListTableViewCell: UITableViewCell {
         
         
         self.foodDateBg.drawType = "DateTagLong"
-        self.foodDateBg.alpha = 0 //0.4
+        self.foodDateBg.alpha = 0.4 //0.4
         self.contentView.addSubview(self.foodDateBg)
         
         self.foodDateBg2.drawType = "DateTag"
-        self.foodDateBg2.alpha = 0 // 0.8
+        self.foodDateBg2.alpha = 0.8 // 0.8
         self.contentView.addSubview(self.foodDateBg2)
         
         //        self.shimmerView.shimmering = true
@@ -83,7 +83,7 @@ class FoodListTableViewCell: UITableViewCell {
         self.foodDate.font = VCAppLetor.Font.XSmall
         self.foodDate.textAlignment = .Left
         self.foodDate.textColor = UIColor.whiteColor()
-        self.foodDate.alpha = 0 // 1.0
+        self.foodDate.alpha = 1.0 // 1.0
         self.foodDateBg2.addSubview(self.foodDate)
         
         let imageURL = self.foodInfo.foodImage!
@@ -112,10 +112,6 @@ class FoodListTableViewCell: UITableViewCell {
                     self.imageCache!.setObject(foodImage, forKey: imageURL)
                     
                     self.foodImageView.image = foodImage
-                    
-                    self.foodDateBg.animation.makeAlpha(0.4).animate(1.0)
-                    self.foodDateBg2.animation.makeAlpha(0.8).animate(1.0)
-                    self.foodDate.animation.makeAlpha(1.0).animate(1.0)
                 }
             }
             

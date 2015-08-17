@@ -167,6 +167,7 @@ class VCShareActionView: UIView {
         self.shareBox.animation.makeY(self.height-200.0).animate(0.3)
         self.visualEffectView!.animation.makeAlpha(1.0).animate(0.3)
         
+        
     }
     
     func shareViewDidTaped(tapGuesture: UITapGestureRecognizer) {
@@ -307,9 +308,11 @@ class VCShareActionView: UIView {
             
             if type.value == ShareTypeSinaWeibo.value {
                 
+                let shareLink: String = (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo).shareURL!
+                
                 msg = "@知味_Taste 邀请你体验 知味App-最精致的高端定制餐饮"
                 
-                msg = msg + ", 使用邀请码 \(self.shareCode!) 即可获取30元礼券 "
+                msg = msg + ", 使用邀请码 \(self.shareCode!) 即可获取30元礼券 \(shareLink)"
                 
                 
             }
