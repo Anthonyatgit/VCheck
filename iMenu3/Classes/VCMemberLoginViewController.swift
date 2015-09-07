@@ -434,61 +434,106 @@ class VCMemberLoginViewController: VCBaseViewController, UIScrollViewDelegate, U
     
     func signinWithWeibo() {
         
-        /**
+        CTMemCache.sharedInstance.set(VCAppLetor.LoginType.SinaWeibo, data: true, namespace: "Sign")
+        
         ShareSDK.getUserInfoWithType(ShareTypeSinaWeibo, authOptions: nil) {
             (result, userInfo, error) -> Void in
             
             if result {
                 
+                
+                self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+                self.hud?.mode = MBProgressHUDMode.Indeterminate
+                
                 println("result: \(result) | userInfo: \(userInfo.sourceData() as NSDictionary)")
                 
                 // Fitch member info from server when login return success, cache member info in the local and refresh userinterface
                 //============================================================
-                
                 var mid: String = userInfo.uid()
                 
+                if (error == nil) {
+                    
+                    let userInfoDict = userInfo.sourceData() as NSDictionary
+                    
+                    var wxUserInfo: NSMutableDictionary = NSMutableDictionary()
+                    wxUserInfo.setValue(userInfo.uid(), forKeyPath: "uid")
+                    wxUserInfo.setValue(userInfoDict.valueForKey("openid"), forKeyPath: "openid")
+                    wxUserInfo.setValue(userInfo.nickname(), forKeyPath: "nickname")
+                    let sex: AnyObject? = userInfoDict.valueForKey("sex")
+                    wxUserInfo.setValue("\(sex!)", forKeyPath: "sex")
+                    wxUserInfo.setValue(userInfoDict.valueForKey("province"), forKeyPath: "province")
+                    wxUserInfo.setValue(userInfoDict.valueForKey("city"), forKeyPath: "city")
+                    wxUserInfo.setValue(userInfoDict.valueForKey("country"), forKeyPath: "country")
+                    wxUserInfo.setValue(userInfo.profileImage(), forKeyPath: "headimgurl")
+                    wxUserInfo.setValue(userInfoDict.valueForKey("unionid"), forKeyPath: "unionid")
+                    
+                    CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatLogInfo, data: wxUserInfo, namespace: "LoginStatus")
+                    
+                    Alamofire.request(VCheckGo.Router.LoginWithWechat(wxUserInfo)).validate().responseSwiftyJSON({
+                        (_, _, JSON, error) -> Void in
+                        
+                        if error == nil {
+                            
+                            let json = JSON
+                            
+                            if json["status"]["succeed"].string! == "1" {
+                                
+                                let memberId = json["data"]["member_id"].string!
+                                let token = json["data"]["token"].string!
+                                
+                                if memberId == "0" && token == "" {
+                                    
+                                    CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatLog, data: true, namespace: "LoginStatus")
+                                    
+                                    CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatAvatar, data: wxUserInfo.valueForKey("headimgurl"), namespace: "LoginStatus")
+                                    CTMemCache.sharedInstance.set(VCAppLetor.LoginStatus.WechatNickname, data: wxUserInfo.valueForKey("nickname"), namespace: "LoginStatus")
+                                    
+                                    self.delegate?.memberDidSigninWithWechatSuccess(memberId, token: token)
+                                    
+                                }
+                                else {
+                                    
+                                    self.delegate?.memberDidSigninSuccess(memberId, token: token)
+                                    
+                                }
+                                
+                                self.dismiss()
+                                
+                            }
+                            else {
+                                RKDropdownAlert.title(json["status"]["error_desc"].string!, backgroundColor: UIColor.alizarinColor(), textColor: UIColor.whiteColor(), time: VCAppLetor.ConstValue.TopAlertStayTime)
+                            }
+                            
+                        }
+                        else {
+                            println("ERROR @ Login with wechat : \(error?.localizedDescription)")
+                        }
+                    })
+                }
+                else {
+                    
+                    self.hud?.hide(true)
+                    println("ERROR @ Auth with WeChat:\(error.errorCode())-\(error.errorDescription())")
+                }
                 
-                BreezeStore.saveInBackground({ (contextType) -> Void in
+                
+                BreezeStore.saveInMain({ (contextType) -> Void in
                     
                     let member = Member.createInContextOfType(contextType) as! Member
+                    
                     member.mid = userInfo.uid()
                     member.nickname = userInfo.nickname()
                     member.iconURL = userInfo.profileImage()
+                    member.lastLog = NSDate()
+                    member.token = "1"
                     
-                    //                    let optIsLogin = Settings.createInContextOfType(contextType) as! Settings
-                    //                    optIsLogin.sid = "\(NSDate())"
-                    //                    optIsLogin.name = VCAppLetor.SettingName.optNameIsLogin
-                    //                    optIsLogin.value = "true"
-                    //
-                    //                    let optLoginType = Settings.createInContextOfType(contextType) as! Settings
-                    //                    optLoginType.sid = "\(NSDate())"
-                    //                    optLoginType.name = VCAppLetor.SettingName.optNameLoginType
-                    //                    optLoginType.value = VCAppLetor.LoginType.SinaWeibo
-                    
-                    }, completion: { error -> Void in
-                        
-                        if (error != nil) {
-                            println("\(error?.localizedDescription)")
-                        }
-                        else {
-                            // Prepare for member login refresh
-                            
-                            CTMemCache.sharedInstance.set("isLogin", data: true, namespace: "member")
-                            CTMemCache.sharedInstance.set("loginType", data: VCAppLetor.LoginType.SinaWeibo, namespace: "member")
-                            CTMemCache.sharedInstance.set("currentMid", data: mid, namespace: "member")
-                            
-                            self.delegate?.memberDidSigninSuccess(mid, token: "0")
-                            self.dismiss()
-                        }
                 })
             }
         }
-        **/
     }
     
     
     func signinWithWechat() {
-        
         
         
         CTMemCache.sharedInstance.set(VCAppLetor.LoginType.WeChat, data: true, namespace: "Sign")

@@ -43,7 +43,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>wx79252ca0921c523d</string>
+				<string>wx14b6df2a2946b753</string>
 			</array>
 		</dict>
 		<dict>
@@ -56,7 +56,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>0812</string>
+	<string>0817</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>

@@ -384,27 +384,58 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
         self.checkNow.addTarget(self, action: "checkNowAction", forControlEvents: UIControlEvents.TouchUpInside)
         self.checkView.addSubview(self.checkNow)
         
-        self.price.text = round_price(self.foodInfo.price!)
-        self.price.textAlignment = .Center
-        self.price.textColor = UIColor.orangeColor()
-        self.price.font = VCAppLetor.Font.XXLight
-        self.checkView.addSubview(self.price)
+        if self.foodInfo.price! != "0" && self.foodInfo.price! != "" {
+            
+            self.price.text = round_price(self.foodInfo.price!)
+            self.price.textAlignment = .Center
+            self.price.textColor = UIColor.orangeColor()
+            self.price.font = VCAppLetor.Font.XXLight
+            self.checkView.addSubview(self.price)
+            
+            self.foodUnit.text = "\(self.foodInfo.priceUnit!)/\(self.foodInfo.unit!)"
+            self.foodUnit.textAlignment = .Center
+            self.foodUnit.textColor = UIColor.orangeColor()
+            self.foodUnit.font = VCAppLetor.Font.NormalFont
+            self.checkView.addSubview(self.foodUnit)
+            
+            self.originPrice.text = "\(round_price(self.foodInfo.originalPrice!))\(self.foodInfo.priceUnit!)"
+            self.originPrice.textAlignment = .Center
+            self.originPrice.textColor = UIColor.grayColor()
+            self.originPrice.font = VCAppLetor.Font.LightXSmall
+            self.checkView.addSubview(self.originPrice)
+            
+            self.originPriceStricke.drawType = "GrayLine"
+            self.originPriceStricke.lineWidth = 1.0
+            self.checkView.addSubview(self.originPriceStricke)
+        }
+        else {
+            
+            self.price.text = round_price(self.foodInfo.originalPrice!)
+            self.price.textAlignment = .Center
+            self.price.textColor = UIColor.orangeColor()
+            self.price.font = VCAppLetor.Font.XXLight
+            self.checkView.addSubview(self.price)
+            
+            self.foodUnit.text = "\(self.foodInfo.priceUnit!)/\(self.foodInfo.unit!)"
+            self.foodUnit.textAlignment = .Center
+            self.foodUnit.textColor = UIColor.orangeColor()
+            self.foodUnit.font = VCAppLetor.Font.NormalFont
+            self.checkView.addSubview(self.foodUnit)
+            
+            self.originPrice.text = "\(round_price(self.foodInfo.originalPrice!))\(self.foodInfo.priceUnit!)"
+            self.originPrice.textAlignment = .Center
+            self.originPrice.textColor = UIColor.grayColor()
+            self.originPrice.font = VCAppLetor.Font.LightXSmall
+            self.originPrice.alpha = 0
+            self.checkView.addSubview(self.originPrice)
+            
+            self.originPriceStricke.drawType = "GrayLine"
+            self.originPriceStricke.lineWidth = 1.0
+            self.originPriceStricke.alpha = 0
+            self.checkView.addSubview(self.originPriceStricke)
+        }
         
-        self.foodUnit.text = "\(self.foodInfo.priceUnit!)/\(self.foodInfo.unit!)"
-        self.foodUnit.textAlignment = .Center
-        self.foodUnit.textColor = UIColor.orangeColor()
-        self.foodUnit.font = VCAppLetor.Font.NormalFont
-        self.checkView.addSubview(self.foodUnit)
         
-        self.originPrice.text = "\(round_price(self.foodInfo.originalPrice!))\(self.foodInfo.priceUnit!)"
-        self.originPrice.textAlignment = .Center
-        self.originPrice.textColor = UIColor.grayColor()
-        self.originPrice.font = VCAppLetor.Font.LightXSmall
-        self.checkView.addSubview(self.originPrice)
-        
-        self.originPriceStricke.drawType = "GrayLine"
-        self.originPriceStricke.lineWidth = 1.0
-        self.checkView.addSubview(self.originPriceStricke)
         
         self.checkView.backgroundColor = UIColor.grayColor().colorWithAlphaComponent(0.1)
         
@@ -650,8 +681,13 @@ class FoodViewerViewController: VCBaseViewController, UIScrollViewDelegate, SMSe
             timeTag = "\(days)天"
             
         }
-        else {
+        else if remainder > 0 {
+            let days = Int(floor(remainder/(3600*24)))
             timeTag = "少于24小时"
+            
+        }
+        else {
+            timeTag = "已结束"
             self.remainTime.textColor = UIColor.alizarinColor()
         }
         

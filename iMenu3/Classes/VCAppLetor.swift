@@ -62,10 +62,10 @@ struct VCAppLetor {
         static let UpdateDescription: String = "有最新的可用版本，建议升级应用保持内容为最新"
         static let UserPanelTitle: String = "我的账户"
         static let SettingsTitle: String = "偏好设置"
-        static let LoginPageTitle: String = "登陆"
+        static let LoginPageTitle: String = "登录"
         static let RegPageTitle: String = "注册"
-        static let UserInfoWithoutSignin: String = "登陆/注册享丰富礼券"
-        static let LoginTitle: String = "使用VCheck账号登陆，赢取丰富礼券"
+        static let UserInfoWithoutSignin: String = "登录/注册享丰富礼券"
+        static let LoginTitle: String = "使用知味账号登录，赢得丰富礼券"
         static let LoginName: String = "手机号/邮箱"
         static let LoginPass: String = "密码"
         static let LoginNameEmpty: String = "手机号/邮箱忘记填写了？"
@@ -76,7 +76,7 @@ struct VCAppLetor {
         static let LoginInfoError: String = "手机号/邮箱或者密码是不是写错了？"
         static let SignUpText: String = "新用户也有专享福利，"
         static let SignUpButtonText: String = "点击注册"
-        static let SocialSignUpTitle: String = "使用社交账号登陆"
+        static let SocialSignUpTitle: String = "使用社交账号登录"
         static let MobileCannotEmpty: String = "请填写您的手机号码来接收验证码"
         static let VerifyCodeSendDone: String = "验证码发送成功"
         static let VerifyCodeSendFail: String = "验证码发送失败，请稍后重试"
@@ -104,10 +104,10 @@ struct VCAppLetor {
         static let SendAutoCode: String = "发送验证码"
         static let InventCodeOption: String = "邀请码(选填)"
         static let NoInventCodeYet: String = "还没有邀请码？没关系，以后还可以补填"
-        static let AgreeTermsString: String = "点击下一步，代表理解并同意 VCheck 的用户协议"
+        static let AgreeTermsString: String = "点击下一步，代表理解并同意知味用户协议"
         static let UserTerms: String = "用户协议"
         static let TermsURL: String = "http://218.244.158.175/static/vcheck/userterms.html"
-        static let InitPasscode: String = "请设置您的登陆密码"
+        static let InitPasscode: String = "请设置您的登录密码"
         static let BlackUserIconURL: String = "http://218.244.158.175/siyocc/t/account_circle_black.png"
         static let NotSetYet: String = "未设置"
         static let PassCodeString = "••••••"
@@ -201,12 +201,13 @@ struct VCAppLetor {
         
         static let VoucherTitle: String = "我的礼券"
         static let VoucherAvailable: String = "张可用礼券"
+        static let VoucherEmpty: String = "你没有可用的礼券"
         static let ExchangeTitle: String = "兑换"
         static let ExchangeCode: String = "兑换码或邀请码"
         static let ExchangeCodeNeeded: String = "请输入兑换码或邀请码"
         static let CancleVoucher: String = "不使用"
         
-        static let FoodViewerTitle: String = "礼遇详情"
+        static let FoodViewerTitle: String = "知味详情"
         static let ShareToGetCoupon: String = "分享获取礼券"
         static let CheckNow: String = "立即购买"
         static let SegmentTitles: [AnyObject] = ["亮点","菜单","须知"]
@@ -215,7 +216,7 @@ struct VCAppLetor {
         static let isClose: String = "已结束"
         
         static let CheckNowTitle: String = "填写订单"
-        static let CheckNowTip: String = "请注意，该礼遇需要到店享用"
+        static let CheckNowTip: String = "请注意，该订单需要到店享用"
         static let PayNowTip: String = "该礼遇支持随时申请退款"
         static let PayDoneTip: String = "向服务商家出示你的订单号码享受您的礼遇"
         static let PriceName: String = "价格"
@@ -230,7 +231,7 @@ struct VCAppLetor {
         static let OrderPriceName: String = "合计: "
         static let SubmitBtnTitle: String = "提交订单"
         static let SubmitOrderInProgress: String = "正在提交您的订单"
-        static let AsyncPaymentInProgress: String = "正在同步交易信息"
+        static let AsyncPaymentInProgress: String = "正在同步支付信息"
         static let PaymentSucceed: String = "支付已经完成"
         static let UserCanclePayment: String = "你取消了支付，如你的支付遇到问题请联系客服 [4008 369 917]"
         static let UserAuthFail: String = "你的身份认证失败，支付已取消，请重试"
@@ -390,7 +391,7 @@ struct VCAppLetor {
         static let OrderItemCellHeight: CGFloat = 122.0
         static let StockAlertPoint: Int = 5
         
-        static let VideoShowTime: NSTimeInterval = 14
+        static let VideoShowTime: NSTimeInterval = 16
         
         static let DefaultItemCountPerPage: Int = 5
         static let DefaultListItemCountPerPage: Int = 10
@@ -442,8 +443,8 @@ struct VCAppLetor {
         static let SinaAppSecret: String = "cad1412fd89be70722de86337a571a54"
         static let SinaRedirectURL: String = "http://192.168.100.100"
         
-        static let WeChatAppKey: String = "wx79252ca0921c523d"
-        static let WeChatAppSecret: String = "18099057b2e02b22e8fed322eb74fda7"
+        static let WeChatAppKey: String = "wx14b6df2a2946b753"
+        static let WeChatAppSecret: String = "fd8d9ff4952252d02eb6c3de2451afad"
     }
     
     enum BMK {
@@ -562,7 +563,7 @@ struct VCAppLetor {
     enum UserPanel {
         
         static let MyMenus: [String: [String]] = [
-//            "User"      : ["登陆/注册享丰富礼券"],
+//            "User"      : ["登录/注册享丰富礼券"],
             "Order"     : ["我的订单", "我喜欢的礼遇", "我的礼券", "反馈", "关于"]
 //            "Settings"  : ["反馈", "关于"]
         ]
@@ -590,7 +591,7 @@ struct VCAppLetor {
         static let AccountSecurity: String = "账号安全"
         static let PhoneNumber: String = "手机号"
         static let Passcode: String = "密码"
-        static let SocialAuth: String = "其它登陆方式"
+        static let SocialAuth: String = "其它登录方式"
         static let SinaWeibo: String = "新浪微博"
         static let WeChat: String = "微信"
         

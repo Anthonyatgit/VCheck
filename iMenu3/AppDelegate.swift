@@ -65,9 +65,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WXApiDelegate {
         })
         
         
-        
-        
-        
         // Wechat Pay
         let we = WXApi.registerApp(VCAppLetor.ShareSDK.WeChatAppKey, withDescription: "VCheck beta")
         

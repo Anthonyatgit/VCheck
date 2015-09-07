@@ -242,11 +242,11 @@ class RegisterViewController: VCBaseViewController, UIScrollViewDelegate, UIText
         self.terms.autoAlignAxisToSuperviewAxis(.Vertical)
         
         self.termsUnderline.autoPinEdge(.Top, toEdge: .Bottom, ofView: self.terms, withOffset: -9.0)
-        self.termsUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: terms, withOffset: -18.0)
+        self.termsUnderline.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: terms, withOffset: -34.0)
         self.termsUnderline.autoSetDimensionsToSize(CGSizeMake(48.0, 3.0))
         
         self.termsButton.autoSetDimensionsToSize(CGSizeMake(48.0, VCAppLetor.ConstValue.ButtonHeight))
-        self.termsButton.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: terms)
+        self.termsButton.autoPinEdge(.Trailing, toEdge: .Trailing, ofView: terms, withOffset: -34.0)
         self.termsButton.autoAlignAxis(.Horizontal, toSameAxisOfView: terms)
         
         super.updateViewConstraints()

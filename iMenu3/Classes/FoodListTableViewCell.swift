@@ -195,30 +195,64 @@ class FoodListTableViewCell: UITableViewCell {
 //        self.foodDesc.lineBreakMode = NSLineBreakMode.ByTruncatingTail
 //        self.contentView.addSubview(self.foodDesc)
         
-        self.foodPrice.font = VCAppLetor.Font.Light
-        self.foodPrice.text = round_price(self.foodInfo.price!)
-        self.foodPrice.textAlignment = .Right
-        self.foodPrice.textColor = UIColor.pumpkinColor()
-        self.foodPrice.sizeToFit()
-        self.contentView.addSubview(self.foodPrice)
+        if self.foodInfo.price! != "0" && self.foodInfo.price! != "" {
+            
+            self.foodPrice.font = VCAppLetor.Font.Light
+            self.foodPrice.text = round_price(self.foodInfo.price!)
+            self.foodPrice.textAlignment = .Right
+            self.foodPrice.textColor = UIColor.pumpkinColor()
+            self.foodPrice.sizeToFit()
+            self.contentView.addSubview(self.foodPrice)
+            
+            self.foodUnit.font = VCAppLetor.Font.SmallFont
+            self.foodUnit.text = "\(self.foodInfo.priceUnit!)/\(self.foodInfo.unit!)"
+            self.foodUnit.textAlignment = .Right
+            self.foodUnit.textColor = UIColor.pumpkinColor()
+            self.foodUnit.sizeToFit()
+            self.contentView.addSubview(self.foodUnit)
+            
+            self.foodOriginPrice.font = VCAppLetor.Font.LightXSmall
+            self.foodOriginPrice.text = round_price(self.foodInfo.originalPrice!) + self.foodInfo.priceUnit!
+            self.foodOriginPrice.textAlignment = .Center
+            self.foodOriginPrice.textColor = UIColor.lightGrayColor()
+            self.foodOriginPrice.sizeToFit()
+            self.contentView.addSubview(self.foodOriginPrice)
+            
+            self.foodOriginPriceStricke.drawType = "GrayLine"
+            self.foodOriginPriceStricke.lineWidth = 1.0
+            self.contentView.addSubview(self.foodOriginPriceStricke)
+        }
+        else {
+            
+            self.foodPrice.font = VCAppLetor.Font.Light
+            self.foodPrice.text = round_price(self.foodInfo.originalPrice!)
+            self.foodPrice.textAlignment = .Right
+            self.foodPrice.textColor = UIColor.pumpkinColor()
+            self.foodPrice.sizeToFit()
+            self.contentView.addSubview(self.foodPrice)
+            
+            self.foodUnit.font = VCAppLetor.Font.SmallFont
+            self.foodUnit.text = "\(self.foodInfo.priceUnit!)/\(self.foodInfo.unit!)"
+            self.foodUnit.textAlignment = .Right
+            self.foodUnit.textColor = UIColor.pumpkinColor()
+            self.foodUnit.sizeToFit()
+            self.contentView.addSubview(self.foodUnit)
+            
+            self.foodOriginPrice.font = VCAppLetor.Font.LightXSmall
+            self.foodOriginPrice.text = round_price(self.foodInfo.originalPrice!) + self.foodInfo.priceUnit!
+            self.foodOriginPrice.textAlignment = .Center
+            self.foodOriginPrice.textColor = UIColor.lightGrayColor()
+            self.foodOriginPrice.sizeToFit()
+            self.foodOriginPrice.alpha = 0
+            self.contentView.addSubview(self.foodOriginPrice)
+            
+            self.foodOriginPriceStricke.drawType = "GrayLine"
+            self.foodOriginPriceStricke.lineWidth = 1.0
+            self.foodOriginPriceStricke.alpha = 0
+            self.contentView.addSubview(self.foodOriginPriceStricke)
+        }
         
-        self.foodUnit.font = VCAppLetor.Font.SmallFont
-        self.foodUnit.text = "\(self.foodInfo.priceUnit!)/\(self.foodInfo.unit!)"
-        self.foodUnit.textAlignment = .Right
-        self.foodUnit.textColor = UIColor.pumpkinColor()
-        self.foodUnit.sizeToFit()
-        self.contentView.addSubview(self.foodUnit)
         
-        self.foodOriginPrice.font = VCAppLetor.Font.LightXSmall
-        self.foodOriginPrice.text = round_price(self.foodInfo.originalPrice!) + self.foodInfo.priceUnit!
-        self.foodOriginPrice.textAlignment = .Center
-        self.foodOriginPrice.textColor = UIColor.lightGrayColor()
-        self.foodOriginPrice.sizeToFit()
-        self.contentView.addSubview(self.foodOriginPrice)
-        
-        self.foodOriginPriceStricke.drawType = "GrayLine"
-        self.foodOriginPriceStricke.lineWidth = 1.0
-        self.contentView.addSubview(self.foodOriginPriceStricke)
         
         var displayAmount: String = ""
         self.foodRemainAmount.textColor = UIColor.lightGrayColor()

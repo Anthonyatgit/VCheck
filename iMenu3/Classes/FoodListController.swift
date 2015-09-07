@@ -184,6 +184,12 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
                     
                     let banArr: Array = json["data"]["banner_list"].arrayValue
                     
+                    if banArr.count < 1 {
+                        
+                        self.tableView.tableHeaderView = UIView(frame: CGRectMake(0, 0, 0, 0))
+                        return
+                    }
+                    
                     var bannerImages: NSMutableArray = NSMutableArray()
                     
                     for item in banArr {
@@ -301,12 +307,6 @@ class FoodListController: VCBaseViewController, UITableViewDataSource, UITableVi
         
         cell.setNeedsUpdateConstraints()
         
-        let delayInSeconds: UInt64 = 1
-        let popTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSeconds * NSEC_PER_SEC))
-        dispatch_after(popTime, dispatch_get_main_queue()) { () -> Void in
-            
-            
-        }
         
         return cell
         

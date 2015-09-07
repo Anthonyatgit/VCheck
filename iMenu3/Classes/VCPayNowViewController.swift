@@ -149,13 +149,15 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
             
             self.scrollView.contentSize = self.scrollView.frame.size
             
-            if (self.wechatUnderline.originY + 15.0) < self.scrollView.frame.height {
-                
-                self.scrollView.contentSize.height = self.scrollView.frame.height + 1.0 - VCAppLetor.ConstValue.CheckNowBarHeight
-            }
-            else {
-                self.scrollView.contentSize.height = self.wechatUnderline.originY + 15.0
-            }
+            self.scrollView.contentSize.height = self.wechatUnderline.originY + 15.0
+            
+//            if (self.wechatUnderline.originY + 15.0) < self.scrollView.frame.height {
+//                
+//                self.scrollView.contentSize.height = self.scrollView.frame.height + 1.0
+//            }
+//            else {
+//                self.scrollView.contentSize.height = self.wechatUnderline.originY + 15.0
+//            }
         }
     }
     
@@ -745,7 +747,7 @@ class VCPayNowViewController: VCBaseViewController, UIScrollViewDelegate, RKDrop
                             (resultDic) -> Void in
                             
                             self.hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-                            self.hud.mode = MBProgressHUDMode.Determinate
+                            self.hud.mode = MBProgressHUDMode.Indeterminate
                             self.hud.labelText = VCAppLetor.StringLine.AsyncPaymentInProgress
                             
                             let dic = resultDic as NSDictionary

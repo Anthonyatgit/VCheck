@@ -266,7 +266,7 @@ class VCShareActionView: UIView {
                     }
                     
                     
-                    let shareContent: ISSContent = ShareSDK.content(msg, defaultContent: VCAppLetor.StringLine.DefaultShareContent, image: png, title: title, url: "", description: "Description", mediaType: SSPublishContentMediaTypeNews)
+                    let shareContent: ISSContent = ShareSDK.content(msg, defaultContent: VCAppLetor.StringLine.DefaultShareContent, image: png, title: title, url: self.foodInfo!.shareLink!, description: "Description", mediaType: SSPublishContentMediaTypeNews)
                     
                     ShareSDK.shareContent(shareContent, type: type, authOptions: nil, shareOptions: nil, statusBarTips: false) {
                         (type, state, statusInfo, error, end) -> Void in
@@ -295,6 +295,8 @@ class VCShareActionView: UIView {
             
             let voucherImage: UIImage = UIImage(named: VCAppLetor.IconName.CouponBlack)!
             
+            let shareLink: String = (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo).shareURL!
+            
             let png = ShareSDK.pngImageWithImage(voucherImage)
             
             var title: String = "送你知味App独享30元礼券"
@@ -308,8 +310,6 @@ class VCShareActionView: UIView {
             
             if type.value == ShareTypeSinaWeibo.value {
                 
-                let shareLink: String = (CTMemCache.sharedInstance.get(VCAppLetor.SettingName.optMemberInfo, namespace: "member")?.data as! MemberInfo).shareURL!
-                
                 msg = "@知味_Taste 邀请你体验 知味App-最精致的高端定制餐饮"
                 
                 msg = msg + ", 使用邀请码 \(self.shareCode!) 即可获取30元礼券 \(shareLink)"
@@ -317,7 +317,7 @@ class VCShareActionView: UIView {
                 
             }
             
-            let shareContent: ISSContent = ShareSDK.content(msg, defaultContent: "", image: png, title: title, url: VCAppLetor.StringLine.AppWebsiteURL, description: "v0.0.1", mediaType: SSPublishContentMediaTypeNews)
+            let shareContent: ISSContent = ShareSDK.content(msg, defaultContent: "", image: png, title: title, url: shareLink, description: "v0.0.1", mediaType: SSPublishContentMediaTypeNews)
             
             ShareSDK.shareContent(shareContent, type: type, authOptions: nil, shareOptions: nil, statusBarTips: false) {
                 (type, state, statusInfo, error, end) -> Void in

@@ -857,7 +857,7 @@ class VCCheckNowViewController: VCBaseViewController, UIScrollViewDelegate, UITe
                                 
                                 newOrder.isReturn = json["data"]["order_info"]["is_return"].string!
                                 
-                                println("newOrder voucherId: \(newOrder.voucherId) | name: \(newOrder.voucherName)")
+                                println("newOrder: \(newOrder.voucherId!) | name: \(newOrder.exCode!)")
                                 
                                 //                                // Cache member order session, CAN NOT submit order with same menu until the order session complete (Deleted OR Paid)
                                 //                                let orderSessionMenus = CTMemCache.sharedInstance.get(VCAppLetor.SettingName.orderSessionMenuIds, namespace: "order")?.data as? NSMutableArray

@@ -396,6 +396,8 @@ struct VCheckGo {
         case RegWithWechat = "member/member_thirdpart/registerWithWx"
         case EditBindWithWechat = "member/member_thirdpart/editWithWx"
         
+        case LoginWithWeibo = "member/member_thirdpart/loginWithWeibo"
+        
     }
     
     
